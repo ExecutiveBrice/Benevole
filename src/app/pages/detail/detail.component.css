@@ -1,0 +1,30 @@
+.star {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+
+.spinner_overlay {
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #fff;
+  opacity: 0.5;
+  z-index: 1000;
+}
+
+.fa-spinner {
+  position: fixed;
+  left: 50vw;
+  top: 20vh;
+  opacity: 1;
+
+}
+
+
+#map {
+  height: 200px;
+}

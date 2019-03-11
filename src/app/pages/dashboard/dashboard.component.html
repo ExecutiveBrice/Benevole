@@ -1,0 +1,13 @@
+<div class="row">
+  <div *ngFor="let produit of produits" class="col-md-6" [routerLink]="['/detail/', produit.nom]">
+    <div class="module ">
+      <div class="imagecontainer">
+        <img class="image" *ngIf="produit.image" [src]="sanitizer.bypassSecurityTrustUrl(produit.image)">
+      </div>
+
+      <div class="Description">
+        <h2>{{produit.nom}}</h2>
+      </div>
+    </div>
+  </div>
+</div>
