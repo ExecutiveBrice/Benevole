@@ -1,0 +1,35 @@
+<nav class="navbar navbar-dark bg-dark mb-5">
+  <a class="navbar-brand ml-auto" href="#">
+    <h2>Olive Et Mirabelle</h2>
+  </a>
+
+  <div class="navbar-expand ml-auto navbar-nav">
+    <div class="navbar-nav">
+      <button type="button" [hidden]="!utilisateur || retour" class="btn btn-secondary" [routerLink]="['/detail/', 'nouveau']">Nouveau</button>
+      <button type="button" [hidden]="!retour" class="btn btn-secondary" [routerLink]="['/dashboard']">Retour</button>
+    </div>
+  </div>
+</nav>
+
+<!-- main app container -->
+
+<div class="container" style="padding-bottom: 70px;">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- credits -->
+<nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
+  <div class="navbar-expand m-auto navbar-text">
+    Fait avec <i class="fa fa-heart"></i> par Brice
+  </div>
+
+  <div class="navbar-expand ml-auto navbar-nav">
+    <div class="navbar-nav">
+
+      <button type="button" [hidden]="utilisateur" class="btn btn-secondary" [routerLink]="['login']">Connexion</button>
+      <button type="button" [hidden]="!utilisateur" class="btn btn-secondary" (click)="logout()">Deconnexion</button>
+
+    </div>
+  </div>
+
+</nav>

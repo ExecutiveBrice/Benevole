@@ -1,0 +1,141 @@
+<div *ngIf="produit">
+  <div class="row">
+    <div class="col-sm-4 ">
+
+      <div class="row">
+        <div class="col-sm-12">
+          <img class="container" *ngIf="produit.image" [src]="sanitizer.bypassSecurityTrustUrl(produit.image)">
+          <div class="row">
+            <div class="col-sm-12">
+              <div [hidden]="!spinner_overlay" class="spinner_overlay">
+                <i class="fa fa-spinner fa-spin" style="font-size:200px;color:red"></i>
+              </div>
+              <input [hidden]="!modification && !nouveau " type="file" (change)="onImageChange($event)" accept="image/*">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-sm-4 ">
+
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <div *ngIf="nouveau || modification">
+            <div class="form-group">
+              <label for="tel">nom :</label>
+              <input [(ngModel)]="produit.nom" type="text" class="form-control" id="nom">
+            </div>
+          </div>
+          <div *ngIf="!nouveau && !modification">
+            <h1>{{produit.nom | uppercase}}</h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <div *ngIf="nouveau || modification">
+            <div class="form-group">
+              <label for="tel">description :</label>
+              <input [(ngModel)]="produit.description" type="text" class="form-control" id="description">
+            </div>
+          </div>
+          <div *ngIf="!nouveau && !modification">
+            <h3>{{produit.description}}</h3>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div class="col-sm-12 text-center">
+          <div *ngIf="nouveau || modification">
+            <div class="form-group">
+              <label for="tel">Tarif :</label>
+              <input [(ngModel)]="produit.tarif" type="text" class="form-control" id="tarif">
+            </div>
+          </div>
+          <div *ngIf="!nouveau && !modification">
+            {{produit.tarif}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="utilisateur" class="col-sm-4 ">
+      <button [hidden]="modification || nouveau" type="button" class="btn btn-secondary" (click)="modification = true">Modifier</button>
+      <button [hidden]="!modification || nouveau" type="button" class="btn btn-secondary" (click)="updateResto()">Mise
+        à Jour</button>
+
+      <button [hidden]="modification || !nouveau" type="button" class="btn btn-secondary" (click)="saveResto()">Enregistrement</button>
+
+    </div>
+
+
+  </div>
+
+
+
+
+
+
+
+
+  <div *ngIf="!nouveau && !modification" class="row">
+    <div class="col-sm-4 ">
+    </div>
+    <div class="col-sm-4 ">
+      <div class="row">
+        <div class="col-sm-12 ">
+          <div class="input-group mb-3 input-group-lg">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Nom : </span>
+            </div>
+            <input type="text" [(ngModel)]="reservation.nom" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-12 ">
+          <div class="input-group mb-3 input-group-lg">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Telephone : </span>
+            </div>
+            <input type="text" [(ngModel)]="reservation.tel" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-12 ">
+          <div class="input-group mb-3 input-group-lg">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Mail : </span>
+            </div>
+            <input type="text" [(ngModel)]="reservation.mail" class="form-control">
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-secondary" (click)="commander(reservation)">Valider la commande</button>
+
+    </div>
+    <div class="col-sm-4 ">
+      <div class="row">
+        <div class="col-sm-12 ">
+          <div class="input-group mb-3 input-group-lg">
+            <div class="input-group-prepend">
+              <span class="input-group-text ">Commentaire : </span>
+            </div>
+            <input type="text" [(ngModel)]="reservation.description" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-12 ">
+          <div class="input-group mb-3 input-group-lg">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Date : </span>
+            </div>
+            <input type="date" [(ngModel)]="reservation.date" class="form-control">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
