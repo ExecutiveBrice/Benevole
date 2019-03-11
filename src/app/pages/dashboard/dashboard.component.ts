@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
-import { ProduitService } from '../../services';
-import { Reservation, Produit } from '../../models';
+import { BenevoleService } from '../../services';
+
 import { DomSanitizer } from '@angular/platform-browser';
+import { Benevole } from '../../models';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,27 +11,60 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 
 export class DashboardComponent implements OnChanges {
-  produits: Produit[];
-
-  constructor(public produitService: ProduitService,
+  exist: boolean;
+  benevole: Benevole;
+  constructor(public benevoleService: BenevoleService,
     public sanitizer: DomSanitizer) {
-    this.getProduits()
+
   }
 
   ngOnChanges() {
 
   }
 
-  getProduits(): void {
-    this.produitService.getAll().subscribe(data => {
+  find(benevole: Benevole): void {
+    this.benevoleService.getByMail(benevole.email).subscribe(data => {
       console.log(data)
+      if (data['benevole'].id) {
+        this.exist = true
+        this.benevole = data['benevole']
+      } else {
+        this.exist = false
+      }
 
-      this.produits = data['produits'] as Produit[]
-      localStorage.setItem('produits', JSON.stringify(data['produits']));
     }),
-    error => {
+      error => {
         console.log('😢 Oh no!', error);
-    };
+      };
   }
 
+
+  subscribe(benevole: Benevole): void {
+    this.benevoleService.add(benevole).subscribe(data => {
+      console.log(data)
+      if (data['benevole'].id) {
+        this.exist = true
+        this.benevole = data['benevole']
+      } else {
+        this.exist = false
+      }
+
+    }),
+      error => {
+        console.log('😢 Oh no!', error);
+      };
+  }
+
+  error(benevole: Benevole): void {
+    this.benevoleService.error(benevole).subscribe(data => {
+      console.log(data)
+      if (data['message'] == "ok") {
+        
+      } 
+
+    }),
+      error => {
+        console.log('😢 Oh no!', error);
+      };
+  }
 }

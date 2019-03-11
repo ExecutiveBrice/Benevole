@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule} from "../app-routing.module";
 import { FormsModule} from "@angular/forms";
 import { HttpClientModule} from "@angular/common/http";
-import { UserService, ReservationService, ProduitService} from "../services";
+import { UserService, CroisementService, BenevolService} from "../services";
 import { LoginComponent} from "../pages/login/login.component";
 import { SignupComponent} from "../pages/signup/signup.component";
 import { DetailComponent} from "../pages/detail";
@@ -23,8 +23,8 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
   ],
   providers: [
     UserService,
-    ReservationService,
-    ProduitService
+    CroisementService,
+    BenevolService
   ],
   declarations: [
     LoginComponent,

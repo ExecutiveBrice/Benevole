@@ -1,3 +1,6 @@
-﻿export * from './produit';
-export * from './reservation';
+﻿export * from './creneau';
+export * from './stand';
+export * from './benevole';
+export * from './croisement';
+
 export * from './user';
