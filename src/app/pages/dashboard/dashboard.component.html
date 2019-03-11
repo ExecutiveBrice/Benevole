@@ -1,5 +1,4 @@
 <div class="row">
-
   <div class="col-sm-12 ">
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
@@ -9,17 +8,17 @@
     </div>
   </div>
 </div>
-<div class="row">
+<div *ngIf="!existe" class="row">
   <div class="col-sm-12 ">
     <button type="button" class="btn btn-secondary" (click)="find(benevole)">Entrer</button>
   </div>
 </div>
-<div class="row">
-    <div class="col-sm-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          Nous ne nous connaissons pas encore, souhaitez vous vous inscrire comme bénvole pour la fête de l'école ?
-        </div>
-      </div>
+<div *ngIf="existe" class="row">
+  <div class="col-sm-12 ">
+    <div class="input-group mb-3 input-group-lg">
+      Nous ne nous connaissons pas encore, souhaitez vous vous inscrire comme bénvole pour la fête de l'école ?
+    </div>
+  </div>
   <div class="col-sm-12 ">
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
@@ -44,12 +43,12 @@
       <input type="text" [(ngModel)]="benevole.telephone" class="form-control">
     </div>
   </div>
-</div>
-<div class="row">
+
   <div class="col-sm-12 ">
     <button type="button" class="btn btn-secondary" (click)="subscribe(benevole)">S'inscrire</button>
   </div>
   <div class="col-sm-12 ">
-      <button type="button" class="btn btn-secondary" (click)="error(benevole)">Il y a un problème, je me suis déjà inscrit</button>
-    </div>
+    <button type="button" class="btn btn-secondary" (click)="error(benevole)">Il y a un problème, je me suis déjà
+      inscrit</button>
+  </div>
 </div>
