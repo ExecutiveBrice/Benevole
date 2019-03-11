@@ -1,13 +1,55 @@
 <div class="row">
-  <div *ngFor="let produit of produits" class="col-md-6" [routerLink]="['/detail/', produit.nom]">
-    <div class="module ">
-      <div class="imagecontainer">
-        <img class="image" *ngIf="produit.image" [src]="sanitizer.bypassSecurityTrustUrl(produit.image)">
-      </div>
 
-      <div class="Description">
-        <h2>{{produit.nom}}</h2>
+  <div class="col-sm-12 ">
+    <div class="input-group mb-3 input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Email : </span>
       </div>
+      <input type="text" [(ngModel)]="benevole.email" class="form-control">
     </div>
   </div>
+</div>
+<div class="row">
+  <div class="col-sm-12 ">
+    <button type="button" class="btn btn-secondary" (click)="find(benevole)">Entrer</button>
+  </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          Nous ne nous connaissons pas encore, souhaitez vous vous inscrire comme bénvole pour la fête de l'école ?
+        </div>
+      </div>
+  <div class="col-sm-12 ">
+    <div class="input-group mb-3 input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Nom : </span>
+      </div>
+      <input type="text" [(ngModel)]="benevole.nom" class="form-control">
+    </div>
+  </div>
+  <div class="col-sm-12 ">
+    <div class="input-group mb-3 input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Prenom : </span>
+      </div>
+      <input type="text" [(ngModel)]="benevole.prenom" class="form-control">
+    </div>
+  </div>
+  <div class="col-sm-12 ">
+    <div class="input-group mb-3 input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Telephone : </span>
+      </div>
+      <input type="text" [(ngModel)]="benevole.telephone" class="form-control">
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12 ">
+    <button type="button" class="btn btn-secondary" (click)="subscribe(benevole)">S'inscrire</button>
+  </div>
+  <div class="col-sm-12 ">
+      <button type="button" class="btn btn-secondary" (click)="erreur(benevole)">Il y a un problème, je me suis déjà inscrit</button>
+    </div>
 </div>
