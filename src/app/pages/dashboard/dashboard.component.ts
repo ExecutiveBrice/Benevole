@@ -11,8 +11,10 @@ import { Benevole } from '../../models';
 })
 
 export class DashboardComponent implements OnChanges {
+  nouveau: boolean;
   exist: boolean;
-  benevole: Benevole;
+  choix:String;
+  benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
     public sanitizer: DomSanitizer) {
 
