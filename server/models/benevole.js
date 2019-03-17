@@ -29,7 +29,7 @@ module.exports = function(sequelize, DataTypes) {
 
     models.Benevole.belongsToMany( models.Croisement, {
       through: {
-        model: ResaBenevoles,
+        model: models.ResaBenevoles,
         unique: false
       },
       foreignKey: 'croisement'
