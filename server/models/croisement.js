@@ -32,11 +32,10 @@ module.exports = function (sequelize, DataTypes) {
     models.Croisement.belongsTo(models.Creneau, {
       foreignKey: "id"
     }),
-    models.Croisement.belongsToMany(models.Benevole, { through: ResaBenevoles });
 
     models.Croisement.belongsToMany( models.Benevole, {
       through: {
-        model: ResaBenevoles,
+        model: models.ResaBenevoles,
         unique: false
       },
       foreignKey: 'benevole'
