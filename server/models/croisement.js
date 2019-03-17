@@ -35,7 +35,10 @@ module.exports = function (sequelize, DataTypes) {
     models.Croisement.belongsToMany(models.Benevole, { through: ResaBenevoles });
 
     models.Croisement.belongsToMany( models.Benevole, {
-      through: [models.ResaBenevoles], //this can be string or a model
+      through: {
+        model: ResaBenevoles,
+        unique: false
+      },
       foreignKey: 'benevole'
   });
   };

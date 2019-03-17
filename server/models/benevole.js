@@ -28,7 +28,10 @@ module.exports = function(sequelize, DataTypes) {
   Benevole.associate = function(models) {
 
     models.Benevole.belongsToMany( models.Croisement, {
-      through: [models.ResaBenevoles], //this can be string or a model
+      through: {
+        model: ResaBenevoles,
+        unique: false
+      },
       foreignKey: 'croisement'
   });
 
