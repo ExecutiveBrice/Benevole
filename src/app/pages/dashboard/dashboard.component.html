@@ -1,54 +1,274 @@
 <div class="row">
-  <div class="col-sm-12 ">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Email : </span>
+  <div class="col-sm-6">
+    <div class="row" *ngIf="!exist">
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Email : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.email" class="form-control">
+        </div>
       </div>
-      <input type="text" [(ngModel)]="benevole.email" class="form-control">
     </div>
-  </div>
-</div>
-<div *ngIf="!exist" class="row">
-  <div class="col-sm-12 ">
-    <button type="button" class="btn btn-secondary" (click)="find(benevole)">Entrer</button>
-  </div>
-</div>
-<div *ngIf="exist" class="row">
-  <div class="col-sm-12 ">
-    <div class="input-group mb-3 input-group-lg">
-      Nous ne nous connaissons pas encore, souhaitez vous vous inscrire comme bénvole pour la fête de l'école ?
-    </div>
-  </div>
-  <div class="col-sm-12 ">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Nom : </span>
+    <div *ngIf="!nouveau && !exist" class="row">
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-secondary" (click)="find(benevole)">Entrer</button>
+        <button type="button" class="btn btn-secondary" (click)="exist = true; nouveau = false">Existe</button>
+        <button type="button" class="btn btn-secondary" (click)="exist = false; nouveau = true">N'existe Pas</button>
       </div>
-      <input type="text" [(ngModel)]="benevole.nom" class="form-control">
     </div>
-  </div>
-  <div class="col-sm-12 ">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Prenom : </span>
+    <div *ngIf="nouveau" class="row">
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          Nous ne nous connaissons pas encore, souhaitez vous vous inscrire comme bénvole pour la fête de l'école ?
+        </div>
       </div>
-      <input type="text" [(ngModel)]="benevole.prenom" class="form-control">
-    </div>
-  </div>
-  <div class="col-sm-12 ">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Telephone : </span>
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Nom : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.nom" class="form-control">
+        </div>
       </div>
-      <input type="text" [(ngModel)]="benevole.telephone" class="form-control">
-    </div>
-  </div>
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Prenom : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.prenom" class="form-control">
+        </div>
+      </div>
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Telephone : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.telephone" class="form-control">
+        </div>
+      </div>
 
-  <div class="col-sm-12 ">
-    <button type="button" class="btn btn-secondary" (click)="subscribe(benevole)">S'inscrire</button>
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-secondary" (click)="subscribe(benevole)">S'inscrire</button>
+      </div>
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-secondary" (click)="error(benevole)">Il y a un problème, je me suis déjà
+          inscrit</button>
+      </div>
+    </div>
+    <div *ngIf="exist && !nouveau" class="row">
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          Votre planning :
+        </div>
+      </div>
+
+
+
+
+
+
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Commentaire : </span>
+          </div>
+          <textarea [(ngModel)]="benevole.commentaire" class="form-control">
+            </textarea>
+        </div>
+      </div>
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Reponse : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.reponse" class="form-control">
+        </div>
+      </div>
+
+      <div class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Préparation de gateau : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.gateaux" class="form-control">
+        </div>
+      </div>
+
+
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-primary" (click)="choix = 'stand'">Je valide mon inscription</button>
+      </div>
+
+
+    </div>
   </div>
-  <div class="col-sm-12 ">
-    <button type="button" class="btn btn-secondary" (click)="error(benevole)">Il y a un problème, je me suis déjà
-      inscrit</button>
+  <div class="col-sm-6">
+    <div class="row" *ngIf="exist && !nouveau">
+
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'heure'">Je préfère choisir mon heure</button>
+      </div>
+
+      <div class="col-sm-12 " *ngIf="choix == 'heure'">
+        <div class="row">
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">9-10h</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 " *ngIf="choix == 'heure'">
+        <div class="row">
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">11h-12h</button>
+          </div>
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">12h-13h</button>
+          </div>
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">13h-14h</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 " *ngIf="choix == 'heure'">
+        <div class="row">
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">14h-14h45</button>
+          </div>
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">14h45-15h30</button>
+          </div>
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">15h30-16h15</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-12 " *ngIf="choix == 'heure'">
+        <div class="row">
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">16h-17h</button>
+          </div>
+          <div class="col-sm-4 ">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">17h-18h</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Je préfère choisir mon
+          stand</button>
+      </div>
+
+      <div class="col-sm-12 " *ngIf="choix == 'stand'">
+        <div class="row">
+          <div class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">Montage</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item disabled" href="#">9-10h</a>
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
+            </div>
+          </div>
+          <div class="col-sm-4 dropdown" *ngIf="choix == 'stand'">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">Démontage</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item disabled" href="#">9-10h</a>
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="col-sm-12 " *ngIf="choix == 'stand'">
+        <div class="row">
+          <div class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">Buvette</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item disabled" href="#">9-10h</a>
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
+            </div>
+          </div>
+          <div class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">Frite</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item disabled" href="#">9-10h</a>
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
+            </div>
+          </div>
+          <div class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">Cantine</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item disabled" href="#">9-10h</a>
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+
+      <div class="col-sm-12 " *ngIf="choix == 'stand'">
+        <div class="row">
+
+
+          <div class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">Jeux</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item disabled" href="#">9-10h</a>
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'besoin'">Là ou vous en avez
+          besoin</button>
+      </div>
+
+
+
+      <div class="col-sm-12" *ngIf="choix == 'besoin'">
+        <div class="row" >
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Démontage
+              17h-18h</button>
+          </div>
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Jeux
+              14h45-15h30</button>
+          </div>
+          <div class="col-sm-4">
+            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Frites
+              12h00-13h00</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
