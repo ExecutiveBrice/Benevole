@@ -22,10 +22,8 @@ module.exports = function (sequelize, DataTypes) {
     },
     limite: {
       type: DataTypes.INTEGER,
-    },
-    croisements: {
-      type: DataTypes.croisements,
-    },
+    }
+
   });
   Croisement.associate = function (models) {
     models.Croisement.belongsTo(models.Stand, {
