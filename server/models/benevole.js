@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
 
   });
   Benevole.associate = function(models) {
-    models.Benevole.belongsToMany(Croisement, { through: ResaBenevoles });
+    models.Benevole.belongsToMany(models.Croisement, { through: ResaBenevoles });
 
 
 
