@@ -32,7 +32,7 @@ module.exports = function (sequelize, DataTypes) {
     models.Croisement.belongsTo(models.Creneau, {
       foreignKey: "id"
     }),
-    models.Croisement.belongsToMany(Benevole, { through: ResaBenevoles });
+    models.Croisement.belongsToMany(models.Benevole, { through: ResaBenevoles });
 
   };
   return Croisement;
