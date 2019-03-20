@@ -9,10 +9,10 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     debut: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
     fin: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     }
   });
   Creneau.associate = function(models) {
