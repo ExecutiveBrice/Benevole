@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var croisementController = require('../controllers').croisement;
+var croisementController = require('../controllers').croisements;
 
 
 router.get('/getAll', function(req,res,next) {
