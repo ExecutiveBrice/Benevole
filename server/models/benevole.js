@@ -17,13 +17,9 @@ module.exports = function(sequelize, DataTypes) {
     telephone: {
       type: DataTypes.STRING,
     },
-    mail: {
+    email: {
       type: DataTypes.STRING,
     },
-    limite: {
-      type: DataTypes.STRING,
-    },
-
   });
   Benevole.associate = function(models) {
 

@@ -8,18 +8,6 @@ module.exports = function (sequelize, DataTypes) {
       autoIncrement: true,
       primaryKey: true
     },
-    prenom: {
-      type: DataTypes.STRING,
-    },
-    nom: {
-      type: DataTypes.STRING,
-    },
-    telephone: {
-      type: DataTypes.STRING,
-    },
-    mail: {
-      type: DataTypes.STRING,
-    },
     limite: {
       type: DataTypes.INTEGER,
     }
