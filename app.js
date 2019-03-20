@@ -50,6 +50,7 @@ app.use(function(req, res, next) {
 });
 
 app.use('/email', email);
+app.use('/croisement', croisement);
 app.use('/reservation', reservation);
 app.use('/produit', produit);
 app.use('/user', user);
