@@ -8,6 +8,7 @@ const logger = require('morgan');
 
 const index = require('./server/routes/index');
 const user = require('./server/routes/user');
+const croisement = require('./server/routes/croisement');
 const reservation = require('./server/routes/reservation');
 const produit = require('./server/routes/produit');
 const email = require('./server/routes/email');
