@@ -1,6 +1,7 @@
 'use strict';
 
 var Croisement = require('../models').Croisement;
+var Creneau = require('../models').Creneau;
 
 module.exports = {
 
