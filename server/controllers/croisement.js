@@ -10,9 +10,6 @@ module.exports = {
   getAll: function getAll(req, res) {
     console.log("getAll")
     return Croisement.findAll({
-      where: {
-        'Stand.nom': 'frites'
-     },
       include: [
         { model: Creneau, as: Creneau.tableName},
         { model: Stand, as: Stand.tableName },
