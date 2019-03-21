@@ -17,7 +17,7 @@ module.exports = function(sequelize, DataTypes) {
   });
   Creneau.associate = function(models) {
     models.Stand.hasMany(models.Croisement, {
-      foreignKey: "creneaux"
+      foreignKey: "creneau"
     })
   };
   return Creneau;
