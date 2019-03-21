@@ -11,9 +11,9 @@ module.exports = {
     console.log("getAll")
     return Croisement.findAll({
       include: [
-        { model: Creneau, as: Creneau.tableName},
-        { model: Stand, as: Stand.tableName },
-        { model: Benevole, as: Benevole.tableName }
+        { model: Creneau},
+        { model: Stand},
+        { model: Benevole}
       ]
     })
       .then(function (croisements) {
@@ -44,8 +44,8 @@ module.exports = {
     return Croisement.findAll({
       where: { 'Stand.id': (req.params.id)},
       include: [
-        { model: Creneau, as: Creneau.tableName},
-        { model: Stand, as: Stand.tableName },
+        { model: Creneau},
+        { model: Stand}
       ]
     })
       .then(function (croisements) {
@@ -76,8 +76,8 @@ module.exports = {
     return Croisement.findAll({
       where: { 'Creneau.id': (req.params.id)},
       include: [
-        { model: Creneau, as: Creneau.tableName},
-        { model: Stand, as: Stand.tableName },
+        { model: Creneau},
+        { model: Stand}
       ]
     })
       .then(function (croisements) {
