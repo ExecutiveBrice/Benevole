@@ -42,10 +42,13 @@ module.exports = {
   getByStand: function getByStand(req, res) {
     console.log("getByStand")
     return Croisement.findAll({
-      where: { 'Stand.id': (req.params.id)},
+     
       include: [
-        { model: Creneau},
-        { model: Stand}
+        { model: Creneau,
+      
+      },
+        { model: Stand,
+          where: { 'id': (req.params.id)}}
       ]
     })
       .then(function (croisements) {
