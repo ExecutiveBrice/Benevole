@@ -2,17 +2,22 @@
 
 var Croisement = require('../models').Croisement;
 var Creneau = require('../models').Creneau;
+var Stand = require('../models').Stand;
+var Benevole = require('../models').Benevole;
 
 module.exports = {
 
-  getAll: function getAll(req,res) {
+  getAll: function getAll(req, res) {
     console.log("getAll")
     return Croisement.findAll({
-
-      
-                include: [
-                    {model: Creneau}
-                ]
+      where: {
+        'Stand.nom': 'frites'
+     },
+      include: [
+        { model: Creneau },
+        { model: Stand },
+        { model: Benevole }
+      ]
     })
       .then(function (croisements) {
         console.log("getAll - 2")
@@ -36,7 +41,7 @@ module.exports = {
         });
       });
   },
- 
+
 
 
 
