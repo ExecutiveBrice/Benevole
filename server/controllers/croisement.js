@@ -6,7 +6,13 @@ module.exports = {
 
   getAll: function getAll(req,res) {
     console.log("getAll")
-    return Croisement.findAll({})
+    return Croisement.findAll({
+
+      
+                include: [
+                    {model: Creneau}
+                ]
+    })
       .then(function (croisements) {
         console.log("getAll - 2")
         console.log(croisements)
