@@ -10,9 +10,8 @@ module.exports = {
     return Croisement.findAll({
 
       
-                include: [
-                    {model: Creneau}
-                ]
+                include: {model: Creneau}
+                
     })
       .then(function (croisements) {
         console.log("getAll - 2")

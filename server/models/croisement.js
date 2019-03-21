@@ -15,10 +15,10 @@ module.exports = function (sequelize, DataTypes) {
   });
   Croisement.associate = function (models) {
     models.Croisement.belongsTo(models.Stand, {
-      foreignKey: "id"
+      foreignKey: "croisement"
     }),
     models.Croisement.belongsTo(models.Creneau, {
-      foreignKey: "id"
+      foreignKey: "creneau"
     }),
 
     models.Croisement.belongsToMany( models.Benevole, {
