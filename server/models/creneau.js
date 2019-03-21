@@ -14,11 +14,12 @@ module.exports = function(sequelize, DataTypes) {
     fin: {
       type: DataTypes.STRING,
     }
+  },
+  {
+    schema: 'Creneaux'
   });
   Creneau.associate = function(models) {
-    models.Stand.hasMany(models.Croisement, {
-      foreignKey: "croisement"
-    })
+
   };
   return Creneau;
 };
