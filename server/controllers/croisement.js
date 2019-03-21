@@ -74,11 +74,8 @@ module.exports = {
   getByCreneau: function getByCreneau(req, res) {
     console.log("getByCreneau")
     return Croisement.findAll({
-      where: { 'Creneau.id': (req.params.id)},
-      include: [
-        { model: Creneau},
-        { model: Stand}
-      ]
+      where: { 'creneau.id': (req.params.id)},
+      include: [{ all: true, nested: true }]
     })
       .then(function (croisements) {
         console.log("getByCreneau - 2")
