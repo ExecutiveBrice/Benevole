@@ -29,9 +29,11 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
         this.exist = true
         this.benevole = data['benevole']
+        this.nouveau = false;
     }),
       error => {
         this.exist = false
+        this.nouveau = true;
         console.log('😢 Oh no!', error);
       };
   }
@@ -41,10 +43,12 @@ export class DashboardComponent implements OnChanges {
     this.benevoleService.add(benevole).subscribe(data => {
       console.log(data)
       this.benevole.id = data['benevole']
-      this.exist = true
+      this.exist = true;
+      this.nouveau = false;
     }),
       error => {
-        this.exist = false
+        this.exist = false;
+        this.nouveau = true;
         console.log('😢 Oh no!', error);
       };
   }
