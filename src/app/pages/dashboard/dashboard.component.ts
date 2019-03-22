@@ -27,15 +27,11 @@ export class DashboardComponent implements OnChanges {
   find(benevole: Benevole): void {
     this.benevoleService.getByMail(benevole.email).subscribe(data => {
       console.log(data)
-      if (data['benevole'].id) {
         this.exist = true
         this.benevole = data['benevole']
-      } else {
-        this.exist = false
-      }
-
     }),
       error => {
+        this.exist = false
         console.log('😢 Oh no!', error);
       };
   }
@@ -44,15 +40,11 @@ export class DashboardComponent implements OnChanges {
   subscribe(benevole: Benevole): void {
     this.benevoleService.add(benevole).subscribe(data => {
       console.log(data)
-      if (data['benevole'].id) {
-        this.exist = true
-        this.benevole = data['benevole']
-      } else {
-        this.exist = false
-      }
-
+      this.benevole.id = data['benevole']
+      this.exist = true
     }),
       error => {
+        this.exist = false
         console.log('😢 Oh no!', error);
       };
   }
