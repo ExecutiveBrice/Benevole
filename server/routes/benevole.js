@@ -11,7 +11,7 @@ router.get('/', function(req,res,next) {
   console.log("------croisement get")
   return benevoleController.get(req,res);
 });
-router.get('/getByMail', function(req,res,next) {
+router.get('/byMail', function(req,res,next) {
   console.log("------croisement getByMail")
   return benevoleController.getByMail(req,res);
 });
