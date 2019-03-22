@@ -11,7 +11,7 @@ module.exports = {
     console.log("getAll")
     return Benevole.findAll({
       include: [
-        { model: Croisement},
+        { model: Croisement}
       ]
     })
       .then(function (benevoles) {
@@ -42,9 +42,7 @@ module.exports = {
     return Benevole.findAll({
       where: { 'mail': (req.query.mail)},
       include: [
-        { model: Croisement},
-        { model: Creneau},
-        { model: Stand}
+        { model: Croisement}
       ]
     })
       .then(function (benevoles) {
