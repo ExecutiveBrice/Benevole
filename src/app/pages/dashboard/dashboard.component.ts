@@ -30,12 +30,12 @@ export class DashboardComponent implements OnChanges {
         this.exist = true
         this.benevole = data['benevoles']
         this.nouveau = false;
-    }),
+    },
       error => {
         this.exist = false
         this.nouveau = true;
         console.log('😢 Oh no!', error);
-      };
+      });
   }
 
 
@@ -45,12 +45,12 @@ export class DashboardComponent implements OnChanges {
       this.benevole.id = data['benevoles']
       this.exist = true;
       this.nouveau = false;
-    }),
+    },
       error => {
         this.exist = false;
         this.nouveau = true;
         console.log('😢 Oh no!', error);
-      };
+      });
   }
 
   error(benevole: Benevole): void {
