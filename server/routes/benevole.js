@@ -15,5 +15,8 @@ router.get('/byMail', function(req,res,next) {
   console.log("------benevole getByMail")
   return benevoleController.getByMail(req,res);
 });
-
+router.post('/', function(req,res,next) {
+  console.log("------benevole add")
+  return benevoleController.add(req,res);
+});
 module.exports = router;

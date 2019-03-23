@@ -13,7 +13,7 @@ import { Benevole } from '../../models';
 export class DashboardComponent implements OnChanges {
   nouveau: boolean;
   exist: boolean;
-  choix:String;
+  choix: String;
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
     public sanitizer: DomSanitizer) {
@@ -27,9 +27,9 @@ export class DashboardComponent implements OnChanges {
   find(benevole: Benevole): void {
     this.benevoleService.getByMail(benevole.email).subscribe(data => {
       console.log(data)
-        this.exist = true
-        this.benevole = data['benevoles']
-        this.nouveau = false;
+      this.exist = true
+      this.benevole = data['benevoles']
+      this.nouveau = false;
     },
       error => {
         this.exist = false
@@ -57,12 +57,12 @@ export class DashboardComponent implements OnChanges {
     this.benevoleService.error(benevole).subscribe(data => {
       console.log(data)
       if (data['message'] == "ok") {
-        
-      } 
 
-    }),
+      }
+
+    },
       error => {
         console.log('😢 Oh no!', error);
-      };
+      });
   }
 }
