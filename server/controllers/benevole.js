@@ -54,14 +54,14 @@ module.exports = {
         console.log("getByMail - 2")
         console.log(benevoles)
         if (benevoles.length == 0) {
-          return res.status(404).json({
-            title: "No benevoles found for this stand",
+          return res.status(400).json({
+            title: "No benevoles found for this email",
             error: "Please try again."
           });
         }
 
         return res.status(200).json({
-          message: 'benevoles found for this stand',
+          message: 'benevoles found for this email',
           benevoles: benevoles
         });
       }).catch(function (error) {
