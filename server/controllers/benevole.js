@@ -40,7 +40,7 @@ module.exports = {
   getByMail: function getByStand(req, res) {
     console.log("getByMail")
     return Benevole.findAll({
-      where: { 'mail': (req.query.mail)},
+      where: { 'email': (req.query.email)},
       include: [
         { model: Croisement}
       ]

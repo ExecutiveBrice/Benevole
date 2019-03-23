@@ -21,8 +21,8 @@ export class BenevoleService {
   }
 
   
-  getByMail(mail:String) {
-    let params = new HttpParams().set('mail', ''+mail+'');
+  getByMail(email:String) {
+    let params = new HttpParams().set('email', ''+email+'');
     return this.http.get(this.apiUrl + '/byMail', {params, responseType: 'json'});
   }
 
