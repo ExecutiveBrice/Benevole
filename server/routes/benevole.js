@@ -4,15 +4,15 @@ var benevoleController = require('../controllers').benevoles;
 
 
 router.get('/getAll', function(req,res,next) {
-  console.log("------croisement getAll")
+  console.log("------benevole getAll")
   return benevoleController.getAll(req,res);
 });
 router.get('/', function(req,res,next) {
-  console.log("------croisement get")
+  console.log("------benevole get")
   return benevoleController.get(req,res);
 });
 router.get('/byMail', function(req,res,next) {
-  console.log("------croisement getByMail")
+  console.log("------benevole getByMail")
   return benevoleController.getByMail(req,res);
 });
 
