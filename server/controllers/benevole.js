@@ -11,7 +11,11 @@ module.exports = {
     console.log("getAll")
     return Benevole.findAll({
       include: [
-        { model: Croisement}
+        { model: Croisement,
+          include: [
+            { model: Creneau},
+            { model: Stand}
+          ]}
       ]
     })
       .then(function (benevoles) {
@@ -37,8 +41,9 @@ module.exports = {
       });
   },
 
-  getByMail: function getByStand(req, res) {
+  getByMail: function getByMail(req, res) {
     console.log("getByMail")
+    console.log(req.query.email)
     return Benevole.findAll({
       where: { 'email': (req.query.email)},
       include: [
@@ -48,7 +53,7 @@ module.exports = {
       .then(function (benevoles) {
         console.log("getByMail - 2")
         console.log(benevoles)
-        if (!benevoles) {
+        if (benevoles.length == 0) {
           return res.status(404).json({
             title: "No benevoles found for this stand",
             error: "Please try again."
