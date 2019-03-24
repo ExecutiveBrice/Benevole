@@ -14,12 +14,14 @@ export class DashboardComponent implements OnChanges {
   nouveau: boolean;
   exist: boolean;
   choix: String;
-  croisements: Croisement[];
+  creneaux: Croisement[];
+  croisements:Croisement[];
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public sanitizer: DomSanitizer) {
-
+      this.getCroisements();
+      this.getStand();
   }
 
   ngOnChanges() {
@@ -73,9 +75,9 @@ export class DashboardComponent implements OnChanges {
 
 
   getCroisements(): void {
-    this.croisementService.getByCreneau("tous").subscribe(data => {
+    this.croisementService.getByStand("tous").subscribe(data => {
       console.log(data)
-      this.croisements = data['croisements']
+      this.creneaux = data['croisements']
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -90,6 +92,15 @@ export class DashboardComponent implements OnChanges {
 
 
 
+  getStand(): void {
+    this.croisementService.getAll().subscribe(data => {
+      console.log(data)
+      this.croisements = data['croisements']
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
 
 
