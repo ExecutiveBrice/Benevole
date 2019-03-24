@@ -8,11 +8,14 @@ module.exports = function(sequelize, DataTypes) {
       autoIncrement: true,
       primaryKey: true
     },
-    debut: {
+    plage: {
       type: DataTypes.STRING,
     },
-    fin: {
-      type: DataTypes.STRING,
+    ordre: {
+      type: DataTypes.INTEGER,
+    },
+    groupe: {
+      type: DataTypes.INTEGER,
     }
   });
   Creneau.associate = function(models) {

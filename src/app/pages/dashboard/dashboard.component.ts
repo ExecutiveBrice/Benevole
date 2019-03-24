@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-
+import { CroisementService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole } from '../../models';
+import { Benevole, Croisement } from '../../models';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,8 +14,10 @@ export class DashboardComponent implements OnChanges {
   nouveau: boolean;
   exist: boolean;
   choix: String;
+  croisements: Croisement[];
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
+    public croisementService: CroisementService,
     public sanitizer: DomSanitizer) {
 
   }
@@ -65,4 +67,56 @@ export class DashboardComponent implements OnChanges {
         console.log('😢 Oh no!', error);
       });
   }
+
+
+
+
+
+  getCroisements(): void {
+    this.croisementService.getByCreneau("tous").subscribe(data => {
+      console.log(data)
+      this.croisements = data['croisements']
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+choisir(croisement:Croisement){
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 }

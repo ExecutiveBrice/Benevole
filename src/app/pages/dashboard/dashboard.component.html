@@ -52,7 +52,8 @@
         <button type="button" class="btn btn-block btn-secondary" (click)="subscribe(benevole)">S'inscrire</button>
       </div>
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="error(benevole)">Il y a un problème, je me suis déjà
+        <button type="button" class="btn btn-block btn-secondary" (click)="error(benevole)">Il y a un problème, je me
+          suis déjà
           inscrit</button>
       </div>
     </div>
@@ -97,7 +98,8 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-primary" (click)="choix = 'stand'">Je valide mon inscription</button>
+        <button type="button" class="btn btn-block btn-primary" (click)="choix = 'stand'">Je valide mon
+          inscription</button>
       </div>
 
 
@@ -106,57 +108,24 @@
   <div class="col-sm-6">
     <div class="row" *ngIf="exist && !nouveau">
 
+
+
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'heure'">Je préfère choisir mon heure</button>
+        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'heure'">Je préfère choisir mon
+          heure</button>
       </div>
 
-      <div class="col-sm-12 " *ngIf="choix == 'heure'">
-        <div class="row">
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">9-10h</button>
+
+      <div *ngIf="choix == 'heure'" *ngFor="let croisement of croisements" class="col-md-6">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-block btn-secondary"
+                (click)="choisir(croisement)">{{croisement.creneau.plage}}</button>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="col-sm-12 " *ngIf="choix == 'heure'">
-        <div class="row">
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">11h-12h</button>
-          </div>
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">12h-13h</button>
-          </div>
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">13h-14h</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-12 " *ngIf="choix == 'heure'">
-        <div class="row">
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">14h-14h45</button>
-          </div>
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">14h45-15h30</button>
-          </div>
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">15h30-16h15</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-sm-12 " *ngIf="choix == 'heure'">
-        <div class="row">
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">16h-17h</button>
-          </div>
-          <div class="col-sm-4 ">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">17h-18h</button>
-          </div>
-        </div>
-      </div>
-
 
 
 
@@ -165,17 +134,27 @@
           stand</button>
       </div>
 
-      <div class="col-sm-12 " *ngIf="choix == 'stand'">
-        <div class="row">
-          <div class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">Montage</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item disabled" href="#">9-10h</a>
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
+      <div *ngIf="choix == 'stand'" *ngFor="let croisement of croisements" class="col-md-6">
+        <div class="col-sm-12 ">
+          <div class="row">
+            <div class="col-sm-4 dropdown">
+              <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+                data-toggle="dropdown">{{croisement.stand.nom}}</button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item disabled" href="#">{{croisement.creneau.plage}}</a>
+                <a class="dropdown-item active" href="#">10-11h</a>
+                <a class="dropdown-item" href="#">12-13h</a>
+              </div>
             </div>
           </div>
+        </div>
+      </div>
+
+
+
+      <div class="col-sm-12 " *ngIf="choix == 'stand'">
+        <div class="row">
+
           <div class="col-sm-4 dropdown" *ngIf="choix == 'stand'">
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
               data-toggle="dropdown">Démontage</button>
@@ -253,7 +232,7 @@
 
 
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
-        <div class="row" >
+        <div class="row">
           <div class="col-sm-4">
             <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Démontage
               17h-18h</button>
