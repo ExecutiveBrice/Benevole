@@ -1,7 +1,7 @@
 'use strict';
 
 var Stand = require('../models').Stand;
-vole;
+
 
 module.exports = {
 
@@ -21,7 +21,7 @@ module.exports = {
 
         return res.status(200).json({
           message: 'stands found',
-          benevoles: benevoles
+          stands: stands
         });
       }).catch(function (error) {
         console.log(error.toString());
