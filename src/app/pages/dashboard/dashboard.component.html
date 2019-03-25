@@ -135,12 +135,12 @@
       </div>
 
       <div *ngIf="choix == 'stand'">
-        <div *ngFor="let croisement of croisements" class="col-md-6">
+        <div *ngFor="let stand of stands" class="col-md-6">
           <div class="col-sm-12 ">
             <div class="row">
               <div class="col-sm-4 dropdown">
                 <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-                  data-toggle="dropdown">{{croisement.stand.nom}}</button>
+                  data-toggle="dropdown">{{stand.nom}}</button>
                 <div class="dropdown-menu">
                   <a class="dropdown-item disabled" href="#">{{croisement.creneau.plage}}</a>
                   <a class="dropdown-item active" href="#">10-11h</a>
@@ -152,73 +152,6 @@
         </div>
       </div>
 
-
-      <div class="col-sm-12 " *ngIf="choix == 'stand'">
-        <div class="row">
-
-          <div class="col-sm-4 dropdown" *ngIf="choix == 'stand'">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">Démontage</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item disabled" href="#">9-10h</a>
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col-sm-12 " *ngIf="choix == 'stand'">
-        <div class="row">
-          <div class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">Buvette</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item disabled" href="#">9-10h</a>
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
-            </div>
-          </div>
-          <div class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">Frite</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item disabled" href="#">9-10h</a>
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
-            </div>
-          </div>
-          <div class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">Cantine</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item disabled" href="#">9-10h</a>
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-
-
-      <div class="col-sm-12 " *ngIf="choix == 'stand'">
-        <div class="row">
-
-
-          <div class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">Jeux</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item disabled" href="#">9-10h</a>
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
-            </div>
-          </div>
-        </div>
-      </div>
 
 
 
