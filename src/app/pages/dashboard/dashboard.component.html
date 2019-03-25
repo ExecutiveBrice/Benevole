@@ -10,17 +10,25 @@
         </div>
       </div>
     </div>
-    <div class="row">
+    <div *ngIf="!exist" class="row">
       <div class="col-sm-12 ">
-        <button ngIf="exist" type="button" class="btn btn-secondary" (click)="find(benevole)">Entrer</button>
-        <button *ngIf="!exist" type="button" class="btn btn-secondary" (click)="find(benevole)">Je me suis trompé dans mon mail, je reessai</button>
-        <button *ngIf="!exist" type="button" class="btn btn-secondary" (click)="exist = false; nouveau = true">Je suis nouveau</button>
+        <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg"
+          (click)="find(benevole)">Entrer</button>
+        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg"
+          (click)="find(benevole)">Je me suis trompé dans mon mail, je réessai</button>
+        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-secondary btn-lg"
+          (click)="error(benevole)">Hé Ho, il y a un problème, je me suis déjà inscrit !</button>
+        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
+          (click)="nouveau = true">Je suis nouveau, je souhaiterai m'inscrire</button>
       </div>
     </div>
-    <div *ngIf="nouveau" class="row">
+    <div *ngIf="nouveau && !existe" class="row">
       <div class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
-          Nous ne nous connaissons pas encore, souhaitez vous vous inscrire comme bénvole pour la fête de l'école ?
+          <h3>Bienvenue, </h3>
+              <h4> nous avons besoin de quelques informations personnelles pour faciliter l'organisation de la fête de
+                l'école.</h4>
+              <h4><i>(Les informations personnelles seront détruites après le fête de l'école)</i></h4>
         </div>
       </div>
       <div class="col-sm-12 ">
@@ -49,15 +57,11 @@
       </div>
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="subscribe(benevole)">S'inscrire</button>
+        <button type="button" class="btn btn-block btn-info btn-lg" (click)="subscribe(benevole)">Je m'inscris</button>
       </div>
-      <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="error(benevole)">Il y a un problème, je me
-          suis déjà
-          inscrit</button>
-      </div>
+
     </div>
-    <div *ngIf="exist && !nouveau" class="row">
+    <div *ngIf="exist" class="row">
       <div class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
           Votre planning :
@@ -106,7 +110,7 @@
     </div>
   </div>
   <div class="col-sm-6">
-    <div class="row" *ngIf="exist && !nouveau">
+    <div class="row" *ngIf="exist ">
 
 
 
