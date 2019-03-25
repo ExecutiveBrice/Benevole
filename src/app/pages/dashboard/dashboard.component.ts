@@ -96,7 +96,7 @@ export class DashboardComponent implements OnChanges {
   getStand(): void {
     this.croisementService.getAll().subscribe(data => {
       console.log(data)
-      this.stands = data['croisements']
+      this.stands = data['stands']
     },
       error => {
         console.log('😢 Oh no!', error);

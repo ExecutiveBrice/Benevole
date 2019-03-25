@@ -20,7 +20,7 @@ module.exports = {
         }
 
         return res.status(200).json({
-          message: 'benevoles found',
+          message: 'stands found',
           benevoles: benevoles
         });
       }).catch(function (error) {

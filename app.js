@@ -11,7 +11,7 @@ const user = require('./server/routes/user');
 const croisement = require('./server/routes/croisement');
 const benevole = require('./server/routes/benevole');
 const email = require('./server/routes/email');
-
+const stand = require('./server/routes/stand');
 
 const url = "https://kermesse.herokuapp.com/";
 const devUrl = "http://localhost:4200";
@@ -53,6 +53,8 @@ app.use('/email', email);
 app.use('/croisement', croisement);
 app.use('/benevole', benevole);
 app.use('/user', user);
+app.use('/stand', stand);
+
 app.use('/', index);
 
 app.use(express.static(path.join(__dirname, './dist')));
