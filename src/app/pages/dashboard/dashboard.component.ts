@@ -13,7 +13,8 @@ import { Benevole, Croisement, Stand } from '../../models';
 })
 
 export class DashboardComponent implements OnChanges {
-  nouveau: boolean;
+  new: boolean;
+  nouveau:boolean;
   exist: boolean;
   choix: String;
   creneaux: Croisement[];
@@ -24,8 +25,12 @@ export class DashboardComponent implements OnChanges {
     public croisementService: CroisementService,
     public standService:StandService,
     public sanitizer: DomSanitizer) {
+      this.exist = false;
+      this.nouveau=false;
+      this.new = true;
       this.getCroisements();
       this.getStand();
+      
   }
 
   ngOnChanges() {
@@ -37,13 +42,13 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.exist = true
       this.benevole = data['benevoles']
-      this.nouveau = false;
     },
       error => {
         this.exist = false
-        this.nouveau = true;
+        this.new = false;
         console.log('😢 Oh no!', error);
       });
+ 
   }
 
 
@@ -52,13 +57,13 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.benevole.id = data['benevoles']
       this.exist = true;
-      this.nouveau = false;
     },
       error => {
         this.exist = false;
-        this.nouveau = true;
+        this.new = false;
         console.log('😢 Oh no!', error);
       });
+
   }
 
   error(benevole: Benevole): void {
@@ -118,8 +123,8 @@ export class DashboardComponent implements OnChanges {
 
 choisir(croisement:Croisement){
 
-
-
+this.benevole.croisements.push(croisement)
+console.log(this.benevole);
 
 }
 
