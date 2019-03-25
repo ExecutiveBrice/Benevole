@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core
 import { BenevoleService } from '../../services';
 import { CroisementService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement } from '../../models';
+import { Benevole, Croisement, Stand } from '../../models';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +15,7 @@ export class DashboardComponent implements OnChanges {
   exist: boolean;
   choix: String;
   creneaux: Croisement[];
+  stands:Stand[];
   croisements:Croisement[];
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
@@ -75,7 +76,7 @@ export class DashboardComponent implements OnChanges {
 
 
   getCroisements(): void {
-    this.croisementService.getByStand("tous").subscribe(data => {
+    this.croisementService.getByStand(1).subscribe(data => {
       console.log(data)
       this.creneaux = data['croisements']
     },
@@ -95,7 +96,7 @@ export class DashboardComponent implements OnChanges {
   getStand(): void {
     this.croisementService.getAll().subscribe(data => {
       console.log(data)
-      this.croisements = data['croisements']
+      this.stands = data['croisements']
     },
       error => {
         console.log('😢 Oh no!', error);

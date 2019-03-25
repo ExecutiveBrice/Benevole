@@ -16,7 +16,7 @@ export class CroisementService {
     return this.http.get<Croisement[]>(this.apiUrl + '/getAll', {responseType: 'json'});
   }
   
-  getByStand(id:String) {
+  getByStand(id:number) {
     let params = new HttpParams().set('id', ''+id+'');
     return this.http.get(this.apiUrl + '/getByStand', {params, responseType: 'json'});
   }

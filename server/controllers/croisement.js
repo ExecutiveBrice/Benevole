@@ -19,7 +19,7 @@ module.exports = {
       .then(function (croisements) {
         console.log("getAll - 2")
         console.log(croisements)
-        if (!croisements) {
+        if (croisements.length == 0) {
           return res.status(404).json({
             title: "No croisements found",
             error: "Please try again."
@@ -54,7 +54,7 @@ module.exports = {
       .then(function (croisements) {
         console.log("getByStand - 2")
         console.log(croisements)
-        if (!croisements) {
+        if (croisements.length == 0) {
           return res.status(404).json({
             title: "No croisements found for this stand",
             error: "Please try again."
@@ -88,7 +88,7 @@ module.exports = {
       .then(function (croisements) {
         console.log("getByCreneau - 2")
         console.log(croisements)
-        if (!croisements) {
+        if (croisements.length == 0) {
           return res.status(404).json({
             title: "No croisements found for this Creneau",
             error: "Please try again."

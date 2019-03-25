@@ -21,7 +21,7 @@ module.exports = {
       .then(function (benevoles) {
         console.log("getAll - 2")
         console.log(benevoles)
-        if (!benevoles) {
+        if (benevoles.length == 0) {
           return res.status(404).json({
             title: "No benevoles found",
             error: "Please try again."

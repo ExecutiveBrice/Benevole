@@ -10,8 +10,6 @@ const index = require('./server/routes/index');
 const user = require('./server/routes/user');
 const croisement = require('./server/routes/croisement');
 const benevole = require('./server/routes/benevole');
-const reservation = require('./server/routes/reservation');
-const produit = require('./server/routes/produit');
 const email = require('./server/routes/email');
 
 
@@ -53,9 +51,7 @@ app.use(function(req, res, next) {
 
 app.use('/email', email);
 app.use('/croisement', croisement);
-app.use('/reservation', reservation);
 app.use('/benevole', benevole);
-app.use('/produit', produit);
 app.use('/user', user);
 app.use('/', index);
 
