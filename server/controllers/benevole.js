@@ -47,7 +47,11 @@ module.exports = {
     return Benevole.findAll({
       where: { 'email': (req.query.email)},
       include: [
-        { model: Croisement}
+        { model: Croisement,
+          include: [
+            { model: Creneau},
+            { model: Stand}
+          ]}
       ]
     })
       .then(function (benevoles) {
