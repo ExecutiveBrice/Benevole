@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService } from '../../services';
+import { CroisementService, StandService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand } from '../../models';
+
+
 
 @Component({
   selector: 'app-dashboard',
@@ -20,6 +22,7 @@ export class DashboardComponent implements OnChanges {
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
     public croisementService: CroisementService,
+    public standService:StandService,
     public sanitizer: DomSanitizer) {
       this.getCroisements();
       this.getStand();
@@ -94,7 +97,7 @@ export class DashboardComponent implements OnChanges {
 
 
   getStand(): void {
-    this.croisementService.getAll().subscribe(data => {
+    this.standService.getAll().subscribe(data => {
       console.log(data)
       this.stands = data['stands']
     },

@@ -116,17 +116,14 @@
       </div>
 
       <div class="col-sm-12" *ngIf="choix == 'heure'">
-        <div *ngFor="let croisement of creneaux" class="col-md-6">
-          <div class="col-sm-12">
-            <div class="row">
-              <div class="col-sm-4">
-                <button type="button" class="btn btn-block btn-secondary"
-                  (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
-              </div>
-            </div>
+        <div class="row">
+          <div *ngFor="let croisement of creneaux" class="col-sm-4">
+            <button type="button" class="btn btn-block btn-secondary"
+              (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>
       </div>
+
 
 
       <div class="col-sm-12 ">
