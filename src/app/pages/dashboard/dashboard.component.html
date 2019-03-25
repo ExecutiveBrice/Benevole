@@ -64,7 +64,12 @@
     <div *ngIf="exist" class="row">
       <div class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
-          Votre planning :
+            <h4>Votre planning :<h4> 
+
+                <div *ngFor="let croisement of benevole.Croisements" class="col-md-12">
+{{croisement.Stand.nom}} à {{croisement.Creneau.plage}}
+                </div>
+
         </div>
       </div>
 
@@ -117,7 +122,7 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Je préfère choisir mon
+        <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Je préfère choisir mon
           stand</button>
       </div>
 
@@ -125,7 +130,7 @@
         <div class="row">
           <div *ngFor="let stand of stands" class="col-md-6">
             <div class="col-sm-4 dropdown">
-              <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              <button type="button" class="btn btn-block btn-info dropdown-toggle"
                 data-toggle="dropdown">{{stand.nom}}</button>
               <div class="dropdown-menu">
                 <a class="dropdown-item active" href="#">10-11h</a>
@@ -142,21 +147,21 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'heure'">Le stand m'est égal mais je
+        <button type="button" class="btn btn-block btn-info" (click)="choix = 'heure'">Le stand m'est égal mais je
           suis disponible à :</button>
       </div>
 
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux" class="col-sm-4">
-            <button type="button" class="btn btn-block btn-secondary"
+            <button type="button" class="btn btn-block btn-info"
               (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>
       </div>
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'besoin'">Là ou vous en avez
+        <button type="button" class="btn btn-block btn-info" (click)="choix = 'besoin'">Là ou vous en avez
           besoin</button>
       </div>
 
@@ -165,15 +170,15 @@
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
           <div class="col-sm-4">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Démontage
+            <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Démontage
               17h-18h</button>
           </div>
           <div class="col-sm-4">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Jeux
+            <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Jeux
               14h45-15h30</button>
           </div>
           <div class="col-sm-4">
-            <button type="button" class="btn btn-block btn-secondary" (click)="choix = 'stand'">Frites
+            <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Frites
               12h00-13h00</button>
           </div>
         </div>
