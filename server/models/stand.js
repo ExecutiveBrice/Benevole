@@ -19,7 +19,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   });
   Stand.associate = function (models) {
-
+    models.Stand.hasMany(models.Croisement, {
+      foreignKey: "stand"
+    })
   };
   return Stand;
 };
