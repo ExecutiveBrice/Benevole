@@ -4,7 +4,7 @@ import {HttpClient,HttpParams} from "@angular/common/http";
 import { Stand } from '../models';
 
 @Injectable()
-export class CroisementService {
+export class StandService {
   apiUrl = environment.apiUrl + '/stand';
 
   constructor(

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { User } from './models';
-import { UserService } from './services';
+import { UserService, StandService } from './services';
 import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
 
 
