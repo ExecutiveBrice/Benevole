@@ -14,23 +14,23 @@ import { Benevole, Croisement, Stand } from '../../models';
 
 export class DashboardComponent implements OnChanges {
   new: boolean;
-  nouveau:boolean;
+  nouveau: boolean;
   exist: boolean;
   choix: String;
   creneaux: Croisement[];
-  stands:Stand[];
-  croisements:Croisement[];
+  stands: Stand[];
+  croisements: Croisement[];
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
     public croisementService: CroisementService,
-    public standService:StandService,
+    public standService: StandService,
     public sanitizer: DomSanitizer) {
-      this.exist = false;
-      this.nouveau=false;
-      this.new = true;
-      this.getCroisements();
-      this.getStand();
-      
+    this.exist = false;
+    this.nouveau = false;
+    this.new = true;
+    this.getCroisements();
+    this.getStand();
+
   }
 
   ngOnChanges() {
@@ -41,22 +41,24 @@ export class DashboardComponent implements OnChanges {
     this.benevoleService.getByMail(benevole.email).subscribe(data => {
       console.log(data)
       this.exist = true
-      this.benevole = data['benevoles']
+      this.benevole = data['benevoles'][0];
+      console.log(this.benevole)
     },
       error => {
         this.exist = false
         this.new = false;
         console.log('😢 Oh no!', error);
       });
- 
+
   }
 
 
   subscribe(benevole: Benevole): void {
     this.benevoleService.add(benevole).subscribe(data => {
       console.log(data)
-      this.benevole.id = data['benevoles']
+      this.benevole.id = data['benevoles'];
       this.exist = true;
+      console.log(this.benevole)
     },
       error => {
         this.exist = false;
@@ -121,12 +123,12 @@ export class DashboardComponent implements OnChanges {
 
 
 
-choisir(croisement:Croisement){
+  choisir(croisement: Croisement) {
+    console.log(this.benevole)
+    this.benevole.Croisements.push(croisement)
+    console.log(this.benevole);
 
-this.benevole.croisements.push(croisement)
-console.log(this.benevole);
-
-}
+  }
 
 
 
