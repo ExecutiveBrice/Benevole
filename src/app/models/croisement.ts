@@ -7,4 +7,5 @@ export class Croisement {
   creneau: Creneau;
   stand: Stand;
   benevoles: Benevole[];
+  selected:boolean;
 }
