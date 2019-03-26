@@ -58,6 +58,7 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.benevole.id = data['benevoles'];
       this.exist = true;
+      this.updateListe(this.benevole)
       console.log(this.benevole)
     },
       error => {
@@ -73,6 +74,7 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.benevole.id = data['benevoles'];
       this.exist = true;
+      this.updateListe(this.benevole)
       console.log(this.benevole)
     },
       error => {
@@ -102,12 +104,10 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  getCroisements(standId:number): void {
+  getCroisements(standId: number): void {
     this.croisementService.getByStand(standId).subscribe(data => {
       console.log(data)
       let croisements = data['croisements']
-      this.updateCroisementListe(croisements);
-
       return croisements;
     },
       error => {
@@ -117,7 +117,14 @@ export class DashboardComponent implements OnChanges {
 
 
 
+  updateListe(benevole: Benevole) {
+    this.updateCroisementListe(this.creneaux, benevole.Croisements)
 
+    this.stands.forEach(stand => {
+      this.updateCroisementListe(stand.Croisements, benevole.Croisements)
+    });
+
+  }
 
 
 
@@ -130,7 +137,7 @@ export class DashboardComponent implements OnChanges {
         if (stand.nom != 'tous') {
           stand.croisements = this.getCroisements(stand.id)
           this.stands.push(stand)
-         
+
         }
       })
     },
@@ -143,12 +150,12 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  updateCroisementListe(croisements : Croisement[]) {
+  updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]) {
     croisements.forEach(croisement => {
-      this.benevole.Croisements.forEach(croisementbene => {
-        console.log(croisementbene.id)
+      croisementsbenevole.forEach(croisementbenevole => {
+        console.log(croisementbenevole.id)
         console.log(croisement.id)
-        if (croisement.id == croisementbene.id) {
+        if (croisement.id == croisementbenevole.id) {
           croisement.selected = true;
         } else {
           croisement.selected = false;
@@ -162,7 +169,7 @@ export class DashboardComponent implements OnChanges {
     let added = false;
 
     for (let index = 0; index < this.benevole.Croisements.length; index++) {
-     
+
       if (croisement.id == this.benevole.Croisements[index].id) {
         console.log("selected")
         croisement.selected = true;
