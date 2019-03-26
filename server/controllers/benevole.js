@@ -107,4 +107,37 @@ module.exports = {
         });
       });
   },
+
+  
+  update: function update(req,res) {
+    console.log("update")
+    return Benevole.create({
+      nom: req.body.nom,
+      telephone: req.body.telephone,
+      email: req.body.email,
+      prenom: req.body.prenom,
+      commentaire: req.body.commentaire,
+      gateaux: req.body.gateaux,
+    })
+      .then(function (benevole) {
+        console.log("update - 2")
+        console.log(benevole)
+        if (!benevole) {
+          return res.status(404).json({
+            title: "No benevole updated",
+            error: "Please try again."
+          });
+        }
+        return res.status(200).json({
+          message: 'benevole updated',
+          benevole: benevole.id
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          message: 'There was an error updating!',
+          error: error.stack
+        });
+      });
+  },
 };
