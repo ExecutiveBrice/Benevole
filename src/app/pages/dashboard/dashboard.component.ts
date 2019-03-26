@@ -25,6 +25,7 @@ export class DashboardComponent implements OnChanges {
     public croisementService: CroisementService,
     public standService: StandService,
     public sanitizer: DomSanitizer) {
+    this.stands = [];
     this.exist = false;
     this.nouveau = false;
     this.new = true;
@@ -49,7 +50,6 @@ export class DashboardComponent implements OnChanges {
         this.new = false;
         console.log('😢 Oh no!', error);
       });
-
   }
 
 
@@ -124,8 +124,8 @@ export class DashboardComponent implements OnChanges {
     this.standService.getAll().subscribe(data => {
       console.log(data)
       data['stands'].forEach(stand => {
-        if(stand.nom != 'tous'){
-          this.stands.push(stand)    
+        if (stand.nom != 'tous') {
+          this.stands.push(stand)
         }
       })
     },
@@ -154,18 +154,23 @@ export class DashboardComponent implements OnChanges {
 
   choisir(croisement: Croisement) {
     console.log(this.benevole)
+    let added = false;
 
-    this.benevole.Croisements.forEach(croisementbene => {
-      let index = this.benevole.Croisements.findIndex(x => x.id ===croisementbene.id);
-      if (croisement.id == croisementbene.id) {
+    for (let index = 0; index < this.benevole.Croisements.length; index++) {
+     
+      if (croisement.id == this.benevole.Croisements[index].id) {
+        console.log("selected")
         croisement.selected = true;
         this.benevole.Croisements.splice(index, 1);
-      } else {
-        croisement.selected = false;
-        this.benevole.Croisements.push(croisement);
+        added = true;
+        break;
       }
-    })
+    }
 
+    if (!added) {
+      croisement.selected = false;
+      this.benevole.Croisements.push(croisement);
+    }
     console.log(this.benevole);
 
   }
