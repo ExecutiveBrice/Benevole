@@ -43,6 +43,7 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.exist = true
       this.benevole = data['benevoles'][0];
+      this.updateListe(this.benevole)
       console.log(this.benevole)
     },
       error => {
@@ -74,7 +75,6 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.benevole.id = data['benevoles'];
       this.exist = true;
-      this.updateListe(this.benevole)
       console.log(this.benevole)
     },
       error => {
@@ -126,8 +126,25 @@ export class DashboardComponent implements OnChanges {
 
   }
 
+  besoins: Croisement[] = [];
 
+  getBesoin() {
+    this.creneaux.forEach(croisement => {
+      if (croisement.besoin == true) {
+        this.besoins.push(croisement);
+      }
+    })
 
+    this.stands.forEach(stand => {
+      stand.Croisements.forEach(croisement => {
+        if (croisement.besoin == true) {
+          this.besoins.push(croisement);
+        }
+      })
+
+    });
+
+  }
 
 
   getStand(): void {

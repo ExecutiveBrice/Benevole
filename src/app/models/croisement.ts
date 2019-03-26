@@ -8,4 +8,5 @@ export class Croisement {
   stand: Stand;
   benevoles: Benevole[];
   selected:boolean;
+  besoin:boolean;
 }
