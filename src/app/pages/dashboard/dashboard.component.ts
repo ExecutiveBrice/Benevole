@@ -65,7 +65,6 @@ export class DashboardComponent implements OnChanges {
         this.new = false;
         console.log('😢 Oh no!', error);
       });
-
   }
 
 
@@ -81,10 +80,9 @@ export class DashboardComponent implements OnChanges {
         this.new = false;
         console.log('😢 Oh no!', error);
       });
-
   }
 
-  
+
 
 
   error(benevole: Benevole): void {
@@ -136,15 +134,32 @@ export class DashboardComponent implements OnChanges {
 
 
 
-
-
-
-
-
+  updateCroisementListe() {
+    this.croisements.forEach(croisement => {
+      this.benevole.Croisements.forEach(croisementbene => {
+        if (croisement.id == croisementbene.id) {
+          croisement.selected = true;
+        } else {
+          croisement.selected = false;
+        }
+      })
+    });
+  }
 
   choisir(croisement: Croisement) {
     console.log(this.benevole)
-    this.benevole.Croisements.push(croisement)
+
+    this.benevole.Croisements.forEach(croisementbene => {
+      let index = this.benevole.Croisements.findIndex(x => x.id ===croisementbene.id);
+      if (croisement.id == croisementbene.id) {
+        croisement.selected = true;
+        this.benevole.Croisements.splice(index, 1);
+      } else {
+        croisement.selected = false;
+        this.benevole.Croisements.push(croisement);
+      }
+    })
+
     console.log(this.benevole);
 
   }
