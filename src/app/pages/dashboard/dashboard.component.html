@@ -72,6 +72,11 @@
       <div class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
           <h4>Votre planning :</h4>
+          
+          <div *ngIf="chevauchement" class="alert alert-danger">
+              <strong>Danger!</strong> Vous vous êtes inscrit sur des creneaux identique.
+            </div>
+          
 
           <div *ngFor="let croisement of benevole.Croisements" class="col-md-12">
             {{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à
