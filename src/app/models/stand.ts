@@ -1,3 +1,5 @@
+import { Croisement } from "./croisement";
+
 
 
 
@@ -6,4 +8,5 @@ export class Stand {
   nom: string;
   description:string;
   limite:number;
+  Croisements: Croisement[];
 }
