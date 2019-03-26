@@ -114,7 +114,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Préparation de gateau : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.gateaux" class="form-control">
+          <input type="text" [ngModel]="benevole.gateaux"  (blur)="updateBenevole()" class="form-control">
         </div>
       </div>
 

@@ -133,7 +133,7 @@ export class DashboardComponent implements OnChanges {
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.Croisements, benevole.Croisements)
     });
-    this.getBesoin()
+
   }
 
   getBesoin() {
@@ -173,10 +173,19 @@ export class DashboardComponent implements OnChanges {
 
 
 
-
-
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]) {
+    console.log(croisementsbenevole)
+    console.log(croisements)
+    croisements.forEach(croisement => {
+      croisementsbenevole.forEach(croisementbenevole => {
 
+        if (croisement.id == croisementbenevole.id) {
+          croisement.selected = true;
+        } else {
+          croisement.selected = false;
+        }
+      })
+    });
   }
 
   choisir(croisement: Croisement) {
