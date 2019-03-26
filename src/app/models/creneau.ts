@@ -3,7 +3,7 @@
 
 export class Creneau {
   id: number;
-  debut: Date;
-  fin:Date;
+  plage: string;
+  
   
 }
