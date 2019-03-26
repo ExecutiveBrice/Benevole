@@ -123,7 +123,11 @@ export class DashboardComponent implements OnChanges {
   getStand(): void {
     this.standService.getAll().subscribe(data => {
       console.log(data)
-      this.stands = data['stands']
+      data['stands'].forEach(stand => {
+        if(stand.nom != 'tous'){
+          this.stands.push(stand)    
+        }
+      })
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -137,6 +141,8 @@ export class DashboardComponent implements OnChanges {
   updateCroisementListe() {
     this.croisements.forEach(croisement => {
       this.benevole.Croisements.forEach(croisementbene => {
+        console.log(croisementbene.id)
+        console.log(croisement.id)
         if (croisement.id == croisementbene.id) {
           croisement.selected = true;
         } else {
