@@ -1,6 +1,6 @@
 <div *ngIf="validation" class="row">
-  <div class="col-sm-12">
-    Merci de votre participation,
+  <div class="alert alert-success">
+    <strong>Merci de votre participation,</strong>
     Vous pouvez revenir quand vous le souhaitez pour modifier vos choix
     Vous pouvez fermer cette fenêtre
   </div>
@@ -72,11 +72,11 @@
       <div class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
           <h4>Votre planning :</h4>
-          
+
           <div *ngIf="chevauchement" class="alert alert-danger">
-              <strong>Danger!</strong> Vous vous êtes inscrit sur des creneaux identique.
-            </div>
-          
+            <strong>Danger!</strong> Vous vous êtes inscrit sur des creneaux identique.
+          </div>
+
 
           <div *ngFor="let croisement of benevole.Croisements" class="col-md-12">
             {{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à
@@ -114,7 +114,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Préparation de gateau : </span>
           </div>
-          <input type="text" [ngModel]="benevole.gateaux"  (blur)="updateBenevole()" class="form-control">
+          <input type="text" [ngModel]="benevole.gateaux" (blur)="updateBenevole()" class="form-control">
         </div>
       </div>
 
