@@ -108,7 +108,7 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-danger" (click)="choix = 'stand'">Je valide mon
+        <button type="button" class="btn btn-block btn-danger" (click)="validation()">Je valide mon
           inscription</button>
       </div>
 
@@ -133,7 +133,8 @@
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
               data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" *ngFor="let croisement of stand.Croisement" [ngClass]="{'active':croisement.selected === true}" href="#">{{croisement.plage}}</a>
+              <a class="dropdown-item" *ngFor="let croisement of stand.Croisement"
+                [ngClass]="{'active':croisement.selected === true}" href="#">{{croisement.plage}}</a>
             </div>
           </div>
         </div>
@@ -146,7 +147,7 @@
 
 
 
-      
+
 
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info" (click)="choix = 'heure'">Le stand m'est égal mais je
@@ -156,8 +157,8 @@
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}" class="btn btn-block btn-secondary"
-              (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
+            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
+              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>
       </div>
@@ -184,8 +185,9 @@
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
           <div *ngFor="let croisement of besoins" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}" class="btn btn-block btn-secondary"
-              (click)="choisir(croisement)">{{croisement.Stand.nom}} - {{croisement.Creneau.plage}}</button>
+            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
+              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Stand.nom}} -
+              {{croisement.Creneau.plage}}</button>
           </div>
         </div>
       </div>

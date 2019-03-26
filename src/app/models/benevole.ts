@@ -13,5 +13,5 @@ export class Benevole {
   Croisements: Croisement[];
   commentaire: string;
   reponse: string;
-  gateaux: number;
+  gateaux: string;
 }
