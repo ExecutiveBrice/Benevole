@@ -133,16 +133,11 @@
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
               data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
-              <a class="dropdown-item active" href="#">10-11h</a>
-              <a class="dropdown-item" href="#">12-13h</a>
+              <a class="dropdown-item" *ngFor="let croisement of stand.Croisement" [ngClass]="{'active':croisement.selected === true}" href="#">{{croisement.plage}}</a>
             </div>
           </div>
         </div>
       </div>
-
-
-
-
 
 
       <div class="col-sm-12 ">
