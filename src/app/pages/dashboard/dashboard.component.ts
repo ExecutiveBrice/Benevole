@@ -14,14 +14,14 @@ import { Benevole, Croisement, Stand } from '../../models';
 
 export class DashboardComponent implements OnChanges {
   new: boolean;
-  validation:boolean=false;
+  validation: boolean;
   nouveau: boolean;
   exist: boolean;
   choix: String;
   creneaux: Croisement[];
   stands: Stand[];
-  
-  besoins: Croisement[] = [];
+
+  besoins: Croisement[];
 
   croisements: Croisement[];
   benevole: Benevole = new Benevole;
@@ -30,12 +30,13 @@ export class DashboardComponent implements OnChanges {
     public standService: StandService,
     public sanitizer: DomSanitizer) {
     this.stands = [];
+    this.besoins = [];
+    this.validation = false;
     this.exist = false;
     this.nouveau = false;
     this.new = true;
     this.getCroisements(1);
     this.getStand();
-    this.getBesoin();
   }
 
   ngOnChanges() {
@@ -128,7 +129,7 @@ export class DashboardComponent implements OnChanges {
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.Croisements, benevole.Croisements)
     });
-
+    this.getBesoin()
   }
 
   getBesoin() {
@@ -171,18 +172,7 @@ export class DashboardComponent implements OnChanges {
 
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]) {
-    console.log(croisementsbenevole)
-    console.log(croisements)
-    croisements.forEach(croisement => {
-      croisementsbenevole.forEach(croisementbenevole => {
 
-        if (croisement.id == croisementbenevole.id) {
-          croisement.selected = true;
-        } else {
-          croisement.selected = false;
-        }
-      })
-    });
   }
 
   choisir(croisement: Croisement) {
@@ -205,7 +195,10 @@ export class DashboardComponent implements OnChanges {
       this.benevole.Croisements.push(croisement);
     }
     console.log(this.benevole);
+    for (let index = 0; index < this.benevole.Croisements.length; index++) {
 
+
+    }
   }
 
 
@@ -214,8 +207,8 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  validate(){
-this.validation = true;
+  validate() {
+    this.validation = true;
   }
 
 

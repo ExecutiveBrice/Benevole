@@ -4,8 +4,10 @@ import { Benevole } from "./benevole";
 
 export class Croisement {
   id:number;
-  creneau: Creneau;
-  stand: Stand;
+  creneau: number;
+  stand: number;
+  Creneau: Creneau;
+  Stand: Stand;
   benevoles: Benevole[];
   selected:boolean;
   besoin:boolean;
