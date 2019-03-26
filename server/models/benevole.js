@@ -27,7 +27,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING,
     },
     gateaux: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING,
     },
   });
   Benevole.associate = function(models) {

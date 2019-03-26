@@ -118,8 +118,9 @@ export class DashboardComponent implements OnChanges {
 
 
   updateListe(benevole: Benevole) {
+    console.log(this.creneaux)
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
-
+    console.log(this.stands)
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.Croisements, benevole.Croisements)
     });
@@ -210,7 +211,9 @@ export class DashboardComponent implements OnChanges {
 
 
 
+  validation(){
 
+  }
 
 
 
