@@ -10,8 +10,10 @@ module.exports = function (sequelize, DataTypes) {
     },
     limite: {
       type: DataTypes.INTEGER,
+    },
+    besoin: {
+      type: DataTypes.BOOLEAN,
     }
-
   });
   Croisement.associate = function (models) {
     models.Croisement.belongsTo(models.Stand, {

@@ -140,6 +140,14 @@
       </div>
 
 
+
+
+
+
+
+
+      
+
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info" (click)="choix = 'heure'">Le stand m'est égal mais je
           suis disponible à :</button>
@@ -154,29 +162,34 @@
         </div>
       </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info" (click)="choix = 'besoin'">Là ou vous en avez
           besoin</button>
       </div>
 
 
-
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
-          <div class="col-sm-4">
-            <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Démontage
-              17h-18h</button>
-          </div>
-          <div class="col-sm-4">
-            <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Jeux
-              14h45-15h30</button>
-          </div>
-          <div class="col-sm-4">
-            <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Frites
-              12h00-13h00</button>
+          <div *ngFor="let croisement of besoins" class="col-sm-4">
+            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}" class="btn btn-block btn-secondary"
+              (click)="choisir(croisement)">{{croisement.Stand.nom}} - {{croisement.Creneau.plage}}</button>
           </div>
         </div>
       </div>
+
 
     </div>
   </div>
