@@ -31,6 +31,7 @@ export class DashboardComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.stands = [];
     this.besoins = [];
+    this.creneaux = [];
     this.validation = false;
     this.exist = false;
     this.nouveau = false;
@@ -195,10 +196,15 @@ export class DashboardComponent implements OnChanges {
       this.benevole.Croisements.push(croisement);
     }
     console.log(this.benevole);
-    for (let index = 0; index < this.benevole.Croisements.length; index++) {
+    let listePlages = []
 
+    this.benevole.Croisements.forEach(croisement => {
 
-    }
+      if (listePlages.indexOf(croisement.Creneau.plage) > 0) {
+
+      }
+    });
+
   }
 
 
