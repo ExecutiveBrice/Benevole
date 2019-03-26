@@ -20,7 +20,7 @@ export class DashboardComponent implements OnChanges {
   choix: String;
   creneaux: Croisement[];
   stands: Stand[];
-
+  chevauchement: boolean;
   besoins: Croisement[];
 
   croisements: Croisement[];
@@ -31,12 +31,13 @@ export class DashboardComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.stands = [];
     this.besoins = [];
-    this.creneaux = [];
+
     this.validation = false;
     this.exist = false;
+    this.chevauchement = false;
     this.nouveau = false;
     this.new = true;
-    this.getCroisements(1);
+    this.creneaux = this.getCroisements(1);
     this.getStand();
   }
 
@@ -110,15 +111,17 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  getCroisements(standId: number): void {
+  getCroisements(standId: number): Croisement[] {
     this.croisementService.getByStand(standId).subscribe(data => {
       console.log(data)
       let croisements = data['croisements']
       return croisements;
     },
       error => {
+
         console.log('😢 Oh no!', error);
       });
+    return [];
   }
 
 
@@ -198,12 +201,14 @@ export class DashboardComponent implements OnChanges {
     console.log(this.benevole);
     let listePlages = []
 
-    this.benevole.Croisements.forEach(croisement => {
-
-      if (listePlages.indexOf(croisement.Creneau.plage) > 0) {
-
+    for (let index = 0; index < this.benevole.Croisements.length; index++) {
+      if (listePlages.indexOf(this.benevole.Croisements[index].Creneau.plage) > 0) {
+        this.chevauchement = true;
+        break;
+      } else {
+        listePlages.push(this.benevole.Croisements[index].Creneau.plage)
       }
-    });
+    };
 
   }
 
