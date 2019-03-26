@@ -14,11 +14,15 @@ import { Benevole, Croisement, Stand } from '../../models';
 
 export class DashboardComponent implements OnChanges {
   new: boolean;
+  validation:boolean=false;
   nouveau: boolean;
   exist: boolean;
   choix: String;
   creneaux: Croisement[];
   stands: Stand[];
+  
+  besoins: Croisement[] = [];
+
   croisements: Croisement[];
   benevole: Benevole = new Benevole;
   constructor(public benevoleService: BenevoleService,
@@ -31,7 +35,7 @@ export class DashboardComponent implements OnChanges {
     this.new = true;
     this.getCroisements(1);
     this.getStand();
-
+    this.getBesoin();
   }
 
   ngOnChanges() {
@@ -127,8 +131,6 @@ export class DashboardComponent implements OnChanges {
 
   }
 
-  besoins: Croisement[] = [];
-
   getBesoin() {
     this.creneaux.forEach(croisement => {
       if (croisement.besoin == true) {
@@ -169,10 +171,11 @@ export class DashboardComponent implements OnChanges {
 
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]) {
+    console.log(croisementsbenevole)
+    console.log(croisements)
     croisements.forEach(croisement => {
       croisementsbenevole.forEach(croisementbenevole => {
-        console.log(croisementbenevole.id)
-        console.log(croisement.id)
+
         if (croisement.id == croisementbenevole.id) {
           croisement.selected = true;
         } else {
@@ -211,8 +214,8 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  validation(){
-
+  validate(){
+this.validation = true;
   }
 
 

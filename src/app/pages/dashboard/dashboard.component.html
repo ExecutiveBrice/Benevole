@@ -1,3 +1,10 @@
+<div *ngIf="validation" class="row">
+  <div class="col-sm-12">
+    Merci de votre participation,
+    Vous pouvez revenir quand vous le souhaitez pour modifier vos choix
+    Vous pouvez fermer cette fenêtre
+  </div>
+</div>
 <div class="row">
   <div class="col-sm-6">
     <div class="row" *ngIf="!exist">
@@ -108,7 +115,7 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-danger" (click)="validation()">Je valide mon
+        <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide mon
           inscription</button>
       </div>
 

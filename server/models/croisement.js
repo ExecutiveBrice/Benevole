@@ -13,6 +13,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     besoin: {
       type: DataTypes.BOOLEAN,
+    },
+    selected: {
+      type: DataTypes.BOOLEAN,
     }
   });
   Croisement.associate = function (models) {
