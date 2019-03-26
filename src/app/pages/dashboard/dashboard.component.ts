@@ -29,7 +29,7 @@ export class DashboardComponent implements OnChanges {
     this.exist = false;
     this.nouveau = false;
     this.new = true;
-    this.getCroisements();
+    this.getCroisements(1);
     this.getStand();
 
   }
@@ -102,10 +102,13 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  getCroisements(): void {
-    this.croisementService.getByStand(1).subscribe(data => {
+  getCroisements(standId:number): void {
+    this.croisementService.getByStand(standId).subscribe(data => {
       console.log(data)
-      this.creneaux = data['croisements']
+      let croisements = data['croisements']
+      this.updateCroisementListe(croisements);
+
+      return croisements;
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -125,7 +128,9 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       data['stands'].forEach(stand => {
         if (stand.nom != 'tous') {
+          stand.croisements = this.getCroisements(stand.id)
           this.stands.push(stand)
+         
         }
       })
     },
@@ -138,8 +143,8 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  updateCroisementListe() {
-    this.croisements.forEach(croisement => {
+  updateCroisementListe(croisements : Croisement[]) {
+    croisements.forEach(croisement => {
       this.benevole.Croisements.forEach(croisementbene => {
         console.log(croisementbene.id)
         console.log(croisement.id)
