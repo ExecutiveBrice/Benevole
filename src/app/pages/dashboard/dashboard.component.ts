@@ -68,6 +68,25 @@ export class DashboardComponent implements OnChanges {
 
   }
 
+
+  update(benevole: Benevole): void {
+    this.benevoleService.update(benevole).subscribe(data => {
+      console.log(data)
+      this.benevole.id = data['benevoles'];
+      this.exist = true;
+      console.log(this.benevole)
+    },
+      error => {
+        this.exist = false;
+        this.new = false;
+        console.log('😢 Oh no!', error);
+      });
+
+  }
+
+  
+
+
   error(benevole: Benevole): void {
     this.benevoleService.error(benevole).subscribe(data => {
       console.log(data)

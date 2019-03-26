@@ -20,6 +20,15 @@ module.exports = function(sequelize, DataTypes) {
     email: {
       type: DataTypes.STRING,
     },
+    commentaire: {
+      type: DataTypes.STRING,
+    },
+    reponse: {
+      type: DataTypes.STRING,
+    },
+    gateaux: {
+      type: DataTypes.INTEGER,
+    },
   });
   Benevole.associate = function(models) {
 

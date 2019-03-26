@@ -19,4 +19,12 @@ router.post('/', function(req,res,next) {
   console.log("------benevole add")
   return benevoleController.add(req,res);
 });
+router.put('/', function(req,res,next) {
+  console.log("------benevole update")
+  return benevoleController.update(req,res);
+});
+
+
+
+
 module.exports = router;

@@ -66,9 +66,10 @@
         <div class="input-group mb-3 input-group-lg">
           <h4>Votre planning :</h4>
 
-              <div *ngFor="let croisement of benevole.Croisements" class="col-md-12">
-                {{croisement.Stand.nom}} à {{croisement.Creneau.plage}}
-              </div>
+          <div *ngFor="let croisement of benevole.Croisements" class="col-md-12">
+            {{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à
+            {{croisement.Creneau.plage}}
+          </div>
 
         </div>
       </div>
@@ -107,7 +108,7 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-primary" (click)="choix = 'stand'">Je valide mon
+        <button type="button" class="btn btn-block btn-danger" (click)="choix = 'stand'">Je valide mon
           inscription</button>
       </div>
 
@@ -128,14 +129,12 @@
 
       <div class="col-sm-12" *ngIf="choix == 'stand'">
         <div class="row">
-          <div *ngFor="let stand of stands" class="col-md-6">
-            <div class="col-sm-4 dropdown">
-              <button type="button" class="btn btn-block btn-info dropdown-toggle"
-                data-toggle="dropdown">{{stand.nom}}</button>
-              <div class="dropdown-menu">
-                <a class="dropdown-item active" href="#">10-11h</a>
-                <a class="dropdown-item" href="#">12-13h</a>
-              </div>
+          <div *ngFor="let stand of stands" class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">{{stand.nom}}</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item active" href="#">10-11h</a>
+              <a class="dropdown-item" href="#">12-13h</a>
             </div>
           </div>
         </div>
@@ -154,7 +153,7 @@
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux" class="col-sm-4">
-            <button type="button" class="btn btn-block btn-info"
+            <button type="button" class="btn btn-block btn-secondary"
               (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>
