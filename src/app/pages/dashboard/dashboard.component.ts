@@ -111,7 +111,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  getCroisements(croisements: Croisement[], standId: number):any {
+  getCroisements(croisements: Croisement[], standId: number) {
     this.croisementService.getByStand(standId).subscribe(data => {
       console.log(data)
       croisements = data['croisements']
