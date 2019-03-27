@@ -64,6 +64,7 @@ export class DashboardComponent implements OnChanges {
   }
 
   find(benevole: Benevole): void {
+    benevole.email = benevole.email.toLowerCase();
     this.benevoleService.getByMail(benevole.email).subscribe(data => {
       this.exist = true
       this.benevole = data['benevoles'][0];
@@ -79,8 +80,11 @@ export class DashboardComponent implements OnChanges {
 
 
   subscribe(benevole: Benevole): void {
+    benevole.email = benevole.email.toLowerCase();
     this.benevoleService.add(benevole).subscribe(data => {
+      console.log(data)
       this.benevole.id = data['benevoles'];
+      this.benevole.Croisements = [];
       this.exist = true;
       this.updateListe(this.benevole)
     },
@@ -93,6 +97,8 @@ export class DashboardComponent implements OnChanges {
 
 
   update(benevole: Benevole): void {
+    console.log(benevole)
+    benevole.email = benevole.email.toLowerCase();
     this.benevoleService.update(benevole).subscribe(data => {
       this.benevole.id = data['benevoles'];
       this.exist = true;
