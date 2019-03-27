@@ -92,7 +92,7 @@ module.exports = {
     })
       .then(function (benevole) {
         console.log("add - 2")
-        console.log(benevole)
+        console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
             title: "No benevole added",
@@ -125,7 +125,7 @@ module.exports = {
     }, { where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log("update - 2")
-        console.log(benevole)
+        console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
             title: "No benevole updated",
