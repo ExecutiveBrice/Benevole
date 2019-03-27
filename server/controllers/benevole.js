@@ -115,20 +115,14 @@ module.exports = {
 
   update: function update(req, res) {
     console.log("update")
+    console.log(req.body.Croisements)
     return Benevole.update({
       nom: req.body.nom,
       telephone: req.body.telephone,
       email: req.body.email,
       prenom: req.body.prenom,
       commentaire: req.body.commentaire,
-      gateaux: req.body.gateaux,
-      Croisements:req.body.Croisements,
-      include: [
-        {
-          model: Croisement,
- 
-        }
-      ]
+      gateaux: req.body.gateaux
     }, { where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log("update - 2")
