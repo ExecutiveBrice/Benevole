@@ -150,10 +150,15 @@ module.exports = {
     return Benevole.findOne({ where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log(benevole);
-          benevole.setCroisements(req.body.Croisements).then(sc=>{
-              console.log(sc);
-          });
-      
+
+        for (var i=0; i<req.body.Croisements.length; i++){
+          
+          benevole.setCroisements([benevole.id,req.body.Croisements[i]]).then(sc=>{
+            console.log(sc);
+        });
+    
+        }
+
 
         console.log("addCroisements - 2")
         console.log(benevole.id)
