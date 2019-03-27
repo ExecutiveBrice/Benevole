@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {environment} from '../../environments/environment';
-import {HttpClient,HttpParams} from "@angular/common/http";
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Email } from '../models';
 @Injectable()
 export class MailService {
@@ -12,7 +12,7 @@ export class MailService {
 
 
 
-  sendMail (email:Email){
-    return this.http.post(this.apiUrl+"email/",email, {responseType: 'json'})
-}
+  sendMail(email: Email) {
+    return this.http.post(this.apiUrl + "/", email, { responseType: 'json' })
+  }
 }

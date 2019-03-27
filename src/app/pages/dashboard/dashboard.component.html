@@ -97,7 +97,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Commentaire : </span>
           </div>
-          <textarea [(ngModel)]="benevole.commentaire" class="form-control">
+          <textarea [ngModel]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
             </textarea>
         </div>
       </div>
@@ -106,7 +106,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Reponse : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.reponse" class="form-control">
+          <input type="text" [(ngModel)]="benevole.reponse" readonly class="form-control">
         </div>
       </div>
 
@@ -115,7 +115,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Préparation de gateau : </span>
           </div>
-          <input type="text" [ngModel]="benevole.gateaux" (blur)="updateBenevole()" class="form-control">
+          <input type="text" [ngModel]="benevole.gateaux" (blur)="update(benevole)" class="form-control">
         </div>
       </div>
 
@@ -147,7 +147,7 @@
               data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
               <a class="dropdown-item" *ngFor="let croisement of stand.croisements"
-                [ngClass]="{'active':croisement.selected === true}" href="#">{{croisement.plage}}</a>
+                [ngClass]="{'active':croisement.selected === true}" (click)="choisir(croisement)">{{croisement.Creneau.plage}}</a>
             </div>
           </div>
         </div>
