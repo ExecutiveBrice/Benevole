@@ -12,12 +12,12 @@ export class BenevoleService {
   ) { }
 
   getAll() {
-    return this.http.get<Benevole[]>(this.apiUrl + '/getAll', {responseType: 'json'});
+    return this.http.get(this.apiUrl + '/getAll', {responseType: 'json'});
   }
 
   get(id) {
     let params = new HttpParams().set('id', ''+id+'');
-    return this.http.get<Benevole>(this.apiUrl + '/', {params, responseType: 'json'});
+    return this.http.get(this.apiUrl + '/', {params, responseType: 'json'});
   }
 
   
@@ -27,15 +27,15 @@ export class BenevoleService {
   }
 
   add(benevole:Benevole) {
-    return this.http.post<Benevole>(this.apiUrl + '/', benevole, {responseType: 'json'});
+    return this.http.post(this.apiUrl + '/', benevole, {responseType: 'json'});
   }
 
   update(benevole:Benevole) {
-    return this.http.put<Benevole>(this.apiUrl + '/', benevole, {responseType: 'json'});
+    return this.http.put(this.apiUrl + '/', benevole, {responseType: 'json'});
   }
 
   
   error(benevole:Benevole) {
-    return this.http.post<Benevole>(this.apiUrl + '/error', benevole, {responseType: 'json'});
+    return this.http.post(this.apiUrl + '/error', benevole, {responseType: 'json'});
   }
 }
