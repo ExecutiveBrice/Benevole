@@ -47,7 +47,6 @@ export class DashboardComponent implements OnChanges {
 
   find(benevole: Benevole): void {
     this.benevoleService.getByMail(benevole.email).subscribe(data => {
-      console.log(data)
       this.exist = true
       this.benevole = data['benevoles'][0];
       this.updateListe(this.benevole)
@@ -63,11 +62,9 @@ export class DashboardComponent implements OnChanges {
 
   subscribe(benevole: Benevole): void {
     this.benevoleService.add(benevole).subscribe(data => {
-      console.log(data)
       this.benevole.id = data['benevoles'];
       this.exist = true;
       this.updateListe(this.benevole)
-      console.log(this.benevole)
     },
       error => {
         this.exist = false;
@@ -79,10 +76,9 @@ export class DashboardComponent implements OnChanges {
 
   update(benevole: Benevole): void {
     this.benevoleService.update(benevole).subscribe(data => {
-      console.log(data)
       this.benevole.id = data['benevoles'];
       this.exist = true;
-      console.log(this.benevole)
+
     },
       error => {
         this.exist = false;
@@ -117,9 +113,7 @@ export class DashboardComponent implements OnChanges {
 
 
   updateListe(benevole: Benevole): void {
-    console.log(this.creneaux)
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
-    console.log(this.stands)
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.croisements, benevole.Croisements)
     });
@@ -147,19 +141,19 @@ export class DashboardComponent implements OnChanges {
 
   getStand(): void {
     this.standService.getAll().subscribe(data => {
-      console.log(data)
       data['stands'].forEach(stand => {
         if (stand.nom != 'tous') {
           this.croisementService.getByStand(stand.id).subscribe(data => {
             stand.croisements = data['croisements']
             this.stands.push(stand)
+            console.log("stand")
+            console.log(stand)
+            console.log("stands")
+            console.log(this.stands)
           },
             error => {
               console.log('😢 Oh no!', error);
             });
-
-
-
         }
       })
     },
@@ -171,8 +165,6 @@ export class DashboardComponent implements OnChanges {
 
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
-    console.log(croisementsbenevole)
-    console.log(croisements)
     croisements.forEach(croisement => {
       console.log("croisement")
       console.log(croisement)
@@ -189,13 +181,10 @@ export class DashboardComponent implements OnChanges {
   }
 
   choisir(croisement: Croisement): void {
-    console.log(this.benevole)
+    this.chevauchement = false;
     let added = false;
-
     for (let index = 0; index < this.benevole.Croisements.length; index++) {
-
       if (croisement.id == this.benevole.Croisements[index].id) {
-        console.log("selected")
         croisement.selected = false;
         this.benevole.Croisements.splice(index, 1);
         added = true;
@@ -207,9 +196,8 @@ export class DashboardComponent implements OnChanges {
       croisement.selected = true;
       this.benevole.Croisements.push(croisement);
     }
-    console.log(this.benevole);
-    let listePlages = []
 
+    let listePlages = []
     for (let index = 0; index < this.benevole.Croisements.length; index++) {
       if (listePlages.indexOf(this.benevole.Croisements[index].Creneau.plage) > 0) {
         this.chevauchement = true;
