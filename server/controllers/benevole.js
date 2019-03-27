@@ -144,27 +144,33 @@ module.exports = {
         });
       });
   },
-  updateCroisements: function updateCroisements(req, res) {
-    console.log("update")
+  addCroisements: function addCroisements(req, res) {
+    console.log("addCroisements")
     console.log(req.body.Croisements)
     return Benevole.findOne({ where: { id: (req.body.id) } })
       .then(function (benevole) {
-        console.log("update - 2")
+        console.log(benevole);
+          benevole.setCroisements(req.body.Croisements).then(sc=>{
+              console.log(sc);
+          });
+      
+
+        console.log("addCroisements - 2")
         console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
-            title: "No benevole updated",
+            title: "No benevole addCroisements",
             error: "Please try again."
           });
         }
         return res.status(200).json({
-          message: 'benevole updated',
+          message: 'benevole addCroisements',
           benevole: benevole.id
         });
       }).catch(function (error) {
         console.log(error.toString());
         return res.status(400).json({
-          message: 'There was an error updating!',
+          message: 'There was an error addCroisements!',
           error: error.stack
         });
       });
