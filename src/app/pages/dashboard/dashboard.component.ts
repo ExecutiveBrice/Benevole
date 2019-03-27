@@ -111,6 +111,8 @@ export class DashboardComponent implements OnChanges {
       console.log('croisements'+standId)
       console.log(data)
       croisements = data['croisements']
+
+      console.log(this.creneaux)
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -183,7 +185,7 @@ export class DashboardComponent implements OnChanges {
     });
   }
 
-  choisir(croisement: Croisement) {
+  choisir(croisement: Croisement): void  {
     console.log(this.benevole)
     let added = false;
 
@@ -222,7 +224,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  validate() {
+  validate(): void  {
     this.validation = true;
   }
 
