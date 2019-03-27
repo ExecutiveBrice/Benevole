@@ -122,7 +122,9 @@ module.exports = {
       prenom: req.body.prenom,
       commentaire: req.body.commentaire,
       gateaux: req.body.gateaux,
-      Croisements:req.body.Croisements
+      Croisements:req.body.Croisements,
+      ResaBenevoles:req.body.Croisements,
+      croisements:req.body.Croisements
     }, { where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log("update - 2")
