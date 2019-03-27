@@ -135,7 +135,7 @@ export class DashboardComponent implements OnChanges {
     })
 
     this.stands.forEach(stand => {
-      stand.Croisements.forEach(croisement => {
+      stand.croisements.forEach(croisement => {
         if (croisement.besoin == true) {
           this.besoins.push(croisement);
         }
@@ -196,7 +196,7 @@ export class DashboardComponent implements OnChanges {
 
       if (croisement.id == this.benevole.Croisements[index].id) {
         console.log("selected")
-        croisement.selected = true;
+        croisement.selected = false;
         this.benevole.Croisements.splice(index, 1);
         added = true;
         break;
@@ -204,7 +204,7 @@ export class DashboardComponent implements OnChanges {
     }
 
     if (!added) {
-      croisement.selected = false;
+      croisement.selected = true;
       this.benevole.Croisements.push(croisement);
     }
     console.log(this.benevole);
