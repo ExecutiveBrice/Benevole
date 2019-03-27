@@ -63,9 +63,9 @@ export class DashboardComponent implements OnChanges {
 
   }
 
-  find(benevole: Benevole): void {
-    benevole.email = benevole.email.toLowerCase();
-    this.benevoleService.getByMail(benevole.email).subscribe(data => {
+  find(): void {
+    this.benevole.email = this.benevole.email.toLowerCase();
+    this.benevoleService.getByMail(this.benevole.email).subscribe(data => {
       this.exist = true
       this.benevole = data['benevoles'][0];
       this.updateListe(this.benevole)
@@ -79,9 +79,9 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  subscribe(benevole: Benevole): void {
-    benevole.email = benevole.email.toLowerCase();
-    this.benevoleService.add(benevole).subscribe(data => {
+  subscribe(): void {
+    this.benevole.email = this.benevole.email.toLowerCase();
+    this.benevoleService.add(this.benevole).subscribe(data => {
       console.log(data)
       this.benevole.id = data['benevoles'];
       this.benevole.Croisements = [];
@@ -96,10 +96,10 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  update(benevole: Benevole): void {
-    console.log(benevole)
-    benevole.email = benevole.email.toLowerCase();
-    this.benevoleService.update(benevole).subscribe(data => {
+  update(): void {
+    console.log(this.benevole)
+    this.benevole.email = this.benevole.email.toLowerCase();
+    this.benevoleService.update(this.benevole).subscribe(data => {
       this.benevole.id = data['benevoles'];
       this.exist = true;
 
@@ -115,7 +115,7 @@ export class DashboardComponent implements OnChanges {
   error(benevole:Benevole): void {
     this.email.to = "bryce.morel@gmail.com"
     this.email.subject = "Problème d'inscription"
-    this.email.text = "Bonjour,/n Mr/Mme "+benevole.nom+"N'arrive pas à s'inscrire"
+    this.email.text = "Bonjour,\n Mr/Mme "+benevole.nom+"N'arrive pas à s'inscrire"
     this.envoiMail(this.email)
   }
 
@@ -223,13 +223,14 @@ export class DashboardComponent implements OnChanges {
 
   validate(): void {
     this.benevoleService.update(this.benevole).subscribe(data => {
+      console.log(data)
       this.benevole.id = data['benevoles'];
       this.exist = true;
 
       this.validation = true;
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = "Bonjour,/n Votre participation à bien été prise en compte"
+      this.email.text = "Bonjour,\n Votre participation à bien été prise en compte"
       this.envoiMail(this.email)
 
     },
