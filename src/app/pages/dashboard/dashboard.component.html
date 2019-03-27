@@ -74,7 +74,8 @@
           <h4>Votre planning :</h4>
 
           <div *ngIf="chevauchement" class="alert alert-danger">
-            <strong>Danger!</strong> Vous vous êtes inscrit sur des creneaux identique.
+            <strong>Attention!</strong> Vous vous êtes inscrit sur au moins 2 creneaux identique
+            <br>(si vous êtes plusieurs, précisez le dans le commentaire).
           </div>
 
 
@@ -145,7 +146,7 @@
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
               data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" *ngFor="let croisement of stand.Croisement"
+              <a class="dropdown-item" *ngFor="let croisement of stand.croisements"
                 [ngClass]="{'active':croisement.selected === true}" href="#">{{croisement.plage}}</a>
             </div>
           </div>
@@ -169,7 +170,7 @@
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
+            <button type="button" [ngClass]="{'btn-warning':croisement.selected === true}"
               class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>

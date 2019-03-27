@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService } from '../../services';
+import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand } from '../../models';
 
@@ -28,6 +28,7 @@ export class DashboardComponent implements OnChanges {
   constructor(public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
+    public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.stands = [];
     this.besoins = [];
@@ -88,13 +89,9 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  error(benevole: Benevole): void {
-    this.benevoleService.error(benevole).subscribe(data => {
-      console.log(data)
-      if (data['message'] == "ok") {
-
-      }
-
+  error(): void {
+    this.mailService.send('valider').subscribe(data => {
+      console.log(data);
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -127,14 +124,12 @@ export class DashboardComponent implements OnChanges {
         this.besoins.push(croisement);
       }
     })
-
     this.stands.forEach(stand => {
       stand.croisements.forEach(croisement => {
         if (croisement.besoin == true) {
           this.besoins.push(croisement);
         }
       })
-
     });
   }
 
@@ -166,11 +161,7 @@ export class DashboardComponent implements OnChanges {
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
     croisements.forEach(croisement => {
-      console.log("croisement")
-      console.log(croisement)
       croisementsbenevole.forEach(croisementbenevole => {
-        console.log("croisementbenevole")
-        console.log(croisementbenevole)
         if (croisement.id == croisementbenevole.id) {
           croisement.selected = true;
         } else {
@@ -199,24 +190,34 @@ export class DashboardComponent implements OnChanges {
 
     let listePlages = []
     for (let index = 0; index < this.benevole.Croisements.length; index++) {
-      if (listePlages.indexOf(this.benevole.Croisements[index].Creneau.plage) > 0) {
+      if (listePlages.indexOf(this.benevole.Croisements[index].Creneau.plage) >= 0) {
         this.chevauchement = true;
         break;
       } else {
         listePlages.push(this.benevole.Croisements[index].Creneau.plage)
       }
     };
-
   }
 
 
-
-
-
-
-
   validate(): void {
-    this.validation = true;
+    this.benevoleService.update(this.benevole).subscribe(data => {
+      this.benevole.id = data['benevoles'];
+      this.exist = true;
+
+      this.validation = true;
+      this.mailService.send('valider').subscribe(data => {
+        console.log(data);
+      },
+        error => {
+          console.log('😢 Oh no!', error);
+        });
+    },
+      error => {
+        this.exist = false;
+        this.new = false;
+        console.log('😢 Oh no!', error);
+      });
   }
 
 
