@@ -11,11 +11,13 @@ module.exports = {
     console.log("getAll")
     return Benevole.findAll({
       include: [
-        { model: Croisement,
+        {
+          model: Croisement,
           include: [
-            { model: Creneau},
-            { model: Stand}
-          ]}
+            { model: Creneau },
+            { model: Stand }
+          ]
+        }
       ]
     })
       .then(function (benevoles) {
@@ -45,13 +47,15 @@ module.exports = {
     console.log("getByMail")
     console.log(req.query.email)
     return Benevole.findAll({
-      where: { 'email': (req.query.email)},
+      where: { 'email': (req.query.email) },
       include: [
-        { model: Croisement,
+        {
+          model: Croisement,
           include: [
-            { model: Creneau},
-            { model: Stand}
-          ]}
+            { model: Creneau },
+            { model: Stand }
+          ]
+        }
       ]
     })
       .then(function (benevoles) {
@@ -78,7 +82,7 @@ module.exports = {
   },
 
 
-  add: function add(req,res) {
+  add: function add(req, res) {
     console.log("add")
     return Benevole.create({
       nom: req.body.nom,
@@ -108,17 +112,17 @@ module.exports = {
       });
   },
 
-  
-  update: function update(req,res) {
+
+  update: function update(req, res) {
     console.log("update")
-    return Benevole.create({
+    return Benevole.update({
       nom: req.body.nom,
       telephone: req.body.telephone,
       email: req.body.email,
       prenom: req.body.prenom,
       commentaire: req.body.commentaire,
       gateaux: req.body.gateaux,
-    })
+    }, { where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log("update - 2")
         console.log(benevole)

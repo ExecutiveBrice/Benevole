@@ -170,7 +170,7 @@
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-warning':croisement.selected === true}"
+            <button type="button" [ngClass]="{'btn-primary':croisement.selected === true}"
               class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>
