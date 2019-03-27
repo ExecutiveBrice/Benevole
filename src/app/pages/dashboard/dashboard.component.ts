@@ -121,9 +121,9 @@ export class DashboardComponent implements OnChanges {
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
     console.log(this.stands)
     this.stands.forEach(stand => {
-      this.updateCroisementListe(stand.Croisements, benevole.Croisements)
+      this.updateCroisementListe(stand.croisements, benevole.Croisements)
     });
-
+    this.getBesoin();
   }
 
 
@@ -150,8 +150,7 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       data['stands'].forEach(stand => {
         if (stand.nom != 'tous') {
-
-          this.croisementService.getByStand( stand.id).subscribe(data => {
+          this.croisementService.getByStand(stand.id).subscribe(data => {
             stand.croisements = data['croisements']
             this.stands.push(stand)
           },
@@ -159,7 +158,7 @@ export class DashboardComponent implements OnChanges {
               console.log('😢 Oh no!', error);
             });
 
-        
+
 
         }
       })
@@ -189,7 +188,7 @@ export class DashboardComponent implements OnChanges {
     });
   }
 
-  choisir(croisement: Croisement): void  {
+  choisir(croisement: Croisement): void {
     console.log(this.benevole)
     let added = false;
 
@@ -228,7 +227,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  validate(): void  {
+  validate(): void {
     this.validation = true;
   }
 

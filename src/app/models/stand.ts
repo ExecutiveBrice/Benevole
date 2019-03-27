@@ -9,4 +9,5 @@ export class Stand {
   description:string;
   limite:number;
   Croisements: Croisement[];
+  croisements: Croisement[];
 }
