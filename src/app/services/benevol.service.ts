@@ -33,6 +33,9 @@ export class BenevoleService {
   update(benevole:Benevole) {
     return this.http.put(this.apiUrl + '/', benevole, {responseType: 'json'});
   }
+  addCroisements(benevole:Benevole) {
+    return this.http.put(this.apiUrl + '/addCroisements', benevole, {responseType: 'json'});
+  }
 
   
   error(benevole:Benevole) {

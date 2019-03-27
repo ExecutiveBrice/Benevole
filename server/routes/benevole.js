@@ -23,6 +23,10 @@ router.put('/', function(req,res,next) {
   console.log("------benevole update")
   return benevoleController.update(req,res);
 });
+router.put('/addCroisements', function(req,res,next) {
+  console.log("------benevole updateCroisements")
+  return benevoleController.addCroisements(req,res);
+});
 
 
 

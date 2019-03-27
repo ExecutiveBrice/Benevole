@@ -202,6 +202,27 @@ export class DashboardComponent implements OnChanges {
     });
   }
 
+
+  
+
+  addCroisements(): void {
+    console.log("addCroisements")
+    console.log(this.benevole)
+    this.benevole.email = this.benevole.email.toLowerCase();
+    this.benevoleService.addCroisements(this.benevole).subscribe(data => {
+      console.log("data")
+      console.log(data)
+      this.exist = true;
+
+    },
+      error => {
+        this.exist = false;
+        this.new = false;
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
   choisir(croisement: Croisement): void {
     this.chevauchement = false;
     let added = false;
@@ -217,6 +238,7 @@ export class DashboardComponent implements OnChanges {
     if (!added) {
       croisement.selected = true;
       this.benevole.Croisements.push(croisement);
+      this.addCroisements();
     }
 
     let listePlages = []
