@@ -118,7 +118,7 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  updateListe(benevole: Benevole) {
+  updateListe(benevole: Benevole): void {
     console.log(this.creneaux)
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
     console.log(this.stands)
@@ -129,7 +129,7 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  getBesoin() {
+  getBesoin(): void {
     this.creneaux.forEach(croisement => {
       if (croisement.besoin == true) {
         this.besoins.push(croisement);
@@ -165,7 +165,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]) {
+  updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
     console.log(croisementsbenevole)
     console.log(croisements)
     croisements.forEach(croisement => {
