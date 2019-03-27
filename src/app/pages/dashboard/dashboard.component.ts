@@ -1,8 +1,9 @@
+
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand } from '../../models';
+import { Benevole, Croisement, Stand, Email } from '../../models';
 
 
 
@@ -25,6 +26,22 @@ export class DashboardComponent implements OnChanges {
 
   croisements: Croisement[];
   benevole: Benevole = new Benevole;
+  email: Email = {
+    to: "",
+    subject: "",
+    text: ""
+  }
+
+
+
+
+
+
+
+
+
+
+
   constructor(public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
@@ -89,13 +106,11 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  error(): void {
-    this.mailService.send('valider').subscribe(data => {
-      console.log(data);
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
+  error(benevole:Benevole): void {
+    this.email.to = "bryce.morel@gmail.com"
+    this.email.subject = "Problème d'inscription"
+    this.email.text = "Bonjour,/n Mr/Mme "+benevole.nom+"N'arrive pas à s'inscrire"
+    this.envoiMail(this.email)
   }
 
 
@@ -206,12 +221,11 @@ export class DashboardComponent implements OnChanges {
       this.exist = true;
 
       this.validation = true;
-      this.mailService.send('valider').subscribe(data => {
-        console.log(data);
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
+      this.email.to = this.benevole.email
+      this.email.subject = "Validation de participation"
+      this.email.text = "Bonjour,/n Votre participation à bien été prise en compte"
+      this.envoiMail(this.email)
+
     },
       error => {
         this.exist = false;
@@ -220,7 +234,15 @@ export class DashboardComponent implements OnChanges {
       });
   }
 
-
+  envoiMail(email: Email) {
+    this.mailService.sendMail(email)
+      .subscribe(res => {
+        console.log("this.api.sendMail");
+        console.log(res);
+      }, err => {
+        console.log(err);
+      });
+  }
 
 
 }
