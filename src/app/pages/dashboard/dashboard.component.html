@@ -15,7 +15,6 @@
   </div>
 </div>
 
-
 <div class="row">
   <div class="col-sm-6">
     <div class="row" *ngIf="!exist">
@@ -101,7 +100,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Commentaire : </span>
           </div>
-          <textarea [ngModel]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
+          <textarea [(ngModel)]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
             </textarea>
         </div>
       </div>
@@ -119,7 +118,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Préparation de gateau : </span>
           </div>
-          <input type="text" [ngModel]="benevole.gateaux" (blur)="update(benevole)" class="form-control">
+          <input type="text" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" class="form-control">
         </div>
       </div>
 
