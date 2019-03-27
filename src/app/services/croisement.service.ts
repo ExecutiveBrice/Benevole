@@ -13,7 +13,7 @@ export class CroisementService {
 
 
   getAll() {
-    return this.http.get<Croisement[]>(this.apiUrl + '/getAll', {responseType: 'json'});
+    return this.http.get(this.apiUrl + '/getAll', {responseType: 'json'});
   }
   
   getByStand(id:number) {

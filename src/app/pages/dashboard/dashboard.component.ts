@@ -92,8 +92,6 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-
-
   error(benevole: Benevole): void {
     this.benevoleService.error(benevole).subscribe(data => {
       console.log(data)
@@ -108,9 +106,6 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-
-
-
   getCroisements(croisements: Croisement[], standId: number): void {
     this.croisementService.getByStand(standId).subscribe(data => {
       console.log('croisements'+standId)
@@ -123,7 +118,6 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-
   updateListe(benevole: Benevole) {
     console.log(this.creneaux)
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
@@ -133,6 +127,7 @@ export class DashboardComponent implements OnChanges {
     });
 
   }
+
 
   getBesoin() {
     this.creneaux.forEach(croisement => {
@@ -149,7 +144,6 @@ export class DashboardComponent implements OnChanges {
       })
 
     });
-
   }
 
 
