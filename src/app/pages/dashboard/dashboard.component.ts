@@ -25,7 +25,7 @@ export class DashboardComponent implements OnChanges {
   besoins: Croisement[];
 
   croisements: Croisement[];
-  benevole: Benevole = new Benevole;
+  benevole: Benevole;
   email: Email = {
     to: "",
     subject: "",
@@ -47,6 +47,8 @@ export class DashboardComponent implements OnChanges {
     public standService: StandService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
+
+    this.benevole = new Benevole();
     this.stands = [];
     this.besoins = [];
     this.creneaux = [];
@@ -64,12 +66,16 @@ export class DashboardComponent implements OnChanges {
   }
 
   find(): void {
+    console.log("find")
+    console.log(this.benevole)
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevoleService.getByMail(this.benevole.email).subscribe(data => {
+      console.log("data")
+      console.log(data)
       this.exist = true
       this.benevole = data['benevoles'][0];
       this.updateListe(this.benevole)
-      console.log(this.benevole)
+
     },
       error => {
         this.exist = false
@@ -80,8 +86,10 @@ export class DashboardComponent implements OnChanges {
 
 
   subscribe(): void {
+    console.log("subscribe")
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevoleService.add(this.benevole).subscribe(data => {
+      console.log("data")
       console.log(data)
       this.benevole.id = data['benevoles'];
       this.benevole.Croisements = [];
@@ -97,10 +105,12 @@ export class DashboardComponent implements OnChanges {
 
 
   update(): void {
+    console.log("update")
     console.log(this.benevole)
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevoleService.update(this.benevole).subscribe(data => {
-      this.benevole.id = data['benevoles'];
+      console.log("data")
+      console.log(data)
       this.exist = true;
 
     },
@@ -112,10 +122,10 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  error(benevole:Benevole): void {
+  error(benevole: Benevole): void {
     this.email.to = "bryce.morel@gmail.com"
     this.email.subject = "Problème d'inscription"
-    this.email.text = "Bonjour,\n Mr/Mme "+benevole.nom+"N'arrive pas à s'inscrire"
+    this.email.text = "Bonjour,\n Mr/Mme " + benevole.nom + "N'arrive pas à s'inscrire"
     this.envoiMail(this.email)
   }
 
