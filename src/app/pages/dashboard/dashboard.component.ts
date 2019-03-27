@@ -31,13 +31,13 @@ export class DashboardComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.stands = [];
     this.besoins = [];
-
+    this.creneaux = [];
     this.validation = false;
     this.exist = false;
     this.chevauchement = false;
     this.nouveau = false;
     this.new = true;
-    this.getCroisements(this.creneaux, 1);
+    this.getCreneaux();
     this.getStand();
   }
 
@@ -106,13 +106,9 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  getCroisements(croisements: Croisement[], standId: number): void {
-    this.croisementService.getByStand(standId).subscribe(data => {
-      console.log('croisements'+standId)
-      console.log(data)
-      croisements = data['croisements']
-
-      console.log(this.creneaux)
+  getCreneaux(): void {
+    this.croisementService.getByStand(1).subscribe(data => {
+      this.creneaux = data['croisements']
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -154,8 +150,16 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       data['stands'].forEach(stand => {
         if (stand.nom != 'tous') {
-          this.getCroisements(stand.croisements, stand.id)
-          this.stands.push(stand)
+
+          this.croisementService.getByStand( stand.id).subscribe(data => {
+            stand.croisements = data['croisements']
+            this.stands.push(stand)
+          },
+            error => {
+              console.log('😢 Oh no!', error);
+            });
+
+        
 
         }
       })
