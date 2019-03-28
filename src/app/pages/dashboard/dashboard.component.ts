@@ -47,6 +47,8 @@ export class DashboardComponent implements OnChanges {
     public standService: StandService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
+
+      
     this.vendredi = new Croisement();
     this.benevole = new Benevole();
     this.stands = [];
@@ -59,7 +61,7 @@ export class DashboardComponent implements OnChanges {
     this.new = true;
     this.getCreneaux();
     this.getStand();
-
+    this.getVendredi();
 
   }
 
@@ -274,7 +276,12 @@ export class DashboardComponent implements OnChanges {
       this.validation = true;
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = "Bonjour,\n Votre participation à bien été prise en compte"
+      this.email.text = "Bonjour,\n Votre participation à bien été prise en compte \n";
+      this.benevole.Croisements.forEach(croisement => {
+        this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
+      });
+      this.email.text = this.email.text + "Vous pouvez revenir à tout moment pour modifier vos choix en vous connectant à l'aide de votre adresse e-mail."
+
       this.envoiMail(this.email)
 
     },
