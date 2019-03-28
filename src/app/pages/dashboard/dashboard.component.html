@@ -34,7 +34,7 @@
         <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg"
           (click)="find(benevole)">Entrer</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg"
-          (click)="find(benevole)">Je me suis trompé dans mon mail, je réessai</button>
+          (click)="find(benevole)">Je me suis trompé dans mon mail, je réessais</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-secondary btn-lg"
           (click)="error(benevole)">Hé Ho, il y a un problème, je me suis déjà inscrit !</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
@@ -106,7 +106,7 @@
             </textarea>
         </div>
       </div>
-      <div class="col-sm-12 ">
+      <div *ngIf="benevole.reponse" class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
           <div class="input-group-prepend">
             <span class="input-group-text">Reponse : </span>
@@ -118,9 +118,9 @@
       <div class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
           <div class="input-group-prepend">
-            <span class="input-group-text">Préparation de gateau : </span>
+            <span class="input-group-text">Préparation de plat : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" class="form-control">
+          <input type="text" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
         </div>
       </div>
 
@@ -138,7 +138,9 @@
 
 
 
-
+      <div class="col-sm-12 ">
+        <button type="button" class="btn btn-block btn-warning" (click)="choisir(vendredi)">{{vendredi.Stand.nom}} - {{vendredi.Creneau.plage}}</button>
+      </div>
 
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Je préfère choisir mon
