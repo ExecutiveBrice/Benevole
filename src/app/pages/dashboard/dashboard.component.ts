@@ -60,9 +60,7 @@ export class DashboardComponent implements OnChanges {
     this.getCreneaux();
     this.getStand();
 
-    $(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-});
+
   }
 
   ngOnChanges() {
