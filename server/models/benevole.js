@@ -37,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
         model: models.ResaBenevoles,
         unique: false
       },
-      foreignKey: 'croisement'
+      foreignKey: 'benevole'
   });
 
   };
