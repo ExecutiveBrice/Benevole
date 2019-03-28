@@ -142,6 +142,16 @@ export class DashboardComponent implements OnChanges {
         console.log('😢 Oh no!', error);
       });
   }
+  getVendredi(): void {
+    console.log("getVendredi")
+    this.croisementService.getByStand(9).subscribe(data => {
+      console.log(data)
+      this.vendredi = data['croisements'][0]
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
 
   updateListe(benevole: Benevole): void {
@@ -195,14 +205,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  getVendredi(): void {
-    this.croisementService.getByStand(9).subscribe(data => {
-      this.vendredi = data['croisements']
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-  }
+
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
     croisements.forEach(croisement => {
