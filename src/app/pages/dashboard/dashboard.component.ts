@@ -48,7 +48,7 @@ export class DashboardComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
 
-      
+
     this.vendredi = new Croisement();
     this.benevole = new Benevole();
     this.stands = [];
@@ -129,7 +129,7 @@ export class DashboardComponent implements OnChanges {
   error(benevole: Benevole): void {
     this.email.to = "bryce.morel@gmail.com"
     this.email.subject = "Problème d'inscription"
-    this.email.text = "Bonjour,\n Mr/Mme " + benevole.nom + "N'arrive pas à s'inscrire"
+    this.email.text = "Bonjour,\n l'utilisateur " + benevole.email + "n'arrive pas à se connecter"
     this.envoiMail(this.email)
   }
 
