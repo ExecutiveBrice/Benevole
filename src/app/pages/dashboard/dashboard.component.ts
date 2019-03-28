@@ -23,7 +23,7 @@ export class DashboardComponent implements OnChanges {
   stands: Stand[];
   chevauchement: boolean;
   besoins: Croisement[];
-
+  vendredi: Croisement;
   croisements: Croisement[];
   benevole: Benevole;
   email: Email = {
@@ -91,7 +91,7 @@ export class DashboardComponent implements OnChanges {
     this.benevoleService.add(this.benevole).subscribe(data => {
       console.log("data")
       console.log(data)
-      this.benevole.id = data['benevoles'];
+      this.benevole.id = data['benevole'];
       this.benevole.Croisements = [];
       this.exist = true;
       this.updateListe(this.benevole)
@@ -188,7 +188,17 @@ export class DashboardComponent implements OnChanges {
       });
   }
 
+  
 
+
+  getVendredi(): void {
+    this.croisementService.getByStand(9).subscribe(data => {
+      this.vendredi = data['croisements']
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
     croisements.forEach(croisement => {
