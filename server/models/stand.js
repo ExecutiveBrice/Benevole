@@ -16,6 +16,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     limite: {
       type: DataTypes.INTEGER,
+    },
+    bulle: {
+      type: DataTypes.STRING,
     }
   });
   Stand.associate = function (models) {

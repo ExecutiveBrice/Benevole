@@ -17,7 +17,7 @@
   </div>
 </div>
 </div>
-<div class="row">
+<div *ngIf="!validation" class="row">
   <div class="col-sm-6">
     <div class="row" *ngIf="!exist">
       <div class="col-sm-12 ">
@@ -32,7 +32,7 @@
     <div *ngIf="!exist" class="row">
       <div class="col-sm-12 ">
         <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg"
-          (click)="find(benevole)">Entrer</button>
+          (click)="find(benevole)" >Entrer</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg"
           (click)="find(benevole)">Je me suis trompé dans mon mail, je réessais</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-secondary btn-lg"
@@ -139,7 +139,7 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-warning" (click)="choisir(vendredi)">{{vendredi.Stand.nom}} - {{vendredi.Creneau.plage}}</button>
+        <button type="button" class="btn btn-block btn-warning" data-toggle="tooltip" title="{{vendredi.Stand.bulle}}" (click)="choisir(vendredi)">{{vendredi.Stand.nom}} - {{vendredi.Creneau.plage}}</button>
       </div>
 
       <div class="col-sm-12 ">

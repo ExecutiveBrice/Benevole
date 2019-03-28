@@ -47,7 +47,7 @@ export class DashboardComponent implements OnChanges {
     public standService: StandService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
-
+    this.vendredi = new Croisement();
     this.benevole = new Benevole();
     this.stands = [];
     this.besoins = [];
@@ -59,6 +59,10 @@ export class DashboardComponent implements OnChanges {
     this.new = true;
     this.getCreneaux();
     this.getStand();
+
+    $(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
   }
 
   ngOnChanges() {
@@ -188,7 +192,7 @@ export class DashboardComponent implements OnChanges {
       });
   }
 
-  
+
 
 
   getVendredi(): void {
@@ -213,7 +217,7 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  
+
 
   addCroisements(): void {
     console.log("addCroisements")
