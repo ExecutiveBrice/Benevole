@@ -4,6 +4,8 @@ import {LoginComponent} from './pages/login/login.component';
 import {SignupComponent} from "./pages/signup/signup.component";
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {GestionComponent} from './pages/gestion/gestion.component';
+import {GestionStandsComponent} from './pages/gestionStands/gestionStands.component';
+import {GestionBenevolesComponent} from './pages/gestionBenevoles/gestionBenevoles.component';
 
 
 const appRoutes: Routes = [
@@ -11,8 +13,9 @@ const appRoutes: Routes = [
   { path: 'signup', component: SignupComponent},
   { path: 'login', component: LoginComponent},
   { path: 'dashboard', component: DashboardComponent},
-  { path: 'gestion', component: GestionComponent}
-
+  { path: 'gestion', component: GestionComponent},
+  { path: 'gestionstands', component: GestionStandsComponent},
+  { path: 'gestionbenevoles', component: GestionBenevolesComponent}
   
 ];
 

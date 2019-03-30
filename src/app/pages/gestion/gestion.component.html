@@ -1,21 +1,6 @@
 
-    <div *ngFor="let benevole of benevoles" class="col-sm-12">
       <button type="button" class="btn btn-block btn-secondary"
-        (click)="choix = benevole.nom">{{benevole.nom}}</button>
+      routerLink="/gestionbenevoles" >Gestion des Bénévoles</button>
 
-      <div class="col-sm-12" *ngIf="choix == benevole.nom">
-        <div class="row">
-          <div *ngFor="let benecroisement of benevole.Croisements" class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">{{benecroisement.Stand.nom == "tous"?"N'importe quel stand":benecroisement.Stand.nom}} à
-              {{benecroisement.Creneau.plage}}</button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" *ngFor="let croisement of croisements"
-                (click)="choisir(croisement)">{{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à {{croisement.Creneau.plage}}</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
+      <button type="button" class="btn btn-block btn-secondary"
+      routerLink="/gestionstands" >Gestion des Stands</button>
