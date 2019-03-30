@@ -6,9 +6,10 @@ import { HttpClientModule} from "@angular/common/http";
 import { UserService, CroisementService, BenevoleService, StandService, MailService} from "../services";
 import { LoginComponent} from "../pages/login/login.component";
 import { SignupComponent} from "../pages/signup/signup.component";
-import { DashboardComponent} from "../pages/dashboard";
-import { GestionComponent} from "../pages/gestion";
-
+import { DashboardComponent} from "../pages/dashboard/dashboard.component";
+import { GestionComponent} from "../pages/gestion/gestion.component";
+import { GestionStandsComponent} from "../pages/gestionStands/gestionStands.component";
+import { GestionBenevolesComponent} from "../pages/gestionBenevoles/gestionBenevoles.component";
 
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 
@@ -34,7 +35,9 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     LoginComponent,
     SignupComponent,
     DashboardComponent,
-    GestionComponent
+    GestionComponent,
+    GestionStandsComponent,
+    GestionBenevolesComponent
   ]
 })
 export class CoreModule { }

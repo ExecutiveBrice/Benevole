@@ -1,0 +1,18 @@
+
+    <div *ngFor="let stand of stands" class="col-sm-12">
+      <button type="button" class="btn btn-block btn-secondary"
+        (click)="choix = stand.nom">{{stand.nom}} </button>
+
+      <div class="col-sm-12" *ngIf="choix == stand.nom">
+        <div class="row">
+          <div *ngFor="let standcroisement of stand.Croisements" class="col-sm-4 dropdown">
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
+              data-toggle="dropdown">{{standcroisement.Creneau.plage}}</button>
+
+              {{standcroisement.Benevole.prenom}} - {{standcroisement.Benevole.nom}} / {{standcroisement.Benevole.email}} {{standcroisement.Benevole.telephone}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+

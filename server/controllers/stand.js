@@ -8,6 +8,15 @@ module.exports = {
   getAll: function getAll(req, res) {
     console.log("getAll")
     return Stand.findAll({
+      include: [
+        {
+          model: Croisement,
+          include: [
+            { model: Creneau },
+            { model: Benevole }
+          ]
+        }
+      ]
     })
       .then(function (stands) {
         console.log("getAll - 2")
