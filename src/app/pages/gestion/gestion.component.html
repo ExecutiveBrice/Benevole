@@ -1,9 +1,9 @@
 
     <div *ngFor="let benevole of benevoles" class="col-sm-12">
       <button type="button" class="btn btn-block btn-secondary"
-        (click)="choix = {{benevole.nom}}">{{benevole.nom}}</button>
+        (click)="choix = benevole.nom">{{benevole.nom}}</button>
 
-      <div class="col-sm-12" *ngIf="choix == {{benevole.nom}}">
+      <div class="col-sm-12" *ngIf="choix == benevole.nom">
         <div class="row">
           <div *ngFor="let benecroisement of benevole.Croisements" class="col-sm-4 dropdown">
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
