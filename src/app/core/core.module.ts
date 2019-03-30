@@ -7,6 +7,9 @@ import { UserService, CroisementService, BenevoleService, StandService, MailServ
 import { LoginComponent} from "../pages/login/login.component";
 import { SignupComponent} from "../pages/signup/signup.component";
 import { DashboardComponent} from "../pages/dashboard";
+import { GestionComponent} from "../pages/gestion";
+
+
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 
 @NgModule({
@@ -30,7 +33,8 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
   declarations: [
     LoginComponent,
     SignupComponent,
-    DashboardComponent
+    DashboardComponent,
+    GestionComponent
   ]
 })
 export class CoreModule { }
