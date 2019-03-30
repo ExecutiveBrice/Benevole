@@ -47,22 +47,18 @@ export class GestionBenevolesComponent implements OnChanges {
   }
 
 
-  choisir(benevole: Benevole, croisement: Croisement): void {
-    let added = false;
-    for (let index = 0; index < benevole.Croisements.length; index++) {
-      if (croisement.id == benevole.Croisements[index].id) {
-        croisement.selected = false;
-        benevole.Croisements.splice(index, 1);
-        added = true;
-        break;
+  choisir(benevole: Benevole, benecroisement: Croisement, croisement: Croisement): void {
+    if (benecroisement.id) {
+      for (let index = 0; index < benevole.Croisements.length; index++) {
+        if (benecroisement.id == benevole.Croisements[index].id) {
+          benevole.Croisements.splice(index, 1);
+          break;
+        }
       }
     }
 
-    if (!added) {
-      croisement.selected = true;
-      benevole.Croisements.push(croisement);
-      this.addCroisements(benevole);
-    }
+    benevole.Croisements.push(croisement);
+    this.addCroisements(benevole);
   }
 
   addCroisements(benevole): void {
