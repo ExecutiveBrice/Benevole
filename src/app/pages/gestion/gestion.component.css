@@ -82,3 +82,10 @@ width: 100%;
 .Description{
   padding-top: 10px;
   }
+
+
+  .btn-block {
+    padding: 3%; 
+    /* define values in pixels / Percentage or em. whatever suits 
+       your requirements */
+}
