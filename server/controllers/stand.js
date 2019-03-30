@@ -1,7 +1,9 @@
 'use strict';
 
 var Stand = require('../models').Stand;
-
+var Croisement = require('../models').Croisement;
+var Creneau = require('../models').Creneau;
+var Benevole = require('../models').Benevole;
 
 module.exports = {
 
