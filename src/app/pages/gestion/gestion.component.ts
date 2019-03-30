@@ -5,8 +5,6 @@ import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
 
-
-
 @Component({
   selector: 'app-gestion',
   templateUrl: './gestion.component.html',
@@ -15,6 +13,7 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 
 export class GestionComponent implements OnChanges {
 
+  croisements: Croisement[];
   benevoles: Benevole[];
   choix: string;
   constructor(public benevoleService: BenevoleService,
@@ -23,9 +22,8 @@ export class GestionComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.benevoles = [];
+    this.croisements = [];
     this.choix = "";
-
-
     this.find();
   }
 
@@ -48,14 +46,7 @@ export class GestionComponent implements OnChanges {
   }
 
 
-
-
-
-
-
-
   choisir(benevole: Benevole, croisement: Croisement): void {
-
     let added = false;
     for (let index = 0; index < benevole.Croisements.length; index++) {
       if (croisement.id == benevole.Croisements[index].id) {
@@ -71,11 +62,7 @@ export class GestionComponent implements OnChanges {
       benevole.Croisements.push(croisement);
       this.addCroisements(benevole);
     }
-
   }
-
-
-
 
   addCroisements(benevole): void {
     console.log("addCroisements")
@@ -90,4 +77,12 @@ export class GestionComponent implements OnChanges {
   }
 
 
+  getCroisement(): void {
+    this.croisementService.getAll().subscribe(data => {
+      this.croisements = data['croisements']
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 }
