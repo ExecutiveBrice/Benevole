@@ -1,12 +1,11 @@
-<div class="col-sm-12" >
-  <div class="row">
-    <div *ngFor="let benevole of benevoles" class="col-sm-4">
-      <button type="button" class="btn btn-block btn-secondary"
-        (click)="choix = benevole.nom">{{benevole.nom}}</button>
 
-      <div class="col-sm-12" *ngIf="choix == benevole.nom">
+    <div *ngFor="let benevole of benevoles" class="col-sm-12">
+      <button type="button" class="btn btn-block btn-secondary"
+        (click)="choix = {{benevole.nom}}">{{benevole.nom}}</button>
+
+      <div class="col-sm-12" *ngIf="choix == {{benevole.nom}}">
         <div class="row">
-          <div *ngFor="let benecroisement of benevole.croisements" class="col-sm-4 dropdown">
+          <div *ngFor="let benecroisement of benevole.Croisements" class="col-sm-4 dropdown">
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
               data-toggle="dropdown">{{benecroisement.Stand.nom == "tous"?"N'importe quel stand":benecroisement.Stand.nom}} à
               {{benecroisement.Creneau.plage}}</button>
@@ -20,6 +19,3 @@
     </div>
 
 
-
-  </div>
-</div>
