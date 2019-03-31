@@ -41,7 +41,7 @@ export class GestionStandsComponent implements OnChanges {
       console.log("data")
       console.log(data)
       
-      this.stands = data['stands'].sort((a,b) => a.nom.localeCompare(b.nom));;
+      this.stands = data['stands'];
     },
       error => {
         console.log('😢 Oh no!', error);
