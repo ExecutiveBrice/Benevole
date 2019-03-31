@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppRoutingModule} from "../app-routing.module";
 import { FormsModule} from "@angular/forms";
 import { HttpClientModule} from "@angular/common/http";
-import { UserService, CroisementService, BenevoleService, StandService, MailService} from "../services";
+import { UserService, CroisementService, BenevoleService, StandService, MailService, FilterSortService} from "../services";
 import { LoginComponent} from "../pages/login/login.component";
 import { SignupComponent} from "../pages/signup/signup.component";
 import { DashboardComponent} from "../pages/dashboard/dashboard.component";
@@ -29,7 +29,8 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     CroisementService,
     BenevoleService,
     StandService,
-    MailService
+    MailService,
+    FilterSortService
   ],
   declarations: [
     LoginComponent,
