@@ -1,4 +1,4 @@
-<div *ngFor="let stand of stands | orderBy:nom:isDesc" class="col-sm-12">
+<div *ngFor="let stand of stands | sort:'nom'" class="col-sm-12">
   <button type="button" class="btn btn-block btn-info" (click)="choix = stand.nom">{{stand.nom}} </button>
 
   <div class="col-sm-12" *ngIf="choix == stand.nom">
