@@ -84,7 +84,7 @@
           </div>
 
 
-          <div *ngFor="let croisement of benevole.Croisements" class="col-md-12">
+          <div *ngFor="let croisement of benevole.Croisements | orderBy:'Creneau.plage':false" class="col-md-12">
             {{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à
             {{croisement.Creneau.plage}}
           </div>
@@ -149,11 +149,11 @@
 
       <div class="col-sm-12" *ngIf="choix == 'stand'">
         <div class="row">
-          <div *ngFor="let stand of stands" class="col-sm-4 dropdown">
+          <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-4 dropdown">
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
               data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" *ngFor="let croisement of stand.croisements"
+              <a class="dropdown-item" *ngFor="let croisement of stand.croisements | orderBy:'Creneau.plage':false"
                 [ngClass]="{'active':croisement.selected === true}"
                 (click)="choisir(croisement)">{{croisement.Creneau.plage}}</a>
             </div>
@@ -177,7 +177,7 @@
 
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
-          <div *ngFor="let croisement of creneaux" class="col-sm-4">
+          <div *ngFor="let croisement of creneaux | orderBy:'Creneau.plage':false" class="col-sm-4">
             <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
               class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
@@ -205,7 +205,7 @@
 
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
-          <div *ngFor="let croisement of besoins" class="col-sm-4">
+          <div *ngFor="let croisement of besoins | orderBy:'Stand.nom':false" class="col-sm-4">
             <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
               class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
               {{croisement.Creneau.plage}}</button>
