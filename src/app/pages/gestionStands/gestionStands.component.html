@@ -1,12 +1,12 @@
-<div *ngFor="let stand of stands | orderBy:'nom':true " class="col-sm-12">
+<div *ngFor="let stand of stands | orderBy:'nom':false " class="col-sm-12">
   <button type="button" class="btn btn-block btn-info" (click)="choix = stand.nom">{{stand.nom}} </button>
 
   <div class="col-sm-12" *ngIf="choix == stand.nom">
     <div class="row">
-      <div *ngFor="let standcroisement of stand.Croisements | orderBy:'Creneau.ordre':true " class="col-sm-12 dropdown">
+      <div *ngFor="let standcroisement of stand.Croisements | orderBy:'Creneau.ordre':false " class="col-sm-12 dropdown">
         <h3><strong>{{standcroisement.Creneau.plage}} :</strong></h3>
         <div class="row">
-          <div *ngFor="let benevole of standcroisement.Benevoles | orderBy:'nom':true " class="col-sm-12 dropdown">
+          <div *ngFor="let benevole of standcroisement.Benevoles | orderBy:'nom':false " class="col-sm-12 dropdown">
             {{benevole.prenom}} - {{benevole.nom}} / {{benevole.email}} {{benevole.telephone}}
           </div>
         </div>

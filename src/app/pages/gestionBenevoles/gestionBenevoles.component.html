@@ -1,16 +1,16 @@
 
-    <div *ngFor="let benevole of benevoles" class="col-sm-12">
+    <div *ngFor="let benevole of benevoles  | orderBy:'nom':false" class="col-sm-12">
       <button type="button" class="btn btn-block btn-info"
-        (click)="choix = benevole.nom">{{benevole.prenom}} - {{benevole.nom}} / {{benevole.email}} {{benevole.telephone}}</button>
+        (click)="choix = benevole.nom">{{benevole.nom}} - {{benevole.prenom}} / {{benevole.email}} {{benevole.telephone}}</button>
 
       <div class="col-sm-12" *ngIf="choix == benevole.nom">
         <div class="row">
-          <div *ngFor="let benecroisement of benevole.Croisements" class="col-sm-4 dropdown">
+          <div *ngFor="let benecroisement of benevole.Croisements | orderBy:'Stand.nom':false" class="col-sm-4 dropdown">
             <button type="button" class="btn btn-block btn-warning dropdown-toggle"
               data-toggle="dropdown">{{benecroisement.Stand.nom == "tous"?"N'importe quel stand":benecroisement.Stand.nom}} à
               {{benecroisement.Creneau.plage}}</button>
             <div class="dropdown-menu">
-              <a class="dropdown-item" *ngFor="let croisement of croisements"
+              <a class="dropdown-item" *ngFor="let croisement of croisements  | orderBy:'Stand.nom':false"
                 (click)="choisir(benevole, benecroisement, croisement)">{{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à {{croisement.Creneau.plage}}</a>
             </div>
           </div>
