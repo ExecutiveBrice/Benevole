@@ -1,9 +1,11 @@
 
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService, ArraySortPipe } from '../../services';
+import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
+
+
 
 @Component({
   selector: 'app-gestionStands',
@@ -16,7 +18,6 @@ export class GestionStandsComponent implements OnChanges {
 
   choix: string;
   constructor(
-    public ArraySortPipe:ArraySortPipe,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
@@ -39,7 +40,8 @@ export class GestionStandsComponent implements OnChanges {
     this.standService.getAll().subscribe(data => {
       console.log("data")
       console.log(data)
-      this.stands = data['stands'];
+      
+      this.stands = data['stands'].sort((a,b) => a.nom.localeCompare(b.nom));;
     },
       error => {
         console.log('😢 Oh no!', error);
