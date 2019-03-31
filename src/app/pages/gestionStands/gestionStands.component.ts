@@ -1,7 +1,7 @@
 
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService, OrderByPipe } from '../../services';
+import { CroisementService, StandService, MailService, ArraySortPipe } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
 
@@ -16,7 +16,7 @@ export class GestionStandsComponent implements OnChanges {
 
   choix: string;
   constructor(
-    public filterSortService: OrderByPipe,
+    public ArraySortPipe:ArraySortPipe,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
