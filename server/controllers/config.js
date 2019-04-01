@@ -1,7 +1,5 @@
 'use strict';
-
-var Stand = require('../models').Config;
-
+var Config = require('../models').Config;
 module.exports = {
 
   getParam: function getParam(req, res) {
