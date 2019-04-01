@@ -10,6 +10,10 @@ router.post('/', function (req, res) {
     return emailsController.sendMail(req,res);
 });
 
+router.post('/rappel', function (req, res) {
+    console.log("------ rappel")
+    return emailsController.rappel(req,res);
+});
 
 
 module.exports = router;

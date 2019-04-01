@@ -29,6 +29,7 @@ export class GestionComponent implements OnChanges {
     this.rappel = false;
     this.bloque = false;
     this.email.text = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
+    this.bloquage();
   }
 
   ngOnChanges() {

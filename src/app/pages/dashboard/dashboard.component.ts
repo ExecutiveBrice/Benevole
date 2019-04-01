@@ -80,8 +80,8 @@ export class DashboardComponent implements OnChanges {
     this.configService.getParam('lock')
       .subscribe(res => {
         console.log("lock");
-        console.log(res);
-        if(res['param'].value == true){
+        console.log(res['param'].value);
+        if(res['param'].value == "true"){
           this.router.navigate(['/404']);
         }
       }, err => {
