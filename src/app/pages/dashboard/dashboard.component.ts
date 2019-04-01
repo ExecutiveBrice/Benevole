@@ -175,6 +175,8 @@ export class DashboardComponent implements OnChanges {
 
 
   updateListe(benevole: Benevole): void {
+    console.log("updateListe")
+    console.log(benevole)
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.croisements, benevole.Croisements)
@@ -228,6 +230,9 @@ export class DashboardComponent implements OnChanges {
 
 
   updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
+    console.log("updateCroisementListe")
+    console.log(croisements)
+    console.log(croisementsbenevole)
     croisements.forEach(croisement => {
       croisementsbenevole.forEach(croisementbenevole => {
         if (croisement.id == croisementbenevole.id) {
