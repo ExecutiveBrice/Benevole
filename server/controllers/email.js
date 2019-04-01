@@ -30,5 +30,53 @@ module.exports = {
         obj: mailOptions
       });
     });
+  },
+  rappel: function rappel(req, res) {
+
+    console.log("sendRappel")
+
+    return Benevole.findAll({
+      include: [
+        {
+          model: Croisement,
+          include: [
+            { model: Creneau },
+            { model: Stand }
+          ]
+        }
+      ]
+    })
+      .then(function (benevoles) {
+        console.log("sendRappel - 2")
+        console.log(benevoles)
+        mailOptions.subject = req.body.subject
+
+        benevoles.forEach(benevole => {
+          var text = req.body.text
+
+          benevole.Croisement.forEach(croisement => {
+          text = text +   croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
+          })
+          mailOptions.text = text
+          mailOptions.to = benevole.email
+
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            console.log('Email sent!');
+
+          });
+
+        });
+        return res.status(200).json({
+          message: "Emails sent",
+          obj: benevoles
+        });
+      })
+
+
   }
+
+
+
+
 };
