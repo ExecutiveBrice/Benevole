@@ -14,5 +14,5 @@ module.exports = function (sequelize, DataTypes) {
   Config.associate = function (models) {
 
   };
-  return Creneau;
+  return Config;
 };

@@ -6,7 +6,7 @@ module.exports = {
 
   getParam: function getParam(req, res) {
     console.log("getParam")
-    return Config.findOne({ where: { param: (req.body.param) } })
+    return Config.findOne({ where: { param: (req.query.param) } })
       .then(function (param) {
         console.log("getParam - 2")
         console.log(param)
@@ -32,13 +32,9 @@ module.exports = {
   updateParam: function updateParam(req, res) {
     console.log("updateParam")
     return Config.update({
-      nom: req.body.nom,
-      telephone: req.body.telephone,
-      email: req.body.email,
-      prenom: req.body.prenom,
-      commentaire: req.body.commentaire,
-      gateaux: req.body.gateaux
-    }, { where: { id: (req.body.id) } })
+      param: req.body.param,
+      value: req.body.value,
+    }, { where: { param: (req.body.param) } })
       .then(function (param) {
         console.log("updateParam - 2")
         console.log(param)
