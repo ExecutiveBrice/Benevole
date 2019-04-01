@@ -14,11 +14,7 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 export class GestionComponent implements OnChanges {
   rappel: boolean;
   bloque: string;
-  email: Email = {
-    to: "",
-    subject: "",
-    text: ""
-  }
+
 
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
@@ -27,7 +23,6 @@ export class GestionComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
-    this.email.text = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
     this.bloquage();
   }
 
@@ -62,20 +57,14 @@ export class GestionComponent implements OnChanges {
       });
   }
 
-  envoiRappel(benevole: Benevole) {
-    this.email.to = benevole.email
-    this.email.subject = "Rappel de participation"
-    this.email.text = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
-    benevole.Croisements.forEach(croisement => {
-      this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
-    });
-    this.email.text = this.email.text + benevole.gateaux + "\n"
-    this.envoiMail(this.email)
-  }
+  envoiRappel() {
+    let email: Email = {
+      to: "",
+      subject: "Rappel de participation",
+      text: "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n"
+    }
 
-
-  envoiMail(email: Email) {
-    this.mailService.sendMail(email)
+    this.mailService.rappel(email)
       .subscribe(res => {
         console.log("this.api.sendMail");
         console.log(res);
