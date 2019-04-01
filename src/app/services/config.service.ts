@@ -16,8 +16,8 @@ export class ConfigService {
   }
 
   updateParam(param:String, value:String) {
-    let params = new HttpParams().set('param', ''+param+'');
-    params.set('value', ''+value+'');
+    let params = new HttpParams().set('param', ''+param+'').set('value', ''+value+'');
+    
     return this.http.put(this.apiUrl + "/", params, { responseType: 'json' })
   }
 }
