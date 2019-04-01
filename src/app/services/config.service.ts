@@ -12,12 +12,12 @@ export class ConfigService {
 
   getParam(param:String) {
     let params = new HttpParams().set('param', ''+param+'');
-    return this.http.get(this.apiUrl + "/param", {params, responseType: 'json' })
+    return this.http.get(this.apiUrl + "/", {params, responseType: 'json' })
   }
 
   updateParam(param:String, value:String) {
     let params = new HttpParams().set('param', ''+param+'');
     params.set('value', ''+value+'');
-    return this.http.put(this.apiUrl + "/param", params, { responseType: 'json' })
+    return this.http.put(this.apiUrl + "/", params, { responseType: 'json' })
   }
 }
