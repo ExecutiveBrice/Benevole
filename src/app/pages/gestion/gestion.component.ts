@@ -14,7 +14,7 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 export class GestionComponent implements OnChanges {
   rappel: boolean;
   bloque: string;
-
+  emailText:string;
 
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
@@ -23,6 +23,7 @@ export class GestionComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
+    this.emailText = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
     this.bloquage();
   }
 
@@ -57,11 +58,11 @@ export class GestionComponent implements OnChanges {
       });
   }
 
-  envoiRappel() {
+  envoiRappel(emailText:string) {
     let email: Email = {
       to: "",
       subject: "Rappel de participation",
-      text: "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n"
+      text: emailText
     }
 
     this.mailService.rappel(email)
