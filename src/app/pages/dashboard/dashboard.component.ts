@@ -222,7 +222,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  addCroisements(): void {
+  addCroisements(benevole:Benevole): void {
     console.log("addCroisements")
     console.log(this.benevole)
     this.benevole.email = this.benevole.email.toLowerCase();
@@ -255,7 +255,7 @@ export class DashboardComponent implements OnChanges {
     if (!added) {
       croisement.selected = true;
       this.benevole.Croisements.push(croisement);
-      this.addCroisements();
+
     }
 
     let listePlages = []
@@ -270,17 +270,18 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  validate(): void {
-    this.benevoleService.update(this.benevole).subscribe(data => {
+  validate(benevole:Benevole): void {
+    this.addCroisements(benevole);
+    this.benevoleService.update(benevole).subscribe(data => {
       console.log(data)
-      this.benevole.id = data['benevoles'];
+      benevole.id = data['benevoles'];
       this.exist = true;
 
       this.validation = true;
-      this.email.to = this.benevole.email
+      this.email.to = benevole.email
       this.email.subject = "Validation de participation"
       this.email.text = "Bonjour,\n Votre participation à bien été prise en compte \n";
-      this.benevole.Croisements.forEach(croisement => {
+      benevole.Croisements.forEach(croisement => {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
       this.email.text = this.email.text + "Vous pouvez revenir à tout moment pour modifier vos choix en vous connectant à l'aide de votre adresse e-mail."

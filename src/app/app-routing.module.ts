@@ -6,6 +6,7 @@ import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {GestionComponent} from './pages/gestion/gestion.component';
 import {GestionStandsComponent} from './pages/gestionStands/gestionStands.component';
 import {GestionBenevolesComponent} from './pages/gestionBenevoles/gestionBenevoles.component';
+import { ErrorComponent} from "./pages/error/error.component";
 
 
 const appRoutes: Routes = [
@@ -15,8 +16,9 @@ const appRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent},
   { path: 'gestion', component: GestionComponent},
   { path: 'gestionstands', component: GestionStandsComponent},
-  { path: 'gestionbenevoles', component: GestionBenevolesComponent}
-  
+  { path: 'gestionbenevoles', component: GestionBenevolesComponent},
+  { path: '404', component: ErrorComponent},
+  { path: '**', redirectTo: '404'}
 ];
 
 @NgModule({
