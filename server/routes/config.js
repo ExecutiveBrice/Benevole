@@ -5,11 +5,11 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 var configController = require('../controllers').configs;
 
-router.get('/param', function (req, res) {
+router.get('/', function (req, res) {
     console.log("------ param")
     return configController.getParam(req,res);
 });
-router.put('/param', function (req, res) {
+router.put('/', function (req, res) {
     console.log("------ param")
     return configController.updateParam(req,res);
 });

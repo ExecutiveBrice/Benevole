@@ -34,25 +34,37 @@ export class GestionComponent implements OnChanges {
   ngOnChanges() {
 
   }
-  bloquage(bloque) {
+
+  bloquage() {
     this.configService.getParam('lock')
       .subscribe(res => {
         console.log("lock");
         console.log(res);
+        this.bloque = res['param'].value;
       }, err => {
         console.log(err);
       });
   }
 
-  envoiRappel(benevole:Benevole) {
+  updateBloque() {
+    this.configService.updateParam('lock',(!this.bloque).toString())
+      .subscribe(res => {
+        console.log("lock");
+        console.log(res);
+        this.bloque = res['param'].value;
+      }, err => {
+        console.log(err);
+      });
+  }
 
+  envoiRappel(benevole: Benevole) {
     this.email.to = benevole.email
     this.email.subject = "Rappel de participation"
     this.email.text = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
     benevole.Croisements.forEach(croisement => {
       this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
     });
-    this.email.text = this.email.text + benevole.gateaux +"\n"
+    this.email.text = this.email.text + benevole.gateaux + "\n"
     this.envoiMail(this.email)
   }
 

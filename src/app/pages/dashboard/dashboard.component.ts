@@ -1,9 +1,11 @@
 
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService } from '../../services';
+import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
+import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
+
 
 
 
@@ -43,6 +45,9 @@ export class DashboardComponent implements OnChanges {
 
 
   constructor(public benevoleService: BenevoleService,
+    
+    public router: Router,
+    public configService:ConfigService,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
@@ -63,10 +68,25 @@ export class DashboardComponent implements OnChanges {
     this.getStand();
     this.getVendredi();
 
+    this.bloquage();
+
   }
 
   ngOnChanges() {
 
+  }
+
+  bloquage() {
+    this.configService.getParam('lock')
+      .subscribe(res => {
+        console.log("lock");
+        console.log(res);
+        if(res['param'].value == true){
+          this.router.navigate(['/404']);
+        }
+      }, err => {
+        console.log(err);
+      });
   }
 
   find(): void {
