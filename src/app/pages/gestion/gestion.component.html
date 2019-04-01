@@ -1,6 +1,17 @@
+<button type="button" class="btn btn-block btn-danger" routerLink="/gestionbenevoles">Gestion des Bénévoles</button>
 
-      <button type="button" class="btn btn-block btn-danger"
-      routerLink="/gestionbenevoles" >Gestion des Bénévoles</button>
+<button type="button" class="btn btn-block btn-danger" routerLink="/gestionstands">Gestion des Stands</button>
 
-      <button type="button" class="btn btn-block btn-danger"
-      routerLink="/gestionstands" >Gestion des Stands</button>
+<button type="button" class="btn btn-block btn-danger" (click)="rappel = !rappel">Mail de rappel</button>
+
+
+<div *ngIf="rappel" class="col-sm-12 ">
+      <div class="input-group mb-3 input-group-lg">
+            <textarea [(ngModel)]="email.text" class="form-control">
+                </textarea>
+      </div>
+      <button type="button" class="btn btn-block btn-info btn-lg" (click)="envoiRappel(benevole)">Envoyer le rappel</button>
+</div>
+
+
+<button type="button" class="btn btn-block btn-danger" (click)="bloquage()">Bloquer le site</button>
