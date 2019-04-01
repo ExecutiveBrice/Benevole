@@ -2,14 +2,10 @@
 
 module.exports = function (sequelize, DataTypes) {
   var Config = sequelize.define("Config", {
-    id: {
-      type: DataTypes.INTEGER,
-      unique: true,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    params: {
+    param: {
       type: DataTypes.STRING,
+      unique: true,
+      primaryKey: true
     },
     value: {
       type: DataTypes.STRING,

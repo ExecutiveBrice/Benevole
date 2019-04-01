@@ -5,13 +5,13 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 var configController = require('../controllers').configs;
 
-router.get('/isLock', function (req, res) {
-    console.log("------ isLock")
-    return configController.isLock(req,res);
+router.get('/param', function (req, res) {
+    console.log("------ param")
+    return configController.getParam(req,res);
 });
-router.put('/lockUnlock', function (req, res) {
-    console.log("------ lockUnlock")
-    return configController.lockUnlock(req,res);
+router.put('/param', function (req, res) {
+    console.log("------ param")
+    return configController.updateParam(req,res);
 });
 
 
