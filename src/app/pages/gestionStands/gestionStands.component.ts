@@ -23,7 +23,7 @@ export class GestionStandsComponent implements OnChanges {
     public standService: StandService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
-      this.stands = [];
+    this.stands = [];
 
     this.choix = "";
     this.getAll();
@@ -40,7 +40,7 @@ export class GestionStandsComponent implements OnChanges {
     this.standService.getAll().subscribe(data => {
       console.log("data")
       console.log(data)
-      
+
       this.stands = data['stands'];
     },
       error => {

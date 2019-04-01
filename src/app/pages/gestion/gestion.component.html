@@ -11,10 +11,10 @@
             <div *ngIf="rappel" class="row">
                   <div  class="col-sm-12 ">
 
-                        <textarea rows="20" [(ngModel)]="email.text" class="form-control">
+                        <textarea rows="20" [(ngModel)]="emailText" class="form-control">
                 </textarea>
 
-                        <button type="button" class="btn btn-block btn-info btn-lg" (click)="envoiRappel(email)">Envoyer
+                        <button type="button" class="btn btn-block btn-info btn-lg" (click)="envoiRappel(emailText)">Envoyer
                               le rappel</button>
                   </div>
             </div>
