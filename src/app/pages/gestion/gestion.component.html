@@ -1,17 +1,25 @@
-<button type="button" class="btn btn-block btn-danger" routerLink="/gestionbenevoles">Gestion des Bénévoles</button>
+<div class="row">
+      <div class="col-sm-12">
 
-<button type="button" class="btn btn-block btn-danger" routerLink="/gestionstands">Gestion des Stands</button>
-
-<button type="button" class="btn btn-block btn-danger" (click)="rappel = !rappel">Mail de rappel</button>
-
-
-<div *ngIf="rappel" class="col-sm-12 ">
-      <div class="input-group mb-3 input-group-lg">
-            <textarea [(ngModel)]="email.text" class="form-control">
-                </textarea>
+            <button type="button" class="btn btn-block btn-danger" routerLink="/gestionbenevoles">Gestion des Bénévoles</button>
       </div>
-      <button type="button" class="btn btn-block btn-info btn-lg" (click)="envoiRappel(benevole)">Envoyer le rappel</button>
+      <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-danger" routerLink="/gestionstands">Gestion des Stands</button>
+      </div>
+      <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-danger" (click)="rappel = !rappel">Mail de rappel</button>
+            <div *ngIf="rappel" class="row">
+                  <div  class="col-sm-12 ">
+
+                        <textarea rows="20" [(ngModel)]="email.text" class="form-control">
+                </textarea>
+
+                        <button type="button" class="btn btn-block btn-info btn-lg" (click)="envoiRappel(benevole)">Envoyer
+                              le rappel</button>
+                  </div>
+            </div>
+      </div>
+      <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-danger" (click)="bloquage(bloque)">{{bloque?'Débloquer le site':'Bloquer le site'</button>
+      </div>
 </div>
-
-
-<button type="button" class="btn btn-block btn-danger" (click)="bloquage()">Bloquer le site</button>
