@@ -233,15 +233,17 @@ export class DashboardComponent implements OnChanges {
     console.log("updateCroisementListe")
     console.log(croisements)
     console.log(croisementsbenevole)
-    croisements.forEach(croisement => {
-      croisementsbenevole.forEach(croisementbenevole => {
-        if (croisement.id == croisementbenevole.id) {
-          croisement.selected = true;
+    for (let index = 0; index < croisements.length; index++) {
+      for (let index = 0; index < croisementsbenevole.length; index++) {
+        if (croisements[index].id == croisementsbenevole[index].id) {
+          croisements[index].selected = true;
+          break;
         } else {
-          croisement.selected = false;
+          croisements[index].selected = false;
         }
-      })
-    });
+      }
+    }
+
   }
 
 
@@ -299,7 +301,7 @@ export class DashboardComponent implements OnChanges {
     this.addCroisements(benevole);
     this.benevoleService.update(benevole).subscribe(data => {
       console.log(data)
-      benevole.id = data['benevoles'];
+      benevole.id = data['benevole'];
       this.exist = true;
 
       this.validation = true;
