@@ -4,11 +4,11 @@ var Stand = require('../models').Config;
 
 module.exports = {
 
-  isLock: function isLock(req, res) {
-    console.log("isLock")
+  getParam: function getParam(req, res) {
+    console.log("getParam")
     return Config.findOne({ where: { param: (req.body.param) } })
       .then(function (param) {
-        console.log("isLock - 2")
+        console.log("getParam - 2")
         console.log(param)
         if (!param) {
           return res.status(404).json({
@@ -29,8 +29,8 @@ module.exports = {
         });
       });
   },
-  lockUnlock: function lockUnlock(req, res) {
-    console.log("lockUnlock")
+  updateParam: function updateParam(req, res) {
+    console.log("updateParam")
     return Config.update({
       nom: req.body.nom,
       telephone: req.body.telephone,
@@ -40,7 +40,7 @@ module.exports = {
       gateaux: req.body.gateaux
     }, { where: { id: (req.body.id) } })
       .then(function (param) {
-        console.log("lockUnlock - 2")
+        console.log("updateParam - 2")
         console.log(param)
         if (!param) {
           return res.status(404).json({
