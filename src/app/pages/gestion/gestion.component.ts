@@ -35,9 +35,9 @@ export class GestionComponent implements OnChanges {
 
   }
   bloquage(bloque) {
-    this.configService.lockUnlock()
+    this.configService.getParam('lock')
       .subscribe(res => {
-        console.log("this.api.sendMail");
+        console.log("lock");
         console.log(res);
       }, err => {
         console.log(err);
