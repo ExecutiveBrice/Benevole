@@ -13,7 +13,7 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 
 export class GestionComponent implements OnChanges {
   rappel: boolean;
-  bloque: boolean;
+  bloque: string;
   email: Email = {
     to: "",
     subject: "",
@@ -27,7 +27,6 @@ export class GestionComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
-    this.bloque = false;
     this.email.text = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
     this.bloquage();
   }
@@ -48,7 +47,12 @@ export class GestionComponent implements OnChanges {
   }
 
   updateBloque() {
-    this.configService.updateParam('lock',(!this.bloque).toString())
+    if(this.bloque == "true"){
+      this.bloque = "false";
+    }else{
+      this.bloque = "true";
+    }
+    this.configService.updateParam('lock',this.bloque)
       .subscribe(res => {
         console.log("lock");
         console.log(res);
