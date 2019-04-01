@@ -29,6 +29,7 @@ module.exports = {
   },
   updateParam: function updateParam(req, res) {
     console.log("updateParam")
+    console.log(param)
     return Config.update({
       param: req.body.param,
       value: req.body.value,
