@@ -1,7 +1,7 @@
 
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService } from '../../services';
+import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
 
@@ -13,27 +13,35 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 
 export class GestionComponent implements OnChanges {
   rappel: boolean;
+  bloque: boolean;
   email: Email = {
     to: "",
     subject: "",
     text: ""
   }
 
-
   constructor(public benevoleService: BenevoleService,
+    public configService: ConfigService,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
+    this.bloque = false;
     this.email.text = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
   }
 
   ngOnChanges() {
 
   }
-  bloquage() {
-
+  bloquage(bloque) {
+    this.configService.lockUnlock()
+      .subscribe(res => {
+        console.log("this.api.sendMail");
+        console.log(res);
+      }, err => {
+        console.log(err);
+      });
   }
 
   envoiRappel(benevole:Benevole) {
