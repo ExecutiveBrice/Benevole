@@ -75,7 +75,6 @@
     </div>
     <div *ngIf="exist" class="row">
       <div class="col-sm-12 ">
-        <div class="input-group mb-3 input-group-lg">
           <h4>Votre planning :</h4>
 
           <div *ngIf="chevauchement" class="alert alert-danger">
@@ -89,7 +88,6 @@
             {{croisement.Creneau.plage}}
           </div>
 
-        </div>
       </div>
 
 
@@ -98,38 +96,25 @@
 
 
       <div class="col-sm-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Commentaire : </span>
-          </div>
-
+          <h4>Commentaire :</h4>
+          <textarea rows="5" [(ngModel)]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
+            </textarea>
         </div>
-        <textarea rows="5" [(ngModel)]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
-          </textarea>
-      </div>
+
       <div *ngIf="benevole.reponse" class="col-sm-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Reponse : </span>
-          </div>
+          <h4>Reponse :</h4>
           <input type="text" [(ngModel)]="benevole.reponse" readonly class="form-control">
-        </div>
       </div>
 
       <div class="col-sm-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Préparation de plat : </span>
-          </div>
-
-        </div>
+        <h4>Préparation de plat :</h4>
         <textarea rows="5" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
           </textarea>
       </div>
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide mon
+        <button type="button" class="btn btn-block btn-danger" (click)="validate(benevole)">Je valide mon
           inscription</button>
       </div>
 
