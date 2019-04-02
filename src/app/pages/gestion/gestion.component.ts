@@ -44,8 +44,10 @@ export class GestionComponent implements OnChanges {
 
   updateBloque() {
     if(this.bloque == "true"){
+      console.log("true to false")
       this.bloque = "false";
     }else{
+      console.log("false to true")
       this.bloque = "true";
     }
     this.configService.updateParam('lock',this.bloque)
