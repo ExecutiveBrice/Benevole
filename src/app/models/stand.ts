@@ -8,7 +8,7 @@ export class Stand {
   nom: string;
   description:string;
   bulle:string;
-  limite:number;
+  ordre:number;
   Croisements: Croisement[];
   croisements: Croisement[];
 }

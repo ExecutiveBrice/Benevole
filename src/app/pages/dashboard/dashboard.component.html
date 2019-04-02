@@ -102,9 +102,10 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Commentaire : </span>
           </div>
-          <textarea [(ngModel)]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
-            </textarea>
+
         </div>
+        <textarea rows="5" [(ngModel)]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
+          </textarea>
       </div>
       <div *ngIf="benevole.reponse" class="col-sm-12 ">
         <div class="input-group mb-3 input-group-lg">
@@ -120,8 +121,10 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Préparation de plat : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
+
         </div>
+        <textarea rows="5" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
+          </textarea>
       </div>
 
 

@@ -66,34 +66,50 @@ module.exports = {
         console.log(benevoles)
         mailOptions.subject = req.body.subject
 
- var text1 = Config.findOne({ where: { param: ("rappel1") } })
-      .then(function (param) {
-        console.log("getParam - 2")
-        console.log(param)
-        if (!param) {
-          return null
-        }
-        return param
-      }).catch(function (error) {
-        console.log(error.toString());
-        return null;
-      });
+        var text1 = Config.findOne({ where: { param: ("rappel1") } })
+          .then(function (param) {
+            console.log("getParam - 2")
+            console.log(param)
+            if (!param) {
+              return null
+            }
+            return param
+          }).catch(function (error) {
+            console.log(error.toString());
+            return null;
+          });
 
+
+          var text2 = Config.findOne({ where: { param: ("rappel2") } })
+          .then(function (param) {
+            console.log("getParam - 2")
+            console.log(param)
+            if (!param) {
+              return null
+            }
+            return param
+          }).catch(function (error) {
+            console.log(error.toString());
+            return null;
+          });
         benevoles.forEach(benevole => {
           var text = text1
           if (benevole.Croisement) {
-            benevole.Croisement.forEach(croisement => {
+            console.log('benevole.Croisement');
+            benevole.Croisements.forEach(croisement => {
               text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
             })
-            mailOptions.text = text
-            mailOptions.to = benevole.email
-
-
-            transporter.sendMail(mailOptions, function (error, info) {
-              console.log('Email sent!');
-
-            });
           }
+          text = text + benevole.gateaux + "\n"
+          text = text + text2
+          mailOptions.text = text
+          mailOptions.to = benevole.email
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            console.log('Email sent!');
+
+          });
+
         });
         return res.status(200).json({
           message: "Emails sent",
