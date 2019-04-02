@@ -33,22 +33,15 @@ export class GestionComponent implements OnChanges {
   }
 
   getParam(param: string, paramvalue: string) {
-    this.configService.getParam(param).subscribe(res => {
-      console.log(param);
-      console.log(res);
-      console.log(res['param'].value);
-      paramvalue = res['param'].value;
-      console.log(paramvalue)
-    }, err => {
-      console.log(err);
-   });
+    return this.configService.getParam(param).subscribe(res => {
+      console.log(res)
+      paramvalue = res;
+    })
   }
 
   updateBloque(bloque) {
-    console.log("true");
-    console.log(true);
     console.log("updateBloque1");
-    
+   
     console.log(bloque);
     if (bloque == "true") {
       bloque = "false";
