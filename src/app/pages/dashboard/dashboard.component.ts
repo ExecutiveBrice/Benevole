@@ -182,6 +182,7 @@ export class DashboardComponent implements OnChanges {
       this.updateCroisementListe(stand.croisements, benevole.Croisements)
     });
     this.getBesoin();
+    this.calculChevauchement(benevole)
   }
 
 
@@ -285,17 +286,21 @@ export class DashboardComponent implements OnChanges {
 
     }
 
+    this.calculChevauchement(this.benevole)
+
+  }
+
+  calculChevauchement(benevole:Benevole){
     let listePlages = []
-    for (let index = 0; index < this.benevole.Croisements.length; index++) {
-      if (listePlages.indexOf(this.benevole.Croisements[index].Creneau.plage) >= 0) {
+    for (let index = 0; index < benevole.Croisements.length; index++) {
+      if (listePlages.indexOf(benevole.Croisements[index].Creneau.plage) >= 0) {
         this.chevauchement = true;
         break;
       } else {
-        listePlages.push(this.benevole.Croisements[index].Creneau.plage)
+        listePlages.push(benevole.Croisements[index].Creneau.plage)
       }
     };
   }
-
 
   validate(benevole:Benevole): void {
     this.addCroisements(benevole);
