@@ -80,7 +80,7 @@ module.exports = {
           });
 
 
-          var text2 = Config.findOne({ where: { param: ("rappel2") } })
+        var text2 = Config.findOne({ where: { param: ("rappel2") } })
           .then(function (param) {
             console.log("getParam - 2")
             console.log(param)
@@ -94,7 +94,7 @@ module.exports = {
           });
         benevoles.forEach(benevole => {
           var text = text1
-          if (benevole.Croisement) {
+          if (benevole.Croisements) {
             console.log('benevole.Croisement');
             benevole.Croisements.forEach(croisement => {
               text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
