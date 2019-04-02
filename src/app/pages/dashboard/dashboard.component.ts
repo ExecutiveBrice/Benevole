@@ -234,8 +234,8 @@ export class DashboardComponent implements OnChanges {
     console.log(croisements)
     console.log(croisementsbenevole)
     for (let index = 0; index < croisements.length; index++) {
-      for (let index = 0; index < croisementsbenevole.length; index++) {
-        if (croisements[index].id == croisementsbenevole[index].id) {
+      for (let indexb = 0; indexb < croisementsbenevole.length; indexb++) {
+        if (croisements[index].id == croisementsbenevole[indexb].id) {
           croisements[index].selected = true;
           break;
         } else {

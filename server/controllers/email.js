@@ -16,6 +16,8 @@ var mailOptions = {
 };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+var Benevole = require('../models').Benevole;
+
 
 module.exports = {
   sendMail: function add(req, res) {

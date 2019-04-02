@@ -14,7 +14,8 @@ import { Observable } from 'rxjs/Observable';
 export class GestionComponent implements OnChanges {
   rappel: boolean;
   bloque: string;
-  emailText: string;
+  emailText1: string;
+  emailText2: string;
 
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
@@ -23,8 +24,8 @@ export class GestionComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
-    this.emailText = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
-    this.getParam("lock", this.bloque)
+
+    this.getParam("lock",this.bloque)
   }
 
   ngOnChanges() {
@@ -42,15 +43,15 @@ export class GestionComponent implements OnChanges {
    });
   }
 
-  updateBloque() {
-    if (this.bloque == "true") {
+  updateBloque(bloque) {
+    if (bloque == "true") {
       console.log("true to false")
-      this.bloque = "false";
+      bloque = "false";
     } else {
       console.log("false to true")
-      this.bloque = "true";
+      bloque = "true";
     }
-    this.configService.updateParam('lock', this.bloque)
+    this.configService.updateParam('lock', bloque)
       .subscribe(res => {
         console.log("lock");
         console.log(res);
@@ -59,11 +60,11 @@ export class GestionComponent implements OnChanges {
       });
   }
 
-  envoiRappel(emailText: string) {
+  envoiRappel() {
     let email: Email = {
       to: "",
       subject: "Rappel de participation",
-      text: emailText
+      text: ""
     }
 
     this.mailService.rappel(email)
