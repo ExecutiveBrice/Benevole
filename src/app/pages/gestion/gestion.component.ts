@@ -4,7 +4,7 @@ import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
-
+import { Observable } from 'rxjs/Observable';
 @Component({
   selector: 'app-gestion',
   templateUrl: './gestion.component.html',
@@ -24,22 +24,26 @@ export class GestionComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.rappel = false;
     this.emailText = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
-    this.bloquage();
+ this.getParam("lock").subscribe(data=> {
+   console.log(data)
+  this.bloque = data
+    });
   }
 
   ngOnChanges() {
 
   }
 
-  bloquage() {
-    this.configService.getParam('lock')
-      .subscribe(res => {
-        console.log("lock");
+  getParam(param:string):Observable<string> {
+    return this.configService.getParam(param)
+      .map(res => {
+        console.log(param);
         console.log(res);
-        this.bloque = res['param'].value;
+        return res['param'].value;
       }, err => {
         console.log(err);
-      });
+     });
+     
   }
 
   updateBloque() {
@@ -54,7 +58,6 @@ export class GestionComponent implements OnChanges {
       .subscribe(res => {
         console.log("lock");
         console.log(res);
-        this.bloque = res['param'].value;
       }, err => {
         console.log(err);
       });
