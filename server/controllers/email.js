@@ -20,7 +20,7 @@ var Croisement = require('../models').Croisement;
 var Creneau = require('../models').Creneau;
 var Stand = require('../models').Stand;
 var Benevole = require('../models').Benevole;
-
+var Config = require('../models').Config;
 
 module.exports = {
   sendMail: function add(req, res) {
@@ -36,6 +36,16 @@ module.exports = {
       });
     });
   },
+
+
+
+
+
+
+
+
+
+
   rappel: function rappel(req, res) {
 
     console.log("sendRappel")
@@ -56,21 +66,34 @@ module.exports = {
         console.log(benevoles)
         mailOptions.subject = req.body.subject
 
+ var text1 = Config.findOne({ where: { param: ("rappel1") } })
+      .then(function (param) {
+        console.log("getParam - 2")
+        console.log(param)
+        if (!param) {
+          return null
+        }
+        return param
+      }).catch(function (error) {
+        console.log(error.toString());
+        return null;
+      });
+
         benevoles.forEach(benevole => {
-          var text = req.body.text
+          var text = text1
+          if (benevole.Croisement) {
+            benevole.Croisement.forEach(croisement => {
+              text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
+            })
+            mailOptions.text = text
+            mailOptions.to = benevole.email
 
-          benevole.Croisement.forEach(croisement => {
-          text = text +   croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
-          })
-          mailOptions.text = text
-          mailOptions.to = benevole.email
 
+            transporter.sendMail(mailOptions, function (error, info) {
+              console.log('Email sent!');
 
-        transporter.sendMail(mailOptions, function (error, info) {
-            console.log('Email sent!');
-
-          });
-
+            });
+          }
         });
         return res.status(200).json({
           message: "Emails sent",
