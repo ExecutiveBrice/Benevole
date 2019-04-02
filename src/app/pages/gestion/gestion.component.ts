@@ -14,7 +14,7 @@ import { Observable } from 'rxjs/Observable';
 export class GestionComponent implements OnChanges {
   rappel: boolean;
   bloque: string;
-  emailText:string;
+  emailText: string;
 
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
@@ -24,37 +24,33 @@ export class GestionComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.rappel = false;
     this.emailText = "Bonjour,\nCe 29 juin se déroule la fête de l'école de l'Ouche Dinier.\nVous vous êtes inscrit en tant que bénévole pour:\n";
- this.getParam("lock").subscribe(data=> {
-   console.log(data)
-  this.bloque = data
-    });
+    this.getParam("lock", this.bloque)
   }
 
   ngOnChanges() {
 
   }
 
-  getParam(param:string):Observable<string> {
-    return this.configService.getParam(param)
-      .map(res => {
-        console.log(param);
-        console.log(res);
-        return res['param'].value;
-      }, err => {
-        console.log(err);
-     });
-     
+  getParam(param: string, value: string) {
+    this.configService.getParam(param).subscribe(res => {
+      console.log(param);
+      console.log(res);
+      console.log(res['param'].value);
+      value = res['param'].value;
+    }, err => {
+      console.log(err);
+   });
   }
 
   updateBloque() {
-    if(this.bloque == "true"){
+    if (this.bloque == "true") {
       console.log("true to false")
       this.bloque = "false";
-    }else{
+    } else {
       console.log("false to true")
       this.bloque = "true";
     }
-    this.configService.updateParam('lock',this.bloque)
+    this.configService.updateParam('lock', this.bloque)
       .subscribe(res => {
         console.log("lock");
         console.log(res);
@@ -63,7 +59,7 @@ export class GestionComponent implements OnChanges {
       });
   }
 
-  envoiRappel(emailText:string) {
+  envoiRappel(emailText: string) {
     let email: Email = {
       to: "",
       subject: "Rappel de participation",
