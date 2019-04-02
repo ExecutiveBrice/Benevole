@@ -25,7 +25,8 @@ export class GestionComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.rappel = false;
 
-    this.updateBlocage()
+    this.updateBlocage();
+    this.getTexts();
   }
 
   ngOnChanges() {
@@ -41,9 +42,23 @@ export class GestionComponent implements OnChanges {
    });
   }
 
+  getTexts() {
+    this.configService.getParam("rappel1").subscribe(res => {
+        console.log(res['param'].value);
+        this.emailText1 = res['param'].value;
+      }, err => {
+        console.log(err);
+     });
+     this.configService.getParam("rappel2").subscribe(res => {
+      console.log(res['param'].value);
+      this.emailText2 = res['param'].value;
+    }, err => {
+      console.log(err);
+   });
+    }
+
+
   updateBloque(bloque) {
-    console.log("true");
-    console.log(true);
     console.log("updateBloque1");
     
     console.log(bloque);
@@ -69,6 +84,21 @@ export class GestionComponent implements OnChanges {
       subject: "Rappel de participation",
       text: ""
     }
+
+    this.configService.updateParam('rappel1', this.emailText1)
+    .subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    });
+
+    this.configService.updateParam('rappel2', this.emailText2)
+    .subscribe(res => {
+      console.log(res);
+    }, err => {
+      console.log(err);
+    });
+
 
     this.mailService.rappel(email)
       .subscribe(res => {
