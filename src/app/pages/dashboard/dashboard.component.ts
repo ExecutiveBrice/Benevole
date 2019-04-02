@@ -34,7 +34,8 @@ export class DashboardComponent implements OnChanges {
     text: ""
   }
 
-
+  emailText1:string;
+  emailText2:string;
 
 
 
@@ -69,7 +70,7 @@ export class DashboardComponent implements OnChanges {
     this.getVendredi();
 
     this.bloquage();
-
+    this.getTexts()
   }
 
   ngOnChanges() {
@@ -252,13 +253,11 @@ export class DashboardComponent implements OnChanges {
 
   addCroisements(benevole:Benevole): void {
     console.log("addCroisements")
-    console.log(this.benevole)
-    this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.addCroisements(this.benevole).subscribe(data => {
-      console.log("data")
+    console.log(benevole)
+    benevole.email = benevole.email.toLowerCase();
+    this.benevoleService.addCroisements(benevole).subscribe(data => {
       console.log(data)
       this.exist = true;
-
     },
       error => {
         this.exist = false;
@@ -306,17 +305,16 @@ export class DashboardComponent implements OnChanges {
     this.addCroisements(benevole);
     this.benevoleService.update(benevole).subscribe(data => {
       console.log(data)
-      benevole.id = data['benevole'];
       this.exist = true;
 
       this.validation = true;
       this.email.to = benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = "Bonjour,\n Votre participation à bien été prise en compte \n";
+      this.email.text = this.emailText1;
       benevole.Croisements.forEach(croisement => {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
-      this.email.text = this.email.text + "Vous pouvez revenir à tout moment pour modifier vos choix en vous connectant à l'aide de votre adresse e-mail."
+      this.email.text = this.email.text + this.emailText2
 
       this.envoiMail(this.email)
 
@@ -337,6 +335,20 @@ export class DashboardComponent implements OnChanges {
         console.log(err);
       });
   }
+  getTexts() {
+    this.configService.getParam("validation1").subscribe(res => {
+        console.log(res['param'].value);
+        this.emailText1 = res['param'].value;
+      }, err => {
+        console.log(err);
+     });
+     this.configService.getParam("validation2").subscribe(res => {
+      console.log(res['param'].value);
+      this.emailText2 = res['param'].value;
+    }, err => {
+      console.log(err);
+   });
+    }
 
 
 }
