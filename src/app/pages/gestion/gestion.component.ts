@@ -44,6 +44,7 @@ export class GestionComponent implements OnChanges {
   }
 
   updateBloque(bloque) {
+    console.log(bloque)
     if (bloque == "true") {
       console.log("true to false")
       bloque = "false";
@@ -58,6 +59,8 @@ export class GestionComponent implements OnChanges {
       }, err => {
         console.log(err);
       });
+      console.log(bloque)
+      console.log(this.bloque)
   }
 
   envoiRappel() {

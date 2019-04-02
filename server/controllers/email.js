@@ -16,6 +16,9 @@ var mailOptions = {
 };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+var Croisement = require('../models').Croisement;
+var Creneau = require('../models').Creneau;
+var Stand = require('../models').Stand;
 var Benevole = require('../models').Benevole;
 
 
