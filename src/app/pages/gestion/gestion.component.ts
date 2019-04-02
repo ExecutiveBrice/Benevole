@@ -25,23 +25,27 @@ export class GestionComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.rappel = false;
 
-    this.getParam("lock",this.bloque)
+    this.updateBlocage()
   }
 
   ngOnChanges() {
 
   }
 
-  getParam(param: string, paramvalue: string) {
-    return this.configService.getParam(param).subscribe(res => {
-      console.log(res)
-      paramvalue = res;
-    })
+  updateBlocage() {
+  this.configService.getParam("lock").subscribe(res => {
+      console.log(res['param'].value);
+      this.bloque = res['param'].value;
+    }, err => {
+      console.log(err);
+   });
   }
 
   updateBloque(bloque) {
+    console.log("true");
+    console.log(true);
     console.log("updateBloque1");
-   
+    
     console.log(bloque);
     if (bloque == "true") {
       bloque = "false";
