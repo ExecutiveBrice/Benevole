@@ -38,6 +38,7 @@ export class GestionComponent implements OnChanges {
       console.log(res);
       console.log(res['param'].value);
       paramvalue = res['param'].value;
+      console.log(paramvalue)
     }, err => {
       console.log(err);
    });
