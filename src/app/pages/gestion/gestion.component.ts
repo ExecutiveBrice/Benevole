@@ -4,7 +4,7 @@ import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
-import { Observable } from 'rxjs/Observable';
+
 @Component({
   selector: 'app-gestion',
   templateUrl: './gestion.component.html',
@@ -14,8 +14,6 @@ import { Observable } from 'rxjs/Observable';
 export class GestionComponent implements OnChanges {
   rappel: boolean;
   bloque: string;
-  emailText1: string;
-  emailText2: string;
 
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
@@ -26,7 +24,6 @@ export class GestionComponent implements OnChanges {
     this.rappel = false;
 
     this.updateBlocage();
-    this.getTexts();
   }
 
   ngOnChanges() {
@@ -34,41 +31,21 @@ export class GestionComponent implements OnChanges {
   }
 
   updateBlocage() {
-  this.configService.getParam("lock").subscribe(res => {
+    this.configService.getParam("lock").subscribe(res => {
       console.log(res['param'].value);
       this.bloque = res['param'].value;
     }, err => {
       console.log(err);
-   });
+    });
   }
 
-  getTexts() {
-    this.configService.getParam("rappel1").subscribe(res => {
-        console.log(res['param'].value);
-        this.emailText1 = res['param'].value;
-      }, err => {
-        console.log(err);
-     });
-     this.configService.getParam("rappel2").subscribe(res => {
-      console.log(res['param'].value);
-      this.emailText2 = res['param'].value;
-    }, err => {
-      console.log(err);
-   });
-    }
-
-
   updateBloque(bloque) {
-    console.log("updateBloque1");
-    
-    console.log(bloque);
     if (bloque == "true") {
       bloque = "false";
     } else {
       bloque = "true";
     }
-    console.log("updateBloque2");
-    console.log(bloque);
+    this.bloque = bloque;
     this.configService.updateParam('lock', bloque)
       .subscribe(res => {
         console.log(res);
@@ -85,19 +62,6 @@ export class GestionComponent implements OnChanges {
       text: ""
     }
 
-    this.configService.updateParam('rappel1', this.emailText1)
-    .subscribe(res => {
-      console.log(res);
-    }, err => {
-      console.log(err);
-    });
-
-    this.configService.updateParam('rappel2', this.emailText2)
-    .subscribe(res => {
-      console.log(res);
-    }, err => {
-      console.log(err);
-    });
 
 
     this.mailService.rappel(email)
