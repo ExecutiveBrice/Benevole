@@ -12,14 +12,7 @@ export class ConfigService {
 
   getParam(param:String) {
     let params = new HttpParams().set('param', ''+param+'');
-    return this.http.get(this.apiUrl + "/", {params, responseType: 'json' }).map(res => {
-      console.log(param);
-      console.log(res);
-      console.log(res['param'].value);
-      return res['param'].value;
-     }, err => {
-      console.log(err);
-   });;
+    return this.http.get(this.apiUrl + "/", {params, responseType: 'json' });
   }
 
   updateParam(param:String, value:String) {
