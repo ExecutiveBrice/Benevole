@@ -44,23 +44,20 @@ export class GestionComponent implements OnChanges {
   }
 
   updateBloque(bloque) {
-    console.log(bloque)
     if (bloque == "true") {
-      console.log("true to false")
       bloque = "false";
     } else {
-      console.log("false to true")
       bloque = "true";
     }
+    console.log("updateBloque");
+    console.log(bloque);
     this.configService.updateParam('lock', bloque)
       .subscribe(res => {
-        console.log("lock");
         console.log(res);
       }, err => {
         console.log(err);
       });
-      console.log(bloque)
-      console.log(this.bloque)
+
   }
 
   envoiRappel() {
