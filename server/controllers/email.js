@@ -9,7 +9,7 @@ var transporter = nodemailer.createTransport({
 });
 
 var mailOptions = {
-  from: 'olive&Mirabelle',
+  from: 'Ecole Ouche Dinier',
   to: 'brice_morel@hotmail.com',
   subject: 'Sujet du mail',
   text: 'Corps du mail'
