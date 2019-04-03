@@ -34,9 +34,8 @@
         <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg"
           (click)="find()">Entrer</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg"
-          (click)="find()">Je me suis trompé dans mon mail, je réessais</button>
-        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-secondary btn-lg"
-          (click)="error()">Hé Ho, il y a un problème, je me suis déjà inscrit !</button>
+          (click)="find()">Je me suis trompé dans mon email, je réessais</button>
+
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
           (click)="nouveau = true">Je suis nouveau, je souhaiterai m'inscrire</button>
       </div>
