@@ -18,6 +18,8 @@ export class GestionComponent implements OnChanges {
   rappel1: string;
   rappel2: string;
   benevoles: Benevole[];
+
+
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
     public croisementService: CroisementService,
@@ -86,7 +88,7 @@ export class GestionComponent implements OnChanges {
       console.log(err);
     });
   }
-  
+
   envoiRappel() {
     let email: Email = {
       to: "",
@@ -94,27 +96,32 @@ export class GestionComponent implements OnChanges {
       text: ""
     }
 
-    let text = "Bonjour,"+"\n"
- text = text + this.rappel1+"\n";
+    let text = "Bonjour," + "\n"
+    text = text + this.rappel1 + "\n";
     this.benevoles.forEach(benevole => {
       console.log(benevole)
       benevole.Croisements.forEach(croisement => {
         text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       })
 
-    text = text + benevole.gateaux + "\n"
-    text = text + this.rappel2;
-    email.text = text
-    email.to = benevole.email
+      text = text + benevole.gateaux + "\n"
+      text = text + this.rappel2;
+      email.text = text
+      email.to = benevole.email
 
 
-    this.mailService.sendMail(email)
-      .subscribe(res => {
-        console.log("this.api.sendMail");
-        console.log(res);
-      }, err => {
-        console.log(err);
-      });
-    }
+      this.mailService.sendMail(email)
+        .subscribe(res => {
+          console.log("this.api.sendMail");
+          console.log(res);
+        }, err => {
+          console.log(err);
+        });
+    })
+
+
   }
+
+
+
 }
