@@ -97,13 +97,13 @@ export class GestionComponent implements OnChanges {
     }
 
     let text = "Bonjour," + "\n"
-    text = text + this.rappel1 + "\n";
+    text = text + this.rappel1 + "\n \n";
     this.benevoles.forEach(benevole => {
       console.log(benevole)
       benevole.Croisements.forEach(croisement => {
         text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       })
-
+      text = text + "\nVous avez également proposé d'apporter :\n"
       text = text + benevole.gateaux + "\n"
       text = text + this.rappel2;
       email.text = text

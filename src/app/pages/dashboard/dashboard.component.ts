@@ -147,12 +147,6 @@ export class DashboardComponent implements OnChanges {
   }
 
 
-  error(benevole: Benevole): void {
-    this.email.to = "bryce.morel@gmail.com"
-    this.email.subject = "Problème d'inscription"
-    this.email.text = "Bonjour,\n l'utilisateur " + benevole.email + "n'arrive pas à se connecter"
-    this.envoiMail(this.email)
-  }
 
 
   getCreneaux(): void {
@@ -310,11 +304,12 @@ export class DashboardComponent implements OnChanges {
       this.validation = true;
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = this.emailText1;
+      this.email.text = this.emailText1+ "\n";
       this.benevole.Croisements.forEach(croisement => {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
       this.email.text = this.email.text + this.emailText2
+      this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation" 
 
       this.envoiMail(this.email)
 
