@@ -32,11 +32,11 @@
     <div *ngIf="!exist" class="row">
       <div class="col-sm-12 ">
         <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg"
-          (click)="find(benevole)">Entrer</button>
+          (click)="find()">Entrer</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg"
-          (click)="find(benevole)">Je me suis trompé dans mon mail, je réessais</button>
+          (click)="find()">Je me suis trompé dans mon mail, je réessais</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-secondary btn-lg"
-          (click)="error(benevole)">Hé Ho, il y a un problème, je me suis déjà inscrit !</button>
+          (click)="error()">Hé Ho, il y a un problème, je me suis déjà inscrit !</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
           (click)="nouveau = true">Je suis nouveau, je souhaiterai m'inscrire</button>
       </div>
@@ -69,7 +69,7 @@
       </div>
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-info btn-lg" (click)="subscribe(benevole)">Je m'inscris</button>
+        <button type="button" class="btn btn-block btn-info btn-lg" (click)="subscribe()">Je m'inscris</button>
       </div>
 
     </div>
@@ -97,7 +97,7 @@
 
       <div class="col-sm-12 ">
           <h4>Commentaire :</h4>
-          <textarea rows="5" [(ngModel)]="benevole.commentaire" (blur)="update(benevole)" class="form-control">
+          <textarea rows="5" [(ngModel)]="benevole.commentaire" class="form-control">
             </textarea>
         </div>
 
@@ -108,13 +108,13 @@
 
       <div class="col-sm-12 ">
         <h4>Préparation de plat :</h4>
-        <textarea rows="5" [(ngModel)]="benevole.gateaux" (blur)="update(benevole)" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
+        <textarea rows="5" [(ngModel)]="benevole.gateaux" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
           </textarea>
       </div>
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-danger" (click)="validate(benevole)">Je valide mon
+        <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide mon
           inscription</button>
       </div>
 

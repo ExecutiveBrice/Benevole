@@ -301,17 +301,17 @@ export class DashboardComponent implements OnChanges {
     };
   }
 
-  validate(benevole:Benevole): void {
-    this.addCroisements(benevole);
-    this.benevoleService.update(benevole).subscribe(data => {
+  validate(): void {
+    this.addCroisements(this.benevole);
+    this.benevoleService.update(this.benevole).subscribe(data => {
       console.log(data)
       this.exist = true;
 
       this.validation = true;
-      this.email.to = benevole.email
+      this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
       this.email.text = this.emailText1;
-      benevole.Croisements.forEach(croisement => {
+      this.benevole.Croisements.forEach(croisement => {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
       this.email.text = this.email.text + this.emailText2
