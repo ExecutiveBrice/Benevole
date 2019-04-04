@@ -6,9 +6,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
 import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
 
-
-
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -34,8 +31,8 @@ export class DashboardComponent implements OnChanges {
     text: ""
   }
 
-  emailText1: string;
-  emailText2: string;
+  emailText1:string;
+  emailText2:string;
 
 
 
@@ -46,9 +43,8 @@ export class DashboardComponent implements OnChanges {
 
 
   constructor(public benevoleService: BenevoleService,
-
     public router: Router,
-    public configService: ConfigService,
+    public configService:ConfigService,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
@@ -82,7 +78,7 @@ export class DashboardComponent implements OnChanges {
       .subscribe(res => {
         console.log("lock");
         console.log(res['param'].value);
-        if (res['param'].value == "true") {
+        if(res['param'].value == "true"){
           this.router.navigate(['/404']);
         }
       }, err => {
@@ -245,7 +241,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  addCroisements(benevole: Benevole): void {
+  addCroisements(benevole:Benevole): void {
     console.log("addCroisements")
     console.log(benevole)
     benevole.email = benevole.email.toLowerCase();
@@ -283,7 +279,7 @@ export class DashboardComponent implements OnChanges {
 
   }
 
-  calculChevauchement(benevole: Benevole) {
+  calculChevauchement(benevole:Benevole){
     let listePlages = []
     for (let index = 0; index < benevole.Croisements.length; index++) {
       if (listePlages.indexOf(benevole.Croisements[index].Creneau.plage) >= 0) {
@@ -304,16 +300,12 @@ export class DashboardComponent implements OnChanges {
       this.validation = true;
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = this.emailText1 + "\n";
-
+      this.email.text = this.emailText1+ "\n";
       this.benevole.Croisements.forEach(croisement => {
-        this.email.text = this.email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "\n"
+        this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
-
-      this.email.text = this.email.text + "\nVous avez également proposé d'apporter :\n"
-      this.email.text = this.email.text + this.benevole.gateaux + "\n"
-      this.email.text = this.email.text + "\n" + this.emailText2 + "\n"
-      this.email.text = this.email.text + "Cordialement, \nL'équipe d'animation"
+      this.email.text = this.email.text + this.emailText2
+      this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation" 
 
       this.envoiMail(this.email)
 
@@ -336,18 +328,18 @@ export class DashboardComponent implements OnChanges {
   }
   getTexts() {
     this.configService.getParam("validation1").subscribe(res => {
-      console.log(res['param'].value);
-      this.emailText1 = res['param'].value;
-    }, err => {
-      console.log(err);
-    });
-    this.configService.getParam("validation2").subscribe(res => {
+        console.log(res['param'].value);
+        this.emailText1 = res['param'].value;
+      }, err => {
+        console.log(err);
+     });
+     this.configService.getParam("validation2").subscribe(res => {
       console.log(res['param'].value);
       this.emailText2 = res['param'].value;
     }, err => {
       console.log(err);
-    });
-  }
+   });
+    }
 
 
 }
