@@ -10,5 +10,8 @@ router.post('/login', function(req,res,next) {
   return userController.signin(req,res);
 });
 
+router.get('/', function(req,res,next) {
+  return userController.getAll(req,res);
+});
 
 module.exports = router;

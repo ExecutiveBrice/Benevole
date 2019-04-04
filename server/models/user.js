@@ -13,6 +13,12 @@ module.exports = function(sequelize, DataTypes) {
     },
     name: {
       type: DataTypes.STRING,
+    },
+    firstname: {
+      type: DataTypes.STRING,
+    },
+    email: {
+      type: DataTypes.STRING,
     }
   });
   User.associate = function(models) {

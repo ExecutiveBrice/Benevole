@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { User } from './models';
-import { UserService, StandService } from './services';
+import { User, Benevole } from './models';
+import { UserService, StandService,MailService, ConfigService } from './services';
 import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
-
+import { Email } from './models';
 
 @Component({
     selector: 'app',
@@ -12,7 +12,15 @@ import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
 export class AppComponent {
     utilisateur: User = null;
     retour: boolean = false;
+    email: Email = {
+        to: "",
+        subject: "",
+        text: ""
+      }
+      users:any[];
     constructor(
+        public mailService:MailService,
+        public userService: UserService,
         public router: Router,
         public route: ActivatedRoute,
         private utilisateurService: UserService ) {
@@ -50,7 +58,25 @@ export class AppComponent {
 
 
     }
+    getContacts() {
+        this.userService.get().subscribe(res => {
+          console.log(res['users']);
+          this.users = res['users'];
+        }, err => {
+          console.log(err);
+        });
+      }
 
+
+    envoiMail(email: Email) {
+        this.mailService.sendMail(email)
+          .subscribe(res => {
+            console.log("this.api.sendMail");
+            console.log(res);
+          }, err => {
+            console.log(err);
+          });
+      }
     logout() {
         console.log("appcomp logout")
         localStorage.removeItem('userId');
@@ -59,4 +85,7 @@ export class AppComponent {
         this.router.navigate(['/login']);
 
     }
+
+
+
 }

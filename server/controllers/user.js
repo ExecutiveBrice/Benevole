@@ -4,7 +4,31 @@ var jwt = require('jsonwebtoken');
 var User = require('../models').User;
 
 module.exports = {
-  signup: function signup(req, res) {
+  getAll: function getAll(req, res) {
+    console.log("getAll")
+    return User.findAll()
+      .then(function (users) {
+        console.log("getAll - 2")
+        console.log(users)
+        if (users.length == 0) {
+          return res.status(404).json({
+            title: "No benevoles found",
+            error: "Please try again."
+          });
+        }
+
+        return res.status(200).json({
+          message: 'benevoles found',
+          users: users
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          title: 'There was an users!',
+          error: error.stack
+        });
+      });
+  },signup: function signup(req, res) {
     console.log(req.body)
     return User.findOne({
       where: {email: (req.body.email)}
