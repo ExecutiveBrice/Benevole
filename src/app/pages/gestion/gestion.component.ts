@@ -103,11 +103,12 @@ export class GestionComponent implements OnChanges {
       text = text + this.rappel1 + "\n \n";
       benevole.Croisements.sort((a,b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0)); 
       benevole.Croisements.forEach(croisement => {
-        text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
+        text = text + croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       })
       text = text + "\nVous avez également proposé d'apporter :\n"
       text = text + benevole.gateaux + "\n"
-      text = text + this.rappel2;
+      text = text + "\n" + this.rappel2 + "\n"
+      text = text + "Cordialement, \n L'équipe d'animation" 
       email.text = text
       email.to = benevole.email
 
