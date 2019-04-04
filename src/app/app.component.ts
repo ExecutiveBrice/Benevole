@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { User, Benevole } from './models';
-import { UserService, StandService,MailService, ConfigService } from './services';
+import { UserService, StandService, MailService, ConfigService } from './services';
 import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
 import { Email } from './models';
 
@@ -16,15 +16,18 @@ export class AppComponent {
         to: "",
         subject: "",
         text: ""
-      }
-      users:any[];
+    }
+    users: User[];
+    mail: boolean;
+
     constructor(
-        public mailService:MailService,
+        public mailService: MailService,
         public userService: UserService,
         public router: Router,
         public route: ActivatedRoute,
-        private utilisateurService: UserService ) {
-
+        private utilisateurService: UserService) {
+        this.mail = false;
+        this.users = [];
         console.log('AppComponent')
         if (JSON.parse(localStorage.getItem('userId'))) {
             this.utilisateur = {
@@ -52,31 +55,41 @@ export class AppComponent {
                 }
             });
         this.utilisateurService.sourceUtilisateur(this.utilisateur);
+
+        this.getContacts();
     }
 
     ngOnInit() {
 
-
     }
     getContacts() {
         this.userService.get().subscribe(res => {
-          console.log(res['users']);
-          this.users = res['users'];
+            console.log(res['users']);
+            this.users = res['users'];
         }, err => {
-          console.log(err);
+            console.log(err);
         });
-      }
+    }
 
 
     envoiMail(email: Email) {
-        this.mailService.sendMail(email)
-          .subscribe(res => {
-            console.log("this.api.sendMail");
-            console.log(res);
-          }, err => {
-            console.log(err);
-          });
-      }
+        this.users.forEach(user => {
+            email.subject = "problème"
+            email.to = user.email
+
+            this.mailService.sendMail(email)
+                .subscribe(res => {
+                    console.log("this.api.sendMail");
+                    console.log(res);
+                }, err => {
+                    console.log(err);
+                });
+        });
+
+        this.mail = false;
+    }
+
+    
     logout() {
         console.log("appcomp logout")
         localStorage.removeItem('userId');
