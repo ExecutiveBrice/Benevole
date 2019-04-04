@@ -1,7 +1,7 @@
 
     <div *ngFor="let benevole of benevoles  | orderBy:'nom':false" class="col-sm-12">
       <button type="button" class="btn btn-block btn-info"
-        (click)="choix = benevole.nom">{{benevole.nom}} - {{benevole.prenom}} / {{benevole.email}} {{benevole.telephone}}</button>
+        (click)="choix = benevole.nom">{{benevole.nom}} {{benevole.prenom}} - {{benevole.email}} - {{benevole.telephone}}</button>
 
       <div class="col-sm-12" *ngIf="choix == benevole.nom">
         <div class="row">

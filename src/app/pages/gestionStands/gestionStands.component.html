@@ -7,7 +7,7 @@
         <h3><strong>{{standcroisement.Creneau.plage}} : ({{standcroisement.Benevoles.length}}/{{standcroisement.limite}})</strong></h3>
         <div class="row">
           <div *ngFor="let benevole of standcroisement.Benevoles | orderBy:'nom':false " class="col-sm-12 dropdown">
-            {{benevole.prenom}} - {{benevole.nom}} / {{benevole.email}} {{benevole.telephone}}
+            {{benevole.prenom}} {{benevole.nom}} - {{benevole.email}} - {{benevole.telephone}}
           </div>
         </div>
       </div>

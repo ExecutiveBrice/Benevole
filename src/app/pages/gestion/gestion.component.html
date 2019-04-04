@@ -1,15 +1,15 @@
 <div class="row">
       <div class="col-sm-12">
 
-            <button type="button" class="btn btn-block btn-danger" routerLink="/gestionbenevoles">Gestion des Bénévoles</button>
+            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionbenevoles">Gestion des Bénévoles</button>
       </div>
       <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-danger" routerLink="/gestionstands">Gestion des Stands</button>
+            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionstands">Gestion des Stands</button>
       </div>
       <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-danger" (click)="envoiRappel()">Envoi d'un mail de rappel</button>
+            <button type="button" class="btn btn-block btn-primary" (click)="envoiRappel()">Envoi du mail de rappel (dernier rappel le {{dateRappel}})</button>
       </div>
       <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-danger" (click)="updateBloque(bloque)">{{bloque == 'true'?'Débloquer le site':'Bloquer le site'}}</button>
+            <button type="button" class="btn btn-block btn-success" [ngClass]="{'btn-danger':bloque == 'true'}" (click)="updateBlocage(bloque)">{{bloque == 'true'?'Je clique pour débloquer le site':'Je clique pour bloquer le site'}}</button>
       </div>
 </div>
