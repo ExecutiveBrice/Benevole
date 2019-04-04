@@ -18,7 +18,7 @@ export class GestionComponent implements OnChanges {
   rappel1: string;
   rappel2: string;
   benevoles: Benevole[];
-
+  dateRappel: string;
 
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
@@ -28,16 +28,38 @@ export class GestionComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.rappel = false;
     this.benevoles = [];
-    this.updateBlocage();
+    this.getBlocage();
     this.getText();
     this.find();
+    this.getDateRappel();
   }
 
   ngOnChanges() {
 
   }
 
-  updateBlocage() {
+  getDateRappel() {
+    this.configService.getParam("dateRappel").subscribe(res => {
+      console.log(res['param'].value);
+      this.dateRappel = res['param'].value;
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  updateDateRappel() {
+    let date = new Date();
+    this.dateRappel = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear()+" à "+date.getHours()+":"+date.getMinutes()
+    console.log(this.dateRappel)
+    this.configService.updateParam('dateRappel', this.dateRappel)
+      .subscribe(res => {
+        console.log(res);
+      }, err => {
+        console.log(err);
+      });
+
+  }
+  getBlocage() {
     this.configService.getParam("lock").subscribe(res => {
       console.log(res['param'].value);
       this.bloque = res['param'].value;
@@ -46,7 +68,7 @@ export class GestionComponent implements OnChanges {
     });
   }
 
-  updateBloque(bloque) {
+  updateBlocage(bloque) {
     if (bloque == "true") {
       bloque = "false";
     } else {
@@ -101,14 +123,14 @@ export class GestionComponent implements OnChanges {
       console.log(benevole)
       let text = "Bonjour," + "\n"
       text = text + this.rappel1 + "\n \n";
-      benevole.Croisements.sort((a,b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0)); 
+      benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
       benevole.Croisements.forEach(croisement => {
         text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       })
       text = text + "\nVous avez également proposé d'apporter :\n"
       text = text + benevole.gateaux + "\n"
       text = text + "\n" + this.rappel2 + "\n"
-      text = text + "Cordialement, \nL'équipe d'animation" 
+      text = text + "Cordialement, \nL'équipe d'animation"
       email.text = text
       email.to = benevole.email
 
@@ -121,7 +143,7 @@ export class GestionComponent implements OnChanges {
           console.log(err);
         });
     })
-
+    this.updateDateRappel()
 
   }
 
