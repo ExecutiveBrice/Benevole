@@ -14,7 +14,7 @@
 <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
 
   <div class="navbar-expand m-auto navbar-text">
-      <div *ngFor="let user of users | orderBy:'name':false" >
+      <div *ngFor="let user of users " >
           {{user.name}}{{user.firstname}} - {{user.email}} - {{user.telephone}}
     </div>
   </div>
