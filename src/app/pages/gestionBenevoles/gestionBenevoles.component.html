@@ -5,6 +5,10 @@
 
       <div class="col-sm-12" *ngIf="choix == benevole.nom">
         <div class="row">
+            <div class="col-sm-12">
+            {{benevole.commentaire}}<br>
+            {{benevole.reponse}}
+          </div>
           <div *ngFor="let benecroisement of benevole.Croisements | orderBy:'Stand.ordre':false" class="col-sm-4 dropdown">
             <button type="button" class="btn btn-block btn-warning dropdown-toggle"
               data-toggle="dropdown">{{benecroisement.Stand.nom == "tous"?"N'importe quel stand":benecroisement.Stand.nom}} à
