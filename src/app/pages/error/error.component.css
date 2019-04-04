@@ -27,7 +27,7 @@ h4 {
 }
 
 [class*="col-"][_ngcontent-c0]:last-of-type {
-  padding-right: 20px;
+  padding-right: 20px !important;
 }
 
 .module {
