@@ -305,7 +305,7 @@ export class DashboardComponent implements OnChanges {
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
       this.email.text = this.emailText1+ "\n";
-      this.benevole.Croisements.sort((a,b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0)); 
+
       this.benevole.Croisements.forEach(croisement => {
         
         this.email.text = this.email.text + croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
