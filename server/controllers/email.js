@@ -3,14 +3,14 @@ var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'bryce.morel@gmail.com',
-    pass: 'xcpsfsejnwtqavoy'
+    user: 'noreply44000@gmail.com',
+    pass: 'otvcdwnhlwbsnzie'
   }
 });
 
 var mailOptions = {
-  from: 'Ecole Ouche Dinier',
-  to: 'brice_morel@hotmail.com',
+  from: 'ALOD Ouche Dinier',
+  to: 'Adresse mail',
   subject: 'Sujet du mail',
   text: 'Corps du mail'
 };

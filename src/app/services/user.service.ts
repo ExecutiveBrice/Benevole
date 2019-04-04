@@ -34,5 +34,7 @@ export class UserService {
   login(user) {
     return this.http.post(this.apiUrl + '/login', user);
   }
-
+  get() {
+    return this.http.get(this.apiUrl + '/', {responseType: 'json'});
+  }
 }
