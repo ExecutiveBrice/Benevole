@@ -307,13 +307,14 @@ export class DashboardComponent implements OnChanges {
       this.email.text = this.emailText1+ "\n";
       this.benevole.Croisements.sort((a,b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0)); 
       this.benevole.Croisements.forEach(croisement => {
-        this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
+        
+        this.email.text = this.email.text + croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
 
       this.email.text =  this.email.text + "\nVous avez également proposé d'apporter :\n"
       this.email.text =  this.email.text +  this.benevole.gateaux + "\n"
-      this.email.text = this.email.text + "\n" + this.emailText2
-      this.email.text = this.email.text + "\nCordialement, \n L'équipe d'animation" 
+      this.email.text = this.email.text + "\n" + this.emailText2 + "\n"
+      this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation" 
 
       this.envoiMail(this.email)
 

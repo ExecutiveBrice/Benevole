@@ -25,7 +25,7 @@ export class ErrorComponent implements OnChanges {
  
 
   getText() {
-    this.configService.getParam("404").subscribe(res => {
+    this.configService.getParam("erreur1").subscribe(res => {
       console.log(res['param'].value);
       this.text = res['param'].value;
     }, err => {
