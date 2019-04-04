@@ -12,18 +12,19 @@
 </div>
 
 <nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
-  {{users}}
+
   <div class="navbar-expand m-auto navbar-text">
-    Brice MOREL - 0676762393 - brice_morel@hotmail.com <br>
-    Xavier SEGUETTE - 0649420765 - xabi.seguette@gmail.com
+      <div *ngFor="let user of users | orderBy:'name':false" >
+          {{user.name}}{{user.firstname}} - {{user.email}} - {{user.telephone}}
+    </div>
   </div>
 
 
   <div *ngIf="!mail">
-      <button type="button" class="btn btn-block btn-danger" (click)="mail = !mail">envoi message</button>
+      <button type="button" class="btn btn-block btn-danger" (click)="mail = !mail">nous envoyer un email</button>
     </div>
   <div *ngIf="mail">
     <textarea rows="3" [(ngModel)]="email.text" placeholder="un problème, une question, une remarque,..." class="form-control"></textarea>
-    <button type="button" class="btn btn-block btn-danger" (click)="envoiMail(email)">envoi message</button>
+    <button type="button" class="btn btn-block btn-danger" (click)="envoiMail(email)">envoi du message</button>
   </div>
 </nav>
