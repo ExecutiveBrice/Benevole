@@ -196,7 +196,7 @@ export class DashboardComponent implements OnChanges {
   getStand(): void {
     this.standService.getAll().subscribe(data => {
       data['stands'].forEach(stand => {
-        if (stand.nom != 'tous' || stand.nom != 'Preparatif') {
+        if (stand.nom != 'tous' && stand.nom != 'Preparatif') {
           this.croisementService.getByStand(stand.id).subscribe(data => {
             stand.Croisements = data['croisements']
             this.stands.push(stand)
