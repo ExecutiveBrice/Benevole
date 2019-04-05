@@ -127,8 +127,10 @@ export class GestionComponent implements OnChanges {
       benevole.Croisements.forEach(croisement => {
         text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       })
+      if(benevole.gateaux){
       text = text + "\nVous avez également proposé d'apporter :\n"
       text = text + benevole.gateaux + "\n"
+      }
       text = text + "\n" + this.rappel2 + "\n"
       text = text + "Cordialement, \nL'équipe d'animation"
       email.text = text
