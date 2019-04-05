@@ -31,8 +31,8 @@ export class DashboardComponent implements OnChanges {
     text: ""
   }
 
-  emailText1:string;
-  emailText2:string;
+  emailText1: string;
+  emailText2: string;
 
 
 
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnChanges {
 
   constructor(public benevoleService: BenevoleService,
     public router: Router,
-    public configService:ConfigService,
+    public configService: ConfigService,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
@@ -78,7 +78,7 @@ export class DashboardComponent implements OnChanges {
       .subscribe(res => {
         console.log("lock");
         console.log(res['param'].value);
-        if(res['param'].value == "true"){
+        if (res['param'].value == "true") {
           this.router.navigate(['/404']);
         }
       }, err => {
@@ -241,7 +241,7 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  addCroisements(benevole:Benevole): void {
+  addCroisements(benevole: Benevole): void {
     console.log("addCroisements")
     console.log(benevole)
     benevole.email = benevole.email.toLowerCase();
@@ -260,26 +260,40 @@ export class DashboardComponent implements OnChanges {
   choisir(croisement: Croisement): void {
     this.chevauchement = false;
     let added = false;
-    for (let index = 0; index < this.benevole.Croisements.length; index++) {
-      if (croisement.id == this.benevole.Croisements[index].id) {
-        croisement.selected = false;
-        this.benevole.Croisements.splice(index, 1);
-        added = true;
-        break;
+
+
+    if (croisement.Benevoles.length < croisement.limite) {
+      console.log("croisement.Benevoles.length < croisement.limite")
+      for (let index = 0; index < this.benevole.Croisements.length; index++) {
+        if (croisement.id == this.benevole.Croisements[index].id) {
+
+          for (let indexBenevole = 0; indexBenevole < croisement.Benevoles.length; indexBenevole++) {
+            if (this.benevole.id == croisement.Benevoles[indexBenevole].id) {
+              croisement.Benevoles.splice(indexBenevole, 1);
+              console.log("retrait du benevole "+indexBenevole)
+            }
+          }
+
+          croisement.selected = false;
+          this.benevole.Croisements.splice(index, 1);
+          added = true;
+          break;
+        }
       }
+
+      if (!added) {
+        croisement.selected = true;
+        this.benevole.Croisements.push(croisement);
+        croisement.Benevoles.push(this.benevole);
+      }
+
+      this.calculChevauchement(this.benevole)
+    } else {
+      console.log("croisement.Benevoles.length > croisement.limite")
     }
-
-    if (!added) {
-      croisement.selected = true;
-      this.benevole.Croisements.push(croisement);
-
-    }
-
-    this.calculChevauchement(this.benevole)
-
   }
 
-  calculChevauchement(benevole:Benevole){
+  calculChevauchement(benevole: Benevole) {
     let listePlages = []
     for (let index = 0; index < benevole.Croisements.length; index++) {
       if (listePlages.indexOf(benevole.Croisements[index].Creneau.plage) >= 0) {
@@ -300,12 +314,12 @@ export class DashboardComponent implements OnChanges {
       this.validation = true;
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = this.emailText1+ "\n";
+      this.email.text = this.emailText1 + "\n";
       this.benevole.Croisements.forEach(croisement => {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
       this.email.text = this.email.text + this.emailText2
-      this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation" 
+      this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation"
 
       this.envoiMail(this.email)
 
@@ -328,18 +342,18 @@ export class DashboardComponent implements OnChanges {
   }
   getTexts() {
     this.configService.getParam("validation1").subscribe(res => {
-        console.log(res['param'].value);
-        this.emailText1 = res['param'].value;
-      }, err => {
-        console.log(err);
-     });
-     this.configService.getParam("validation2").subscribe(res => {
+      console.log(res['param'].value);
+      this.emailText1 = res['param'].value;
+    }, err => {
+      console.log(err);
+    });
+    this.configService.getParam("validation2").subscribe(res => {
       console.log(res['param'].value);
       this.emailText2 = res['param'].value;
     }, err => {
       console.log(err);
-   });
-    }
+    });
+  }
 
 
 }
