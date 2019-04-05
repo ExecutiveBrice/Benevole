@@ -170,7 +170,7 @@ export class DashboardComponent implements OnChanges {
     console.log(benevole)
     this.updateCroisementListe(this.creneaux, benevole.Croisements)
     this.stands.forEach(stand => {
-      this.updateCroisementListe(stand.croisements, benevole.Croisements)
+      this.updateCroisementListe(stand.Croisements, benevole.Croisements)
     });
     this.getBesoin();
     this.calculChevauchement(benevole)
@@ -184,7 +184,7 @@ export class DashboardComponent implements OnChanges {
       }
     })
     this.stands.forEach(stand => {
-      stand.croisements.forEach(croisement => {
+      stand.Croisements.forEach(croisement => {
         if (croisement.besoin == true) {
           this.besoins.push(croisement);
         }
@@ -198,7 +198,7 @@ export class DashboardComponent implements OnChanges {
       data['stands'].forEach(stand => {
         if (stand.nom != 'tous') {
           this.croisementService.getByStand(stand.id).subscribe(data => {
-            stand.croisements = data['croisements']
+            stand.Croisements = data['croisements']
             this.stands.push(stand)
             console.log("stand")
             console.log(stand)

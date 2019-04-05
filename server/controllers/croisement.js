@@ -13,7 +13,8 @@ module.exports = {
       include: [
         { model: Creneau},
         { model: Stand},
-        { model: Benevole}
+        { model: Benevole,
+          attributes: ['id']}
       ]
     })
       .then(function (croisements) {
@@ -82,7 +83,8 @@ module.exports = {
           where: { 'id': (req.query.id)}
         },
         { model: Stand},
-        { model: Benevole}
+        { model: Benevole,
+          attributes: ['id']}
       ]
     })
       .then(function (croisements) {
