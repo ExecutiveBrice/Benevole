@@ -35,7 +35,7 @@ export class BenevoleService {
     return this.http.put(this.apiUrl + '/', benevole, {responseType: 'json'});
   }
   addCroisements(benevole:Benevole) {
-   let benevoleRef = benevole
+   let benevoleRef = JSON.parse(JSON.stringify(benevole));
    benevoleRef.Croisements.forEach(croisement => {
     croisement.Benevoles = null;
   });
