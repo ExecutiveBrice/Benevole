@@ -196,7 +196,7 @@ export class DashboardComponent implements OnChanges {
   getStand(): void {
     this.standService.getAll().subscribe(data => {
       data['stands'].forEach(stand => {
-        if (stand.nom != 'tous') {
+        if (stand.nom != 'tous' || stand.nom != 'Preparatif') {
           this.croisementService.getByStand(stand.id).subscribe(data => {
             stand.Croisements = data['croisements']
             this.stands.push(stand)
@@ -286,7 +286,9 @@ export class DashboardComponent implements OnChanges {
       if (!added) {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
-        croisement.Benevoles.push(this.benevole);
+        let bene = new Benevole();
+        bene.id = this.benevole.id;
+        croisement.Benevoles.push(bene);
         if (croisement.Benevoles.length > croisement.limite) {
           console.log("croisement.Benevoles.length < croisement.limite")
           this.plein = true;
