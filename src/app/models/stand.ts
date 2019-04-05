@@ -10,5 +10,4 @@ export class Stand {
   bulle:string;
   ordre:number;
   Croisements: Croisement[];
-  croisements: Croisement[];
 }
