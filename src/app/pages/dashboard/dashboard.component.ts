@@ -287,7 +287,7 @@ export class DashboardComponent implements OnChanges {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
         croisement.Benevoles.push(this.benevole);
-        if (croisement.Benevoles.length >= croisement.limite) {
+        if (croisement.Benevoles.length > croisement.limite) {
           console.log("croisement.Benevoles.length < croisement.limite")
           this.plein = true;
         }
@@ -313,9 +313,7 @@ export class DashboardComponent implements OnChanges {
   }
 
   validate(): void {
-    this.benevole.Croisements.forEach(croisement => {
-      croisement.Benevoles = null;
-    });
+
     this.addCroisements(this.benevole);
     this.benevoleService.update(this.benevole).subscribe(data => {
       console.log(data)
