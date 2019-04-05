@@ -141,7 +141,7 @@
             <button type="button" class="btn btn-block btn-secondary dropdown-toggle" data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
               <a class="dropdown-item" *ngFor="let croisement of stand.croisements | orderBy:'Creneau.ordre':false"
-                [ngClass]="{'active':croisement.selected === true}" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
+                [ngClass]="{'active':croisement.selected === true, 'disbled':croisement.Benevoles.length >= croisement.limite}" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
                 ({{croisement.Benevoles.length}}/{{croisement.limite}})</a>
             </div>
           </div>
