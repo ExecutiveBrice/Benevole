@@ -307,6 +307,9 @@ export class DashboardComponent implements OnChanges {
   }
 
   validate(): void {
+    this.benevole.Croisements.forEach(croisement => {
+     croisement.Benevoles = null;
+   });
     this.addCroisements(this.benevole);
     this.benevoleService.update(this.benevole).subscribe(data => {
       console.log(data)
