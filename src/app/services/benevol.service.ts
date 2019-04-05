@@ -1,3 +1,4 @@
+import { Croisement } from './../models/croisement';
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {HttpClient,HttpParams} from "@angular/common/http";
@@ -34,7 +35,11 @@ export class BenevoleService {
     return this.http.put(this.apiUrl + '/', benevole, {responseType: 'json'});
   }
   addCroisements(benevole:Benevole) {
-    return this.http.put(this.apiUrl + '/addCroisements', benevole, {responseType: 'json'});
+   let benevoleRef = benevole
+   benevoleRef.Croisements.forEach(croisement => {
+    croisement.Benevoles = null;
+  });
+    return this.http.put(this.apiUrl + '/addCroisements', benevoleRef, {responseType: 'json'});
   }
 
   
