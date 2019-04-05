@@ -53,7 +53,6 @@ export class DashboardComponent implements OnChanges {
 
     this.vendredi = new Croisement();
     this.benevole = new Benevole();
-    this.benevole.Croisements = [];
     this.stands = [];
     this.besoins = [];
     this.creneaux = [];
