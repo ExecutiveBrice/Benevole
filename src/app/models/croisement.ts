@@ -8,7 +8,8 @@ export class Croisement {
   stand: number;
   Creneau: Creneau;
   Stand: Stand;
-  benevoles: Benevole[];
+  Benevoles: Benevole[];
   selected:boolean;
   besoin:boolean;
+  limite:number;
 }
