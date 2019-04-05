@@ -13,7 +13,7 @@
             <button type="button" class="btn btn-block btn-warning dropdown-toggle"
               data-toggle="dropdown">{{benecroisement.Stand.nom == "tous"?"N'importe quel stand":benecroisement.Stand.nom}} à
               {{benecroisement.Creneau.plage}}</button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu scrollable-menu">
               <a class="dropdown-item" *ngFor="let croisement of croisements  | orderBy:'Creneau.ordre':false"
                 (click)="choisir(benevole, benecroisement, croisement)">{{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à {{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</a>
             </div>
