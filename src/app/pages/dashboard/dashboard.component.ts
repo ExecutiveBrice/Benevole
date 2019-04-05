@@ -30,7 +30,7 @@ export class DashboardComponent implements OnChanges {
     subject: "",
     text: ""
   }
-
+  plein: boolean;
   emailText1: string;
   emailText2: string;
 
@@ -50,7 +50,7 @@ export class DashboardComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
 
-
+    this.plein = false;
     this.vendredi = new Croisement();
     this.benevole = new Benevole();
     this.stands = [];
@@ -282,13 +282,19 @@ export class DashboardComponent implements OnChanges {
 
     if (croisement.Benevoles.length < croisement.limite) {
       console.log("croisement.Benevoles.length < croisement.limite")
+      this.plein = false;
       if (!added) {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
         croisement.Benevoles.push(this.benevole);
+        if (croisement.Benevoles.length >= croisement.limite) {
+          console.log("croisement.Benevoles.length < croisement.limite")
+          this.plein = true;
+        }
       }
     } else {
       console.log("croisement.Benevoles.length > croisement.limite")
+      this.plein = true;
     }
     this.calculChevauchement(this.benevole)
 
@@ -308,8 +314,8 @@ export class DashboardComponent implements OnChanges {
 
   validate(): void {
     this.benevole.Croisements.forEach(croisement => {
-     croisement.Benevoles = null;
-   });
+      croisement.Benevoles = null;
+    });
     this.addCroisements(this.benevole);
     this.benevoleService.update(this.benevole).subscribe(data => {
       console.log(data)
@@ -323,10 +329,10 @@ export class DashboardComponent implements OnChanges {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
 
-      if(this.benevole.gateaux){
+      if (this.benevole.gateaux) {
         this.email.text = this.email.text + "\nVous avez également proposé d'apporter :\n"
         this.email.text = this.email.text + this.benevole.gateaux + "\n"
-        }
+      }
 
       this.email.text = this.email.text + this.emailText2
       this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation"
