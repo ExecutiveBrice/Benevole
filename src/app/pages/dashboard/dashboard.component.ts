@@ -262,35 +262,36 @@ export class DashboardComponent implements OnChanges {
     let added = false;
 
 
+
+    for (let index = 0; index < this.benevole.Croisements.length; index++) {
+      if (croisement.id == this.benevole.Croisements[index].id) {
+
+        for (let indexBenevole = 0; indexBenevole < croisement.Benevoles.length; indexBenevole++) {
+          if (this.benevole.id == croisement.Benevoles[indexBenevole].id) {
+            croisement.Benevoles.splice(indexBenevole, 1);
+            console.log("retrait du benevole " + indexBenevole)
+          }
+        }
+
+        croisement.selected = false;
+        this.benevole.Croisements.splice(index, 1);
+        added = true;
+        break;
+      }
+    }
+
     if (croisement.Benevoles.length < croisement.limite) {
       console.log("croisement.Benevoles.length < croisement.limite")
-      for (let index = 0; index < this.benevole.Croisements.length; index++) {
-        if (croisement.id == this.benevole.Croisements[index].id) {
-
-          for (let indexBenevole = 0; indexBenevole < croisement.Benevoles.length; indexBenevole++) {
-            if (this.benevole.id == croisement.Benevoles[indexBenevole].id) {
-              croisement.Benevoles.splice(indexBenevole, 1);
-              console.log("retrait du benevole "+indexBenevole)
-            }
-          }
-
-          croisement.selected = false;
-          this.benevole.Croisements.splice(index, 1);
-          added = true;
-          break;
-        }
-      }
-
       if (!added) {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
         croisement.Benevoles.push(this.benevole);
       }
-
-      this.calculChevauchement(this.benevole)
     } else {
       console.log("croisement.Benevoles.length > croisement.limite")
     }
+    this.calculChevauchement(this.benevole)
+
   }
 
   calculChevauchement(benevole: Benevole) {
