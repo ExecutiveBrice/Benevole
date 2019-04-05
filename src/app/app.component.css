@@ -1,0 +1,24 @@
+
+@media screen and (min-width: 601px) {
+    a {
+      font-size: 40px;
+    }
+    .container {
+        font-size: 20px;
+        padding-top: 100px;
+        padding-bottom: 150px;
+      }
+  }
+  
+  /* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+  @media screen and (max-width: 600px) {
+    a {
+      font-size: 20px;
+    }
+    .container {
+        font-size: 10px;
+        padding-top: 80px;
+        padding-bottom: 100px;
+        
+      }
+  }

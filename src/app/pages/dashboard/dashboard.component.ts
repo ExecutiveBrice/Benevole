@@ -319,6 +319,12 @@ export class DashboardComponent implements OnChanges {
       this.benevole.Croisements.forEach(croisement => {
         this.email.text = this.email.text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
       });
+
+      if(this.benevole.gateaux){
+        this.email.text = this.email.text + "\nVous avez également proposé d'apporter :\n"
+        this.email.text = this.email.text + this.benevole.gateaux + "\n"
+        }
+
       this.email.text = this.email.text + this.emailText2
       this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation"
 

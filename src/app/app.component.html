@@ -1,30 +1,32 @@
-<nav class="navbar navbar-dark bg-dark mt-5">
-  <a class="navbar-brand mx-auto" href="#">
-    <h2>Fête de l'école de l'Ouche Dinier 2018/2019</h2>
-  </a>
+<div class="container">
+  <nav class="navbar navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand mx-auto" href="#">
+      Fête de l'école de l'Ouche Dinier
+    </a>
 
-</nav>
+  </nav>
 
-<!-- main app container -->
+  <!-- main app container -->
 
-<div class="container" style="padding-bottom: 70px;">
+
   <router-outlet></router-outlet>
-</div>
 
-<nav class="navbar navbar-dark bg-dark mt-5 fixed-bottom">
+  <nav class="navbar navbar-dark bg-dark fixed-bottom">
 
-  <div class="navbar-expand m-auto navbar-text">
-      <div *ngFor="let user of users " >
-          {{user.name}} {{user.firstname}} - {{user.telephone}} - {{user.email}}
+    <div class="navbar-expand m-auto navbar-text">
+      <div *ngFor="let user of users ">
+        {{user.name}} {{user.firstname}} - {{user.telephone}} - {{user.email}}
+      </div>
     </div>
-  </div>
 
 
-  <div *ngIf="!mail">
+    <div *ngIf="!mail">
       <button type="button" class="btn btn-block btn-danger" (click)="mail = !mail">nous envoyer un email</button>
     </div>
-  <div *ngIf="mail">
-    <textarea rows="3" [(ngModel)]="email.text" placeholder="un problème, une question, une remarque,..." class="form-control"></textarea>
-    <button type="button" class="btn btn-block btn-danger" (click)="envoiMail(email)">envoi du message</button>
-  </div>
-</nav>
+    <div *ngIf="mail">
+      <textarea rows="3" [(ngModel)]="email.text" placeholder="un problème, une question, une remarque,..."
+        class="form-control"></textarea>
+      <button type="button" class="btn btn-block btn-danger" (click)="envoiMail(email)">envoi du message</button>
+    </div>
+  </nav>
+</div>

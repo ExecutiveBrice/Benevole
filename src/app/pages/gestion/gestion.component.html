@@ -7,7 +7,7 @@
             <button type="button" class="btn btn-block btn-primary" routerLink="/gestionstands">Gestion des Stands</button>
       </div>
       <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" (click)="envoiRappel()">Envoi du mail de rappel (dernier rappel le {{dateRappel}})</button>
+            <button type="button" class="btn btn-block btn-primary" (click)="envoiRappel()">Envoi du mail de rappel <br> (dernier rappel le {{dateRappel}})</button>
       </div>
       <div class="col-sm-12">
             <button type="button" class="btn btn-block btn-success" [ngClass]="{'btn-danger':bloque == 'true'}" (click)="updateBlocage(bloque)">{{bloque == 'true'?'Je clique pour débloquer le site':'Je clique pour bloquer le site'}}</button>
