@@ -1,21 +1,21 @@
 <div *ngIf="validation" class="row">
   <div class="col-sm-12 ">
-  <div class="alert alert-success">
-    <strong>Merci de votre participation,</strong>
-    Vous pouvez revenir quand vous le souhaitez pour modifier vos choix
-    Vous pouvez fermer cette fenêtre
+    <div class="alert alert-success">
+      <strong>Merci de votre participation,</strong>
+      Vous pouvez revenir quand vous le souhaitez pour modifier vos choix
+      Vous pouvez fermer cette fenêtre
+    </div>
   </div>
-</div>
 </div>
 <div *ngIf="nouveau && !exist" class="row">
   <div class="col-sm-12 ">
-  <div class="alert alert-success">
-    <strong>Bienvenue,</strong>
-    <h4> nous avons besoin de quelques informations personnelles pour faciliter l'organisation de la fête de
-      l'école.</h4>
-    <h4><i>(Les informations personnelles seront détruites après la fête)</i></h4>
+    <div class="alert alert-success">
+      <strong>Bienvenue,</strong>
+      <h4> nous avons besoin de quelques informations personnelles pour faciliter l'organisation de la fête de
+        l'école.</h4>
+      <h4><i>(Les informations personnelles seront détruites après la fête)</i></h4>
+    </div>
   </div>
-</div>
 </div>
 <div *ngIf="!validation" class="row">
   <div class="col-sm-6">
@@ -31,13 +31,12 @@
     </div>
     <div *ngIf="!exist" class="row">
       <div class="col-sm-12 ">
-        <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg"
-          (click)="find()">Entrer</button>
-        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg"
-          (click)="find()">Je me suis trompé dans mon email, je réessais</button>
+        <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg" (click)="find()">Entrer</button>
+        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg" (click)="find()">Je me
+          suis trompé dans mon email, je réessais</button>
 
-        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
-          (click)="nouveau = true">Je suis nouveau, je souhaiterai m'inscrire</button>
+        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg" (click)="nouveau = true">Je
+          suis nouveau, je souhaiterai m'inscrire</button>
       </div>
     </div>
     <div *ngIf="nouveau && !exist" class="row">
@@ -74,19 +73,19 @@
     </div>
     <div *ngIf="exist" class="row">
       <div class="col-sm-12 ">
-          <h4>Votre planning :</h4>
+        <h4>Votre planning :</h4>
 
-          <div *ngIf="chevauchement" class="alert alert-danger">
-            <strong>Attention!</strong> Vous vous êtes inscrit sur au moins 2 creneaux identique
-            <br>(si vous êtes plusieurs, précisez le dans le commentaire).
-          </div>
+        <div *ngIf="chevauchement" class="alert alert-danger">
+          <strong>Attention!</strong> Vous vous êtes inscrit sur au moins 2 creneaux identique
+          <br>(si vous êtes plusieurs, précisez le dans le commentaire).
+        </div>
 
-
+        <div *ngIf=" benevole.Croisements.length > 0">
           <div *ngFor="let croisement of benevole.Croisements | orderBy:'Creneau.ordre':false" class="col-md-12">
             {{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à
             {{croisement.Creneau.plage}}
           </div>
-
+        </div>
       </div>
 
 
@@ -95,19 +94,20 @@
 
 
       <div class="col-sm-12 ">
-          <h4>Commentaire :</h4>
-          <textarea rows="5" [(ngModel)]="benevole.commentaire" class="form-control">
+        <h4>Commentaire :</h4>
+        <textarea rows="5" [(ngModel)]="benevole.commentaire" class="form-control">
             </textarea>
-        </div>
+      </div>
 
       <div *ngIf="benevole.reponse" class="col-sm-12 ">
-          <h4>Reponse :</h4>
-          <input type="text" [(ngModel)]="benevole.reponse" readonly class="form-control">
+        <h4>Reponse :</h4>
+        <input type="text" [(ngModel)]="benevole.reponse" readonly class="form-control">
       </div>
 
       <div class="col-sm-12 ">
         <h4>Préparation de plat :</h4>
-        <textarea rows="5" [(ngModel)]="benevole.gateaux" placeholder="par exemple: une tarte au pomme et une quiche" class="form-control">
+        <textarea rows="5" [(ngModel)]="benevole.gateaux" placeholder="par exemple: une tarte au pomme et une quiche"
+          class="form-control">
           </textarea>
       </div>
 
@@ -126,7 +126,8 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-warning" data-toggle="tooltip" title="{{vendredi.Stand.bulle}}" (click)="choisir(vendredi)">{{vendredi.Stand.nom}} - {{vendredi.Creneau.plage}}</button>
+        <button type="button" class="btn btn-block btn-warning" data-toggle="tooltip" title="{{vendredi.Stand.bulle}}"
+          (click)="choisir(vendredi)">{{vendredi.Stand.nom}} - {{vendredi.Creneau.plage}}</button>
       </div>
 
       <div class="col-sm-12 ">
@@ -137,12 +138,11 @@
       <div class="col-sm-12" *ngIf="choix == 'stand'">
         <div class="row">
           <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-4 dropdown">
-            <button type="button" class="btn btn-block btn-secondary dropdown-toggle"
-              data-toggle="dropdown">{{stand.nom}}</button>
+            <button type="button" class="btn btn-block btn-secondary dropdown-toggle" data-toggle="dropdown">{{stand.nom}}</button>
             <div class="dropdown-menu">
               <a class="dropdown-item" *ngFor="let croisement of stand.croisements | orderBy:'Creneau.ordre':false"
-                [ngClass]="{'active':croisement.selected === true}"
-                (click)="choisir(croisement)" >{{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</a>
+                [ngClass]="{'active':croisement.selected === true}" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
+                ({{croisement.Benevoles.length}}/{{croisement.limite}})</a>
             </div>
           </div>
         </div>
@@ -165,8 +165,9 @@
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux | orderBy:'Creneau.ordre':false" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
-              class="btn btn-block btn-secondary" (click)="choisir(croisement)" [disabled]="croisement.Benevoles.length == croisement.limite">{{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
+            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}" class="btn btn-block btn-secondary"
+              (click)="choisir(croisement)" [disabled]="croisement.Benevoles.length == croisement.limite">{{croisement.Creneau.plage}}
+              ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
       </div>
@@ -193,8 +194,8 @@
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
           <div *ngFor="let croisement of besoins | orderBy:'Stand.nom':false" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}"
-              class="btn btn-block btn-secondary" [disabled]="croisement.Benevoles.length == croisement.limite"  (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
+            <button type="button" [ngClass]="{'btn-info':croisement.selected === true}" class="btn btn-block btn-secondary"
+              [disabled]="croisement.Benevoles.length == croisement.limite" (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
               {{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
