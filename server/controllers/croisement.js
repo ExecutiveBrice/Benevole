@@ -47,7 +47,8 @@ module.exports = {
         { model: Creneau},
         { model: Stand,
           where: { 'id': (req.query.id)}},
-        { model: Benevole}
+        { model: Benevole,
+          attributes: ['id']}
       ]
     })
       .then(function (croisements) {

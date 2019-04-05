@@ -84,7 +84,7 @@
         <div *ngIf=" benevole.Croisements.length > 0">
           <div *ngFor="let croisement of benevole.Croisements | orderBy:'Creneau.ordre':false" class="col-md-12">
             {{croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom}} à
-            {{croisement.Creneau.plage}}
+            {{croisement.Creneau.plage}} {{croisement.Creneau.ordre}}
           </div>
         </div>
       </div>
@@ -126,7 +126,7 @@
       <div *ngIf="plein"  class="col-sm-12 ">
         <div class="alert alert-danger">
           <strong>Attention!</strong> <br>
-          Cette plage horaire est déjà complete,<br>
+          Cette plage horaire est déjà complète,<br>
           Choisissez en une autre ;)
         </div>
       </div>
@@ -174,8 +174,7 @@
         <div class="row">
           <div *ngFor="let croisement of creneaux | orderBy:'Creneau.ordre':false" class="col-sm-4">
             <button type="button" [ngClass]="{'btn-info':croisement.selected === true, 'grey':croisement.Benevoles.length >= croisement.limite}"
-              class="btn btn-block btn-secondary" (click)="choisir(croisement)"
-              [disabled]="croisement.Benevoles.length == croisement.limite">{{croisement.Creneau.plage}}
+              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
               ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
@@ -204,8 +203,7 @@
         <div class="row">
           <div *ngFor="let croisement of besoins | orderBy:'Stand.nom':false" class="col-sm-4">
             <button type="button" [ngClass]="{'btn-info':croisement.selected === true, 'grey':croisement.Benevoles.length >= croisement.limite}"
-              class="btn btn-block btn-secondary" [disabled]="croisement.Benevoles.length == croisement.limite"
-              (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
+              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
               {{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
