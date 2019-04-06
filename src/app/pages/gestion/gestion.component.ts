@@ -125,7 +125,7 @@ export class GestionComponent implements OnChanges {
       text = text + this.rappel1 + "\n \n";
       benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
       benevole.Croisements.forEach(croisement => {
-        text = text + croisement.Stand.nom + " - " + croisement.Creneau.plage + "\n"
+        text = text + (croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom) + " - " + croisement.Creneau.plage + "\n"
       })
       if(benevole.gateaux){
       text = text + "\nVous avez également proposé d'apporter :\n"
