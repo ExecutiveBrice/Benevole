@@ -143,11 +143,11 @@
 
       <div class="col-sm-12" *ngIf="choix == 'stand'">
         <div class="row">
-          <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-11">
+          <div *ngFor="let stand of stands | orderBy:'ordre':false" class="col-sm-11">
             <button type="button" class="btn btn-block btn-secondary " title="{{stand.bulle}}"
               (click)="choixStand = stand.nom">{{stand.nom}}</button>
             <div class="row" *ngIf="choixStand == stand.nom">
-              {{stand.bulle}}
+              {{stand.bulle}}<br>
               <div *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-4">
                 <button type="button" class="btn btn-block btn-secondary"
                   [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
