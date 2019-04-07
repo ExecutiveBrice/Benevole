@@ -113,7 +113,6 @@ export class DashboardComponent implements OnChanges {
       console.log("data")
       console.log(data)
       this.benevole.id = data['benevole'];
-      this.benevole.Croisements = [];
       this.exist = true;
       this.updateListe(this.benevole)
     },

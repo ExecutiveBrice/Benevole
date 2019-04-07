@@ -14,4 +14,8 @@ export class Benevole {
   commentaire: string;
   reponse: string;
   gateaux: string;
+
+  constructor(){
+    this.Croisements = []
+  }
 }
