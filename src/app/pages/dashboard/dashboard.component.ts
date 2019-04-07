@@ -95,6 +95,7 @@ export class DashboardComponent implements OnChanges {
       console.log(data)
       this.exist = true
       this.benevole = data['benevoles'][0];
+      this.benevole.Croisements = [];
       this.updateListe(this.benevole)
 
     },
@@ -113,6 +114,7 @@ export class DashboardComponent implements OnChanges {
       console.log("data")
       console.log(data)
       this.benevole.id = data['benevole'];
+      this.benevole.Croisements = [];
       this.exist = true;
       this.updateListe(this.benevole)
     },
