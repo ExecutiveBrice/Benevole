@@ -147,12 +147,13 @@
             <button type="button" class="btn btn-block btn-secondary " title="{{stand.bulle}}"
               (click)="choixStand = stand.nom">{{stand.nom}}</button>
             <div class="row" *ngIf="choixStand == stand.nom">
-              {{stand.bulle}}<br>
+              <div class="col-sm-12 ">
+                {{stand.bulle}}
+              </div>
               <div *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-4">
                 <button type="button" class="btn btn-block btn-secondary"
                   [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
-                  (click)="choisir(croisement)">{{croisement.Creneau.plage}}
-                  ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
+                  (click)="choisir(croisement)">{{croisement.Creneau.plage}}<br>({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
               </div>
             </div>
           </div>
@@ -178,8 +179,7 @@
           <div *ngFor="let croisement of creneaux | orderBy:'Creneau.ordre':false" class="col-sm-4">
             <button type="button"
               [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
-              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
-              ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
+              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}<br>({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
       </div>
@@ -210,7 +210,7 @@
               [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
               title="{{croisement.Stand.bulle}}" class="btn btn-block btn-secondary"
               (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
-              {{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
+              {{croisement.Creneau.plage}}<br>({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
       </div>
