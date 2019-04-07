@@ -90,7 +90,7 @@ export class DashboardComponent implements OnChanges {
     console.log("find")
     console.log(this.benevole)
     this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.getByMail(this.benevole.email).subscribe(data => {
+    this.benevoleService.getByMailLite(this.benevole.email).subscribe(data => {
       console.log("data")
       console.log(data)
       this.exist = true
@@ -229,6 +229,7 @@ export class DashboardComponent implements OnChanges {
       for (let indexb = 0; indexb < croisementsbenevole.length; indexb++) {
         if (croisements[index].id == croisementsbenevole[indexb].id) {
           croisements[index].selected = true;
+          this.benevole.Croisements.push(croisements[index]);
           break;
         } else {
           croisements[index].selected = false;

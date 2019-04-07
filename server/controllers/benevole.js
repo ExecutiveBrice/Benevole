@@ -7,6 +7,8 @@ var Benevole = require('../models').Benevole;
 
 module.exports = {
 
+
+
   getAll: function getAll(req, res) {
     console.log("getAll")
     return Benevole.findAll({
@@ -82,6 +84,35 @@ module.exports = {
   },
 
 
+
+  getByMailLite: function getByMailLite(req, res) {
+    console.log("getByMailLite")
+    console.log(req.query.email)
+    return Benevole.findAll({
+      where: { 'email': (req.query.email) },
+    })
+      .then(function (benevoles) {
+        console.log("getByMailLite - 2")
+        console.log(benevoles)
+        if (benevoles.length == 0) {
+          return res.status(400).json({
+            title: "No benevoles found for this email",
+            error: "Please try again."
+          });
+        }
+
+        return res.status(200).json({
+          message: 'benevoles found for this email',
+          benevoles: benevoles
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          title: 'There was an error signing in!',
+          error: error.stack
+        });
+      });
+  },
   add: function add(req, res) {
     console.log("add")
     return Benevole.create({

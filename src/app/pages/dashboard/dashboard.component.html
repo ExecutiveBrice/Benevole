@@ -143,14 +143,14 @@
 
       <div class="col-sm-12" *ngIf="choix == 'stand'">
         <div class="row">
-          <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-7">
+          <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-11">
             <button type="button" class="btn btn-block btn-secondary " title="{{stand.bulle}}"
               (click)="choixStand = stand.nom">{{stand.nom}}</button>
-              {{stand.bulle}}
             <div class="row" *ngIf="choixStand == stand.nom">
+              {{stand.bulle}}
               <div *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-11">
-                <button type="button" class="btn btn-block btn-secondary" 
-                  [ngClass]="{'btn-secondary':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
+                <button type="button" class="btn btn-block btn-secondary"
+                  [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
                   (click)="choisir(croisement)">{{croisement.Creneau.plage}}
                   ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
               </div>
@@ -177,7 +177,7 @@
         <div class="row">
           <div *ngFor="let croisement of creneaux | orderBy:'Creneau.ordre':false" class="col-sm-4">
             <button type="button"
-              [ngClass]="{'btn-info':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
+              [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
               class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
               ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
@@ -207,7 +207,7 @@
         <div class="row">
           <div *ngFor="let croisement of besoins | orderBy:'Stand.nom':false" class="col-sm-4">
             <button type="button"
-              [ngClass]="{'btn-info':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
+              [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
               title="{{croisement.Stand.bulle}}" class="btn btn-block btn-secondary"
               (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
               {{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
