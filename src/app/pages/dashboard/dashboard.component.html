@@ -146,10 +146,10 @@
           <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-7">
             <button type="button" class="btn btn-block btn-secondary " title="{{stand.bulle}}"
               (click)="choixStand = stand.nom">{{stand.nom}}</button>
-
+              {{stand.bulle}}
             <div class="row" *ngIf="choixStand == stand.nom">
-              <div *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-4">
-                <button type="button" class="btn btn-block btn-secondary" title="{{stand.bulle}}"
+              <div *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-11">
+                <button type="button" class="btn btn-block btn-secondary" 
                   [ngClass]="{'btn-secondary':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
                   (click)="choisir(croisement)">{{croisement.Creneau.plage}}
                   ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
