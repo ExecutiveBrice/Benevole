@@ -169,9 +169,9 @@ export class DashboardComponent implements OnChanges {
   updateListe(benevole: Benevole): void {
     console.log("updateListe")
     console.log(benevole)
-    this.updateCroisementListe(this.creneaux, benevole.Croisements)
+    this.updateCroisementListe(this.creneaux)
     this.stands.forEach(stand => {
-      this.updateCroisementListe(stand.Croisements, benevole.Croisements)
+      this.updateCroisementListe(stand.Croisements)
     });
     this.getBesoin();
     this.calculChevauchement(benevole)
@@ -222,13 +222,12 @@ export class DashboardComponent implements OnChanges {
 
 
 
-  updateCroisementListe(croisements: Croisement[], croisementsbenevole: Croisement[]): void {
+  updateCroisementListe(croisements: Croisement[]): void {
     console.log("updateCroisementListe")
     console.log(croisements)
-    console.log(croisementsbenevole)
     for (let index = 0; index < croisements.length; index++) {
-      for (let indexb = 0; indexb < croisementsbenevole.length; indexb++) {
-        if (croisements[index].id == croisementsbenevole[indexb].id) {
+      for (let indexb = 0; indexb < croisements[index].Benevoles.length; indexb++) {
+        if ( croisements[index].Benevoles[indexb].id == this.benevole.id) {
           croisements[index].selected = true;
           this.benevole.Croisements.push(croisements[index]);
           break;
@@ -237,7 +236,6 @@ export class DashboardComponent implements OnChanges {
         }
       }
     }
-
   }
 
 
@@ -262,8 +260,6 @@ export class DashboardComponent implements OnChanges {
   choisir(croisement: Croisement): void {
     this.chevauchement = false;
     let added = false;
-
-
 
     for (let index = 0; index < this.benevole.Croisements.length; index++) {
       if (croisement.id == this.benevole.Croisements[index].id) {
@@ -329,7 +325,7 @@ export class DashboardComponent implements OnChanges {
       this.email.text = this.emailText1 + "\n";
       this.benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
       this.benevole.Croisements.forEach(croisement => {
-        this.email.text = this.email.text + (croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom) + " - " + croisement.Creneau.plage + "\n"
+        this.email.text = this.email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "\n"
       });
 
       if (this.benevole.gateaux) {
