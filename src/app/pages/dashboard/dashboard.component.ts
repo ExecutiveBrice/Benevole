@@ -284,9 +284,6 @@ export class DashboardComponent implements OnChanges {
       if (!added) {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
-        let bene = new Benevole();
-        bene.id = this.benevole.id;
-        croisement.Benevoles.push(bene);
         if (croisement.Benevoles.length > croisement.limite) {
           console.log("croisement.Benevoles.length < croisement.limite")
           this.plein = true;
@@ -337,7 +334,6 @@ export class DashboardComponent implements OnChanges {
       this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation"
 
       this.envoiMail(this.email)
-
     },
       error => {
         this.exist = false;
