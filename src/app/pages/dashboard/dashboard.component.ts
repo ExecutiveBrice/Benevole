@@ -33,7 +33,7 @@ export class DashboardComponent implements OnChanges {
   plein: boolean;
   emailText1: string;
   emailText2: string;
-
+  choixStand: string;
 
 
 
