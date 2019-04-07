@@ -4,6 +4,7 @@
       font-size: 40px;
     }
     .container {
+      min-height: 85vh;
         font-size: 20px;
         padding-top: 30px;
       }
@@ -15,8 +16,10 @@
       font-size: 20px;
     }
     .container {
+      min-height: 85vh;
         font-size: 10px;
         padding-top: 30px;
         
       }
+
   }
