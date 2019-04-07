@@ -16,12 +16,11 @@ export class BenevoleService {
     return this.http.get(this.apiUrl + '/getAll', {responseType: 'json'});
   }
 
-  get(id) {
-    let params = new HttpParams().set('id', ''+id+'');
-    return this.http.get(this.apiUrl + '/', {params, responseType: 'json'});
+  getByMailLite(email:String) {
+    let params = new HttpParams().set('email', ''+email+'');
+    return this.http.get(this.apiUrl + '/byMailLite', {params, responseType: 'json'});
   }
 
-  
   getByMail(email:String) {
     let params = new HttpParams().set('email', ''+email+'');
     return this.http.get(this.apiUrl + '/byMail', {params, responseType: 'json'});
@@ -34,6 +33,7 @@ export class BenevoleService {
   update(benevole:Benevole) {
     return this.http.put(this.apiUrl + '/', benevole, {responseType: 'json'});
   }
+  
   addCroisements(benevole:Benevole) {
     return this.http.put(this.apiUrl + '/addCroisements', benevole, {responseType: 'json'});
   }
