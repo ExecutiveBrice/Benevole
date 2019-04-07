@@ -37,7 +37,7 @@
 
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
           (click)="nouveau = true">Je
-          suis nouveau, je souhaiterai m'inscrire</button> 
+          suis nouveau, je souhaiterai m'inscrire</button>
       </div>
     </div>
     <div *ngIf="nouveau && !exist" class="row">
@@ -123,7 +123,7 @@
   </div>
   <div class="col-sm-6">
     <div class="row" *ngIf="exist ">
-      <div *ngIf="plein"  class="col-sm-12 ">
+      <div *ngIf="plein" class="col-sm-12 ">
         <div class="alert alert-danger">
           <strong>Attention!</strong> <br>
           Cette plage horaire est déjà complète,<br>
@@ -145,16 +145,16 @@
         <div class="row">
           <div *ngFor="let stand of stands | orderBy:'nom':false" class="col-sm-7">
             <button type="button" class="btn btn-block btn-secondary " title="{{stand.bulle}}"
-            (click)="choixStand = stand.nom" >{{stand.nom}}</button>
+              (click)="choixStand = stand.nom">{{stand.nom}}</button>
 
-              <div *ngIf="choixStand == stand.nom" *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-4">
+            <div class="row" *ngIf="choixStand == stand.nom">
+              <div *ngFor="let croisement of stand.Croisements | orderBy:'Creneau.ordre':false" class="col-sm-4">
                 <button type="button" class="btn btn-block btn-secondary" title="{{stand.bulle}}"
-                [ngClass]="{'btn-secondary':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
+                  [ngClass]="{'btn-secondary':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
                   (click)="choisir(croisement)">{{croisement.Creneau.plage}}
                   ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
               </div>
-
-
+            </div>
           </div>
         </div>
       </div>
@@ -176,7 +176,8 @@
       <div class="col-sm-12" *ngIf="choix == 'heure'">
         <div class="row">
           <div *ngFor="let croisement of creneaux | orderBy:'Creneau.ordre':false" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
+            <button type="button"
+              [ngClass]="{'btn-info':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
               class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}
               ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
@@ -205,8 +206,10 @@
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
           <div *ngFor="let croisement of besoins | orderBy:'Stand.nom':false" class="col-sm-4">
-            <button type="button" [ngClass]="{'btn-info':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}" title="{{croisement.Stand.bulle}}"
-              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
+            <button type="button"
+              [ngClass]="{'btn-info':croisement.selected === true, 'btn-dark':croisement.Benevoles.length >= croisement.limite}"
+              title="{{croisement.Stand.bulle}}" class="btn btn-block btn-secondary"
+              (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
               {{croisement.Creneau.plage}} ({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
