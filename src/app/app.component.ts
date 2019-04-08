@@ -22,6 +22,7 @@ export class AppComponent {
     mail: boolean;
     titleText:string;
     titleDate:string;
+    planing:boolean;
     constructor(
         public configService:ConfigService,
         public mailService: MailService,
@@ -30,6 +31,7 @@ export class AppComponent {
         public route: ActivatedRoute,
         private utilisateurService: UserService) {
         this.mail = false;
+        this.planing = false;
         this.users = [];
         this.getTexts();
         console.log('AppComponent')
