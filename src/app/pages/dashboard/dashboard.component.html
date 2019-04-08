@@ -139,7 +139,8 @@
 
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-warning" title="{{vendredi.Stand.bulle}}"
-          (click)="choisir(vendredi)">{{vendredi.Stand.nom}} - {{vendredi.Creneau.plage}}<br><i>{{vendredi.Stand.bulle}}</i></button>
+          (click)="choisir(vendredi)">{{vendredi.Stand.nom}} -
+          {{vendredi.Creneau.plage}}<br><i>{{vendredi.Stand.bulle}}</i></button>
       </div>
 
       <div class="col-sm-12 ">
@@ -185,7 +186,8 @@
           <div *ngFor="let croisement of creneaux | orderBy:'Creneau.ordre':false" class="col-sm-4">
             <button type="button"
               [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
-              class="btn btn-block btn-secondary" (click)="choisir(croisement)">{{croisement.Creneau.plage}}<br>({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
+              class="btn btn-block btn-secondary"
+              (click)="choisir(croisement)">{{croisement.Creneau.plage}}<br>({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
           </div>
         </div>
       </div>

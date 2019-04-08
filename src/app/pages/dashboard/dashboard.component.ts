@@ -284,6 +284,7 @@ export class DashboardComponent implements OnChanges {
       if (!added) {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
+        croisement.Benevoles.push(this.benevole)
         if (croisement.Benevoles.length > croisement.limite) {
           console.log("croisement.Benevoles.length < croisement.limite")
           this.plein = true;
