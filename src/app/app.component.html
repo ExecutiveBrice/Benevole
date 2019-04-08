@@ -1,17 +1,42 @@
-<nav class="navbar navbar-expand-md bg-dark navbar-dark">
-  <a class="navbar-brand mx-auto" href="#">
-    <b>{{titleText}}</b> <br> {{titleDate}}
-  </a>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark ">
 
+  <a class="navbar-brand mx-auto" href="#">
+    <b>{{titleText}}</b>
+  </a>
 </nav>
 
-<!-- main app container -->
+
+
 
 <div class="container">
   <router-outlet></router-outlet>
 </div>
-<nav class="navbar navbar-expand-md bg-dark navbar-dark">
 
+
+
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+    <span class="fa fa-calendar"></span>
+  </button>
+
+  <div class="collapse navbar-collapse flex-column" id="navbar">
+    <ul class=" navbar-nav nav mx-auto w-100 d-flex  justify-content-center">
+      <li class="nav-item col-sm-2">
+        <i class="nav-link active">11H-12H<br>Chorale des élèves</i>
+      </li>
+      <li class="nav-item col-sm-2">
+        <i class="nav-link active">12H-12H30<br>Apéritif</i>
+      </li>
+      <li class="nav-item col-sm-2">
+        <i class="nav-link active">12H30-14H<br>Repas</i>
+      </li>
+      <li class="nav-item col-sm-2">
+        <i class="nav-link active">14H-17H<br>Jeux</i>
+      </li>
+    </ul>
+
+  </div>
   <div class="navbar-expand m-auto navbar-text">
     <div *ngFor="let user of users ">
       {{user.name}} {{user.firstname}} - {{user.telephone}} - {{user.email}}
@@ -23,7 +48,8 @@
     <button type="button" class="btn btn-block btn-danger" (click)="mail = !mail">Nous envoyer un email</button>
   </div>
   <div *ngIf="mail">
-    <textarea rows="3" [(ngModel)]="email.text" placeholder="Un problème, une question, une remarque,..." class="form-control"></textarea>
+    <textarea rows="3" [(ngModel)]="email.text" placeholder="Un problème, une question, une remarque,..."
+      class="form-control"></textarea>
     <button type="button" class="btn btn-block btn-danger" (click)="envoiMail(email)">Envoi de l'email</button>
   </div>
 </nav>
