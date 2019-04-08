@@ -82,8 +82,8 @@
         </div>
 
         <div *ngIf="benevole.Croisements.length == 0" class="alert alert-success">
-          <strong>Pour ajouter une moment de bénévolat :</strong><br>
-          Cliquez sur les choix à droite puis choisisez le créneau qui vous convient.<br>
+          <strong>Pour ajouter un moment de bénévolat :</strong><br>
+          Cliquez sur les choix à droite puis choisissez le créneau qui vous convient.<br>
           Vous pouvez bien évidement en choisir plusieurs
         </div>
         <div *ngIf=" benevole.Croisements.length > 0">
@@ -102,7 +102,7 @@
 
       <div class="col-sm-12 ">
         <h4>Commentaire :</h4>
-        <textarea rows="5" [(ngModel)]="benevole.commentaire" class="form-control">
+        <textarea rows="3" [(ngModel)]="benevole.commentaire" class="form-control">
             </textarea>
       </div>
 
@@ -113,7 +113,7 @@
 
       <div class="col-sm-12 ">
         <h4>Préparation de plat(s) (sucré et/ou salé):</h4>
-        <textarea rows="5" [(ngModel)]="benevole.gateaux" placeholder="par exemple: une tarte au pomme et une quiche"
+        <textarea rows="3" [(ngModel)]="benevole.gateaux" placeholder="par exemple: une tarte au pomme et une quiche"
           class="form-control">
           </textarea>
       </div>
@@ -187,7 +187,7 @@
             <button type="button"
               [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
               class="btn btn-block btn-secondary"
-              (click)="choisir(croisement)">{{croisement.Creneau.plage}}<br>({{croisement.Benevoles.length}}/{{croisement.limite}})</button>
+              (click)="choisir(croisement)">{{croisement.Creneau.plage}}</button>
           </div>
         </div>
       </div>
