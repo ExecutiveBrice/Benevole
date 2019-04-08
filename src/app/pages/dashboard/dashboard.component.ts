@@ -244,6 +244,9 @@ export class DashboardComponent implements OnChanges {
   addCroisements(benevole: Benevole): void {
     console.log("addCroisements")
     console.log(benevole)
+    benevole.Croisements.forEach(croisement => {
+      croisement.Benevoles = []
+    });
     benevole.email = benevole.email.toLowerCase();
     this.benevoleService.addCroisements(benevole).subscribe(data => {
       console.log(data)
@@ -260,17 +263,14 @@ export class DashboardComponent implements OnChanges {
   choisir(croisement: Croisement): void {
     this.chevauchement = false;
     let added = false;
-
     for (let index = 0; index < this.benevole.Croisements.length; index++) {
       if (croisement.id == this.benevole.Croisements[index].id) {
-
         for (let indexBenevole = 0; indexBenevole < croisement.Benevoles.length; indexBenevole++) {
           if (this.benevole.id == croisement.Benevoles[indexBenevole].id) {
             croisement.Benevoles.splice(indexBenevole, 1);
             console.log("retrait du benevole " + indexBenevole)
           }
         }
-
         croisement.selected = false;
         this.benevole.Croisements.splice(index, 1);
         added = true;
@@ -284,7 +284,7 @@ export class DashboardComponent implements OnChanges {
       if (!added) {
         croisement.selected = true;
         this.benevole.Croisements.push(croisement);
-        croisement.Benevoles.push(this.benevole)
+        croisement.Benevoles.push(this.benevole);
         if (croisement.Benevoles.length > croisement.limite) {
           console.log("croisement.Benevoles.length < croisement.limite")
           this.plein = true;

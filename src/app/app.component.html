@@ -1,27 +1,20 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark ">
 
-  <a class="navbar-brand mx-auto" href="#">
-    <b>{{titleText}}</b>
-  </a>
-</nav>
-
-
-
-
-<div class="container">
-  <router-outlet></router-outlet>
-</div>
-
-
-
-
-<nav class="navbar navbar-expand-md bg-dark navbar-dark">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
-    <span class="fa fa-calendar"></span>
-  </button>
-
-  <div class="collapse navbar-collapse flex-column" id="navbar">
-    <ul class=" navbar-nav nav mx-auto w-100 d-flex  justify-content-center">
+  <div class="mx-auto flex-column" id="navbar">
+    <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link active">{{titleText}}</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
+      <li *ngIf="!planing" class="nav-item">
+        <i class="nav-link active fa fa-calendar-plus-o" (click)="planing = true"> {{titleDate}}</i>
+      </li>
+      <li *ngIf="planing" class="nav-item">
+        <i class="nav-link active fa fa-calendar-minus-o" (click)="planing = false"> {{titleDate}}</i>
+      </li>
+    </ul>
+    <ul *ngIf="planing" class="navbar-nav mx-auto w-100 d-flex  justify-content-center">
       <li class="nav-item col-sm-2">
         <i class="nav-link active">11H-12H<br>Chorale des élèves</i>
       </li>
@@ -37,6 +30,14 @@
     </ul>
 
   </div>
+</nav>
+<!-- main app container -->
+
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+
   <div class="navbar-expand m-auto navbar-text">
     <div *ngFor="let user of users ">
       {{user.name}} {{user.firstname}} - {{user.telephone}} - {{user.email}}
