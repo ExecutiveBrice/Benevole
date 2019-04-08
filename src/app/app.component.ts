@@ -20,8 +20,10 @@ export class AppComponent {
     }
     users: User[];
     mail: boolean;
-
+    titleText:string;
+    titleDate:string;
     constructor(
+        public configService:ConfigService,
         public mailService: MailService,
         public userService: UserService,
         public router: Router,
@@ -29,6 +31,7 @@ export class AppComponent {
         private utilisateurService: UserService) {
         this.mail = false;
         this.users = [];
+        this.getTexts();
         console.log('AppComponent')
         if (JSON.parse(localStorage.getItem('userId'))) {
             this.utilisateur = {
@@ -101,5 +104,18 @@ export class AppComponent {
     }
 
 
-
+    getTexts() {
+        this.configService.getParam("titleText").subscribe(res => {
+          console.log(res['param'].value);
+          this.titleText = res['param'].value;
+        }, err => {
+          console.log(err);
+        });
+        this.configService.getParam("titleDate").subscribe(res => {
+          console.log(res['param'].value);
+          this.titleDate = res['param'].value;
+        }, err => {
+          console.log(err);
+        });
+      }
 }

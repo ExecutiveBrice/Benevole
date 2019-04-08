@@ -310,7 +310,6 @@ export class DashboardComponent implements OnChanges {
   }
 
   validate(): void {
-
     this.addCroisements(this.benevole);
     this.benevoleService.update(this.benevole).subscribe(data => {
       console.log(data)
@@ -327,12 +326,10 @@ export class DashboardComponent implements OnChanges {
 
       if (this.benevole.gateaux) {
         this.email.text = this.email.text + "\nVous avez également proposé d'apporter :\n"
-        this.email.text = this.email.text + this.benevole.gateaux + "\n"
+        this.email.text = this.email.text + this.benevole.gateaux + "\n\n"
       }
-
       this.email.text = this.email.text + this.emailText2
-      this.email.text = this.email.text + "Cordialement, \n L'équipe d'animation"
-
+      this.email.text = this.email.text + "Cordialement,\nL'équipe d'animation"
       this.envoiMail(this.email)
     },
       error => {
@@ -351,6 +348,7 @@ export class DashboardComponent implements OnChanges {
         console.log(err);
       });
   }
+
   getTexts() {
     this.configService.getParam("validation1").subscribe(res => {
       console.log(res['param'].value);
