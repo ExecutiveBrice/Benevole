@@ -32,7 +32,7 @@ module.exports = {
       console.log('Email sent!');
       return res.status(200).json({
         message: "Email sent",
-        obj: mailOptions
+        obj: mailOptions.subject
       });
     });
   },

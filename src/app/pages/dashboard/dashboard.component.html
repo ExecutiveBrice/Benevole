@@ -3,6 +3,7 @@
     <div class="alert alert-success">
       <strong>Merci de votre participation,</strong><br>
       Vous pouvez revenir quand vous le souhaitez pour modifier vos choix<br>
+      <a href="https://www.kermesse.herokuapp.com">le site d'inscription</a>
       Vous pouvez fermer cette fenêtre
     </div>
   </div>
@@ -25,7 +26,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Email : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.email" class="form-control">
+          <input type="text" [(ngModel)]="benevole.email" class="form-control" id="email" (keyup.enter)="find()">
         </div>
       </div>
     </div>
@@ -47,7 +48,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Nom : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.nom" class="form-control">
+          <input type="text" [(ngModel)]="benevole.nom" class="form-control" id="lastname">
         </div>
       </div>
       <div class="col-sm-12 ">
@@ -55,7 +56,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Prenom : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.prenom" class="form-control">
+          <input type="text" [(ngModel)]="benevole.prenom" class="form-control" id="firstname">
         </div>
       </div>
       <div class="col-sm-12 ">
@@ -63,7 +64,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Telephone : </span>
           </div>
-          <input type="text" [(ngModel)]="benevole.telephone" class="form-control">
+          <input type="text" [(ngModel)]="benevole.telephone" class="form-control" id="phone">
         </div>
       </div>
 
