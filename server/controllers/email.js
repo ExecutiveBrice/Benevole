@@ -12,7 +12,7 @@ var mailOptions = {
   from: 'ALOD Ouche Dinier',
   to: 'Adresse mail',
   subject: 'Sujet du mail',
-  text: 'Corps du mail'
+  html: 'Corps du mail'
 };
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -27,7 +27,7 @@ module.exports = {
     console.log("sendMail")
     mailOptions.to = req.body.to
     mailOptions.subject = req.body.subject
-    mailOptions.text = req.body.text
+    mailOptions.html = req.body.text
     return transporter.sendMail(mailOptions, function (error, info) {
       console.log('Email sent!');
       return res.status(200).json({
@@ -102,7 +102,7 @@ module.exports = {
           }
           text = text + benevole.gateaux + "\n"
           text = text + text2
-          mailOptions.text = text
+          mailOptions.html = text
           mailOptions.to = benevole.email
 
           transporter.sendMail(mailOptions, function (error, info) {
