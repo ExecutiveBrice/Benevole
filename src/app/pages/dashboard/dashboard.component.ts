@@ -22,7 +22,7 @@ export class DashboardComponent implements OnChanges {
   stands: Stand[];
   chevauchement: boolean;
   besoins: Croisement[];
-  vendredi: Croisement;
+  vendredi: Croisement[];
   croisements: Croisement[];
   benevole: Benevole;
   email: Email = {
@@ -51,7 +51,7 @@ export class DashboardComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
 
     this.plein = false;
-    this.vendredi = new Croisement();
+    this.vendredi = [];
     this.benevole = new Benevole();
     this.stands = [];
     this.besoins = [];
@@ -158,7 +158,7 @@ export class DashboardComponent implements OnChanges {
     console.log("getVendredi")
     this.croisementService.getByStand(9).subscribe(data => {
       console.log(data)
-      this.vendredi = data['croisements'][0]
+      this.vendredi = data['croisements']
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -169,6 +169,7 @@ export class DashboardComponent implements OnChanges {
   updateListe(benevole: Benevole): void {
     console.log("updateListe")
     console.log(benevole)
+    this.updateCroisementListe(this.vendredi)
     this.updateCroisementListe(this.creneaux)
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.Croisements)
@@ -331,6 +332,8 @@ export class DashboardComponent implements OnChanges {
       }
       this.email.text = this.email.text + this.emailText2
       this.email.text = this.email.text + "Cordialement,\nL'équipe d'animation"
+      this.email.text = this.email.text + "https://kermesse.herokuapp.com"
+      this.email.text = this.email.text + "<a>https://kermesse.herokuapp.com</a>"
       this.envoiMail(this.email)
     },
       error => {
