@@ -330,10 +330,7 @@ export class DashboardComponent implements OnChanges {
         this.email.text = this.email.text + "\nVous avez également proposé d'apporter :\n"
         this.email.text = this.email.text + this.benevole.gateaux + "\n\n"
       }
-      this.email.text = this.email.text + this.emailText2
-      this.email.text = this.email.text + "Cordialement,\nL'équipe d'animation"
-      this.email.text = this.email.text + "https://kermesse.herokuapp.com \n"
-      this.email.text = this.email.text + "<a src='https://kermesse.herokuapp.com' >Cliquez pour aller sur le site</a>"
+      this.email.text = this.email.text + this.emailText2;
       this.envoiMail(this.email)
     },
       error => {
