@@ -8,6 +8,7 @@
             <div class="col-sm-12">
             {{benevole.commentaire}}<br>
             {{benevole.reponse}}
+            <input type="text" [(ngModel)]="benevole.email" class="form-control" (keyup.enter)="send()">
           </div>
           <div *ngFor="let benecroisement of benevole.Croisements | orderBy:'Stand.ordre':false" class="col-sm-4 dropdown">
             <button type="button" class="btn btn-block btn-warning dropdown-toggle"

@@ -320,15 +320,15 @@ export class DashboardComponent implements OnChanges {
       this.validation = true;
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
-      this.email.text = this.emailText1 + "\n";
+      this.email.text = this.emailText1;
       this.benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
       this.benevole.Croisements.forEach(croisement => {
-        this.email.text = this.email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "\n"
+        this.email.text = this.email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
       });
 
       if (this.benevole.gateaux) {
-        this.email.text = this.email.text + "\nVous avez également proposé d'apporter :\n"
-        this.email.text = this.email.text + this.benevole.gateaux + "\n\n"
+        this.email.text = this.email.text + "\nVous avez également proposé d'apporter :<br>"
+        this.email.text = this.email.text + this.benevole.gateaux + "<br>"
       }
       this.email.text = this.email.text + this.emailText2;
       this.envoiMail(this.email)
