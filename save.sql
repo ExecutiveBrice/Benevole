@@ -1,6 +1,10 @@
--- Table: public."Benevoles"
 
--- DROP TABLE public."Benevoles";
+
+CREATE SEQUENCE public."Benevoles_id_seq";
+
+ALTER SEQUENCE public."Benevoles_id_seq"
+    OWNER TO ylsnechbtzagbz;
+
 
 CREATE TABLE public."Benevoles"
 (
@@ -22,7 +26,7 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE public."Benevoles"
-    OWNER to spjaautoglbjjg;
+    OWNER to ylsnechbtzagbz;
 
 
 
