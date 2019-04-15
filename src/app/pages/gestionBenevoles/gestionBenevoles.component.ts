@@ -16,6 +16,13 @@ export class GestionBenevolesComponent implements OnChanges {
   croisements: Croisement[];
   benevoles: Benevole[];
   choix: string;
+  email: Email = {
+    to: "",
+    subject: "",
+    text: ""
+  }
+
+
   constructor(public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
@@ -82,4 +89,36 @@ export class GestionBenevolesComponent implements OnChanges {
         console.log('😢 Oh no!', error);
       });
   }
+
+  send(benevole:Benevole){
+      this.benevoleService.update(benevole).subscribe(data => {
+        console.log(data)
+
+        this.email.to = benevole.email
+        this.email.subject = "Réponse au commentaire de la fête de l'école"
+        this.email.text = "Vous nous aviez communiqué que :<br>";
+ 
+        this.email.text =  this.email.text + benevole.commentaire + "<br>"
+
+        this.email.text =  this.email.text + "<br>Notre réponse :<br>"
+
+        this.email.text =  this.email.text + benevole.reponse + "<br>"
+
+        this.email.text =  this.email.text + "Vous pourrez bien entendu retrouver cette réponse sur <a href='https://ouchedinier.herokuapp.com'>le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
+        this.envoiMail(this.email)
+      },
+        error => {
+          console.log('😢 Oh no!', error);
+        });
+    }
+  
+    envoiMail(email: Email) {
+      this.mailService.sendMail(email)
+        .subscribe(res => {
+          console.log("this.api.sendMail");
+          console.log(res);
+        }, err => {
+          console.log(err);
+        });
+    }
 }
