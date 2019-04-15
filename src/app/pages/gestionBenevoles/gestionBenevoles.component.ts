@@ -104,7 +104,7 @@ export class GestionBenevolesComponent implements OnChanges {
 
         this.email.text =  this.email.text + benevole.reponse + "<br>"
 
-        this.email.text =  this.email.text + "Vous pourrez bien entendu retrouver cette réponse sur <a href='https://ouchedinier.herokuapp.com'>le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
+        this.email.text =  this.email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href='https://ouchedinier.herokuapp.com'>le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
         this.envoiMail(this.email)
       },
         error => {
