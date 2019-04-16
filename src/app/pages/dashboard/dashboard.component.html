@@ -76,7 +76,9 @@
     <div *ngIf="exist" class="row">
       <div class="col-sm-12 ">
         <h4>Votre planning :</h4>
-
+        <div *ngIf="chorale" class="alert alert-danger">
+          <strong>Attention!</strong> Attention Chorale à 11H !
+        </div>
         <div *ngIf="chevauchement" class="alert alert-danger">
           <strong>Attention!</strong> Vous vous êtes inscrit sur au moins 2 creneaux identique
           <br>(si vous êtes plusieurs, précisez le dans le commentaire).
