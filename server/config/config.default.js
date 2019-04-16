@@ -2,7 +2,7 @@
 
 module.exports = {
   // App name.
-  appName: 'kermesse',
+  appName: 'ouchedinier',
 
   // Server port.
   port: 4200,
