@@ -21,6 +21,7 @@ export class DashboardComponent implements OnChanges {
   creneaux: Croisement[];
   stands: Stand[];
   chevauchement: boolean;
+  chorale:boolean;
   besoins: Croisement[];
   vendredi: Croisement[];
   croisements: Croisement[];
@@ -59,6 +60,7 @@ export class DashboardComponent implements OnChanges {
     this.validation = false;
     this.exist = false;
     this.chevauchement = false;
+    this.chorale = false;
     this.nouveau = false;
     this.new = true;
     this.getCreneaux();
@@ -302,11 +304,12 @@ export class DashboardComponent implements OnChanges {
   calculChevauchement(benevole: Benevole) {
     let listePlages = []
     for (let index = 0; index < benevole.Croisements.length; index++) {
-      if (listePlages.indexOf(benevole.Croisements[index].Creneau.plage) >= 0) {
+      if (listePlages.indexOf(benevole.Croisements[index].Creneau.id) >= 0) {
         this.chevauchement = true;
         break;
       } else {
-        listePlages.push(benevole.Croisements[index].Creneau.plage)
+        listePlages.push(benevole.Croisements[index].Creneau.id)
+        listePlages.concat(benevole.Croisements[index].Creneau.chevauchement)
       }
     };
   }

@@ -16,7 +16,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     groupe: {
       type: DataTypes.INTEGER,
-    }
+    },
+    chevauchement: {
+      type: DataTypes.STRING,
+    },
   });
   Creneau.associate = function(models) {
     models.Stand.hasMany(models.Croisement, {
