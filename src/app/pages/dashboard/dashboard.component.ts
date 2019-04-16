@@ -21,7 +21,7 @@ export class DashboardComponent implements OnChanges {
   creneaux: Croisement[];
   stands: Stand[];
   chevauchement: boolean;
-  chorale:boolean;
+  chorale: boolean;
   besoins: Croisement[];
   vendredi: Croisement[];
   croisements: Croisement[];
@@ -230,7 +230,7 @@ export class DashboardComponent implements OnChanges {
     console.log(croisements)
     for (let index = 0; index < croisements.length; index++) {
       for (let indexb = 0; indexb < croisements[index].Benevoles.length; indexb++) {
-        if ( croisements[index].Benevoles[indexb].id == this.benevole.id) {
+        if (croisements[index].Benevoles[indexb].id == this.benevole.id) {
           croisements[index].selected = true;
           this.benevole.Croisements.push(croisements[index]);
           break;
@@ -311,17 +311,15 @@ export class DashboardComponent implements OnChanges {
         break;
       } else {
         listePlages.push(benevole.Croisements[index].Creneau.id)
-        listePlages.concat(benevole.Croisements[index].Creneau.chevauchement)
+        listePlages = listePlages.concat(benevole.Croisements[index].Creneau.chevauchement)
         console.log(listePlages)
       }
     };
-    let listechorale = [2,3]
-    for (let index = 0; index < benevole.Croisements.length; index++) {
-      if (listechorale.indexOf(benevole.Croisements[index].Creneau.id)) {
-        this.chorale = true;
-        break;
-      }
+
+    if (listePlages.indexOf(2) || listePlages.indexOf(3)) {
+      this.chorale = true;
     }
+
   }
 
   validate(): void {
