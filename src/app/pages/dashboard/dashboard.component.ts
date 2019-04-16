@@ -302,6 +302,8 @@ export class DashboardComponent implements OnChanges {
   }
 
   calculChevauchement(benevole: Benevole) {
+    this.chevauchement = false;
+    this.chorale = false;
     let listePlages = []
     for (let index = 0; index < benevole.Croisements.length; index++) {
       if (listePlages.indexOf(benevole.Croisements[index].Creneau.id) >= 0) {
@@ -310,8 +312,16 @@ export class DashboardComponent implements OnChanges {
       } else {
         listePlages.push(benevole.Croisements[index].Creneau.id)
         listePlages.concat(benevole.Croisements[index].Creneau.chevauchement)
+        console.log(listePlages)
       }
     };
+    let listechorale = [2,3]
+    for (let index = 0; index < benevole.Croisements.length; index++) {
+      if (listechorale.indexOf(benevole.Croisements[index].Creneau.id)) {
+        this.chorale = true;
+        break;
+      }
+    }
   }
 
   validate(): void {
