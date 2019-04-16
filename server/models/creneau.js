@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
     },
     chevauchement: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
     },
   });
   Creneau.associate = function(models) {
