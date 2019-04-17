@@ -164,7 +164,7 @@
                 <button type="button" class="btn btn-block btn-secondary"
                   [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
                   (click)="choisir(croisement)">{{croisement.Creneau.plage}}<br>
-                  {{(croisement.limite - croisement.Benevoles.length)==0?'Complet':(croisement.limite - croisement.Benevoles.length)>1?'il reste {{croisement.limite - croisement.Benevoles.length}} places':'il reste une place''}}
+                  {{(croisement.limite - croisement.Benevoles.length)==0?'Complet':(croisement.limite - croisement.Benevoles.length)>1?'il reste '+croisement.limite - croisement.Benevoles.length+' places':'il reste une place'}}
                   </button>
               </div>
             </div>
