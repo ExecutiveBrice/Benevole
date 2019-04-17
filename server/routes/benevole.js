@@ -29,6 +29,10 @@ router.put('/addCroisements', function(req,res,next) {
   console.log("------benevole updateCroisements")
   return benevoleController.addCroisements(req,res);
 });
+router.put('/updateReponse', function(req,res,next) {
+  console.log("------benevole updateReponse")
+  return benevoleController.updateReponse(req,res);
+});
 
 
 

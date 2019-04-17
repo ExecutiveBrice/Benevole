@@ -91,7 +91,7 @@ export class GestionBenevolesComponent implements OnChanges {
   }
 
   send(benevole:Benevole){
-      this.benevoleService.update(benevole).subscribe(data => {
+      this.benevoleService.updateReponse(benevole).subscribe(data => {
         console.log(data)
 
         this.email.to = benevole.email

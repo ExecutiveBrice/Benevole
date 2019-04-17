@@ -316,7 +316,7 @@ export class DashboardComponent implements OnChanges {
       }
     };
 
-    if (listePlages.indexOf(2) || listePlages.indexOf(3)) {
+    if (listePlages.indexOf(2)>= 0 || listePlages.indexOf(3)>= 0) {
       this.chorale = true;
     }
 
