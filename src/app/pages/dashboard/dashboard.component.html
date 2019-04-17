@@ -223,7 +223,8 @@
               [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
               title="{{croisement.Stand.bulle}}" class="btn btn-block btn-secondary"
               (click)="choisir(croisement)">{{croisement.Stand.nom}}<br>
-              {{croisement.Creneau.plage}}<br>il reste {{croisement.limite - croisement.Benevoles.length}} places</button>
+              {{(croisement.limite - croisement.Benevoles.length)==0?'Complet':(croisement.limite - croisement.Benevoles.length)>1?'il reste '+(croisement.limite - croisement.Benevoles.length)+' places':'il reste une place'}}
+            </button>
           </div>
         </div>
       </div>
