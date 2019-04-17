@@ -49,7 +49,7 @@ export class GestionComponent implements OnChanges {
 
   updateDateRappel() {
     let date = new Date();
-    this.dateRappel = date.getDay()+"/"+date.getMonth()+"/"+date.getFullYear()+" à "+date.getHours()+":"+date.getMinutes()
+    this.dateRappel = date.getUTCDate()+"/"+date.getUTCMonth()+"/"+date.getFullYear()+" à "+date.getHours()+":"+date.getMinutes()
     console.log(this.dateRappel)
     this.configService.updateParam('dateRappel', this.dateRappel)
       .subscribe(res => {
