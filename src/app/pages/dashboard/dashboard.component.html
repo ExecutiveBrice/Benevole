@@ -3,7 +3,7 @@
     <div class="alert alert-success">
       <strong>Merci de votre participation,</strong><br>
       Vous pouvez revenir quand vous le souhaitez pour modifier vos choix<br>
-      <a href="https://ouchedinier.herokuapp.com">le site d'inscription</a>
+      en vous connectant (<a href="https://ouchedinier.herokuapp.com">sur le site d'inscription</a>)<br>
       Vous pouvez fermer cette fenêtre
     </div>
   </div>
@@ -34,7 +34,7 @@
       <div class="col-sm-12 ">
         <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg " (click)="find()">Entrer</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg" (click)="find()">Je me
-          suis trompé dans mon email, je réessais</button>
+          suis trompé dans mon email, j'essaie à nouveau</button>
 
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
           (click)="nouveau = true">Je
@@ -209,14 +209,14 @@
 
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-info" (click)="choix = 'besoin'">Là ou vous en avez
+        <button type="button" class="btn btn-block btn-info" (click)="choix = 'besoin'">Là où vous en avez
           besoin</button>
       </div>
 
 
       <div class="col-sm-12" *ngIf="choix == 'besoin'">
         <div class="row">
-          <div *ngFor="let croisement of besoins | orderBy:'Stand.nom':false" class="col-sm-4">
+          <div *ngFor="let croisement of besoins | orderBy:'Creneau.ordre':false" class="col-sm-4">
             <button type="button"
               [ngClass]="{'btn-success':croisement.selected === true, 'btn-danger':croisement.Benevoles.length >= croisement.limite}"
               title="{{croisement.Stand.bulle}}" class="btn btn-block btn-secondary"
