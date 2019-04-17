@@ -209,5 +209,34 @@ module.exports = {
           error: error.stack
         });
       });
+  }, 
+  
+  
+  updateReponse: function updateReponse(req, res) {
+    console.log("updateReponse")
+    console.log(req.body.Croisements)
+    return Benevole.update({
+      reponse: req.body.reponse
+    }, { where: { id: (req.body.id) } })
+      .then(function (benevole) {
+        console.log("updateReponse - 2")
+        console.log(benevole.id)
+        if (!benevole) {
+          return res.status(404).json({
+            title: "No benevole updateReponse",
+            error: "Please try again."
+          });
+        }
+        return res.status(200).json({
+          message: 'benevole updateReponse',
+          benevole: benevole.id
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          message: 'There was an error updateReponse!',
+          error: error.stack
+        });
+      });
   },
 };

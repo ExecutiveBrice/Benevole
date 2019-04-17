@@ -38,6 +38,10 @@ export class BenevoleService {
     return this.http.put(this.apiUrl + '/addCroisements', benevole, {responseType: 'json'});
   }
 
+  updateReponse(benevole:Benevole) {
+    return this.http.put(this.apiUrl + '/updateReponse', benevole, {responseType: 'json'});
+  }
+  
   
   error(benevole:Benevole) {
     return this.http.post(this.apiUrl + '/error', benevole, {responseType: 'json'});

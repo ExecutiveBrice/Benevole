@@ -121,16 +121,16 @@ export class GestionComponent implements OnChanges {
 
     this.benevoles.forEach(benevole => {
       console.log(benevole)
-      let text = this.rappel1;
+      let text = this.rappel1+"<br>"+"<br>";
       benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
       benevole.Croisements.forEach(croisement => {
         text = text + (croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
       })
       if(benevole.gateaux){
-      text = text + "Vous avez également proposé d'apporter :<br>"
+      text = text + "<br>Vous avez également proposé d'apporter :<br>"
       text = text + benevole.gateaux + "<br>"
       }
-      text = text + "\n" + this.rappel2
+      text = text + "<br>" + this.rappel2
       email.text = text
       email.to = benevole.email
 
