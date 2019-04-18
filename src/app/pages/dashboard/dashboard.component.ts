@@ -110,6 +110,7 @@ export class DashboardComponent implements OnChanges {
 
 
   subscribe(): void {
+    this.nouveau = false;
     console.log("subscribe")
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevoleService.add(this.benevole).subscribe(data => {
@@ -323,12 +324,13 @@ export class DashboardComponent implements OnChanges {
   }
 
   validate(): void {
+    this.validation = true;
     this.addCroisements(this.benevole);
     this.benevoleService.update(this.benevole).subscribe(data => {
       console.log(data)
       this.exist = true;
 
-      this.validation = true;
+
       this.email.to = this.benevole.email
       this.email.subject = "Validation de participation"
       this.email.text = this.emailText1;

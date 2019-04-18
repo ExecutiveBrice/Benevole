@@ -14,6 +14,9 @@ a {
   box-sizing: border-box;
 }
 
+.bordered {
+  border-style: solid
+}
 
 .module {
   padding: 10px !important;
