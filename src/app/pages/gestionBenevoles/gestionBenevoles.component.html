@@ -1,8 +1,8 @@
 <div *ngFor="let benevole of benevoles  | orderBy:'nom':false" class="col-sm-12">
-  <button type="button" class="btn btn-block btn-info" (click)="choix = benevole.nom">{{benevole.nom}}
+  <button type="button" class="btn btn-block btn-info" (click)="choix = benevole.email">{{benevole.nom}}
     {{benevole.prenom}} - {{benevole.email}} - {{benevole.telephone}}</button>
 
-  <div class="col-sm-12" *ngIf="choix == benevole.nom">
+  <div class="col-sm-12" *ngIf="choix == benevole.email">
     <div class="row">
       <div class="col-sm-12">
         {{benevole.commentaire}}
@@ -31,3 +31,4 @@
       </div>
     </div>
   </div>
+</div>
