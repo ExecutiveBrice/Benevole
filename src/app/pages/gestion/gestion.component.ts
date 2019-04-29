@@ -157,6 +157,7 @@ export class GestionComponent implements OnChanges {
 
   envoiMail(email: Email) {
     this.mail = false;
+    email.text.replace("\n", "<br>");
     console.log(email)
     this.benevoles.forEach(benevole => {
       console.log(benevole)
