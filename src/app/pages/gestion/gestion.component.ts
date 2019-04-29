@@ -19,7 +19,7 @@ export class GestionComponent implements OnChanges {
   rappel2: string;
   benevoles: Benevole[];
   dateRappel: string;
-
+  mail: boolean;
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
     public croisementService: CroisementService,
@@ -27,6 +27,7 @@ export class GestionComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
+    this.mail = false;
     this.benevoles = [];
     this.getBlocage();
     this.getText();
@@ -49,7 +50,7 @@ export class GestionComponent implements OnChanges {
 
   updateDateRappel() {
     let date = new Date();
-    this.dateRappel = date.getUTCDate()+"/"+date.getUTCMonth()+"/"+date.getFullYear()+" à "+date.getHours()+":"+date.getMinutes()
+    this.dateRappel = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getFullYear() + " à " + date.getHours() + ":" + date.getMinutes()
     console.log(this.dateRappel)
     this.configService.updateParam('dateRappel', this.dateRappel)
       .subscribe(res => {
@@ -121,14 +122,14 @@ export class GestionComponent implements OnChanges {
 
     this.benevoles.forEach(benevole => {
       console.log(benevole)
-      let text = this.rappel1+"<br>"+"<br>";
+      let text = this.rappel1 + "<br>" + "<br>";
       benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
       benevole.Croisements.forEach(croisement => {
-        text = text + (croisement.Stand.nom == "tous"?"N'importe quel stand":croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
+        text = text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
       })
-      if(benevole.gateaux){
-      text = text + "<br>Vous avez également proposé d'apporter :<br>"
-      text = text + benevole.gateaux + "<br>"
+      if (benevole.gateaux) {
+        text = text + "<br>Vous avez également proposé d'apporter :<br>"
+        text = text + benevole.gateaux + "<br>"
       }
       text = text + "<br>" + this.rappel2
       email.text = text
@@ -148,5 +149,32 @@ export class GestionComponent implements OnChanges {
   }
 
 
+  emailInfo: Email = {
+    to: "",
+    subject: "Infos pratique",
+    text: "Bla bla"
+  }
+
+  envoiMail(email: Email) {
+    this.mail = false;
+    console.log(email)
+    this.benevoles.forEach(benevole => {
+      console.log(benevole)
+      email.to = benevole.email
+
+      this.mailService.sendMail(email)
+        .subscribe(res => {
+          console.log("this.api.sendMail");
+          console.log(res);
+        }, err => {
+          console.log(err);
+        });
+    })
+    this.emailInfo = {
+      to: "",
+      subject: "Infos pratique",
+      text: "Bla bla"
+    }
+  }
 
 }
