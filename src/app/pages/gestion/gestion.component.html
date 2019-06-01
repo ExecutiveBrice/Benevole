@@ -28,11 +28,11 @@
             <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
 
             <div class="checkbox">
-                  <label><input type="checkbox" [ngModel]="rappel" value="">Rappel de la selection des inscrits</label>
+                  <label><input type="checkbox" [(ngModel)]="theCheckbox" (change)="toggleVisibility($event)" >Rappel des choix des inscrits</label>
             </div>
 
             <button type="button" class="btn btn-block btn-primary" (click)="envoiMail(emailInfo)">
-                  Envoyer ce message à tout les bénévoles inscrits</button>
+                  Envoyer ce message à la liste choisi</button>
       </div>
 
 </div>
