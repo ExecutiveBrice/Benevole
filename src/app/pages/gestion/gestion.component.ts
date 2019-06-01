@@ -146,15 +146,18 @@ export class GestionComponent implements OnChanges {
     this.configService.getParam("rappel1").subscribe(res => {
       console.log(res['param'].value);
       this.emailInfo.text = res['param'].value;
+
+      this.configService.getParam("rappel2").subscribe(res => {
+        console.log(res['param'].value);
+        this.emailInfo.text = this.emailInfo.text + res['param'].value;
+      }, err => {
+        console.log(err);
+      });
+
     }, err => {
       console.log(err);
     });
-    this.configService.getParam("rappel2").subscribe(res => {
-      console.log(res['param'].value);
-      this.emailInfo.text = this.emailInfo.text + res['param'].value;
-    }, err => {
-      console.log(err);
-    });
+
 
   }
 
@@ -173,7 +176,7 @@ export class GestionComponent implements OnChanges {
         email.to = benevole.email
 
         if (this.rappel) {
-          email.text = email.text + "<br>" + "<br>"
+          email.text = email.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
           benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
           benevole.Croisements.forEach(croisement => {
             email.text = email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
