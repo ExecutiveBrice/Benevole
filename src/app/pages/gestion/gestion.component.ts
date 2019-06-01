@@ -13,7 +13,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 })
 
 export class GestionComponent implements OnChanges {
-  rappel: boolean;
+  rappel;
   bloque: string;
   benevoles: Benevole[];
   dateRappel: string;
@@ -70,7 +70,7 @@ export class GestionComponent implements OnChanges {
 
   updateDateRappel() {
     let date = new Date();
-    this.dateRappel = date.getUTCDate() + "/" + date.getUTCMonth() + 1 + "/" + date.getFullYear() + " à " + date.getHours() + ":" + date.getMinutes()
+    this.dateRappel = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getFullYear() + " à " + date.getHours() + ":" + date.getMinutes()
     console.log(this.dateRappel)
     this.configService.updateParam('dateRappel', this.dateRappel)
       .subscribe(res => {
@@ -142,34 +142,30 @@ export class GestionComponent implements OnChanges {
 
   getText() {
     this.emailInfo.subject = 'Infos pratique';
-    let rappel1;
-    let rappel2;
-
 
     this.configService.getParam("rappel1").subscribe(res => {
       console.log(res['param'].value);
-      rappel1 = res['param'].value;
+      this.emailInfo.text = res['param'].value;
     }, err => {
       console.log(err);
     });
     this.configService.getParam("rappel2").subscribe(res => {
       console.log(res['param'].value);
-      rappel2 = res['param'].value;
+      this.emailInfo.text = this.emailInfo.text + res['param'].value;
     }, err => {
       console.log(err);
     });
 
-    this.emailInfo.text = rappel1 + rappel2;
   }
 
 
   envoiMail(email: Email) {
     this.mail = false;
-    email.text.replace("\n", "<br>");
-    email.text.replace("\r", "<br>");
-    console.log(email)
+    console.log(email.text)
+    email.text = email.text.replace(/\n/g, "<br>");
+    console.log(email.text)
 
-
+    console.log(this.rappel)
 
     this.benevoles.forEach(benevole => {
       if (benevole.id == 21) {
@@ -199,9 +195,13 @@ export class GestionComponent implements OnChanges {
     })
 
     this.getText();
-    this.rappel = false;
     this.mailingList = null;
     this.updateDateRappel()
+  }
+
+
+  toggleVisibility(e) {
+    this.rappel = e.target.checked;
   }
 
 }
