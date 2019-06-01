@@ -13,8 +13,7 @@
                   (click)="updateBlocage(bloque)">{{bloque == 'true'?'Je clique pour débloquer le site':'Je clique pour bloquer le site'}}</button>
       </div>
       <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" (click)="mail = !mail">Envoi à tout les
-                  inscrits</button>
+            <button type="button" class="btn btn-block btn-primary" (click)="mail = !mail">Envoi de mails</button>
       </div>
 
       <div *ngIf="mail" class="form-group col-sm-12 ">
