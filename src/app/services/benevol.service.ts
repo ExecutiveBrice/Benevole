@@ -16,6 +16,17 @@ export class BenevoleService {
     return this.http.get(this.apiUrl + '/getAll', {responseType: 'json'});
   }
 
+  getWithChoice() {
+    return this.http.get(this.apiUrl + '/getWithChoice', {responseType: 'json'});
+  }
+
+  getWithOutChoice() {
+    return this.http.get(this.apiUrl + '/getWithOutChoice', {responseType: 'json'});
+  }
+
+
+
+  
   getByMailLite(email:String) {
     let params = new HttpParams().set('email', ''+email+'');
     return this.http.get(this.apiUrl + '/byMailLite', {params, responseType: 'json'});

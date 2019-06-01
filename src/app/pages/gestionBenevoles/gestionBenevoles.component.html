@@ -1,11 +1,11 @@
 <div *ngFor="let benevole of benevoles  | orderBy:'nom':false" class="col-sm-12">
-  <button type="button" class="btn btn-block btn-info" (click)="choix = benevole.email">{{benevole.nom}}
-    {{benevole.prenom}} - {{benevole.email}} - {{benevole.telephone}}</button>
+  <button type="button" class="btn btn-block btn-info" (click)="choix = benevole.email">
+    {{benevole.nom}} {{benevole.prenom}}</button>
 
   <div class="col-sm-12" *ngIf="choix == benevole.email">
     <div class="row">
       <div class="col-sm-12">
-        {{benevole.commentaire}}
+        {{benevole.email}} - {{benevole.telephone}}
       </div>
       <div class="col-sm-12">
         <div class="row">
@@ -13,7 +13,7 @@
             <input type="text" [(ngModel)]="benevole.reponse" class="form-control">
           </div>
           <div class="col-sm-2">
-            <button type="button" class="btn btn-block btn-info" (click)="send(benevole)">Envoyer</button>
+            <button type="button" class="btn btn-block btn-info" (click)="send(benevole)">Envoyer la réponse au commentaire</button>
           </div>
         </div>
         <div *ngFor="let benecroisement of benevole.Croisements | orderBy:'Stand.ordre':false"
