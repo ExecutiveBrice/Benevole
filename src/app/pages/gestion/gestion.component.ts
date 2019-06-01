@@ -15,11 +15,32 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class GestionComponent implements OnChanges {
   rappel: boolean;
   bloque: string;
-  rappel1: string;
-  rappel2: string;
   benevoles: Benevole[];
   dateRappel: string;
   mail: boolean;
+
+  emailInfo: Email = {
+    to: "",
+    subject: "",
+    text: "Bla bla"
+  }
+
+  mailingList;
+  mailingLists = [{
+    id: '1',
+    name: 'Tout les inscrits',
+  },
+  {
+    id: '2',
+    name: 'Les inscrits AVEC au moins un choix',
+  },
+  {
+    id: '3',
+    name: 'Les inscrits SANS choix',
+  }]
+
+
+
   constructor(public benevoleService: BenevoleService,
     public configService: ConfigService,
     public croisementService: CroisementService,
@@ -31,7 +52,6 @@ export class GestionComponent implements OnChanges {
     this.benevoles = [];
     this.getBlocage();
     this.getText();
-    this.find();
     this.getDateRappel();
   }
 
@@ -50,7 +70,7 @@ export class GestionComponent implements OnChanges {
 
   updateDateRappel() {
     let date = new Date();
-    this.dateRappel = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getFullYear() + " à " + date.getHours() + ":" + date.getMinutes()
+    this.dateRappel = date.getUTCDate() + "/" + date.getUTCMonth() + 1 + "/" + date.getFullYear() + " à " + date.getHours() + ":" + date.getMinutes()
     console.log(this.dateRappel)
     this.configService.updateParam('dateRappel', this.dateRappel)
       .subscribe(res => {
@@ -85,97 +105,103 @@ export class GestionComponent implements OnChanges {
 
   }
 
-  find(): void {
-    console.log("find")
-    console.log(this.benevoles)
-    this.benevoleService.getAll().subscribe(data => {
-      console.log("data")
-      console.log(data)
-      this.benevoles = data['benevoles'];
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
+  getBenevoles(option): void {
+    console.log("getBenevoles")
+    console.log(option)
+    this.benevoles = [];
+    if (option.id == 1) {
+      this.benevoleService.getAll().subscribe(data => {
+        console.log("data")
+        console.log(data)
+        this.benevoles = data['benevoles'];
+      },
+        error => {
+          console.log('😢 Oh no!', error);
+        });
+    } else if (option.id == 2) {
+      this.benevoleService.getWithChoice().subscribe(data => {
+        console.log("data")
+        console.log(data)
+        this.benevoles = data['benevoles'];
+      },
+        error => {
+          console.log('😢 Oh no!', error);
+        });
+    } else if (option.id == 3) {
+      this.benevoleService.getWithOutChoice().subscribe(data => {
+        console.log("data")
+        console.log(data)
+        this.benevoles = data['benevoles'];
+      },
+        error => {
+          console.log('😢 Oh no!', error);
+        });
+    }
   }
+
+
   getText() {
+    this.emailInfo.subject = 'Infos pratique';
+    let rappel1;
+    let rappel2;
+
+
     this.configService.getParam("rappel1").subscribe(res => {
       console.log(res['param'].value);
-      this.rappel1 = res['param'].value;
+      rappel1 = res['param'].value;
     }, err => {
       console.log(err);
     });
     this.configService.getParam("rappel2").subscribe(res => {
       console.log(res['param'].value);
-      this.rappel2 = res['param'].value;
+      rappel2 = res['param'].value;
     }, err => {
       console.log(err);
     });
+
+    this.emailInfo.text = rappel1 + rappel2;
   }
 
-  envoiRappel() {
-    let email: Email = {
-      to: "",
-      subject: "Rappel de participation",
-      text: ""
-    }
-
-
-    this.benevoles.forEach(benevole => {
-      console.log(benevole)
-      let text = this.rappel1 + "<br>" + "<br>";
-      benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
-      benevole.Croisements.forEach(croisement => {
-        text = text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
-      })
-      if (benevole.gateaux) {
-        text = text + "<br>Vous avez également proposé d'apporter :<br>"
-        text = text + benevole.gateaux + "<br>"
-      }
-      text = text + "<br>" + this.rappel2
-      email.text = text
-      email.to = benevole.email
-
-
-      this.mailService.sendMail(email)
-        .subscribe(res => {
-          console.log("this.api.sendMail");
-          console.log(res);
-        }, err => {
-          console.log(err);
-        });
-    })
-    this.updateDateRappel()
-
-  }
-
-
-  emailInfo: Email = {
-    to: "",
-    subject: "Infos pratique",
-    text: "Bla bla"
-  }
 
   envoiMail(email: Email) {
     this.mail = false;
     email.text.replace("\n", "<br>");
+    email.text.replace("\r", "<br>");
     console.log(email)
-    this.benevoles.forEach(benevole => {
-      console.log(benevole)
-      email.to = benevole.email
 
-      this.mailService.sendMail(email)
-        .subscribe(res => {
-          console.log("this.api.sendMail");
-          console.log(res);
-        }, err => {
-          console.log(err);
-        });
+
+
+    this.benevoles.forEach(benevole => {
+      if (benevole.id == 21) {
+        console.log(benevole)
+        email.to = benevole.email
+
+        if (this.rappel) {
+          email.text = email.text + "<br>" + "<br>"
+          benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
+          benevole.Croisements.forEach(croisement => {
+            email.text = email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
+          })
+          if (benevole.gateaux) {
+            email.text = email.text + "<br>Vous avez également proposé d'apporter :<br>"
+            email.text = email.text + benevole.gateaux + "<br>"
+          }
+        }
+
+        this.mailService.sendMail(email)
+          .subscribe(res => {
+            console.log("this.api.sendMail");
+            console.log(res);
+          }, err => {
+            console.log(err);
+          });
+      }
     })
-    this.emailInfo = {
-      to: "",
-      subject: "Infos pratique",
-      text: "Bla bla"
-    }
+
+    this.getText();
+    this.rappel = false;
+    this.mailingList = null;
+    this.updateDateRappel()
   }
 
 }

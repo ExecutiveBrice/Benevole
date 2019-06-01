@@ -7,21 +7,30 @@
             <button type="button" class="btn btn-block btn-primary" routerLink="/gestionstands">Gestion des
                   Stands</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" (click)="envoiRappel()">Envoi du mail de rappel <br>
-                  (dernier rappel le {{dateRappel}})</button>
-      </div>
+
       <div class="col-sm-12">
             <button type="button" class="btn btn-block btn-success" [ngClass]="{'btn-danger':bloque == 'true'}"
                   (click)="updateBlocage(bloque)">{{bloque == 'true'?'Je clique pour débloquer le site':'Je clique pour bloquer le site'}}</button>
       </div>
       <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" (click)="mail = !mail">Envoi à tout les inscrits</button>
+            <button type="button" class="btn btn-block btn-primary" (click)="mail = !mail">Envoi à tout les
+                  inscrits</button>
       </div>
 
-      <div *ngIf="mail" class="col-sm-12 ">
+      <div *ngIf="mail" class="form-group col-sm-12 ">
+
+                  <select [ngModel]="selectedDeviceObj" (ngModelChange)="getBenevoles($event)" class="form-control">
+                        <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
+                        </option>
+                  </select>
+
             <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
             <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
+
+            <div class="checkbox">
+                  <label><input type="checkbox" [ngModel]="rappel" value="">Rappel de la selection des inscrits</label>
+            </div>
+
             <button type="button" class="btn btn-block btn-primary" (click)="envoiMail(emailInfo)">
                   Envoyer ce message à tout les bénévoles inscrits</button>
       </div>
