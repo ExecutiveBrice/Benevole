@@ -7,7 +7,14 @@ router.get('/getAll', function(req,res,next) {
   console.log("------benevole getAll")
   return benevoleController.getAll(req,res);
 });
-
+router.get('/getWithChoice', function(req,res,next) {
+  console.log("------benevole getWithChoice")
+  return benevoleController.getWithChoice(req,res);
+});
+router.get('/getWithOutChoice', function(req,res,next) {
+  console.log("------benevole getWithOutChoice")
+  return benevoleController.getWithOutChoice(req,res);
+});
 router.get('/byMailLite', function(req,res,next) {
   console.log("------benevole getByMailLite")
   return benevoleController.getByMailLite(req,res);
