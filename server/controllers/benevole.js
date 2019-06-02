@@ -97,15 +97,18 @@ module.exports = {
             { model: Stand }
           ]
         }
-      ],
-      where: {
-        ResaBenevoles: []
-      },
+      ]
     })
       .then(function (benevoles) {
         console.log("getWithOutChoice - 2")
-        console.log(benevoles)
-        if (benevoles.length == 0) {
+        newBenevoles = [];
+        benevoles.forEach(benevole => {
+          if (benevole.Croisements.length == 0) {
+            newBenevoles.push(benevole)
+          }
+        });
+        console.log(newBenevoles)
+        if (newBenevoles.length == 0) {
           return res.status(404).json({
             title: "No benevoles found",
             error: "Please try again."
@@ -114,7 +117,7 @@ module.exports = {
 
         return res.status(200).json({
           message: 'benevoles found',
-          benevoles: benevoles
+          benevoles: newBenevoles
         });
       }).catch(function (error) {
         console.log(error.toString());
