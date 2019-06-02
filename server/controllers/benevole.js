@@ -94,7 +94,7 @@ module.exports = {
           model: Croisement,
           where: {
             id: {
-              $in: idsToSkip
+              $in: []
             }
           },
           include: [
