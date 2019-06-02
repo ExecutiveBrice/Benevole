@@ -92,17 +92,17 @@ module.exports = {
       include: [
         {
           model: Croisement,
+          where: {
+            id: {
+              $in: idsToSkip
+            }
+          },
           include: [
             { model: Creneau },
             { model: Stand }
           ]
         }
-      ],
-      where: sequelize.where(
-        sequelize.col('Croisement.id'),
-        'IS',
-        null
-    )
+      ]
     })
       .then(function (benevoles) {
         console.log("getWithOutChoice - 2")
