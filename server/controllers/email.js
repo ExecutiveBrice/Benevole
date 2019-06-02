@@ -7,7 +7,9 @@ var transporter = nodemailer.createTransport({
     pass: 'ngzxgjexnulwvqgq'
   }
 });
-
+//compte Gmail
+//alod.section.fete@gmail.com
+//OucheDinier44400
 var mailOptions = {
   from: 'ALOD Ouche Dinier',
   to: 'Adresse mail',

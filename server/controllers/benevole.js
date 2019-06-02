@@ -93,8 +93,8 @@ module.exports = {
         {
           model: Croisement,
           where: {
-            id: null
-        },
+            length: 0
+          },
           include: [
             { model: Creneau },
             { model: Stand }
@@ -262,13 +262,13 @@ module.exports = {
       .then(function (benevole) {
         console.log(benevole);
         var idList = []
-        for (var i=0; i<req.body.Croisements.length; i++){
+        for (var i = 0; i < req.body.Croisements.length; i++) {
           idList.push(req.body.Croisements[i].id)
         }
-        benevole.setCroisements(idList).then(sc=>{
+        benevole.setCroisements(idList).then(sc => {
           console.log("addCroisements - setCroisements")
           console.log(sc);
-      });
+        });
 
         console.log("addCroisements - 2")
         console.log(benevole.id)
@@ -289,9 +289,9 @@ module.exports = {
           error: error.stack
         });
       });
-  }, 
-  
-  
+  },
+
+
   updateReponse: function updateReponse(req, res) {
     console.log("updateReponse")
     console.log(req.body.Croisements)
