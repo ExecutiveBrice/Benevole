@@ -92,15 +92,15 @@ module.exports = {
       include: [
         {
           model: Croisement,
+          where: {
+            id: null
+        },
           include: [
             { model: Creneau },
             { model: Stand }
           ]
         }
-      ],
-      where: {
-        Croisement: null
-      }
+      ]
     })
       .then(function (benevoles) {
         console.log("getWithOutChoice - 2")
