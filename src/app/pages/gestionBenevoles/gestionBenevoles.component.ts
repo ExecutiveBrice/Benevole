@@ -1,9 +1,10 @@
 
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService } from '../../services';
+import { CroisementService, StandService, MailService, ExcelService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
+
 
 @Component({
   selector: 'app-gestionBenevoles',
@@ -27,6 +28,7 @@ export class GestionBenevolesComponent implements OnChanges {
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
+    public excelService: ExcelService,
     public sanitizer: DomSanitizer) {
     this.benevoles = [];
     this.croisements = [];
@@ -39,6 +41,9 @@ export class GestionBenevolesComponent implements OnChanges {
 
   }
 
+  exportAsXLSX():void {
+    this.excelService.exportAsExcelFile(this.benevoles, 'sample');
+  }
 
   find(): void {
     console.log("find")
