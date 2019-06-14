@@ -1,4 +1,5 @@
 <div class="row">
+
       <div class="col-sm-12">
             <button type="button" class="btn btn-block btn-primary" routerLink="/gestionbenevoles">Gestion des
                   Bénévoles</button>
@@ -18,20 +19,28 @@
 
       <div *ngIf="mail" class="form-group col-sm-12 ">
 
-                  <select [ngModel]="selectedDeviceObj" (ngModelChange)="getBenevoles($event)" class="form-control">
-                        <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
-                        </option>
-                  </select>
+            <select [ngModel]="selectedDeviceObj" (ngModelChange)="getBenevoles($event)" class="form-control">
+                  <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
+                  </option>
+            </select>
 
             <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
             <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
 
             <div class="checkbox">
-                  <label><input type="checkbox" [(ngModel)]="theCheckbox" (change)="toggleVisibility($event)" >Rappel des choix des inscrits</label>
+                  <label><input type="checkbox" [(ngModel)]="theCheckbox" (change)="toggleVisibility($event)">Rappel des
+                        choix des inscrits</label>
             </div>
 
             <button type="button" class="btn btn-block btn-primary" (click)="envoiMail(emailInfo)">
                   Envoyer ce message à la liste choisi</button>
+      </div>
+
+
+
+
+      <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-primary" (click)="exportAsXLSX()">Télécharger</button>
       </div>
 
 </div>

@@ -1,10 +1,11 @@
 
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService, ConfigService } from '../../services';
+import { CroisementService, StandService, MailService, ConfigService, ExcelService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
 import { forEach } from '@angular/router/src/utils/collection';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-gestion',
@@ -45,6 +46,7 @@ export class GestionComponent implements OnChanges {
     public configService: ConfigService,
     public croisementService: CroisementService,
     public standService: StandService,
+    public excelService: ExcelService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.rappel = false;
@@ -56,6 +58,46 @@ export class GestionComponent implements OnChanges {
   }
 
   ngOnChanges() {
+
+  }
+
+
+  exportAsXLSX(): void {
+
+    this.standService.getAll().subscribe(data => {
+      console.log("data")
+      console.log(data)
+
+      let stands = new Array;
+      data['stands'].forEach(stand => {
+        let standLite = {
+          nom: String,
+          creneaux: []
+        };
+        standLite.nom = stand.nom;
+        standLite.creneaux = [];
+
+        for (let indexR = 0; indexR < 100; indexR++) {
+          let creneau = {};
+          for (let index = 0; index < stand.Croisements.length; index++) {
+            const croisement = stand.Croisements[index];
+            if (croisement.Benevoles[indexR]) {
+              creneau[croisement.Creneau.plage] = croisement.Benevoles[indexR].nom + " " + croisement.Benevoles[indexR].prenom;
+            }
+          }
+          standLite.creneaux.push(creneau);
+        }
+        stands.push(standLite)
+      });
+      console.log('stands')
+      console.log(stands)
+
+      this.excelService.multiExportAsExcelFile(stands, 'Stands');
+
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
 
   }
 
