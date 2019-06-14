@@ -14,6 +14,9 @@ module.exports = function (sequelize, DataTypes) {
     description: {
       type: DataTypes.STRING,
     },
+    etat: {
+      type: DataTypes.INTEGER,
+    },
     ordre: {
       type: DataTypes.INTEGER,
     },
