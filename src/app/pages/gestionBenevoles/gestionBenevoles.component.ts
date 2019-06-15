@@ -41,7 +41,7 @@ export class GestionBenevolesComponent implements OnChanges {
 
   }
 
-  exportAsXLSX():void {
+  exportAsXLSX(): void {
     this.excelService.exportAsExcelFile(this.benevoles, 'sample');
   }
 
@@ -60,18 +60,24 @@ export class GestionBenevolesComponent implements OnChanges {
 
 
   choisir(benevole: Benevole, benecroisement: Croisement, croisement: Croisement): void {
-    if (benecroisement.id) {
-      for (let index = 0; index < benevole.Croisements.length; index++) {
-        if (benecroisement.id == benevole.Croisements[index].id) {
-          benevole.Croisements.splice(index, 1);
-          break;
+    if (benecroisement != null) {
+      if (benecroisement.id) {
+        for (let index = 0; index < benevole.Croisements.length; index++) {
+          if (benecroisement.id == benevole.Croisements[index].id) {
+            benevole.Croisements.splice(index, 1);
+            break;
+          }
         }
       }
     }
+    if (croisement != null) {
+      benevole.Croisements.push(croisement);
+    }
 
-    benevole.Croisements.push(croisement);
     this.addCroisements(benevole);
   }
+
+
 
   addCroisements(benevole): void {
     console.log("addCroisements")
@@ -95,35 +101,35 @@ export class GestionBenevolesComponent implements OnChanges {
       });
   }
 
-  send(benevole:Benevole){
-      this.benevoleService.updateReponse(benevole).subscribe(data => {
-        console.log(data)
+  send(benevole: Benevole) {
+    this.benevoleService.updateReponse(benevole).subscribe(data => {
+      console.log(data)
 
-        this.email.to = benevole.email
-        this.email.subject = "Réponse au commentaire de la fête de l'école"
-        this.email.text = "Vous nous aviez communiqué que :<br>";
- 
-        this.email.text =  this.email.text + benevole.commentaire + "<br>"
+      this.email.to = benevole.email
+      this.email.subject = "Réponse au commentaire de la fête de l'école"
+      this.email.text = "Vous nous aviez communiqué que :<br>";
 
-        this.email.text =  this.email.text + "<br>Notre réponse :<br>"
+      this.email.text = this.email.text + benevole.commentaire + "<br>"
 
-        this.email.text =  this.email.text + benevole.reponse + "<br>"
+      this.email.text = this.email.text + "<br>Notre réponse :<br>"
 
-        this.email.text =  this.email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href='https://ouchedinier.herokuapp.com'>le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
-        this.envoiMail(this.email)
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
-    }
-  
-    envoiMail(email: Email) {
-      this.mailService.sendMail(email)
-        .subscribe(res => {
-          console.log("this.api.sendMail");
-          console.log(res);
-        }, err => {
-          console.log(err);
-        });
-    }
+      this.email.text = this.email.text + benevole.reponse + "<br>"
+
+      this.email.text = this.email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href='https://ouchedinier.herokuapp.com'>le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
+      this.envoiMail(this.email)
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+  envoiMail(email: Email) {
+    this.mailService.sendMail(email)
+      .subscribe(res => {
+        console.log("this.api.sendMail");
+        console.log(res);
+      }, err => {
+        console.log(err);
+      });
+  }
 }
