@@ -70,6 +70,9 @@ export class GestionBenevolesComponent implements OnChanges {
         }
       }
     }
+    if(benevole.Croisements == null){
+      benevole.Croisements = []
+    }
     if (croisement != null) {
       benevole.Croisements.push(croisement);
     }
