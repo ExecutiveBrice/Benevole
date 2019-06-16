@@ -1,7 +1,6 @@
 
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
-import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService, ConfigService, ExcelService } from '../../services';
+import { CroisementService, StandService, MailService, ConfigService, ExcelService, BenevoleService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
 import { forEach } from '@angular/router/src/utils/collection';
@@ -79,8 +78,11 @@ export class GestionComponent implements OnChanges {
 
         for (let indexR = 0; indexR < 100; indexR++) {
           let creneau = {};
+
+          stand.Croisements.sort(function(a, b) { return a.Creneau.ordre - b.Creneau.ordre; })
           for (let index = 0; index < stand.Croisements.length; index++) {
             const croisement = stand.Croisements[index];
+            creneau[croisement.Creneau.plage] = "";
             if (croisement.Benevoles[indexR]) {
               creneau[croisement.Creneau.plage] = croisement.Benevoles[indexR].nom + " " + croisement.Benevoles[indexR].prenom;
             }
