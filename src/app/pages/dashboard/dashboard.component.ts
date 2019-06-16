@@ -205,14 +205,12 @@ export class DashboardComponent implements OnChanges {
           this.croisementService.getByStand(stand.id).subscribe(data => {
             stand.Croisements = data['croisements']
             this.stands.push(stand)
-            console.log("stand")
-            console.log(stand)
-            console.log("stands")
-            console.log(this.stands)
           },
             error => {
               console.log('😢 Oh no!', error);
             });
+            console.log("stands")
+            console.log(this.stands)
         }
       })
     },
