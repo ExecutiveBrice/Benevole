@@ -9,5 +9,6 @@ export class Stand {
   description:string;
   bulle:string;
   ordre:number;
+  etat:number;
   Croisements: Croisement[];
 }
