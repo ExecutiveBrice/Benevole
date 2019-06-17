@@ -1,4 +1,13 @@
 <div class="row">
+      <div class="col-sm-12 ">
+        <div class="alert alert-success">
+            <strong>{{benevoles.length}} bénévoles inscrits (enfants compris) / 
+            {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi / 
+            {{benevolesToChange.length}} bénévoles à replacer</strong>
+        </div>
+      </div>
+    </div>
+<div class="row">
 
       <div class="col-sm-12">
             <button type="button" class="btn btn-block btn-primary" routerLink="/gestionbenevoles">Gestion des
@@ -19,7 +28,7 @@
 
       <div *ngIf="mail" class="form-group col-sm-12 ">
 
-            <select [ngModel]="selectedDeviceObj" (ngModelChange)="getBenevoles($event)" class="form-control">
+            <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
                   <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
                   </option>
             </select>

@@ -16,6 +16,9 @@ export class GestionComponent implements OnChanges {
   rappel;
   bloque: string;
   benevoles: Benevole[];
+  benevolesWithChoice: Benevole[];
+  benevolesWithoutChoice: Benevole[];
+  benevolesToChange: Benevole[];
   dateRappel: string;
   mail: boolean;
 
@@ -25,7 +28,7 @@ export class GestionComponent implements OnChanges {
     text: "Bla bla"
   }
 
-  mailingList;
+  mailingList: Benevole[];
   mailingLists = [{
     id: '1',
     name: 'Tout les inscrits',
@@ -50,10 +53,15 @@ export class GestionComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
     this.rappel = false;
     this.mail = false;
+    this.mailingList = [];
     this.benevoles = [];
+    this.benevolesWithChoice = [];
+    this.benevolesWithoutChoice = [];
+    this.benevolesToChange = [];
     this.getBlocage();
     this.getText();
     this.getDateRappel();
+    this.getBenevoles();
   }
 
   ngOnChanges() {
@@ -79,7 +87,7 @@ export class GestionComponent implements OnChanges {
         for (let indexR = 0; indexR < 100; indexR++) {
           let creneau = {};
 
-          stand.Croisements.sort(function(a, b) { return a.Creneau.ordre - b.Creneau.ordre; })
+          stand.Croisements.sort(function (a, b) { return a.Creneau.ordre - b.Creneau.ordre; })
           for (let index = 0; index < stand.Croisements.length; index++) {
             const croisement = stand.Croisements[index];
             creneau[croisement.Creneau.plage] = "";
@@ -122,8 +130,8 @@ export class GestionComponent implements OnChanges {
       }, err => {
         console.log(err);
       });
-
   }
+
   getBlocage() {
     this.configService.getParam("lock").subscribe(res => {
       console.log(res['param'].value);
@@ -149,40 +157,69 @@ export class GestionComponent implements OnChanges {
 
   }
 
-  getBenevoles(option): void {
-    console.log("getBenevoles")
+  getMailingList(option): void {
+    console.log("getMailingList")
     console.log(option)
     this.benevoles = [];
     if (option.id == 1) {
-      this.benevoleService.getAll().subscribe(data => {
-        console.log("data")
-        console.log(data)
-        this.benevoles = data['benevoles'];
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
+      this.mailingList = this.benevoles
     } else if (option.id == 2) {
-      this.benevoleService.getWithChoice().subscribe(data => {
-        console.log("data")
-        console.log(data)
-        this.benevoles = data['benevoles'];
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
+      this.mailingList = this.benevolesWithChoice
     } else if (option.id == 3) {
-      this.benevoleService.getWithOutChoice().subscribe(data => {
-        console.log("data")
-        console.log(data)
-        this.benevoles = data['benevoles'];
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
+      this.mailingList = this.benevolesWithoutChoice
     }
   }
 
+
+
+  getBenevoles(): void {
+    console.log("getBenevoles")
+
+    this.benevoleService.getAll().subscribe(data => {
+      console.log("benevoles")
+      console.log(data)
+      this.benevoles = data['benevoles'];
+      this.getBenevolesWithChoice(this.benevoles);
+      this.getBenevolesWithoutChoice(this.benevoles);
+      this.getBenevolesToChange(this.benevoles);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+  getBenevolesWithChoice(benevoles: Benevole[]) {
+
+    benevoles.forEach(benevole => {
+      if (benevole.Croisements.length > 0) {
+        this.benevolesWithChoice.push(benevole);
+      }
+    });
+    console.log("benevolesWithChoice")
+    console.log(this.benevolesWithChoice)
+  }
+  getBenevolesWithoutChoice(benevoles: Benevole[]) {
+    benevoles.forEach(benevole => {
+      if (benevole.Croisements.length == 0) {
+        this.benevolesWithoutChoice.push(benevole);
+      }
+    });
+    console.log("benevolesWithoutChoice")
+    console.log(this.benevolesWithoutChoice)
+  }
+  getBenevolesToChange(benevoles: Benevole[]) {
+    benevoles.forEach(benevole => {
+      if (benevole.Croisements) {
+        benevole.Croisements.forEach(croisement => {
+          if (croisement.Stand.etat == 1 || croisement.Stand.id == 8) {
+            this.benevolesToChange.push(benevole);
+          }
+        });
+      }
+    });
+    console.log("benevolesToChange")
+    console.log(this.benevolesToChange)
+  }
 
   getText() {
     this.emailInfo.subject = 'Infos pratique';
@@ -214,11 +251,9 @@ export class GestionComponent implements OnChanges {
 
     console.log(this.rappel)
 
-    this.benevoles.forEach(benevole => {
-      if (benevole.id == 21) {
+    this.mailingList.forEach(benevole => {
         console.log(benevole)
         email.to = benevole.email
-
         if (this.rappel) {
           email.text = email.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
           benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
@@ -238,11 +273,10 @@ export class GestionComponent implements OnChanges {
           }, err => {
             console.log(err);
           });
-      }
     })
-
+    this.rappel = false;
     this.getText();
-    this.mailingList = null;
+    this.mailingList = [];
     this.updateDateRappel()
   }
 
