@@ -159,8 +159,7 @@ export class GestionComponent implements OnChanges {
 
   getMailingList(option): void {
     console.log("getMailingList")
-    console.log(option)
-    this.benevoles = [];
+    console.log(option);
     if (option.id == 1) {
       this.mailingList = this.benevoles
     } else if (option.id == 2) {
