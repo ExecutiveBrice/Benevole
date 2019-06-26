@@ -251,21 +251,22 @@ export class GestionComponent implements OnChanges {
     console.log(this.rappel)
 
     this.mailingList.forEach(benevole => {
+      let emailCopy =JSON.parse(JSON.stringify(email))
         console.log(benevole)
-        email.to = benevole.email
+        emailCopy.to = benevole.email
         if (this.rappel) {
-          email.text = email.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
+          emailCopy.text = emailCopy.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
           benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
           benevole.Croisements.forEach(croisement => {
-            email.text = email.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
+            emailCopy.text = emailCopy.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
           })
           if (benevole.gateaux) {
-            email.text = email.text + "<br>Vous avez également proposé d'apporter :<br>"
-            email.text = email.text + benevole.gateaux + "<br>"
+            emailCopy.text = emailCopy.text + "<br>Vous avez également proposé d'apporter :<br>"
+            emailCopy.text = emailCopy.text + benevole.gateaux + "<br>"
           }
         }
 
-        this.mailService.sendMail(email)
+        this.mailService.sendMail(emailCopy)
           .subscribe(res => {
             console.log("this.api.sendMail");
             console.log(res);
