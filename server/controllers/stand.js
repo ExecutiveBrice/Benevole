@@ -43,4 +43,59 @@ module.exports = {
       });
   },
 
+  update: function update(req, res) {
+    console.log("update")
+    console.log(req.body.Stand)
+    return Stand.update({
+      nom: req.body.nom,
+      description: req.body.description,
+      etat: req.body.etat,
+      bulle: req.body.bulle
+    }, { where: { id: (req.body.id) } })
+      .then(function (stand) {
+        console.log("update - 2")
+        console.log(stand.id)
+        if (!stand) {
+          return res.status(404).json({
+            title: "No stand updated",
+            error: "Please try again."
+          });
+        }
+        return res.status(200).json({
+          message: 'stand updated',
+          stand: stand.id
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          message: 'There was an error updating!',
+          error: error.stack
+        });
+      });
+  },
+  delete: function supp(req, res) {
+    console.log("delete")
+    console.log(req.body.Stand)
+    return Stand.delete({}, { where: { id: (req.body.id) } })
+      .then(function (stand) {
+        console.log("delete - 2")
+        console.log(stand.id)
+        if (!stand) {
+          return res.status(404).json({
+            title: "No stand updated",
+            error: "Please try again."
+          });
+        }
+        return res.status(200).json({
+          message: 'stand updated',
+          stand: stand.id
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          message: 'There was an error updating!',
+          error: error.stack
+        });
+      });
+  },
 };

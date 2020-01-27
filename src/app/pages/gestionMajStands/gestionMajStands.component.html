@@ -1,0 +1,7 @@
+<div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-sm-12">
+
+{{stand}}
+
+  <button type="button" class="btn btn-block btn-info" (click)="update(stand)">Mettre à jour</button>
+
+</div>

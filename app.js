@@ -14,11 +14,6 @@ const email = require('./server/routes/email');
 const stand = require('./server/routes/stand');
 const config = require('./server/routes/config');
 
-
-
-const url = "https://ouchedinier.herokuapp.com/";
-const devUrl = "http://localhost:4200";
-
 const app = express();
 
 require('dotenv').config();
