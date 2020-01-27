@@ -10,6 +10,7 @@ import { SignupComponent} from "../pages/signup/signup.component";
 import { DashboardComponent} from "../pages/dashboard/dashboard.component";
 import { GestionComponent} from "../pages/gestion/gestion.component";
 import { GestionStandsComponent} from "../pages/gestionStands/gestionStands.component";
+import { GestionMajStandsComponent} from "../pages/gestionMajStands/gestionMajStands.component";
 import { GestionBenevolesComponent} from "../pages/gestionBenevoles/gestionBenevoles.component";
 import { ErrorComponent} from "../pages/error/error.component";
 
@@ -43,6 +44,7 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     DashboardComponent,
     GestionComponent,
     GestionStandsComponent,
+    GestionMajStandsComponent,
     GestionBenevolesComponent,
     ErrorComponent,
     OrderByPipe
