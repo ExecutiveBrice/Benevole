@@ -49,7 +49,6 @@ module.exports = {
     return Stand.update({
       nom: req.body.nom,
       description: req.body.description,
-      etat: req.body.etat,
       bulle: req.body.bulle
     }, { where: { id: (req.body.id) } })
       .then(function (stand) {

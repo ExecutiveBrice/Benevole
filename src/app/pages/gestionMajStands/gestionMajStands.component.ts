@@ -8,9 +8,9 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 
 
 @Component({
-  selector: 'app-gestionStands',
-  templateUrl: './gestionStands.component.html',
-  styleUrls: ['./gestionStands.component.css']
+  selector: 'app-gestionMajStands',
+  templateUrl: './gestionMajStands.component.html',
+  styleUrls: ['./gestionMajStands.component.css']
 })
 
 export class GestionMajStandsComponent implements OnChanges {
