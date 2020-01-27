@@ -1,11 +1,8 @@
 # Ouche Dinier Responsive Web App
 
-<a src="https://kermess.herokuapp.com">https://kermess.herokuapp.com</a>
-
 Front Angular 6
--User Registration
 -Bénévole inscription
--Gestion
+-Gestion des bénévoles
 -REST API
 
 Back ExpressJS
@@ -14,16 +11,21 @@ Back ExpressJS
 
 BDD Postgres (addon heroku)
 
+DEV MOD
 git clone https://github.com/ExecutiveBrice/Kermess
-npm install
-
-git remote add heroku https://git.heroku.com/<votre_app>.git
-
-git add *
-git commit -m "commit message"
-git push heroku master
+npm install //add dependencies
+ng build //build the Angular APP in the Dist folder
+node ./bin/www //run the full app (front and back)
 
 
-# Pour voir les logs de l'app
-heroku logs --tail
+PROD MOD
+copy these files and folder from your DEV environment
+/bin
+/dist
+/server
+app.js
+... (à completer)
+do a "npm install compression"
 
+node ./bin/www //Pour lancement ponctuel (lié à la connexion)
+nohup node ./bin/www > output.log //Pour un lancement permanent (jusqu'au reboot)

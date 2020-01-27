@@ -1,19 +1,16 @@
 {
   "development": {
-    "username": "postgres",
-    "password": "postgres",
+    "username": "pi",
+    "password": "serveurBrice",
     "database": "postgres",
-    "host": "localhost",
-    "dialect": "postgres"
-  },
-  "test": {
-    "username": "ylsnechbtzagbz",
-    "password": "40715ac7c2d52637d16197bcc9b8ab3a16c71b2e5e49b437b3c1711cd5a6e500",
-    "database": "d4833h3osulqcn",
-    "host": "ec2-54-228-243-238.eu-west-1.compute.amazonaws.com",
+    "host": "192.168.1.19",
     "dialect": "postgres"
   },
   "production": {
-    "use_env_variable": "postgres://ylsnechbtzagbz:40715ac7c2d52637d16197bcc9b8ab3a16c71b2e5e49b437b3c1711cd5a6e500@ec2-54-228-243-238.eu-west-1.compute.amazonaws.com:5432/d4833h3osulqcn"
+    "username": "pi",
+    "password": "serveurBrice",
+    "database": "postgres",
+    "host": "localhost",
+    "dialect": "postgres"
   }
 }

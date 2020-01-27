@@ -16,5 +16,12 @@ export class StandService {
     return this.http.get<Stand[]>(this.apiUrl + '/getAll', {responseType: 'json'});
   }
   
-
+  update(stand:Stand) {
+    return this.http.put(this.apiUrl + '/', stand, {responseType: 'json'});
+  }
+  
+  delete(stand:Stand) {
+    return this.http.delete(this.apiUrl + '/' + stand.id, {responseType: 'json'});
+  }
+  
 }

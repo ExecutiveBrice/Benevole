@@ -15,7 +15,7 @@
     "e2e": "ng e2e",
     "postinstall": "ng build --prod --aot",
     "deploy": "git push origin master && git push heroku master",
-    "start:dev": "nodemon ./bin/www"
+    "start:dev": "node ./bin/www"
   },
   "private": true,
   "dependencies": {
