@@ -14,10 +14,6 @@ a {
   box-sizing: border-box;
 }
 
-.bordered {
-  border-style: solid
-}
-
 
 .module {
   padding: 10px !important;
@@ -35,8 +31,4 @@ a {
   background-color: #EEE;
   cursor: pointer;
   color: rgb(74, 117, 78);
-}
-
-.grey{
-  background-color: gray!important;
 }

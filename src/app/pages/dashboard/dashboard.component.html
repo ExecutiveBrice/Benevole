@@ -31,11 +31,13 @@
       </div>
 
       <div class="col-sm-12 ">
-        <button type="button" class="btn btn-block btn-warning" title="{{vendredi[0].Stand.bulle}}"
-          (click)="choisir(vendredi[0])">{{vendredi[0].Stand.nom}} -
-          {{vendredi[0].Creneau.plage}}<br><i>{{vendredi[0].Stand.bulle}}</i></button>
+        <div *ngFor="let preparatif of preparatifs | orderBy:'ordre':false" class="col-sm-11">
+        <button type="button" class="btn btn-block btn-warning" title="{{preparatif.Stand.bulle}}"
+          (click)="choisir(preparatif)">{{preparatif.Stand.nom}} -
+          {{preparatif.Creneau.plage}}<br><i>{{preparatif.Stand.bulle}}</i></button>
+        </div>
       </div>
-
+      
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Je préfère choisir mon
           stand</button>

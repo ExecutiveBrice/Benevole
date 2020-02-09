@@ -6,7 +6,7 @@ var Creneau = require('../models').Creneau;
 var Benevole = require('../models').Benevole;
 
 module.exports = {
-
+  
   getAll: function getAll(req, res) {
     console.log("getAll")
     return Stand.findAll({
@@ -22,7 +22,6 @@ module.exports = {
     })
       .then(function (stands) {
         console.log("getAll - 2")
-        console.log(stands)
         if (stands.length == 0) {
           return res.status(404).json({
             title: "No stands found",
@@ -42,18 +41,80 @@ module.exports = {
         });
       });
   },
+  getById: function getById(req, res) {
+    console.log("getById")
+    return Stand.findOne({
+      include: [
+        {
+          model: Croisement,
+          include: [
+            { model: Creneau },
+            { model: Benevole }
+          ]
+        }
+      ]
+    },{ where: { id: (req.query.id) } })
+      .then(function (stands) {
+        console.log("getById - 2")
+        if (stands== null) {
+          return res.status(404).json({
+            title: "No stands found for this id",
+            error: "Please try again."
+          });
+        }
 
+        return res.status(200).json({
+          message: 'stands found for this id',
+          stands: stands
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          title: 'There was an error signing in!',
+          error: error.stack
+        });
+      });
+  },
+  ajout: function ajout(req, res) {
+    console.log("ajout")
+    return Stand.create({
+      nom: req.body.nom,
+      description: req.body.description,
+      bulle: req.body.bulle,
+      etat: req.body.etat,
+      ordre: req.body.ordre
+    })
+      .then(function (stand) {
+        console.log("ajout - 2")
+        if (!stand) {
+          return res.status(404).json({
+            title: "No stand ajout",
+            error: "Please try again."
+          });
+        }
+        return res.status(200).json({
+          message: 'stand ajout',
+          stand: stand.id
+        });
+      }).catch(function (error) {
+        console.log(error.toString());
+        return res.status(400).json({
+          message: 'There was an error updating!',
+          error: error.stack
+        });
+      });
+  },
   update: function update(req, res) {
     console.log("update")
-    console.log(req.body.Stand)
     return Stand.update({
       nom: req.body.nom,
       description: req.body.description,
-      bulle: req.body.bulle
+      bulle: req.body.bulle,
+      etat: req.body.etat,
+      ordre: req.body.ordre
     }, { where: { id: (req.body.id) } })
       .then(function (stand) {
         console.log("update - 2")
-        console.log(stand.id)
         if (!stand) {
           return res.status(404).json({
             title: "No stand updated",
@@ -72,21 +133,21 @@ module.exports = {
         });
       });
   },
+
+
   delete: function supp(req, res) {
     console.log("delete")
-    console.log(req.body.Stand)
-    return Stand.delete({}, { where: { id: (req.body.id) } })
+    return Stand.destroy({ where: { id: (req.query.id) } })
       .then(function (stand) {
         console.log("delete - 2")
-        console.log(stand.id)
         if (!stand) {
           return res.status(404).json({
-            title: "No stand updated",
+            title: "No stand deleted",
             error: "Please try again."
           });
         }
         return res.status(200).json({
-          message: 'stand updated',
+          message: 'stand deleted',
           stand: stand.id
         });
       }).catch(function (error) {
@@ -97,4 +158,6 @@ module.exports = {
         });
       });
   },
+  
+ 
 };

@@ -9,7 +9,6 @@ module.exports = {
     return User.findAll()
       .then(function (users) {
         console.log("getAll - 2")
-        console.log(users)
         if (users.length == 0) {
           return res.status(404).json({
             title: "No benevoles found",
@@ -28,12 +27,14 @@ module.exports = {
           error: error.stack
         });
       });
-  },signup: function signup(req, res) {
-    console.log(req.body)
+  },
+  
+  signup: function signup(req, res) {
+
     return User.findOne({
       where: {email: (req.body.email)}
     }).then(function(user) {
-      console.log(user)
+
       if (user) {
         return res.status(401).json({
           message: "User already has account",

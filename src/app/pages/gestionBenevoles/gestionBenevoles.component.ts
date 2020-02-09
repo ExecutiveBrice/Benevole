@@ -47,9 +47,7 @@ export class GestionBenevolesComponent implements OnChanges {
 
   find(): void {
     console.log("find")
-    console.log(this.benevoles)
     this.benevoleService.getAll().subscribe(data => {
-      console.log("data")
       console.log(data)
       this.benevoles = data['benevoles'];
     },
@@ -84,9 +82,7 @@ export class GestionBenevolesComponent implements OnChanges {
 
   addCroisements(benevole): void {
     console.log("addCroisements")
-    console.log(benevole)
     this.benevoleService.addCroisements(benevole).subscribe(data => {
-      console.log("data")
       console.log(data)
     },
       error => {

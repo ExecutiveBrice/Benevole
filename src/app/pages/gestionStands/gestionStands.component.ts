@@ -36,9 +36,7 @@ export class GestionStandsComponent implements OnChanges {
 
   getAll(): void {
     console.log("find")
-    console.log(this.stands)
     this.standService.getAll().subscribe(data => {
-      console.log("data")
       console.log(data)
 
       this.stands = data['stands'];

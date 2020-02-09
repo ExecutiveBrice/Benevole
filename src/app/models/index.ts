@@ -4,3 +4,4 @@ export * from './benevole';
 export * from './croisement';
 export * from './email';
 export * from './user';
+export * from './config';

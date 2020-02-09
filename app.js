@@ -12,6 +12,7 @@ const croisement = require('./server/routes/croisement');
 const benevole = require('./server/routes/benevole');
 const email = require('./server/routes/email');
 const stand = require('./server/routes/stand');
+const creneau = require('./server/routes/creneau');
 const config = require('./server/routes/config');
 
 const app = express();
@@ -52,6 +53,7 @@ app.use('/croisement', croisement);
 app.use('/benevole', benevole);
 app.use('/user', user);
 app.use('/stand', stand);
+app.use('/creneau', creneau);
 app.use('/config', config);
 app.use('/', index);
 

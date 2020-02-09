@@ -83,9 +83,6 @@ ALTER TABLE public."Creneaus"
     OWNER to ylsnechbtzagbz;
 
 
-
-
-
     -- Table: public."Stands"
 
 -- DROP TABLE public."Stands";
@@ -135,12 +132,12 @@ CREATE TABLE public."Croisements"
     CONSTRAINT croisement_pkey PRIMARY KEY (id),
     CONSTRAINT "Creneau" FOREIGN KEY (creneau)
         REFERENCES public."Creneaus" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
     CONSTRAINT "Stand" FOREIGN KEY (stand)
         REFERENCES public."Stands" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
 )
 WITH (
     OIDS = FALSE
@@ -171,8 +168,8 @@ CREATE TABLE public."ResaBenevoles"
     CONSTRAINT "ResaBenevoles_pkey" PRIMARY KEY (id),
     CONSTRAINT "Benevoles" FOREIGN KEY (benevole)
         REFERENCES public."Benevoles" (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
     CONSTRAINT "Croisements" FOREIGN KEY (croisement)
         REFERENCES public."Croisements" (id) MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -219,3 +216,19 @@ TABLESPACE pg_default;
 
 ALTER TABLE public."Users"
     OWNER to ylsnechbtzagbz;
+
+
+
+
+
+-- Si pas de cascade sur les cles etrangère
+----------------------
+ALTER TABLE "Croisements"
+ADD CONSTRAINT "Creneau" FOREIGN KEY ("creneau")
+REFERENCES "Creneaus" (id) MATCH SIMPLE
+ON DELETE CASCADE
+ALTER TABLE "Croisements"
+ADD CONSTRAINT "Stand" FOREIGN KEY ("stand")
+REFERENCES "Stands" (id) MATCH SIMPLE
+ON DELETE CASCADE
+---------------------
