@@ -302,7 +302,7 @@ export class DashboardComponent implements OnChanges {
 
   calculChevauchement(benevole: Benevole) {
     this.chevauchement = false;
-    this.chorale = false;
+
     let listePlages = []
     for (let index = 0; index < benevole.Croisements.length; index++) {
       if (listePlages.indexOf(benevole.Croisements[index].Creneau.id) >= 0) {
@@ -314,11 +314,6 @@ export class DashboardComponent implements OnChanges {
         console.log(listePlages)
       }
     };
-
-    if (listePlages.indexOf(2)>= 0 || listePlages.indexOf(3)>= 0) {
-      this.chorale = true;
-    }
-
   }
 
   validate(): void {
