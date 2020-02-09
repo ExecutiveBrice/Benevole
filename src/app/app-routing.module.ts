@@ -5,7 +5,9 @@ import {SignupComponent} from "./pages/signup/signup.component";
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {GestionComponent} from './pages/gestion/gestion.component';
 import {GestionStandsComponent} from './pages/gestionStands/gestionStands.component';
+import {GestionMajConfigComponent} from './pages/gestionMajConfig/gestionMajConfig.component';
 import {GestionMajStandsComponent} from './pages/gestionMajStands/gestionMajStands.component';
+import {GestionMajCreneauxComponent} from './pages/gestionMajCreneaux/gestionMajCreneaux.component';
 import {GestionBenevolesComponent} from './pages/gestionBenevoles/gestionBenevoles.component';
 import { ErrorComponent} from "./pages/error/error.component";
 
@@ -16,7 +18,9 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'dashboard', component: DashboardComponent},
   { path: 'gestion', component: GestionComponent},
+  { path: 'gestionmajconfig', component: GestionMajConfigComponent},
   { path: 'gestionmajstands', component: GestionMajStandsComponent},
+  { path: 'gestionmajcreneaux', component: GestionMajCreneauxComponent},
   { path: 'gestionstands', component: GestionStandsComponent},
   { path: 'gestionbenevoles', component: GestionBenevolesComponent},
   { path: '404', component: ErrorComponent},

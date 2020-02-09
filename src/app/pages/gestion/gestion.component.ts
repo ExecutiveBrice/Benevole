@@ -2,7 +2,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
 import { CroisementService, StandService, MailService, ConfigService, ExcelService, BenevoleService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email } from '../../models';
+import { Benevole, Croisement, Stand, Email, Config } from '../../models';
 import { forEach } from '@angular/router/src/utils/collection';
 import { stringify } from 'querystring';
 
@@ -72,7 +72,6 @@ export class GestionComponent implements OnChanges {
   exportAsXLSX(): void {
 
     this.standService.getAll().subscribe(data => {
-      console.log("data")
       console.log(data)
 
       let stands = new Array;
@@ -99,7 +98,7 @@ export class GestionComponent implements OnChanges {
         }
         stands.push(standLite)
       });
-      console.log('stands')
+
       console.log(stands)
 
       this.excelService.multiExportAsExcelFile(stands, 'Stands');
@@ -113,7 +112,6 @@ export class GestionComponent implements OnChanges {
 
   getDateRappel() {
     this.configService.getParam("dateRappel").subscribe(res => {
-      console.log(res['param'].value);
       this.dateRappel = res['param'].value;
     }, err => {
       console.log(err);
@@ -124,7 +122,10 @@ export class GestionComponent implements OnChanges {
     let date = new Date();
     this.dateRappel = date.getUTCDate() + "/" + date.getUTCMonth() + "/" + date.getFullYear() + " à " + date.getHours() + ":" + date.getMinutes()
     console.log(this.dateRappel)
-    this.configService.updateParam('dateRappel', this.dateRappel)
+    let config = new Config();
+    config.param = 'dateRappel'
+    config.value = this.dateRappel
+    this.configService.updateParam(config)
       .subscribe(res => {
         console.log(res);
       }, err => {
@@ -147,8 +148,12 @@ export class GestionComponent implements OnChanges {
     } else {
       bloque = "true";
     }
+    
     this.bloque = bloque;
-    this.configService.updateParam('lock', bloque)
+    let config = new Config();
+    config.param = 'lock'
+    config.value = bloque
+    this.configService.updateParam(config)
       .subscribe(res => {
         console.log(res);
       }, err => {
@@ -175,7 +180,6 @@ export class GestionComponent implements OnChanges {
     console.log("getBenevoles")
 
     this.benevoleService.getAll().subscribe(data => {
-      console.log("benevoles")
       console.log(data)
       this.benevoles = data['benevoles'];
       this.getBenevolesWithChoice(this.benevoles);
@@ -194,8 +198,7 @@ export class GestionComponent implements OnChanges {
         this.benevolesWithChoice.push(benevole);
       }
     });
-    console.log("benevolesWithChoice")
-    console.log(this.benevolesWithChoice)
+
   }
   getBenevolesWithoutChoice(benevoles: Benevole[]) {
     benevoles.forEach(benevole => {
@@ -203,32 +206,30 @@ export class GestionComponent implements OnChanges {
         this.benevolesWithoutChoice.push(benevole);
       }
     });
-    console.log("benevolesWithoutChoice")
-    console.log(this.benevolesWithoutChoice)
+
   }
   getBenevolesToChange(benevoles: Benevole[]) {
     benevoles.forEach(benevole => {
       if (benevole.Croisements) {
         benevole.Croisements.forEach(croisement => {
-          if (croisement.Stand.etat == 1 || croisement.Stand.id == 8) {
+          if (croisement.Stand.etat == 1 || croisement.Stand.etat == 3) {
             this.benevolesToChange.push(benevole);
           }
         });
       }
     });
-    console.log("benevolesToChange")
-    console.log(this.benevolesToChange)
+
   }
 
   getText() {
     this.emailInfo.subject = 'Infos pratique';
 
     this.configService.getParam("rappel1").subscribe(res => {
-      console.log(res['param'].value);
+
       this.emailInfo.text = res['param'].value;
 
       this.configService.getParam("rappel2").subscribe(res => {
-        console.log(res['param'].value);
+
         this.emailInfo.text = this.emailInfo.text + res['param'].value;
       }, err => {
         console.log(err);

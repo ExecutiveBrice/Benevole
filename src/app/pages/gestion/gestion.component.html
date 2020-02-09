@@ -22,6 +22,14 @@
                   Stands</button>
       </div>
       <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionmajcreneaux">Maj des
+                  Creneaux</button>
+      </div>
+      <div class="col-sm-12">
+            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionmajconfig">Maj des
+                  Infos</button>
+      </div>
+      <div class="col-sm-12">
             <button type="button" class="btn btn-block btn-success" [ngClass]="{'btn-danger':bloque == 'true'}"
                   (click)="updateBlocage(bloque)">{{bloque == 'true'?'Je clique pour débloquer le site':'Je clique pour bloquer le site'}}</button>
       </div>

@@ -6,28 +6,7 @@
         <a class="nav-link active" href="https://ouchedinier.herokuapp.com">{{titleText}}</a>
       </li>
     </ul>
-    <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
-      <li *ngIf="!planing" class="nav-item">
-        <i class="nav-link active fa fa-calendar-plus-o" (click)="planing = true"> {{titleDate}}</i>
-      </li>
-      <li *ngIf="planing" class="nav-item">
-        <i class="nav-link active fa fa-calendar-minus-o" (click)="planing = false"> {{titleDate}}</i>
-      </li>
-    </ul>
-    <ul *ngIf="planing" class="navbar-nav mx-auto w-100 d-flex  justify-content-center">
-      <li class="nav-item col-sm-2">
-        <i class="nav-link active">11H-12H<br>Chorale des élèves</i>
-      </li>
-      <li class="nav-item col-sm-2">
-        <i class="nav-link active">12H-12H30<br>Apéritif</i>
-      </li>
-      <li class="nav-item col-sm-2">
-        <i class="nav-link active">12H30-14H<br>Repas</i>
-      </li>
-      <li class="nav-item col-sm-2">
-        <i class="nav-link active">14H-17H<br>Jeux</i>
-      </li>
-    </ul>
+
 
   </div>
 </nav>

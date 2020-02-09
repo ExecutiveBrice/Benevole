@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from "@angular/common/http";
+import { Config } from '../models';
 
 @Injectable()
 export class ConfigService {
@@ -10,13 +11,17 @@ export class ConfigService {
     private http: HttpClient
   ) { }
 
+  getAll() {
+    return this.http.get(this.apiUrl + '/getAll', {responseType: 'json'});
+  }
+
   getParam(param:string) {
     let params = new HttpParams().set('param', ''+param+'');
     return this.http.get(this.apiUrl + "/", {params, responseType: 'json' });
   }
 
-  updateParam(param:string, value:string) {
-    let params = new HttpParams().set('param', ''+param+'').set('value', ''+value+'');
+  updateParam(config:Config) {
+    let params = new HttpParams().set('param', ''+config.param+'').set('value', ''+config.value+'');
     
     return this.http.put(this.apiUrl + "/", params, { responseType: 'json' })
   }

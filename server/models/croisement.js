@@ -19,10 +19,10 @@ module.exports = function (sequelize, DataTypes) {
     }
   });
   Croisement.associate = function (models) {
-    models.Croisement.belongsTo(models.Stand, {
+    models.Croisement.belongsTo(models.Stand, {onDelete: 'cascade',
       foreignKey: "stand"
     }),
-    models.Croisement.belongsTo(models.Creneau, {
+    models.Croisement.belongsTo(models.Creneau, {onDelete: 'cascade',
       foreignKey: "creneau"
     }),
 

@@ -23,7 +23,7 @@ export class DashboardComponent implements OnChanges {
   chevauchement: boolean;
   chorale: boolean;
   besoins: Croisement[];
-  vendredi: Croisement[];
+  preparatifs: Croisement[];
   croisements: Croisement[];
   benevole: Benevole;
   email: Email = {
@@ -52,7 +52,7 @@ export class DashboardComponent implements OnChanges {
     public sanitizer: DomSanitizer) {
 
     this.plein = false;
-    this.vendredi = [];
+    this.preparatifs = [];
     this.benevole = new Benevole();
     this.stands = [];
     this.besoins = [];
@@ -65,7 +65,7 @@ export class DashboardComponent implements OnChanges {
     this.new = true;
     this.getCreneaux();
     this.getStand();
-    this.getVendredi();
+    this.getPreparatifs();
 
     this.bloquage();
     this.getTexts()
@@ -150,18 +150,18 @@ export class DashboardComponent implements OnChanges {
 
 
   getCreneaux(): void {
-    this.croisementService.getByStand(1).subscribe(data => {
+    this.croisementService.getByEtat(1).subscribe(data => {
       this.creneaux = data['croisements']
     },
       error => {
         console.log('😢 Oh no!', error);
       });
   }
-  getVendredi(): void {
-    console.log("getVendredi")
-    this.croisementService.getByStand(9).subscribe(data => {
+  getPreparatifs(): void {
+    console.log("getPreparatifs")
+    this.croisementService.getByEtat(5).subscribe(data => {
       console.log(data)
-      this.vendredi = data['croisements']
+      this.preparatifs = data['croisements']
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -172,7 +172,7 @@ export class DashboardComponent implements OnChanges {
   updateListe(benevole: Benevole): void {
     console.log("updateListe")
     console.log(benevole)
-    this.updateCroisementListe(this.vendredi)
+    this.updateCroisementListe(this.preparatifs)
     this.updateCroisementListe(this.creneaux)
     this.stands.forEach(stand => {
       this.updateCroisementListe(stand.Croisements)
@@ -201,7 +201,7 @@ export class DashboardComponent implements OnChanges {
   getStand(): void {
     this.standService.getAll().subscribe(data => {
       data['stands'].forEach(stand => {
-        if (stand.etat == 2) {
+        if (stand.etat == 2 || stand.etat == 3) {
           this.croisementService.getByStand(stand.id).subscribe(data => {
             stand.Croisements = data['croisements']
             this.stands.push(stand)

@@ -22,7 +22,7 @@ module.exports = function(sequelize, DataTypes) {
     },
   });
   Creneau.associate = function(models) {
-    models.Stand.hasMany(models.Croisement, {
+    models.Stand.hasMany(models.Croisement, {onDelete: 'cascade', hooks: true,foreignKey: { allowNull: false } ,
       foreignKey: "creneau"
     })
   };

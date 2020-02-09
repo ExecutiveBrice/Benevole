@@ -24,7 +24,6 @@ module.exports = {
     })
       .then(function (benevoles) {
         console.log("getAll - 2")
-        console.log(benevoles)
         if (benevoles.length == 0) {
           return res.status(404).json({
             title: "No benevoles found",
@@ -65,7 +64,6 @@ module.exports = {
     })
       .then(function (benevoles) {
         console.log("getWithChoice - 2")
-        console.log(benevoles)
         if (benevoles.length == 0) {
           return res.status(404).json({
             title: "No benevoles found",
@@ -107,7 +105,6 @@ module.exports = {
             newBenevoles.push(benevole)
           }
         });
-        console.log(newBenevoles)
         if (newBenevoles.length == 0) {
           return res.status(404).json({
             title: "No benevoles found",
@@ -130,7 +127,6 @@ module.exports = {
 
   getByMail: function getByMail(req, res) {
     console.log("getByMail")
-    console.log(req.query.email)
     return Benevole.findAll({
       where: { 'email': (req.query.email) },
       include: [
@@ -145,7 +141,6 @@ module.exports = {
     })
       .then(function (benevoles) {
         console.log("getByMail - 2")
-        console.log(benevoles)
         if (benevoles.length == 0) {
           return res.status(400).json({
             title: "No benevoles found for this email",
@@ -170,13 +165,11 @@ module.exports = {
 
   getByMailLite: function getByMailLite(req, res) {
     console.log("getByMailLite")
-    console.log(req.query.email)
     return Benevole.findAll({
       where: { 'email': (req.query.email) },
     })
       .then(function (benevoles) {
         console.log("getByMailLite - 2")
-        console.log(benevoles)
         if (benevoles.length == 0) {
           return res.status(400).json({
             title: "No benevoles found for this email",
@@ -206,7 +199,6 @@ module.exports = {
     })
       .then(function (benevole) {
         console.log("add - 2")
-        console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
             title: "No benevole added",
@@ -228,7 +220,6 @@ module.exports = {
 
   update: function update(req, res) {
     console.log("update")
-    console.log(req.body.Croisements)
     return Benevole.update({
       nom: req.body.nom,
       telephone: req.body.telephone,
@@ -239,7 +230,6 @@ module.exports = {
     }, { where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log("update - 2")
-        console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
             title: "No benevole updated",
@@ -260,7 +250,6 @@ module.exports = {
   },
   addCroisements: function addCroisements(req, res) {
     console.log("addCroisements")
-    console.log(req.body.Croisements)
     return Benevole.findOne({ where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log(benevole);
@@ -274,7 +263,6 @@ module.exports = {
         });
 
         console.log("addCroisements - 2")
-        console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
             title: "No benevole addCroisements",
@@ -297,13 +285,11 @@ module.exports = {
 
   updateReponse: function updateReponse(req, res) {
     console.log("updateReponse")
-    console.log(req.body.Croisements)
     return Benevole.update({
       reponse: req.body.reponse
     }, { where: { id: (req.body.id) } })
       .then(function (benevole) {
         console.log("updateReponse - 2")
-        console.log(benevole.id)
         if (!benevole) {
           return res.status(404).json({
             title: "No benevole updateReponse",

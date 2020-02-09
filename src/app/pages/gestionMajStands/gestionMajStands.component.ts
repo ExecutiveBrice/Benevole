@@ -1,9 +1,8 @@
 
 import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
-import { BenevoleService } from '../../services';
-import { CroisementService, StandService, MailService } from '../../services';
+import { CroisementService, StandService, CreneauService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email } from '../../models';
+import { Croisement, Stand, Creneau } from '../../models';
 
 
 
@@ -15,32 +14,42 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
 
 export class GestionMajStandsComponent implements OnChanges {
   stands: Stand[];
-
+  creneaux: Creneau[];
+  newStand: Stand = new Stand();
   choix: string;
+  ajouterCroisement: number = 0;
+
   constructor(
-    public benevoleService: BenevoleService,
+    public creneauService: CreneauService,
     public croisementService: CroisementService,
     public standService: StandService,
-    public mailService: MailService,
     public sanitizer: DomSanitizer) {
     this.stands = [];
-
+    this.creneaux = [];
     this.choix = "";
-    this.getAll();
+    this.getAllStands();
+    this.getAllCrenneaux();
   }
 
   ngOnChanges() {
 
   }
 
+  existInCroisements(croisements: Croisement[], id: number): boolean {
+    let existe = false;
+    croisements.forEach(croisement => {
+      if (croisement.Creneau.id == id) {
+        existe = true;
+      }
+    });
 
-  getAll(): void {
+    return existe;
+  }
+
+  getAllStands(): void {
     console.log("find")
-    console.log(this.stands)
     this.standService.getAll().subscribe(data => {
-      console.log("data")
       console.log(data)
-
       this.stands = data['stands'];
     },
       error => {
@@ -48,17 +57,90 @@ export class GestionMajStandsComponent implements OnChanges {
       });
   }
 
-
+  getAllCrenneaux(): void {
+    console.log("getAllCrenneaux")
+    this.creneauService.getAll().subscribe(data => {
+      console.log(data)
+      this.creneaux = data['creneaux'];
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
   update(stand): void {
     console.log("update")
-    stand.bulle = "coucou";
-    console.log(stand)
     this.standService.update(stand).subscribe(data => {
-      console.log("data")
       console.log(data)
+      this.getAllStands()
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
-      this.stands = data['stands'];
+
+  
+
+  updateCroisement(croisement:Croisement): void {
+    console.log("update")
+    this.croisementService.update(croisement).subscribe(data => {
+      console.log(data)
+      this.getAllStands()
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
+  ajoutCroisement(stand: Stand, creneau: Creneau): void {
+    console.log("ajoutCroisement")
+    let croisement = new Croisement()
+    croisement.Stand = stand
+    croisement.Creneau = creneau
+
+    this.croisementService.ajout(croisement).subscribe(data => {
+      console.log(data)
+      this.getAllStands()
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
+  deleteCroisement(croisement: Croisement): void {
+    console.log("deleteCroisement")
+
+    this.croisementService.delete(croisement).subscribe(data => {
+      console.log(data)
+      this.getAllStands()
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
+  ajout(stand: Stand): void {
+    console.log("ajout")
+    stand.Croisements = []
+    this.standService.ajout(stand).subscribe(data => {
+      console.log(data)
+      this.getAllStands()
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
+  delete(stand): void {
+    console.log("delete")
+    this.standService.delete(stand).subscribe(data => {
+      console.log(data)
+      this.getAllStands()
     },
       error => {
         console.log('😢 Oh no!', error);
