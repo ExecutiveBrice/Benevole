@@ -4,6 +4,7 @@ import {LoginComponent} from './pages/login/login.component';
 import {SignupComponent} from "./pages/signup/signup.component";
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {GestionComponent} from './pages/gestion/gestion.component';
+import {GestionSMSComponent} from './pages/gestionSMS/gestionSMS.component';
 import {GestionStandsComponent} from './pages/gestionStands/gestionStands.component';
 import {GestionMajConfigComponent} from './pages/gestionMajConfig/gestionMajConfig.component';
 import {GestionMajStandsComponent} from './pages/gestionMajStands/gestionMajStands.component';
@@ -22,6 +23,7 @@ const appRoutes: Routes = [
   { path: 'gestionmajstands', component: GestionMajStandsComponent},
   { path: 'gestionmajcreneaux', component: GestionMajCreneauxComponent},
   { path: 'gestionstands', component: GestionStandsComponent},
+  { path: 'gestionsms', component: GestionSMSComponent},  
   { path: 'gestionbenevoles', component: GestionBenevolesComponent},
   { path: '404', component: ErrorComponent},
   { path: '**', redirectTo: '404'}

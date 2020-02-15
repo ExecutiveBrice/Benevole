@@ -4,7 +4,7 @@ import { AppRoutingModule} from "../app-routing.module";
 import { FormsModule} from "@angular/forms";
 import { HttpClientModule} from "@angular/common/http";
 import { OrderByPipe} from "../sort.pipe";
-import { UserService, CroisementService, BenevoleService, StandService, MailService, ConfigService, ExcelService, CreneauService} from "../services";
+import { UserService, CroisementService, BenevoleService, StandService, MailService, ConfigService, ExcelService, CreneauService, SMSService} from "../services";
 import { LoginComponent} from "../pages/login/login.component";
 import { SignupComponent} from "../pages/signup/signup.component";
 import { DashboardComponent} from "../pages/dashboard/dashboard.component";
@@ -14,6 +14,7 @@ import { GestionMajStandsComponent} from "../pages/gestionMajStands/gestionMajSt
 import { GestionMajConfigComponent} from "../pages/gestionMajConfig/gestionMajConfig.component";
 import { GestionBenevolesComponent} from "../pages/gestionBenevoles/gestionBenevoles.component";
 import { GestionMajCreneauxComponent} from "../pages/gestionMajCreneaux/gestionMajCreneaux.component";
+import { GestionSMSComponent} from "../pages/gestionSMS/gestionSMS.component";
 
 import { ErrorComponent} from "../pages/error/error.component";
 
@@ -40,7 +41,8 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     MailService,
     ConfigService,
     ExcelService,
-    CreneauService
+    CreneauService,
+    SMSService
   ],
   declarations: [
     LoginComponent,
@@ -48,6 +50,7 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     DashboardComponent,
     GestionComponent,
     GestionStandsComponent,
+    GestionSMSComponent,
     GestionMajStandsComponent,
     GestionBenevolesComponent,
     GestionMajCreneauxComponent,
