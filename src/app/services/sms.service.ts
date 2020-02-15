@@ -4,7 +4,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Injectable()
 export class SMSService {
-  apiUrl = 'http://90.105.98.204:9999/';
+  apiUrl = 'https://90.105.98.204:9999/';
 
   constructor(
     private http: HttpClient
