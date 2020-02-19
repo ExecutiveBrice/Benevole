@@ -18,7 +18,7 @@ export class GestionSMSComponent implements OnChanges {
     numeros: "",
     message: ""
   }
-
+  smsList = []
 
   constructor(
     public smsService: SMSService,
@@ -32,7 +32,7 @@ export class GestionSMSComponent implements OnChanges {
 
   send(sms): void {
     console.log(sms);
-
+    this.smsList = [];
     let numeros = sms.numeros.split(";")
 
     numeros.forEach(num => {
@@ -40,9 +40,11 @@ export class GestionSMSComponent implements OnChanges {
 
       this.smsService.send(num, sms.message).subscribe(data => {
         console.log(data)
-
+        this.smsList.push({numero : num,resultat : "OK"})
+        console.log(this.smsList)
       },
         error => {
+          this.smsList.push({numero : num,resultat : "ERREUR"})
           console.log('😢 Oh no!', error);
         });
 
