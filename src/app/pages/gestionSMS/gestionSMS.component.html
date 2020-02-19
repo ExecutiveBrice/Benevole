@@ -14,5 +14,13 @@
   <div class="input-group mb-3 input-group-lg">
     <button type="button" class="btn btn-block btn-info" (click)="send(sms)">Envoyer</button>
   </div>
-</div>
 
+
+
+  <div class="col-sm-12">
+    Numero : Résultat
+  </div>
+  <div *ngFor="let sms of smsList " class="col-sm-12">
+    {{sms.numero}} : {{sms.resultat}}
+  </div>
+</div>
