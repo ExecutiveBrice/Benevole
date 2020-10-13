@@ -3,7 +3,7 @@ import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange 
 import { CroisementService, StandService, CreneauService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Croisement, Stand, Creneau } from '../../models';
-
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -12,27 +12,37 @@ import { Croisement, Stand, Creneau } from '../../models';
   styleUrls: ['./gestionMajStands.component.css']
 })
 
-export class GestionMajStandsComponent implements OnChanges {
+export class GestionMajStandsComponent implements OnInit {
   stands: Stand[];
   creneaux: Creneau[];
   newStand: Stand = new Stand();
   choix: string;
   ajouterCroisement: number = 0;
+  organumber:number;
 
   constructor(
+    public route: ActivatedRoute,
+    public router: Router,
     public creneauService: CreneauService,
     public croisementService: CroisementService,
     public standService: StandService,
     public sanitizer: DomSanitizer) {
+
+  }
+
+  ngOnInit() {
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+
+    console.log(this.organumber)
+    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+      this.router.navigate(['/error' ]);
+    }
+
     this.stands = [];
     this.creneaux = [];
     this.choix = "";
     this.getAllStands();
     this.getAllCrenneaux();
-  }
-
-  ngOnChanges() {
-
   }
 
   existInCroisements(croisements: Croisement[], id: number): boolean {

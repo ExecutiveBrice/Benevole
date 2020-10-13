@@ -5,6 +5,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email, Config } from '../../models';
 import { forEach } from '@angular/router/src/utils/collection';
 import { stringify } from 'querystring';
+import { Router, ActivatedRoute } from '@angular/router';
+
+
 
 @Component({
   selector: 'app-gestion',
@@ -12,7 +15,7 @@ import { stringify } from 'querystring';
   styleUrls: ['./gestion.component.css']
 })
 
-export class GestionComponent implements OnChanges {
+export class GestionComponent implements OnInit {
   rappel;
   bloque: string;
   benevoles: Benevole[];
@@ -42,15 +45,30 @@ export class GestionComponent implements OnChanges {
     name: 'Les inscrits SANS choix',
   }]
 
+  organumber:number;
 
-
-  constructor(public benevoleService: BenevoleService,
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public benevoleService: BenevoleService,
     public configService: ConfigService,
     public croisementService: CroisementService,
     public standService: StandService,
     public excelService: ExcelService,
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
+
+  }
+
+  ngOnInit() {
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+
+    console.log(this.organumber)
+    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+      this.router.navigate(['/error' ]);
+    }
+
+
     this.rappel = false;
     this.mail = false;
     this.mailingList = [];
@@ -62,10 +80,6 @@ export class GestionComponent implements OnChanges {
     this.getText();
     this.getDateRappel();
     this.getBenevoles();
-  }
-
-  ngOnChanges() {
-
   }
 
 
@@ -148,7 +162,7 @@ export class GestionComponent implements OnChanges {
     } else {
       bloque = "true";
     }
-    
+
     this.bloque = bloque;
     let config = new Config();
     config.param = 'lock'
@@ -252,28 +266,28 @@ export class GestionComponent implements OnChanges {
     console.log(this.rappel)
 
     this.mailingList.forEach(benevole => {
-      let emailCopy =JSON.parse(JSON.stringify(email))
-        console.log(benevole)
-        emailCopy.to = benevole.email
-        if (this.rappel) {
-          emailCopy.text = emailCopy.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
-          benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
-          benevole.Croisements.forEach(croisement => {
-            emailCopy.text = emailCopy.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
-          })
-          if (benevole.gateaux) {
-            emailCopy.text = emailCopy.text + "<br>Vous avez également proposé d'apporter :<br>"
-            emailCopy.text = emailCopy.text + benevole.gateaux + "<br>"
-          }
+      let emailCopy = JSON.parse(JSON.stringify(email))
+      console.log(benevole)
+      emailCopy.to = benevole.email
+      if (this.rappel) {
+        emailCopy.text = emailCopy.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
+        benevole.Croisements.sort((a, b) => (a.Creneau.ordre > b.Creneau.ordre) ? 1 : ((b.Creneau.ordre > a.Creneau.ordre) ? -1 : 0));
+        benevole.Croisements.forEach(croisement => {
+          emailCopy.text = emailCopy.text + (croisement.Stand.nom == "tous" ? "N'importe quel stand" : croisement.Stand.nom) + " - " + croisement.Creneau.plage + "<br>"
+        })
+        if (benevole.gateaux) {
+          emailCopy.text = emailCopy.text + "<br>Vous avez également proposé d'apporter :<br>"
+          emailCopy.text = emailCopy.text + benevole.gateaux + "<br>"
         }
+      }
 
-        this.mailService.sendMail(emailCopy)
-          .subscribe(res => {
-            console.log("this.api.sendMail");
-            console.log(res);
-          }, err => {
-            console.log(err);
-          });
+      this.mailService.sendMail(emailCopy)
+        .subscribe(res => {
+          console.log("this.api.sendMail");
+          console.log(res);
+        }, err => {
+          console.log(err);
+        });
     })
     this.rappel = false;
     this.getText();

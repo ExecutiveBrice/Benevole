@@ -5,3 +5,4 @@ export * from './croisement';
 export * from './email';
 export * from './user';
 export * from './config';
+export * from './event';

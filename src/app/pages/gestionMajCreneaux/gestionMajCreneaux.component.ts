@@ -3,6 +3,7 @@ import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange 
 import { CreneauService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Creneau } from '../../models';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 
@@ -12,22 +13,32 @@ import { Creneau } from '../../models';
   styleUrls: ['./gestionMajCreneaux.component.css']
 })
 
-export class GestionMajCreneauxComponent implements OnChanges {
+export class GestionMajCreneauxComponent implements OnInit {
   creneaux: Creneau[];
   newCreneau: Creneau = new Creneau();
   choix: string;
+  organumber:number;
 
   constructor(
+    public route: ActivatedRoute,
+    public router: Router,
     public creneauService: CreneauService,
     public sanitizer: DomSanitizer) {
+
+  }
+
+  ngOnInit() {
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+
+    console.log(this.organumber)
+    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+      this.router.navigate(['/error' ]);
+    }
+
     this.creneaux = [];
 
     this.choix = "";
     this.getAll();
-  }
-
-  ngOnChanges() {
-
   }
 
 

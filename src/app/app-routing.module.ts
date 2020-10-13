@@ -2,31 +2,22 @@ import { NgModule } from '@angular/core';
 import {PreloadAllModules, PreloadingStrategy, RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from './pages/login/login.component';
 import {SignupComponent} from "./pages/signup/signup.component";
-import {DashboardComponent} from './pages/dashboard/dashboard.component';
-import {GestionComponent} from './pages/gestion/gestion.component';
-import {GestionSMSComponent} from './pages/gestionSMS/gestionSMS.component';
-import {GestionStandsComponent} from './pages/gestionStands/gestionStands.component';
-import {GestionMajConfigComponent} from './pages/gestionMajConfig/gestionMajConfig.component';
-import {GestionMajStandsComponent} from './pages/gestionMajStands/gestionMajStands.component';
-import {GestionMajCreneauxComponent} from './pages/gestionMajCreneaux/gestionMajCreneaux.component';
-import {GestionBenevolesComponent} from './pages/gestionBenevoles/gestionBenevoles.component';
-import { ErrorComponent} from "./pages/error/error.component";
-
+import { ErrorComponent, InscriptionComponent, ConnexionComponent, GestionComponent, CreationComponent, GestionStandsComponent, GestionMajStandsComponent, GestionMajConfigComponent, GestionBenevolesComponent, GestionMajCreneauxComponent, GestionSMSComponent} from "./pages";
 
 const appRoutes: Routes = [
-  { path: '',pathMatch: 'full', redirectTo: 'dashboard'},
-  { path: 'signup', component: SignupComponent},
-  { path: 'login', component: LoginComponent},
-  { path: 'dashboard', component: DashboardComponent},
-  { path: 'gestion', component: GestionComponent},
-  { path: 'gestionmajconfig', component: GestionMajConfigComponent},
-  { path: 'gestionmajstands', component: GestionMajStandsComponent},
-  { path: 'gestionmajcreneaux', component: GestionMajCreneauxComponent},
-  { path: 'gestionstands', component: GestionStandsComponent},
-  { path: 'gestionsms', component: GestionSMSComponent},  
-  { path: 'gestionbenevoles', component: GestionBenevolesComponent},
-  { path: '404', component: ErrorComponent},
-  { path: '**', redirectTo: '404'}
+  { path: ':id',pathMatch: 'full', redirectTo: 'connexion/:id'},
+  { path: 'creation', component: CreationComponent},
+  { path: 'connexion/:id', component: ConnexionComponent},
+  { path: 'inscription/:id', component: InscriptionComponent},
+  { path: 'gestion/:id', component: GestionComponent},
+  { path: 'gestionmajconfig/:id', component: GestionMajConfigComponent},
+  { path: 'gestionmajstands/:id', component: GestionMajStandsComponent},
+  { path: 'gestionmajcreneaux/:id', component: GestionMajCreneauxComponent},
+  { path: 'gestionstands/:id', component: GestionStandsComponent},
+  { path: 'gestionsms/:id', component: GestionSMSComponent},  
+  { path: 'gestionbenevoles/:id', component: GestionBenevolesComponent},
+  { path: 'error', component: ErrorComponent},
+  { path: '**', redirectTo: 'error'}
 ];
 
 @NgModule({
@@ -38,4 +29,3 @@ const appRoutes: Routes = [
   ]
 })
 export class AppRoutingModule { }
-
