@@ -3,7 +3,7 @@ import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange 
 import { ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Config } from '../../models';
-
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -12,19 +12,29 @@ import { Config } from '../../models';
   styleUrls: ['./gestionMajConfig.component.css']
 })
 
-export class GestionMajConfigComponent implements OnChanges {
+export class GestionMajConfigComponent implements OnInit {
   configs: Config[];
+  organumber:number;
 
   constructor(
+    public route: ActivatedRoute,
+    public router: Router,
     public configService: ConfigService,
     public sanitizer: DomSanitizer) {
+
+  }
+
+  ngOnInit() {
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+
+    console.log(this.organumber)
+    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+      this.router.navigate(['/error' ]);
+    }
+
     this.configs = [];
 
     this.getAll();
-  }
-
-  ngOnChanges() {
-
   }
 
 

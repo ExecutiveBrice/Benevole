@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import { Config } from '../models';
+import { Config, Event } from '../models';
 
 @Injectable()
 export class ConfigService {
@@ -13,6 +13,10 @@ export class ConfigService {
 
   getAll() {
     return this.http.get(this.apiUrl + '/getAll', {responseType: 'json'});
+  }
+
+  create(event:Event) {
+    return this.http.post(this.apiUrl + '/', event, {responseType: 'json'});
   }
 
   getParam(param:string) {

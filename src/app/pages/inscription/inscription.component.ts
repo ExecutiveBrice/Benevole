@@ -1,18 +1,21 @@
 
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
-import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-inscription',
+  templateUrl: './inscription.component.html',
+  styleUrls: ['./inscription.component.css']
 })
 
-export class DashboardComponent implements OnChanges {
+export class InscriptionComponent implements OnInit {
+
+  organumber: number = 0;
+
   new: boolean;
   validation: boolean;
   nouveau: boolean;
@@ -44,6 +47,7 @@ export class DashboardComponent implements OnChanges {
 
 
   constructor(public benevoleService: BenevoleService,
+    public route: ActivatedRoute,
     public router: Router,
     public configService: ConfigService,
     public croisementService: CroisementService,
@@ -51,9 +55,27 @@ export class DashboardComponent implements OnChanges {
     public mailService: MailService,
     public sanitizer: DomSanitizer) {
 
+
+  }
+
+  ngOnInit() {
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+    console.log(this.organumber)
+    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+      this.router.navigate(['/error']);
+    }
+
+    
+    if (localStorage.getItem('user')) {
+      this.benevole = JSON.parse(localStorage.getItem('user'));
+    } else {
+      this.router.navigate(['/connexion/'+ this.organumber ]);
+    }
+
+
     this.plein = false;
     this.preparatifs = [];
-    this.benevole = new Benevole();
+
     this.stands = [];
     this.besoins = [];
     this.creneaux = [];
@@ -61,17 +83,12 @@ export class DashboardComponent implements OnChanges {
     this.exist = false;
     this.chevauchement = false;
     this.chorale = false;
-    this.nouveau = false;
-    this.new = true;
     this.getCreneaux();
     this.getStand();
     this.getPreparatifs();
 
     this.bloquage();
     this.getTexts()
-  }
-
-  ngOnChanges() {
 
   }
 
@@ -88,66 +105,6 @@ export class DashboardComponent implements OnChanges {
       });
   }
 
-  find(): void {
-    console.log("find")
-    console.log(this.benevole)
-    this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.getByMailLite(this.benevole.email).subscribe(data => {
-      console.log("data")
-      console.log(data)
-      this.exist = true
-      this.benevole = data['benevoles'][0];
-      this.benevole.Croisements = [];
-      this.updateListe(this.benevole)
-
-    },
-      error => {
-        this.exist = false
-        this.new = false;
-        console.log('😢 Oh no!', error);
-      });
-  }
-
-
-  subscribe(): void {
-    this.nouveau = false;
-    console.log("subscribe")
-    this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.add(this.benevole).subscribe(data => {
-      console.log("data")
-      console.log(data)
-      this.benevole.id = data['benevole'];
-      this.benevole.Croisements = [];
-      this.exist = true;
-      this.updateListe(this.benevole)
-    },
-      error => {
-        this.exist = false;
-        this.new = false;
-        console.log('😢 Oh no!', error);
-      });
-  }
-
-
-  update(): void {
-    console.log("update")
-    console.log(this.benevole)
-    this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.update(this.benevole).subscribe(data => {
-      console.log("data")
-      console.log(data)
-      this.exist = true;
-
-    },
-      error => {
-        this.exist = false;
-        this.new = false;
-        console.log('😢 Oh no!', error);
-      });
-  }
-
-
-
 
   getCreneaux(): void {
     this.croisementService.getByEtat(1).subscribe(data => {
@@ -157,6 +114,8 @@ export class DashboardComponent implements OnChanges {
         console.log('😢 Oh no!', error);
       });
   }
+
+
   getPreparatifs(): void {
     console.log("getPreparatifs")
     this.croisementService.getByEtat(5).subscribe(data => {
@@ -209,8 +168,8 @@ export class DashboardComponent implements OnChanges {
             error => {
               console.log('😢 Oh no!', error);
             });
-            console.log("stands")
-            console.log(this.stands)
+          console.log("stands")
+          console.log(this.stands)
         }
       })
     },
@@ -218,10 +177,6 @@ export class DashboardComponent implements OnChanges {
         console.log('😢 Oh no!', error);
       });
   }
-
-
-
-
 
 
   updateCroisementListe(croisements: Croisement[]): void {
@@ -239,8 +194,6 @@ export class DashboardComponent implements OnChanges {
       }
     }
   }
-
-
 
 
   addCroisements(benevole: Benevole): void {
@@ -300,6 +253,7 @@ export class DashboardComponent implements OnChanges {
 
   }
 
+
   calculChevauchement(benevole: Benevole) {
     this.chevauchement = false;
 
@@ -315,6 +269,7 @@ export class DashboardComponent implements OnChanges {
       }
     };
   }
+
 
   validate(): void {
     this.validation = true;
@@ -346,6 +301,7 @@ export class DashboardComponent implements OnChanges {
       });
   }
 
+
   envoiMail(email: Email) {
     this.mailService.sendMail(email)
       .subscribe(res => {
@@ -355,6 +311,7 @@ export class DashboardComponent implements OnChanges {
         console.log(err);
       });
   }
+
 
   getTexts() {
     this.configService.getParam("validation1").subscribe(res => {

@@ -4,6 +4,8 @@ import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ExcelService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email } from '../../models';
+import { Router, ActivatedRoute } from '@angular/router';
+
 
 
 @Component({
@@ -12,8 +14,8 @@ import { Benevole, Croisement, Stand, Email } from '../../models';
   styleUrls: ['./gestionBenevoles.component.css']
 })
 
-export class GestionBenevolesComponent implements OnChanges {
-
+export class GestionBenevolesComponent implements OnInit {
+  organumber:number;
   croisements: Croisement[];
   benevoles: Benevole[];
   choix: string;
@@ -24,20 +26,32 @@ export class GestionBenevolesComponent implements OnChanges {
   }
 
 
-  constructor(public benevoleService: BenevoleService,
+  constructor(
+    public route: ActivatedRoute,
+    public router: Router,
+    public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
     public excelService: ExcelService,
     public sanitizer: DomSanitizer) {
+
+  }
+
+  ngOnInit() {
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+
+    console.log(this.organumber)
+    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+      this.router.navigate(['/error' ]);
+    }
+
+
     this.benevoles = [];
     this.croisements = [];
     this.choix = "";
     this.find();
     this.getCroisement();
-  }
-
-  ngOnChanges() {
 
   }
 
