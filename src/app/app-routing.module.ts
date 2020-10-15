@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
-import {PreloadAllModules, PreloadingStrategy, RouterModule, Routes} from '@angular/router';
-import {LoginComponent} from './pages/login/login.component';
-import {SignupComponent} from "./pages/signup/signup.component";
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { ErrorComponent, InscriptionComponent, ConnexionComponent, GestionComponent, CreationComponent, GestionStandsComponent, GestionMajStandsComponent, GestionMajConfigComponent, GestionBenevolesComponent, GestionMajCreneauxComponent, GestionSMSComponent} from "./pages";
 
 const appRoutes: Routes = [
-  { path: ':id',pathMatch: 'full', redirectTo: 'connexion/:id'},
+
   { path: 'creation', component: CreationComponent},
   { path: 'connexion/:id', component: ConnexionComponent},
   { path: 'inscription/:id', component: InscriptionComponent},

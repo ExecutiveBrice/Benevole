@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -40,12 +40,6 @@ export class InscriptionComponent implements OnInit {
   choixStand: string;
 
 
-
-
-
-
-
-
   constructor(public benevoleService: BenevoleService,
     public route: ActivatedRoute,
     public router: Router,
@@ -61,7 +55,7 @@ export class InscriptionComponent implements OnInit {
   ngOnInit() {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
     console.log(this.organumber)
-    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
+    if (!this.organumber || isNaN(this.organumber) || this.organumber < 1) {
       this.router.navigate(['/error']);
     }
 

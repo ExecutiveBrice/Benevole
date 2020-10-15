@@ -1,9 +1,9 @@
 
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ExcelService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email } from '../../models';
+import { Benevole, Croisement, Email } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -15,7 +15,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class GestionBenevolesComponent implements OnInit {
-  organumber:number;
+  organumber: number;
   croisements: Croisement[];
   benevoles: Benevole[];
   choix: string;
@@ -42,8 +42,8 @@ export class GestionBenevolesComponent implements OnInit {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
 
     console.log(this.organumber)
-    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
-      this.router.navigate(['/error' ]);
+    if (!this.organumber || isNaN(this.organumber) || this.organumber < 1) {
+      this.router.navigate(['/error']);
     }
 
 
@@ -70,6 +70,16 @@ export class GestionBenevolesComponent implements OnInit {
       });
   }
 
+  choixBenevole(email: string) {
+    if (this.choix != email) {
+      this.choix = email
+    } else {
+      this.choix = null
+    }
+
+  }
+
+
 
   choisir(benevole: Benevole, benecroisement: Croisement, croisement: Croisement): void {
     if (benecroisement != null) {
@@ -82,7 +92,7 @@ export class GestionBenevolesComponent implements OnInit {
         }
       }
     }
-    if(benevole.Croisements == null){
+    if (benevole.Croisements == null) {
       benevole.Croisements = []
     }
     if (croisement != null) {

@@ -1,9 +1,7 @@
 
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
-import { BenevoleService } from '../../services';
+import { Component, OnChanges } from '@angular/core';
 import { ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email } from '../../models';
 
 @Component({
   selector: 'app-error',

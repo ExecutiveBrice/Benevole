@@ -12,7 +12,7 @@ Back ExpressJS
 BDD Postgres (addon heroku)
 
 DEV MOD
-git clone https://github.com/ExecutiveBrice/Kermess
+git remote add origin https://github.com/ExecutiveBrice/GestionBenevole.git
 npm install //add dependencies
 ng build //build the Angular APP in the Dist folder
 node ./bin/www //run the full app (front and back)

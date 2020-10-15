@@ -3,7 +3,7 @@
   <div class="mx-auto flex-column" id="navbar">
     <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
       <li class="nav-item">
-        <a class="nav-link active" href="{{adresse}}">{{titleText}}</a>
+        <a class="nav-link active" href="./{{evenement.id}}">{{evenement.eventName}}</a>
       </li>
     </ul>
 
@@ -18,9 +18,7 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
 
   <div class="navbar-expand m-auto navbar-text">
-    <div *ngFor="let user of users ">
-      {{user.name}} {{user.firstname}} - {{user.telephone}} - {{user.email}}
-    </div>
+    {{evenement.contact}} - {{evenement.contactTel}} - {{evenement.contactEmail}}
   </div>
 
 

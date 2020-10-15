@@ -1,43 +1,45 @@
 <div class="row">
       <div class="col-sm-12 ">
-        <div class="alert alert-success">
-            <strong>{{benevoles.length}} bénévoles inscrits (enfants compris) / 
-            {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi / 
-            {{benevolesToChange.length}} bénévoles à replacer</strong>
-        </div>
+            <div class="alert alert-success">
+                  <strong>
+                        {{benevoles.length}} bénévoles inscrits /
+                        {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi /
+                        {{benevolesToChange.length}} bénévoles à positionner
+                  </strong>
+            </div>
       </div>
-    </div>
-<div class="row">
+</div>
 
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionbenevoles">Gestion des
+<div class="row">
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" routerLink="/gestionbenevoles">Gestion des
                   Bénévoles</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionstands">Gestion des
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" routerLink="/gestionstands">Gestion des
                   Stands</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionmajstands">Maj des
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" routerLink="/gestionmajstands">Maj des
                   Stands</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionmajcreneaux">Maj des
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" routerLink="/gestionmajcreneaux">Maj des
                   Creneaux</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" routerLink="/gestionmajconfig">Maj des
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" routerLink="/gestionmajconfig">Maj des
                   Infos</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-success" [ngClass]="{'btn-danger':bloque == 'true'}"
-                  (click)="updateBlocage(bloque)">{{bloque == 'true'?'Je clique pour débloquer le site':'Je clique pour bloquer le site'}}</button>
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block btn-success overflow-visibles" [ngClass]="{'btn-danger':bloque == 'true'}"
+                  (click)="updateBlocage(bloque)">Je clique pour<br />{{bloque == 'true'?'débloquer le site':'bloquer le site'}}</button>
       </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" (click)="mail = !mail">Envoi de mails</button>
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" (click)="mail = !mail">Envoi de mails</button>
       </div>
 
-      <div *ngIf="mail" class="form-group col-sm-12 ">
+      <div *ngIf="mail" class="form-group col-sm-3 ">
 
             <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
                   <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
@@ -52,15 +54,15 @@
                         choix des inscrits</label>
             </div>
 
-            <button type="button" class="btn btn-block btn-primary" (click)="envoiMail(emailInfo)">
+            <button type="button" class="btn btn-block" (click)="envoiMail(emailInfo)">
                   Envoyer ce message à la liste choisi</button>
       </div>
 
 
 
 
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block btn-primary" (click)="exportAsXLSX()">Télécharger</button>
+      <div class="col-sm-3">
+            <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
       </div>
 
 </div>

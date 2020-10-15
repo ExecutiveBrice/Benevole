@@ -1,9 +1,7 @@
 
-import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnChanges } from '@angular/core';
 import { SMSService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Creneau } from '../../models';
-
 
 
 @Component({
