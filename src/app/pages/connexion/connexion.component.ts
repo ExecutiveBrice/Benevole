@@ -1,10 +1,10 @@
 
-import { Component, OnInit, Input, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email } from '../../models';
-import { Router, ActivatedRoute, ParamMap, NavigationEnd, Event } from '@angular/router';
+import { Benevole } from '../../models';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-connexion',
@@ -15,17 +15,11 @@ import { Router, ActivatedRoute, ParamMap, NavigationEnd, Event } from '@angular
 export class ConnexionComponent implements OnInit {
 
   organumber: number;
-
   new: boolean;
   validation: boolean;
   nouveau: boolean;
   exist: boolean;
   benevole: Benevole;
-
-
-
-
-
 
 
   constructor(public benevoleService: BenevoleService,
@@ -35,28 +29,23 @@ export class ConnexionComponent implements OnInit {
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
-    public sanitizer: DomSanitizer) {
+    public sanitizer: DomSanitizer) { }
 
-
-  }
 
   ngOnInit() {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
     console.log(this.organumber)
-    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
-      this.router.navigate(['/error']);
+    if (!this.organumber || isNaN(this.organumber) || this.organumber < 1) {
+      this.router.navigate(['error']);
     }
-
 
     this.benevole = new Benevole();
     this.validation = false;
     this.exist = false;
     this.nouveau = false;
     this.new = true;
-
     this.bloquage();
   }
-
 
   bloquage() {
     this.configService.getParam('lock')
@@ -81,8 +70,6 @@ export class ConnexionComponent implements OnInit {
       console.log(data)
 
       localStorage.setItem('user', JSON.stringify(data));
-
-
     },
       error => {
         this.exist = false
@@ -128,17 +115,5 @@ export class ConnexionComponent implements OnInit {
         console.log('😢 Oh no!', error);
       });
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

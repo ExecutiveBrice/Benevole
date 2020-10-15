@@ -1,12 +1,11 @@
 
-export class Event {
+export class Evenement {
   id: number;
-  contactFirstName: string;
-  contactLastName: string;
+  contact: string;
   eventName: string;
   contactEmail: string;
-  startDate:Date;
-  endDate:Date;
+  contactTel: string;
+  startDate: Date;
+  endDate: Date;
   password: string;
-
 }

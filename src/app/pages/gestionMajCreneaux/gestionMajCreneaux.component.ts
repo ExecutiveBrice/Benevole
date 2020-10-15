@@ -1,5 +1,5 @@
 
-import { Component, Pipe, PipeTransform, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CreneauService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Creneau } from '../../models';
@@ -31,8 +31,8 @@ export class GestionMajCreneauxComponent implements OnInit {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
 
     console.log(this.organumber)
-    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
-      this.router.navigate(['/error' ]);
+    if (!this.organumber || isNaN(this.organumber) || this.organumber < 1) {
+      this.router.navigate(['/error']);
     }
 
     this.creneaux = [];

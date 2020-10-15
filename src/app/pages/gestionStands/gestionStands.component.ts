@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email } from '../../models';
+import { Stand } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -34,8 +34,8 @@ export class GestionStandsComponent implements OnInit {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
 
     console.log(this.organumber)
-    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
-      this.router.navigate(['/error' ]);
+    if (!this.organumber || isNaN(this.organumber) || this.organumber < 1) {
+      this.router.navigate(['/error']);
     }
 
 
@@ -60,5 +60,13 @@ export class GestionStandsComponent implements OnInit {
   }
 
 
+
+  choixstand(nom: string) {
+    if (this.choix != nom) {
+      this.choix = nom
+    } else {
+      this.choix = null
+    }
+  }
 
 }

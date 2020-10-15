@@ -1,10 +1,8 @@
 
-import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CroisementService, StandService, MailService, ConfigService, ExcelService, BenevoleService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Stand, Email, Config } from '../../models';
-import { forEach } from '@angular/router/src/utils/collection';
-import { stringify } from 'querystring';
+import { Benevole, Email, Config } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -64,8 +62,8 @@ export class GestionComponent implements OnInit {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
 
     console.log(this.organumber)
-    if (!this.organumber && isNaN(this.organumber) && this.organumber < 1) {
-      this.router.navigate(['/error' ]);
+    if (!this.organumber || isNaN(this.organumber) || this.organumber < 1) {
+      this.router.navigate(['/error']);
     }
 
 

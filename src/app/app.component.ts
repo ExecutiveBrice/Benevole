@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { User, Benevole } from './models';
-import { UserService, StandService, MailService, ConfigService } from './services';
+import { User } from './models';
+import { UserService, MailService, ConfigService } from './services';
 import { Router, ActivatedRoute, NavigationEnd, Event } from '@angular/router';
-import { Email } from './models';
+import { Email, Evenement } from './models';
 
 @Component({
     selector: 'app',
@@ -11,6 +11,8 @@ import { Email } from './models';
 })
 
 export class AppComponent {
+
+    evenement : Evenement;
     utilisateur: User = null;
     retour: boolean = false;
     email: Email = {
@@ -23,6 +25,9 @@ export class AppComponent {
     titleText:string;
     titleDate:string;
     planing:boolean;
+    organumber: number;
+
+
     constructor(
         public configService:ConfigService,
         public mailService: MailService,
@@ -30,45 +35,24 @@ export class AppComponent {
         public router: Router,
         public route: ActivatedRoute,
         private utilisateurService: UserService) {
+    
+    }
+
+    ngOnInit() {
+
+ 
+
+        this.evenement = new Evenement();
         this.mail = false;
         this.planing = false;
         this.users = [];
         this.getTexts();
         console.log('AppComponent')
-        if (JSON.parse(localStorage.getItem('userId'))) {
-            this.utilisateur = {
-                name: JSON.parse(localStorage.getItem('userId')),
-                email: "",
-                password: ''
-            };
-        }
-
-        this.router.events.subscribe((event: Event) => {
-            if (event instanceof NavigationEnd) {
-                console.log((<NavigationEnd>event).url)
-                if ((<NavigationEnd>event).url == '/dashboard' || (<NavigationEnd>event).url == '/') {
-                    this.retour = false;
-                } else {
-                    this.retour = true;
-                }
-            }
-        });
-
-        utilisateurService.utilisateurSource$.subscribe(
-            data => {
-                if (data != undefined) {
-                    this.utilisateur = data;
-                }
-            });
-        this.utilisateurService.sourceUtilisateur(this.utilisateur);
-
-        this.getContacts();
+        this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+        console.log("AppComponent"+this.organumber)
     }
 
-    ngOnInit() {
-
-    }
-    getContacts() {
+    getEvenement() {
         this.userService.get().subscribe(res => {
             console.log(res['users']);
             this.users = res['users'];
@@ -96,14 +80,7 @@ export class AppComponent {
     }
 
     
-    logout() {
-        console.log("appcomp logout")
-        localStorage.removeItem('userId');
-        localStorage.removeItem('token');
-        this.utilisateur = null;
-        this.router.navigate(['/login']);
 
-    }
 
 
     getTexts() {

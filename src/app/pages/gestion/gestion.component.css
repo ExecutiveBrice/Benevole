@@ -14,6 +14,9 @@ a {
   box-sizing: border-box;
 }
 
+.btn {
+  min-height: 100px;
+}
 
 .module {
   padding: 10px !important;

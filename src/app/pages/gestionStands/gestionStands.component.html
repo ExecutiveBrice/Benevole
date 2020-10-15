@@ -1,5 +1,5 @@
 <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-sm-12">
-  <button type="button" class="btn btn-block btn-info" (click)="choix = stand.nom">{{stand.nom}} </button>
+  <button type="button" class="btn btn-block btn-info" (click)="choixstand(stand.nom)">{{stand.nom}} </button>
 
   <div class="col-sm-12" *ngIf="choix == stand.nom">
     <div class="row">
