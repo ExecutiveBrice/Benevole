@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
-
+import QRCode from 'qrcode'
 
 @Component({
   selector: 'app-creation',
@@ -32,7 +32,14 @@ export class CreationComponent implements OnInit {
 
 
   ngOnInit() {
-
+// With promises
+QRCode.toDataURL('I am a pony!')
+  .then(url => {
+    console.log(url)
+  })
+  .catch(err => {
+    console.error(err)
+  })
     this.new = true;
     this.ok = true;
   }

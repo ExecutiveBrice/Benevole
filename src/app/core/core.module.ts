@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule} from "../app-routing.module";
 import { FormsModule} from "@angular/forms";
-import { HttpClientModule} from "@angular/common/http";
 import { OrderByPipe} from "../sort.pipe";
 import { UserService, CroisementService, BenevoleService, StandService, MailService, ConfigService, ExcelService, CreneauService, SMSService} from "../services";
 import { LoginComponent} from "../pages/login/login.component";
