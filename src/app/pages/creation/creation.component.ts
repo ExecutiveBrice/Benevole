@@ -12,16 +12,18 @@ import QRCode from 'qrcode'
 
 export class CreationComponent implements OnInit {
 
-
+  qrcode: Blob
+  using_address
+  managing_address
   evenement: Evenement = {
-    contactEmail : "machin@truncate.com",
-    contact : "Truc BIDUL",
-    contactTel : "06 00 00 00",
-    endDate : new Date(),
-    eventName : "Ma fête à moi",
-    id : 0,
-    password : "facil",
-    startDate : new Date()
+    contactEmail: "machin@truncate.com",
+    contact: "Truc BIDUL",
+    contactTel: "06 00 00 00",
+    endDate: new Date(),
+    eventName: "Ma fête à moi",
+    id: 0,
+    password: "facil",
+    startDate: new Date()
   };
   new: boolean;
   ok: boolean;
@@ -32,23 +34,34 @@ export class CreationComponent implements OnInit {
 
 
   ngOnInit() {
-// With promises
-QRCode.toDataURL('I am a pony!')
-  .then(url => {
-    console.log(url)
-  })
-  .catch(err => {
-    console.error(err)
-  })
+
     this.new = true;
     this.ok = true;
   }
 
 
   create(evenement: Evenement): void {
-    console.log("update")
+    this.new = false
+    this.ok = true
+    evenement.id = 486
+    this.using_address ="https://www.alod.fr/connexion/" + evenement.id
+      this.managing_address ="https://www.alod.fr/gestion/" + evenement.id
+      // With promises
+      QRCode.toDataURL(this.using_address)
+        .then(url => {
+          this.qrcode = url
+          console.log(url)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+
     this.configService.create(evenement).subscribe(data => {
       console.log(data)
+
+
+
+
     },
       error => {
         console.log('😢 Oh no!', error);

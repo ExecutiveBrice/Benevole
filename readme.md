@@ -1,11 +1,13 @@
-# Ouche Dinier Responsive Web App
+# Application Webb de Gestion de bénévole
 
-Front Angular 6
+Front Angular 10
+-Création d'évenement
 -Bénévole inscription
 -Gestion des bénévoles
+-Gestion des stands et crénaux
 -REST API
 
-Back ExpressJS
+Back ExpressJS (passe plat)
 -sequelize pour la liaison BDD
 -nodemailer pour l'envoi de mail
 
