@@ -36,7 +36,8 @@
     </div>
   </div>
   <div class="col-sm-6">
-    Le nom de l'évènement, c'est le titre qui s'affichera en en-tête du site et, que les participants scanderont dans les rues !
+    Le nom de l'évènement, c'est le titre qui s'affichera en en-tête du site et, que les participants scanderont dans
+    les rues !
   </div>
 
 
@@ -47,7 +48,8 @@
       <div class="input-group-prepend">
         <span class="input-group-text">Début</span>
       </div>
-      <input type="date" [ngModel] ="evenement.startDate | date:'yyyy-MM-dd'" (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate">
+      <input type="date" [ngModel]="evenement.startDate | date:'yyyy-MM-dd'"
+        (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate">
     </div>
   </div>
   <div class="col-sm-6">
@@ -61,7 +63,8 @@
       <div class="input-group-prepend">
         <span class="input-group-text">Fin</span>
       </div>
-      <input type="date" [ngModel] ="evenement.endDate | date:'yyyy-MM-dd'" (ngModelChange)="evenement.endDate = $event" class="form-control" id="endDate">
+      <input type="date" [ngModel]="evenement.endDate | date:'yyyy-MM-dd'" (ngModelChange)="evenement.endDate = $event"
+        class="form-control" id="endDate">
     </div>
   </div>
   <div class="col-sm-6">
@@ -88,29 +91,49 @@
 
 
   <div class="col-sm-12 ">
-    <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide la création de mon
+    <button type="button" class="btn btn-block btn-danger" (click)="create(evenement)">Je valide la création de mon
       évenement</button>
   </div>
 
 </div>
 
 
+
+
+
 <div class="row" *ngIf="!new && ok">
   <div class="col-sm-12 ">
-    Le gestionnaire de l'évenement {{nom_evenement}} à bien été créé!
+    Le gestionnaire de l'évenement <strong>'{{evenement.eventName}}'</strong> à bien été créée!
+    <br />
+    <br />
+    <br />
   </div>
 
-  <div class="col-sm-12 ">
-    L'adresse d'utilisation est :
-    {{using_address}}
+  <div class="col-sm-6 ">
+    <u>L'adresse d'utilisation est :</u>
+    <br />
+    <a href="{{using_address}}">{{using_address}}</a>
+    <br />
+    <br />
+    <img src="{{qrcode}}" />
   </div>
-
-  <div class="col-sm-12 ">
-    L'adresse de gestion est :
-    {{managing_address}}
+  <div class="col-sm-6 ">
+    <u>L'adresse de gestion est :</u>
+    <br />
+    <a href="{{managing_address}}">{{managing_address}}</a>
   </div>
 
 </div>
+
+
+
+
+
+
+
+
+
+
 
 <div class="row" *ngIf="!new && !ok">
   <div class="col-sm-12 ">

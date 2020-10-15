@@ -16,7 +16,7 @@ export class ConfigService {
   }
 
   create(event:Evenement) {
-    return this.http.post(this.apiUrl + '/', event, {responseType: 'json'});
+    return this.http.post<number>(this.apiUrl + '/', event, {responseType: 'json'});
   }
 
   getParam(param:string) {
