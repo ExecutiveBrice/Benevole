@@ -1,33 +1,7 @@
-# Application Webb de Gestion de bénévole
 
-Front Angular 10
--Création d'évenement
--Bénévole inscription
--Gestion des bénévoles
--Gestion des stands et crénaux
--REST API
+http://localhost:8091/GestionBenevole/swagger-ui.html
+http://localhost:8091/GestionBenevole/v2/api-docs
+http://localhost:8091/GestionBenevole/#/connexion/5
+http://localhost:8091/GestionBenevole/#/creation
 
-Back ExpressJS (passe plat)
--sequelize pour la liaison BDD
--nodemailer pour l'envoi de mail
-
-BDD Postgres (addon heroku)
-
-DEV MOD
-git remote add origin https://github.com/ExecutiveBrice/GestionBenevole.git
-npm install //add dependencies
-ng build //build the Angular APP in the Dist folder
-node ./bin/www //run the full app (front and back)
-
-
-PROD MOD
-copy these files and folder from your DEV environment
-/bin
-/dist
-/server
-app.js
-... (à completer)
-do a "npm install compression"
-
-node ./bin/www //Pour lancement ponctuel (lié à la connexion)
-nohup node ./bin/www > output.log //Pour un lancement permanent (jusqu'au reboot)
+java -jar D:\Ionic\ouchedinier\serverPart\target\gestion_benevole.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///D:\Ionic\ouchedinier\serverPart\src\main\resources\application.yml
