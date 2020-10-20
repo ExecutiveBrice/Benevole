@@ -1,0 +1,26 @@
+<div class="col-sm-12 ">
+  <div class="input-group mb-3 input-group-lg">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Numeros : </span>
+    </div>
+    <input type="text" [(ngModel)]="sms.numeros" class="form-control" id="numeros">
+  </div>
+  <div class="input-group mb-3 input-group-lg">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Message : </span>
+    </div>
+    <input type="text" [(ngModel)]="sms.message" class="form-control" id="message">
+  </div>
+  <div class="input-group mb-3 input-group-lg">
+    <button type="button" class="btn btn-block btn-info" (click)="send(sms)">Envoyer</button>
+  </div>
+
+
+
+  <div class="col-sm-12">
+    Numero : Résultat
+  </div>
+  <div *ngFor="let sms of smsList " class="col-sm-12">
+    {{sms.numero}} : {{sms.resultat}}
+  </div>
+</div>
