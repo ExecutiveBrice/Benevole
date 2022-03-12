@@ -8,7 +8,7 @@ export class Evenement {
   startDate: Date;
   endDate: Date;
   password: string;
-
+  affiche:string | ArrayBuffer;
  
   rappelDate: Date;
   validation: string;

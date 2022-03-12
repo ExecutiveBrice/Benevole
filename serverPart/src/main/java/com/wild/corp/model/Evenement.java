@@ -36,6 +36,10 @@ public class Evenement {
     @Column(name = "RAPPEL_DATE")
     private Date rappelDate;
 
+    @Lob
+    @Column(name = "IMAGE")
+    private String affiche;
+
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
@@ -70,6 +74,14 @@ public class Evenement {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getAffiche() {
+        return affiche;
+    }
+
+    public void setAffiche(String affiche) {
+        this.affiche = affiche;
     }
 
     public String getContact() {

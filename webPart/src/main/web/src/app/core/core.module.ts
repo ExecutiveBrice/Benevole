@@ -7,9 +7,9 @@ import { OrderByPipe} from "../sort.pipe";
 import { ConfigService, ValidationService, TransmissionService, CroisementService, EvenementService, BenevoleService, StandService, MailService, ExcelService, CreneauService, SMSService} from "../services";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { GestionEvenementsComponent, ModalContent, ErrorComponent, InscriptionComponent, ConnexionComponent, GestionComponent, CreationComponent, GestionStandsComponent, GestionMajStandsComponent, GestionMajConfigComponent, GestionBenevolesComponent, GestionMajCreneauxComponent, GestionSMSComponent} from "../pages";
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 
-import { Ng2ImgMaxModule } from 'ng2-img-max';
 
 @NgModule({
   imports: [
@@ -17,7 +17,7 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    Ng2ImgMaxModule,
+    ImageCropperModule,
     NgbModule
   ],
   exports: [

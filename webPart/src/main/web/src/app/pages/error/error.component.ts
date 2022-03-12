@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
+
 @Component({
   selector: 'app-error',
   templateUrl: './error.component.html',
@@ -15,5 +16,7 @@ export class ErrorComponent {
     public sanitizer: DomSanitizer) {
 
   }
+
+
 
 }

@@ -17,7 +17,7 @@ public interface EvenementService {
 
     Evenement findById(Integer evenementId);
 
-
+    Evenement updateAffiche(Integer evenementId, String affiche);
 
     void deleteById(Integer evenementId);
 }

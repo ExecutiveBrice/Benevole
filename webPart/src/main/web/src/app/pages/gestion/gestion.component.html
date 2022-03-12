@@ -14,7 +14,7 @@
       <div class="col-sm-12 ">
             <div class="alert">
                   <strong>
-                       Gestion de l'evenement
+                        Gestion de l'evenement
                   </strong>
             </div>
       </div>
@@ -28,8 +28,9 @@
       </div>
 
       <div class="col-sm-3">
-            <button type="button" class="btn btn-block btn-success overflow-visibles" [ngClass]="{'btn-danger':evenement.lock}"
-                  (click)="updateBlocage()">Je clique pour<br />{{evenement.lock?'débloquer le site':'bloquer le site'}}</button>
+            <button type="button" class="btn btn-block btn-success overflow-visibles"
+                  [ngClass]="{'btn-danger':evenement.lock}" (click)="updateBlocage()">Je clique
+                  pour<br />{{evenement.lock?'débloquer le site':'bloquer le site'}}</button>
       </div>
       <div class="col-sm-3">
             <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
@@ -68,7 +69,7 @@
       <div class="col-sm-12 ">
             <div class="alert">
                   <strong>
-                       Parametrage de l'evenement
+                        Parametrage de l'evenement
                   </strong>
             </div>
       </div>
@@ -85,9 +86,22 @@
                   Infos</button>
       </div>
       <div class="col-sm-3">
-            <a href="{{using_address}}">    <img src="{{qrcode}}" /></a>
+            <a href="{{using_address}}"> <img src="{{qrcode}}" /></a>
       </div>
 
-      
+      <div class="col-12">
+            <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
+
+
+            <img class="container" *ngIf="evenement.affiche" [src]="evenement.affiche" alt="Affiche">
+
+
+            <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="3 / 1"
+                  [resizeToWidth]="640" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                  (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+            </image-cropper>
+            <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Valider cette
+                  image</button>
+      </div>
 
 </div>

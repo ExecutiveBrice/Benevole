@@ -38,6 +38,13 @@ public class EvenementController {
         return new ResponseEntity<>(evenement, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/updateAffiche", method = RequestMethod.PUT)
+    public ResponseEntity<Evenement> updateAffiche(@RequestParam Integer id, @RequestBody String affiche) {
+        logger.debug("updateAffiche Evenement");
+        Evenement evenement = evenementService.updateAffiche(id, affiche);
+        return new ResponseEntity<>(evenement, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<Evenement> update(@RequestBody Evenement evenement) {
@@ -47,10 +54,10 @@ public class EvenementController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<Integer> delete(@RequestParam Integer id) {
+    public ResponseEntity<?> delete(@RequestParam Integer id) {
         logger.debug("delete Evenement");
         evenementService.deleteById(id);
-        return new ResponseEntity<>(id, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 

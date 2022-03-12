@@ -89,5 +89,14 @@ public class BenevoleController {
         return new ResponseEntity<>(benevoles, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/deleteById", method = RequestMethod.DELETE)
+    public ResponseEntity<?> getAll(@RequestParam Integer benevoleId) {
+        logger.debug("deleteById Benevole");
+        benevoleService.deleteById(benevoleId);
+
+        return new ResponseEntity<>( HttpStatus.OK);
+    }
+
+
 
 }

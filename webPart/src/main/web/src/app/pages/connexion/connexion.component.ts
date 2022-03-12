@@ -1,11 +1,11 @@
 
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, BenevoleService, EvenementService } from '../../services';
+import { TransmissionService, ValidationService, BenevoleService, EvenementService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TransmissionService } from 'src/app/services/transmission.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-connexion',
@@ -14,7 +14,7 @@ import { TransmissionService } from 'src/app/services/transmission.service';
 })
 
 export class ConnexionComponent implements OnInit {
-
+  evenement: Evenement;
   organumber: number;
   new: boolean;
   validation: boolean;
@@ -33,16 +33,23 @@ export class ConnexionComponent implements OnInit {
     public validationService: ValidationService,
     public sanitizer: DomSanitizer) { }
 
-
+    subscription = new Subscription();
   ngOnInit() {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
     this.validationService.testCommun(this.organumber)
-
+    this.evenement = new Evenement();
     this.benevole = new Benevole();
     this.validation = false;
     this.exist = false;
     this.nouveau = false;
     this.new = true;
+
+    this.subscription = this.transmissionService.dataStream.subscribe(
+      data => {
+        console.log(data)
+        this.evenement = data
+      });
+
   }
 
 

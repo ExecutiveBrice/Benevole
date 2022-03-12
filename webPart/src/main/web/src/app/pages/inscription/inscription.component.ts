@@ -149,20 +149,13 @@ export class InscriptionComponent implements OnInit {
           if (croisements != null) {
             stand.croisements = croisements
 
-
-
             if (stand.type == 2 || stand.type == 3) {
-
-
               stand.croisements.forEach(croisement => {
                 if (croisement.besoin == true) {
-
                   this.besoins.push(croisement);
                 }
                 croisement.stand = stand
               })
-
-
               this.stands.push(stand)
               console.log("stands")
               console.log(this.stands)
@@ -175,7 +168,6 @@ export class InscriptionComponent implements OnInit {
                 croisement.stand = stand
                 this.sansChoix.push(croisement)
               })
-
               console.log("sansChoix")
               console.log(this.sansChoix)
 
@@ -185,9 +177,8 @@ export class InscriptionComponent implements OnInit {
                   this.besoins.push(croisement);
                 }
                 croisement.stand = stand
-                this.preparatifs.push(stand)
               })
-
+              this.preparatifs.push(stand)
               console.log("preparatifs")
               console.log(this.preparatifs)
 
@@ -197,25 +188,17 @@ export class InscriptionComponent implements OnInit {
                   this.besoins.push(croisement);
                 }
                 croisement.stand = stand
-                this.postparatifs.push(stand)
               })
-
+              this.postparatifs.push(stand)
               console.log("postparatifs")
               console.log(this.postparatifs)
+
             }
-
           }
-
         },
           error => {
             console.log('😢 Oh no!', error);
           });
-
-
-
-
-
-
       })
     },
       error => {

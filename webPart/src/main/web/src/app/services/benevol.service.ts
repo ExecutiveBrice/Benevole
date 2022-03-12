@@ -29,6 +29,10 @@ export class BenevoleService {
     return this.http.get<Benevole[]>(this.apiUrl + '/getWithOutChoice', { params, responseType: 'json' });
   }
 
+  deleteById(benevoleId: number) {
+    let params = new HttpParams().set('benevoleId', '' + benevoleId + '');
+    return this.http.delete<void>(this.apiUrl + '/deleteById', { params, responseType: 'json' });
+  }
 
   getByMail(email: String, eventId: number) {
     let params = new HttpParams().set('email', '' + email + '').set('eventId', '' + eventId + '');

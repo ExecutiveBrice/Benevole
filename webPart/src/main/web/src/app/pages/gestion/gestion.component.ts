@@ -6,7 +6,7 @@ import { Benevole, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
-
+import { ImageCroppedEvent } from 'ngx-image-cropper';
 
 
 
@@ -98,6 +98,39 @@ export class GestionComponent implements OnInit {
     this.getBenevoles();
   }
 
+
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+
+  fileChangeEvent(event: any): void {
+    console.log("fileChangeEvent")
+    this.imageChangedEvent = event;
+  }
+  imageCropped(event: ImageCroppedEvent) {
+    console.log(event)
+    this.croppedImage = event.base64;
+  }
+  imageLoaded() {
+    /* show cropper */
+  }
+  cropperReady() {
+    /* cropper ready */
+  }
+  loadImageFailed() {
+    /* show message */
+  }
+  uploadImage(croppedImage: any) {
+console.log(croppedImage)
+    this.evenement.affiche = croppedImage
+
+    this.evenementService.updateAffiche(this.evenement.id, croppedImage).subscribe(data => {
+      this.evenement = data;
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+  
 
 
 
@@ -240,24 +273,25 @@ export class GestionComponent implements OnInit {
           benevole.croisements = []
           this.croisementService.getByBenevole(benevole.id).subscribe(croisements => {
             console.log(croisements)
+            if (croisements != null) {
+              benevole.croisements = croisements
 
-            benevole.croisements = croisements
-
-            if (benevole.croisements.length > 0) {
-              this.benevolesWithChoice.push(benevole);
+              if (benevole.croisements.length > 0) {
+                this.benevolesWithChoice.push(benevole);
+              }
+              if (benevole.croisements.length == 0) {
+                this.benevolesWithoutChoice.push(benevole);
+              }
+              if (benevole.croisements) {
+                benevole.croisements.forEach(croisement => {
+                  if (croisement.stand.type == 1 || croisement.stand.type == 3) {
+                    this.benevolesToChange.push(benevole);
+                  }
+                });
+              }
+            }else{
+                this.benevolesWithoutChoice.push(benevole);
             }
-            if (benevole.croisements.length == 0) {
-              this.benevolesWithoutChoice.push(benevole);
-            }
-            if (benevole.croisements) {
-              benevole.croisements.forEach(croisement => {
-                if (croisement.stand.type == 1 || croisement.stand.type == 3) {
-                  this.benevolesToChange.push(benevole);
-                }
-              });
-            }
-
-
           },
             error => {
               console.log('😢 Oh no!', error);
@@ -313,5 +347,7 @@ export class GestionComponent implements OnInit {
   toggleVisibility(e) {
     this.rappel = e.target.checked;
   }
+
+  
 
 }

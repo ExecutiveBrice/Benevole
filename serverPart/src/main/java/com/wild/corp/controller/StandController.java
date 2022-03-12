@@ -27,12 +27,12 @@ public class StandController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<Integer> delete(@RequestParam Integer standId) {
+    public ResponseEntity<?> delete(@RequestParam Integer standId) {
         logger.debug("delete standId " +standId);
         standService.delete(standId);
 
 
-        return new ResponseEntity<>(standId, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)

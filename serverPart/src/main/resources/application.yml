@@ -48,5 +48,5 @@ appparam :
       title: "Création de l'evenement <event_name>"
       header: "Le gestionnaire de l'évenement <strong><event_name></strong> à bien été créée!<br /><br /><br />"
       using: "<u>L'adresse d'utilisation est :</u><br /><a href=\"<using_address>\"><using_address></a><br /><br />"
-      managing: "<u>L'adresse de gestpour modifier vos choixion est :</u><br /><a href=\"<managing_address>\"><managing_address></a>"
+      managing: "<u>L'adresse de gestion pour modifier vos choixion est :</u><br /><a href=\"<managing_address>\"><managing_address></a>"
       signature: "<br /><br />Cordialement,<br />L'équipe d'animation de l'ALOD"

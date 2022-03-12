@@ -23,6 +23,10 @@ export class EvenementService {
   update(creneau:Evenement) {
     return this.http.put<Evenement>(this.apiUrl + '/', creneau, {responseType: 'json'});
   }
+  updateAffiche(id:number, affiche:string) {
+    let params = new HttpParams().set('id', ''+id+'');
+    return this.http.put<Evenement>(this.apiUrl + '/updateAffiche', affiche, {params, responseType: 'json'});
+  }
   delete(creneau:Evenement) {
     let params = new HttpParams().set('id', ''+creneau.id+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});

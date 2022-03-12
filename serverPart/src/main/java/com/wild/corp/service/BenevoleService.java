@@ -28,4 +28,6 @@ public interface BenevoleService {
     List<Benevole> findAll();
 
     Benevole findById(Integer benevoleId);
+
+    void deleteById(Integer benevoleId);
 }

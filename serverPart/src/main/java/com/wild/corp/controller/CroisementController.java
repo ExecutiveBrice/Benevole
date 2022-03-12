@@ -38,11 +38,11 @@ public class CroisementController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<Integer> delete(@RequestParam Integer croisementId) {
+    public ResponseEntity<?> delete(@RequestParam Integer croisementId) {
         logger.debug("delete standId "+croisementId);
         croisementService.delete(croisementId);
 
-        return new ResponseEntity<>(croisementId, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)

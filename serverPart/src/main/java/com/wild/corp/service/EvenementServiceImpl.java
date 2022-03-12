@@ -41,7 +41,7 @@ public class EvenementServiceImpl implements EvenementService {
 
         evenement.setLock(Boolean.valueOf(environment.getRequiredProperty("evenement.default.lock")));
         evenement.setValidation(environment.getRequiredProperty("evenement.default.messages.validation"));
-        evenement.setRetour(environment.getRequiredProperty("evenement.default.messages.retour"));
+        evenement.setRetour(environment.getRequiredProperty("evenement.default.messages.retour").replaceAll("<using_address>", "https://alod.fr/GestionBenevole/#/connexion/"+String.valueOf(evenement.getId()) ));
         evenement.setSignature(environment.getRequiredProperty("appparam.messages.creation.signature"));
 
         evenement.setRappel(replaceText(environment.getRequiredProperty("evenement.default.messages.rappel"), evenement));
@@ -60,7 +60,6 @@ public class EvenementServiceImpl implements EvenementService {
     }
 
     String replaceText(String text, Evenement evenement){
-
         text = text.replaceAll("<start_date>", String.valueOf(evenement.getStartDate()) );
         text = text.replaceAll("<event_name>", String.valueOf(evenement.getEventName()) );
 
@@ -91,7 +90,13 @@ public class EvenementServiceImpl implements EvenementService {
 
         return evenementRepository.save(event);
     }
-
+    @Override
+    public Evenement updateAffiche(Integer evenementId, String affiche) {
+logger.debug(affiche);
+        Evenement event = findById(evenementId);
+        event.setAffiche(affiche);
+        return evenementRepository.save(event);
+    }
 
     /**
      * {@inheritDoc}

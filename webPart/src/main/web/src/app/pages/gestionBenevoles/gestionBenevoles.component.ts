@@ -67,18 +67,20 @@ export class GestionBenevolesComponent implements OnInit {
   find(): void {
     this.benevoleService.getByEvenementId(this.organumber).subscribe(benevoles => {
       console.log(benevoles)
-      this.benevoles = benevoles;
+      if (benevoles != null) {
+        this.benevoles = benevoles;
 
-      benevoles.forEach(benevole => {
-        benevole.croisements = []
-        this.croisementService.getByBenevole(benevole.id).subscribe(croisements => {
-          console.log(croisements)
-          benevole.croisements = croisements
-        },
-          error => {
-            console.log('😢 Oh no!', error);
-          });
-      });
+        benevoles.forEach(benevole => {
+          benevole.croisements = []
+          this.croisementService.getByBenevole(benevole.id).subscribe(croisements => {
+            console.log(croisements)
+            benevole.croisements = croisements
+          },
+            error => {
+              console.log('😢 Oh no!', error);
+            });
+        });
+      }
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -173,6 +175,16 @@ export class GestionBenevolesComponent implements OnInit {
     this.mailService.sendMail(email)
       .subscribe(res => {
         console.log("this.api.sendMail");
+        console.log(res);
+      }, err => {
+        console.log(err);
+      });
+  }
+
+  delete(benevoleId: number) {
+    this.benevoleService.deleteById(benevoleId)
+      .subscribe(res => {
+        this.benevoles = this.benevoles.filter(benevole => benevole.id != benevoleId)
         console.log(res);
       }, err => {
         console.log(err);
