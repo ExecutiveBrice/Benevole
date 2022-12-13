@@ -12,9 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Controller de la vue globale
- */
 @RestController
 @RequestMapping("/email")
 public class mailController {

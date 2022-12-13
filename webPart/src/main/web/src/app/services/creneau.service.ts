@@ -23,7 +23,7 @@ export class CreneauService {
     return this.http.put(this.apiUrl + '/', creneau, { responseType: 'json'});
   }
   delete(creneau:Creneau) {
-    let params = new HttpParams().set('id', ''+creneau.id+'');
+    let params = new HttpParams().set('creneauId', ''+creneau.id+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
   }
   

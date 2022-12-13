@@ -8,12 +8,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Column;
+import javax.persistence.Lob;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Classe implémentant les services IG
- */
 @Service("ConfigService")
 @Transactional
 public class ConfigServiceImpl implements ConfigService {
@@ -24,8 +23,6 @@ public class ConfigServiceImpl implements ConfigService {
     private EvenementRepository evenementRepository;
     @Autowired
     private Environment environment;
-
-
 
     @Override
     public Map<String, String> getParams() {

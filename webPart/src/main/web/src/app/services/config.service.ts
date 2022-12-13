@@ -22,7 +22,6 @@ export class ConfigService {
 
     while(text.match("<using_address>")){
       text= text.replace("<using_address>",using_address)
-      console.log(text.match("<using_address>"))
     }
 
     while(text.match("<managing_address>")){

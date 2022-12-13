@@ -40,6 +40,14 @@ public class Evenement {
     @Column(name = "IMAGE")
     private String affiche;
 
+
+    @Column(name = "SITEPERSOURL")
+    private String sitepersourl;
+
+    @Lob
+    @Column(name = "SITEPERSOLOGO")
+    private String sitepersologo;
+
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
@@ -82,6 +90,22 @@ public class Evenement {
 
     public void setAffiche(String affiche) {
         this.affiche = affiche;
+    }
+
+    public String getSitepersourl() {
+        return sitepersourl;
+    }
+
+    public void setSitepersourl(String sitepersourl) {
+        this.sitepersourl = sitepersourl;
+    }
+
+    public String getSitepersologo() {
+        return sitepersologo;
+    }
+
+    public void setSitepersologo(String sitepersologo) {
+        this.sitepersologo = sitepersologo;
     }
 
     public String getContact() {

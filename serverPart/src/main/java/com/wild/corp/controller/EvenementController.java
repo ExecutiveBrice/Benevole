@@ -1,6 +1,5 @@
 package com.wild.corp.controller;
 
-
 import com.wild.corp.model.Evenement;
 import com.wild.corp.service.EvenementService;
 import org.slf4j.Logger;
@@ -12,9 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Controller de la vue globale
- */
 @RestController
 @RequestMapping("/evenement")
 public class EvenementController {
@@ -23,8 +19,6 @@ public class EvenementController {
 
     @Autowired
     private EvenementService evenementService;
-
-
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Evenement> add(@RequestBody Evenement evenement) {
@@ -45,7 +39,6 @@ public class EvenementController {
         return new ResponseEntity<>(evenement, HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<Evenement> update(@RequestBody Evenement evenement) {
         logger.debug("update Evenement");
@@ -60,7 +53,6 @@ public class EvenementController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/getById", method = RequestMethod.GET)
     public ResponseEntity<Evenement> getById(@RequestParam Integer id) {
         logger.debug("getById Evenement id "+id);
@@ -74,7 +66,6 @@ public class EvenementController {
         return new ResponseEntity<>(evenement, HttpStatus.OK);
     }
 
-
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
     public ResponseEntity<List<Evenement>> getAll() {
         logger.debug("getAll Evenement");
@@ -87,5 +78,38 @@ public class EvenementController {
         return new ResponseEntity<>(evenements, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/isAuthorize", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> authorize(@RequestParam Integer id, @RequestParam String password) {
+        logger.debug("authorize Evenement");
+        Boolean authorisation = evenementService.authorize(id, password);
+        return new ResponseEntity<>(authorisation, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/isOpen", method = RequestMethod.GET)
+    public ResponseEntity<Boolean> authorize(@RequestParam Integer id) {
+        logger.debug("isOpen Evenement");
+        Boolean isOpen = evenementService.isOpen(id);
+        return new ResponseEntity<>(isOpen, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getAffiche", method = RequestMethod.GET)
+    public ResponseEntity<String> getAffiche(@RequestParam Integer id) {
+        logger.debug("getAffiche Evenement");
+        String affiche = evenementService.getAffiche(id);
+        return new ResponseEntity<>(affiche, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getLogo", method = RequestMethod.GET)
+    public ResponseEntity<String> getLogo(@RequestParam Integer id) {
+        logger.debug("getLogo Evenement");
+        String affiche = evenementService.getLogo(id);
+        return new ResponseEntity<>(affiche, HttpStatus.OK);
+    }
+    @RequestMapping(value = "/opening", method = RequestMethod.PUT)
+    public ResponseEntity<Boolean> updateOpening(@RequestParam Integer id) {
+        logger.debug("update opening Evenement");
+        Boolean isOpen =  evenementService.updateOpening(id);
+        return new ResponseEntity<>(isOpen, HttpStatus.OK);
+    }
 
 }

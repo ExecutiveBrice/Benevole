@@ -1,107 +1,119 @@
-<div class="row">
-      <div class="col-sm-12 ">
-            <div class="alert alert-success">
-                  <strong>
-                        {{benevoles.length}} bénévoles inscrits /
-                        {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi /
-                        {{benevolesToChange.length}} bénévoles à positionner
-                  </strong>
-            </div>
+<div *ngIf="!authorize" class="row">
+  <div class="col-sm-6">
+    <div class="input-group mb-3 ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Mot de passe</span>
       </div>
+      <input type="text" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="input-group mb-3 ">
+      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
+        Valider</button>
+    </div>
+  </div>
 </div>
 
-<div class="row">
-      <div class="col-sm-12 ">
-            <div class="alert">
-                  <strong>
-                        Gestion de l'evenement
-                  </strong>
-            </div>
-      </div>
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block" [routerLink]="['/gestionbenevoles/', organumber]">Gestion des
-                  Bénévoles</button>
-      </div>
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block" [routerLink]="['/gestionstands/', organumber]">Gestion des
-                  Stands</button>
-      </div>
 
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block btn-success overflow-visibles"
-                  [ngClass]="{'btn-danger':evenement.lock}" (click)="updateBlocage()">Je clique
-                  pour<br />{{evenement.lock?'débloquer le site':'bloquer le site'}}</button>
-      </div>
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
-      </div>
-      <div class="col-sm-12">
-            <button type="button" class="btn btn-block" (click)="mail = !mail">Envoi de mails</button>
-      </div>
-
-      <div *ngIf="mail" class="form-group col-sm-12 ">
-
-            <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
-                  <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
-                  </option>
-            </select>
-
-            <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
-            <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
-
-            <div class="checkbox">
-                  <label><input type="checkbox" [(ngModel)]="theCheckbox" (change)="toggleVisibility($event)">Rappel des
-                        choix des inscrits</label>
-            </div>
-
-            <button type="button" class="btn btn-block" (click)="envoiMail(emailInfo)">
-                  Envoyer ce message à la liste choisi</button>
-      </div>
-
-
-
-
-
-
+<div *ngIf="authorize" class="row">
+  <div class="col-sm-12 ">
+    <div class="alert alert-success">
+      <strong>
+        {{benevoles.length}} bénévoles inscrits /
+        {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi /
+        {{benevolesToChange.length}} bénévoles à positionner
+      </strong>
+    </div>
+  </div>
 </div>
 
-<div class="row">
-      <div class="col-sm-12 ">
-            <div class="alert">
-                  <strong>
-                        Parametrage de l'evenement
-                  </strong>
-            </div>
-      </div>
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block" [routerLink]="['/gestionmajstands/', organumber]">Maj des
-                  Stands</button>
-      </div>
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block" [routerLink]="['/gestionmajcreneaux/', organumber]">Maj des
-                  Creneaux</button>
-      </div>
-      <div class="col-sm-3">
-            <button type="button" class="btn btn-block" [routerLink]="['/gestionmajconfig/', organumber]">Maj des
-                  Infos</button>
-      </div>
-      <div class="col-sm-3">
-            <a href="{{using_address}}"> <img src="{{qrcode}}" /></a>
-      </div>
+<div *ngIf="authorize" class="row">
+  <div class="col-sm-12 ">
+    <div class="alert">
+      <strong>
+        Gestion de l'evenement
+      </strong>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionbenevoles/', organumber]">Gestion des
+      Bénévoles</button>
+  </div>
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionstands/', organumber]">Gestion des
+      Stands</button>
+  </div>
 
-      <div class="col-12">
-            <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block btn-success overflow-visibles" [ngClass]="{'btn-danger':evenement.lock}"
+      (click)="updateBlocage()">Je clique
+      pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
+  </div>
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
+  </div>
+  <div class="col-sm-12">
+    <button type="button" class="btn btn-block" (click)="mail = !mail">Envoi de mails</button>
+  </div>
+
+  <div *ngIf="mail" class="form-group col-sm-12 ">
+
+    <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
+      <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
+      </option>
+    </select>
+
+    <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
+    <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
+
+    <div class="checkbox">
+      <label><input type="checkbox" [(ngModel)]="theCheckbox" (change)="toggleVisibility($event)">Rappel des
+        choix des inscrits</label>
+    </div>
+
+    <button type="button" class="btn btn-block" (click)="envoiMail(emailInfo)">
+      Envoyer ce message à la liste choisi</button>
+  </div>
+</div>
+
+<div *ngIf="authorize" class="row">
+  <div class="col-sm-12 ">
+    <div class="alert">
+      <strong>
+        Parametrage de l'evenement
+      </strong>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajstands/', organumber]">Maj des
+      Stands</button>
+  </div>
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajcreneaux/', organumber]">Maj des
+      Creneaux</button>
+  </div>
+  <div class="col-sm-3">
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajconfig/', organumber]">Maj des
+      Infos</button>
+  </div>
+  <div class="col-sm-3">
+    <a href="{{using_address}}"> <img src="{{qrcode}}" /></a>
+  </div>
+
+  <div class="col-12">
+    <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
 
 
-            <img class="container" *ngIf="evenement.affiche" [src]="evenement.affiche" alt="Affiche">
+    <img class="container" *ngIf="evenement.affiche" [src]="evenement.affiche" alt="Affiche">
 
 
-            <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="3 / 1"
-                  [resizeToWidth]="640" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
-                  (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-            </image-cropper>
-            <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Valider cette
-                  image</button>
-      </div>
+    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="3 / 1"
+      [resizeToWidth]="640" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+    </image-cropper>
+    <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Valider cette
+      image</button>
+  </div>
 
 </div>

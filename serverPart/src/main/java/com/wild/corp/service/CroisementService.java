@@ -5,9 +5,6 @@ package com.wild.corp.service;
 import com.wild.corp.model.Croisement;
 import java.util.List;
 
-/**
- * Classe des services portant sur les IG
- */
 public interface CroisementService {
 
     void persist(Croisement croisement);

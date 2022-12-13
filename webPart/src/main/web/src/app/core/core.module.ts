@@ -6,7 +6,7 @@ import { FormsModule} from "@angular/forms";
 import { OrderByPipe} from "../sort.pipe";
 import { ConfigService, ValidationService, TransmissionService, CroisementService, EvenementService, BenevoleService, StandService, MailService, ExcelService, CreneauService, SMSService} from "../services";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { GestionEvenementsComponent, ModalContent, ErrorComponent, InscriptionComponent, ConnexionComponent, GestionComponent, CreationComponent, GestionStandsComponent, GestionMajStandsComponent, GestionMajConfigComponent, GestionBenevolesComponent, GestionMajCreneauxComponent, GestionSMSComponent} from "../pages";
+import { GestionEvenementsComponent, ErrorComponent, InscriptionComponent, ConnexionComponent, GestionComponent, CreationComponent, GestionStandsComponent, GestionMajStandsComponent, GestionMajConfigComponent, GestionBenevolesComponent, GestionMajCreneauxComponent, GestionSMSComponent} from "../pages";
 import { ImageCropperModule } from 'ngx-image-cropper';
 
 
@@ -48,7 +48,6 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     GestionMajConfigComponent,
     GestionEvenementsComponent,
     ErrorComponent,
-    ModalContent,
     OrderByPipe
   ]
 })

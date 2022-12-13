@@ -34,8 +34,6 @@ import javax.mail.internet.MimeMessage;
         } catch (MailException e) {
             logger.debug("send mail " + e);
         }
-
-
     }
 
     public void sendSimpleMessage(Email mail) {
@@ -53,8 +51,6 @@ import javax.mail.internet.MimeMessage;
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-
 
         try {
             emailSender.send(message);

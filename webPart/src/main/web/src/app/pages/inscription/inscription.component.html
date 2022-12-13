@@ -28,7 +28,7 @@
           Choisissez en une autre ;)
         </div>
       </div>
-      <div class="col-sm-12" *ngIf="preparatifs.length > 0">
+      <div class="col-sm-12" *ngIf="preparatifs && preparatifs.length > 0">
         <div class="row bordered">
 
           <div class="col-sm-12 " >
@@ -63,7 +63,7 @@
 
       <div class="col-sm-12">
         <div class="row bordered">
-          <div *ngIf="stands.length > 0" class="col-sm-12 ">
+          <div *ngIf="stands && stands.length > 0" class="col-sm-12 ">
             <button type="button" class="btn btn-block btn-info" (click)="choix = 'stand'">Je préfère choisir mon
               stand</button>
           </div>
@@ -93,7 +93,7 @@
 
 
 
-          <div *ngIf="sansChoix.length > 0" class="col-sm-12 ">
+          <div *ngIf="sansChoix && sansChoix.length > 0" class="col-sm-12 ">
             <button type="button" class="btn btn-block btn-info" (click)="choix = 'heure'">Le stand m'est égal mais je
               suis disponible à :</button>
           </div>
@@ -110,7 +110,7 @@
           </div>
 
 
-          <div *ngIf="besoins.length > 0" class="col-sm-12 ">
+          <div *ngIf="besoins && besoins.length > 0" class="col-sm-12 ">
             <button type="button" class="btn btn-block btn-info" (click)="choix = 'besoin'">Là où vous en avez
               besoin</button>
           </div>
@@ -135,7 +135,7 @@
         </div>
       </div>
 
-      <div class="col-sm-12 " *ngIf="postparatifs.length > 0">
+      <div class="col-sm-12 " *ngIf="postparatifs && postparatifs.length > 0">
         <div class="row bordered">
           <div class="col-sm-12 " >
             <button type="button" class="btn btn-block btn-info" (click)="choix = 'postparatifs'">Les postparatifs
@@ -210,12 +210,12 @@
           <br>(si vous êtes plusieurs, précisez le dans le commentaire).
         </div>
 
-        <div *ngIf="benevole.croisements != undefined && benevole.croisements.length == 0" class="alert alert-success">
+        <div *ngIf="benevole && benevole.croisements != undefined && benevole.croisements.length == 0" class="alert alert-success">
           <strong>Pour ajouter un moment de bénévolat :</strong><br>
           Cliquez sur les choix à droite puis choisissez le créneau qui vous convient.<br>
           Vous pouvez bien évidement en choisir plusieurs
         </div>
-        <div *ngIf="benevole.croisements != undefined && benevole.croisements.length > 0">
+        <div *ngIf="benevole && benevole.croisements != undefined && benevole.croisements.length > 0">
           <div *ngFor="let croisement of benevole.croisements | orderBy:'creneau.ordre':false" class="col-md-12">
             <i class="fa fa-trash" (click)="choisir(croisement)"></i>
             {{croisement.creneau.plage}} :
@@ -224,13 +224,13 @@
         </div>
       </div>
 
-      <div class="col-sm-12 ">
+      <div *ngIf="benevole" class="col-sm-12 ">
         <h4>Commentaire :</h4>
         <textarea rows="3" [(ngModel)]="benevole.commentaire" class="form-control">
             </textarea>
       </div>
 
-      <div *ngIf="benevole.reponse" class="col-sm-12 ">
+      <div *ngIf="benevole && benevole.reponse" class="col-sm-12 ">
         <h4>Reponse :</h4>
         <input type="text" [(ngModel)]="benevole.reponse" readonly class="form-control">
       </div>

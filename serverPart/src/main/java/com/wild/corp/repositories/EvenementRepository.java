@@ -4,14 +4,11 @@ package com.wild.corp.repositories;
 
 import com.wild.corp.model.Evenement;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
-/**
- * Classe d'encapsulation de la couche DAO PM
- */
 @Repository
 public interface EvenementRepository extends JpaRepository<Evenement, Integer> {
 

@@ -13,8 +13,18 @@ export class TransmissionService {
   dataStream = this.dataSource.asObservable();
 
   // Service message commands
-  dataTransmission(event: Evenement) {
-    this.dataSource.next(event);
+  dataTransmission(evenement: Evenement) {
+    this.dataSource.next(evenement);
   }
 
+  // Observable string sources
+  private idSource = new Subject<number>();
+
+  // Observable string streams
+  numberStream = this.idSource.asObservable();
+
+  // Service message commands
+  numberTransmission(number: number) {
+    this.idSource.next(number);
+  }
 }

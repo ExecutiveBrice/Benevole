@@ -13,16 +13,15 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication(scanBasePackages={"com.wild.corp"})// same as @Configuration @EnableAutoConfiguration @ComponentScan
 public class RunWebApp {
 
-
-	public static void main(String[] args) {
+public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication(RunWebApp.class);
 		springApplication.addListeners(new ApplicationPidFileWriter("gestion_benevole.pid"));
 		springApplication.run(args);
 	}
 
-
 	@PostConstruct
 	private void init() {
+
 
 	}
 }

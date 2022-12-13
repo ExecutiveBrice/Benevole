@@ -1,9 +1,10 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark ">
-  <a href="https://www.alod.fr" class="navbar-left"><img src="https://www.alod.fr/wp-content/uploads/2021/04/cropped-200000033.png"></a>
+  <a href="evenement.sitepersourl" class="navbar-left"> <img class="container" *ngIf="evenement.sitepersologo" [src]="evenement.sitepersologo" alt="logo"></a>
+  <a href="https://alod.fr" class="navbar-left"> <img class="container" *ngIf="!evenement.sitepersologo" src="assets/logo.png" alt="lossgo"></a>
 
   <div class="mx-auto flex-column" id="navbar">
     <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
-      <li class="nav-item gros_titre">
+      <li *ngIf="evenement != undefined" class="nav-item gros_titre">
         {{evenement.eventName}}
       </li>
     </ul>
@@ -20,7 +21,7 @@
 </div>
 <nav *ngIf="canSendAlerte" class="navbar navbar-expand-md bg-dark navbar-dark">
 
-  <div class="navbar-expand m-auto navbar-text">
+  <div *ngIf="evenement != undefined" class="navbar-expand m-auto navbar-text">
     {{evenement.contact}} - {{evenement.contactTel}} - {{evenement.contactEmail}}
   </div>
 

@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 
-/**
- * Classe implémentant les services IG
- */
 @Service("CroisementService")
 @Transactional
 public class CroisementServiceImpl implements CroisementService {
@@ -29,19 +26,11 @@ public class CroisementServiceImpl implements CroisementService {
         croisementRepository.save(croisement);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Croisement> findByEtatAndEvenementId(Integer etat, Integer eventId) {
         return croisementRepository.findByStandTypeAndStandEvenementId(etat, eventId);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void delete(Integer croisementId) {
         Croisement croisement = findById(croisementId);
@@ -50,50 +39,31 @@ public class CroisementServiceImpl implements CroisementService {
         croisementRepository.delete(croisement);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Croisement findById(Integer croisementId){
         return croisementRepository.findAllById(croisementId).get(0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Croisement> getCroisementByStand(Integer standId){
         return croisementRepository.findByStandId(standId);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Croisement> getCroisementByEvenement(Integer evenementId){
         return croisementRepository.findByStandEvenementId(evenementId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Croisement> getCroisementByCreneau(Integer creneauId){
         return croisementRepository.findByCreneauId(creneauId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Croisement> getCroisementByBenveole(Integer benevoleId){
         return croisementRepository.findByBenevolesId(benevoleId);
     }
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public List<Croisement> findAll() {
         return croisementRepository.findAll();

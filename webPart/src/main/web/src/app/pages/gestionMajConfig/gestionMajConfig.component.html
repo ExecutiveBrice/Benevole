@@ -1,4 +1,21 @@
-<div class="row">
+<div *ngIf="!authorize" class="row">
+  <div class="col-sm-6">
+    <div class="input-group mb-3 ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Mot de passe</span>
+      </div>
+      <input type="text" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="input-group mb-3 ">
+      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
+        Valider</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="authorize && evenement != undefined" class="row">
 
   <div class="col-sm-12">
     <div class="input-group mb-3 input-group-lg">
@@ -71,14 +88,14 @@
       <div class="input-group-prepend">
         <span class="input-group-text">password</span>
       </div>
-      <input type="text" [(ngModel)]="evenement.password" class="form-control" id="password">
+      <input type="text" [(ngModel)]="evenement.password" class="form-control" id="evenementpassword">
     </div>
   </div>
 
   <div class="col-sm-12">
     <div class="input-group mb-3 input-group-lg">
       <span class="input-group-text">validation</span>
-      <textarea [(ngModel)]="evenement.validation" id="w3review" name="w3review" rows="4" cols="100">
+      <textarea [(ngModel)]="evenement.validation" id="validation" name="w3review" rows="4" cols="100">
        {{evenement.validation}}
         </textarea>
     </div>
@@ -87,7 +104,7 @@
   <div class="col-sm-12">
     <div class="input-group mb-3 input-group-lg">
       <span class="input-group-text">retour</span>
-      <textarea [(ngModel)]="evenement.retour" id="w3review" name="w3review" rows="4" cols="100">
+      <textarea [(ngModel)]="evenement.retour" id="retour" name="w3review" rows="4" cols="100">
         {{evenement.retour}}
          </textarea>
     </div>
@@ -96,7 +113,7 @@
   <div class="col-sm-12">
     <div class="input-group mb-3 input-group-lg">
       <span class="input-group-text">signature</span>
-      <textarea [(ngModel)]="evenement.signature" id="w3review" name="w3review" rows="4" cols="100">
+      <textarea [(ngModel)]="evenement.signature" id="signature" name="w3review" rows="4" cols="100">
         {{evenement.signature}}
          </textarea>
     </div>
@@ -105,10 +122,32 @@
   <div class="col-sm-12">
     <div class="input-group mb-3 input-group-lg">
       <span class="input-group-text">rappel</span>
-      <textarea [(ngModel)]="evenement.rappel" id="w3review" name="w3review" rows="4" cols="100">
+      <textarea [(ngModel)]="evenement.rappel" id="rappel" name="w3review" rows="4" cols="100">
         {{evenement.rappel}}
          </textarea>
     </div>
+  </div>
+
+  <div class="col-sm-12">
+    <div class="input-group mb-3 input-group-lg">
+      <span class="input-group-text">url site perso</span>
+        <input type="text" [(ngModel)]="evenement.sitepersourl" class="form-control" id="siteperso">
+    </div>
+  </div>
+
+  <div class="col-12">
+    <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
+
+
+    <img class="container" *ngIf="evenement.sitepersologo" [src]="evenement.sitepersologo" alt="Affiche">
+
+
+    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="14/9"
+      [resizeToWidth]="150" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+    </image-cropper>
+    <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Valider cette
+      image</button>
   </div>
 
   <div class="col-sm-12 ">

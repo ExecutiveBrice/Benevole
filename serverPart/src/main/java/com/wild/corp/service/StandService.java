@@ -6,9 +6,6 @@ import com.wild.corp.model.Stand;
 
 import java.util.List;
 
-/**
- * Classe des services portant sur les IG
- */
 public interface StandService {
 
     void persist(Stand stand);

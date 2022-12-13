@@ -5,9 +5,6 @@ import com.wild.corp.model.Benevole;
 
 import java.util.List;
 
-/**
- * Classe des services portant sur les IG
- */
 public interface BenevoleService {
 
     void persist(Benevole benevole);

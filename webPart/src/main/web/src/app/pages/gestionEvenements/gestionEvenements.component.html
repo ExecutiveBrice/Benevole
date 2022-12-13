@@ -1,12 +1,27 @@
-<div class="row">
+<div *ngIf="!authorize" class="row">
+  <div class="col-sm-6">
+    <div class="input-group mb-3 ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Mot de passe</span>
+      </div>
+      <input type="text" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="input-group mb-3 ">
+      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
+        Valider</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div *ngIf="authorize" class="row">
   <div *ngFor="let evenement of evenements  | orderBy:'id':false" class="col-sm-12">
     <button type="button" class="btn btn-block btn-info" (click)="choixEvenement(evenement.id)">
       {{evenement.id}} - {{evenement.eventName}} {{evenement.startDate | date:'dd/MM/yyyy'}}</button>
     <div class="col-sm-12" *ngIf="choix == evenement.id">
-
-
-
-
 
       <div class="col-sm-6">
         <div class="input-group mb-3 ">
@@ -79,7 +94,7 @@
           <div class="input-group-prepend">
             <span class="input-group-text">Mot de passe</span>
           </div>
-          <input type="text" [(ngModel)]="evenement.password" class="form-control" id="password">
+          <input type="text" [(ngModel)]="evenement.password" class="form-control" id="evenementpassword">
         </div>
       </div>
       <div class="col-sm-3">

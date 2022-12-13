@@ -17,10 +17,10 @@ export class ConnexionComponent implements OnInit {
   evenement: Evenement;
   organumber: number;
   new: boolean;
-  validation: boolean;
   nouveau: boolean;
   exist: boolean;
   benevole: Benevole;
+  affiche:string;
 
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
@@ -36,32 +36,38 @@ export class ConnexionComponent implements OnInit {
     subscription = new Subscription();
   ngOnInit() {
     this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testCommun(this.organumber)
-    this.evenement = new Evenement();
+    this.validationService.testCommun(this.organumber).then(response => {
+      if(response){
+        this.getAffiche(this.organumber);
+      }else{
+        this.router.navigate(['error']);
+      }
+    })
+    .catch(err => {
+      this.router.navigate(['error']);
+    })
+
     this.benevole = new Benevole();
-    this.validation = false;
     this.exist = false;
     this.nouveau = false;
     this.new = true;
-
-    this.subscription = this.transmissionService.dataStream.subscribe(
-      data => {
-        console.log(data)
-        this.evenement = data
-      });
-
+    console.log("numberTransmission"+this.organumber);
+    this.transmissionService.numberTransmission(this.organumber);
   }
 
 
-
+  getAffiche(organumber:number): void {
+    this.evenementService.getAffiche(organumber).subscribe(affiche => {
+      this.affiche = affiche;
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
   find(): void {
-    console.log("find")
-    console.log(this.benevole)
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevoleService.getByMail(this.benevole.email, this.organumber).subscribe(benevole => {
-      console.log("benevole")
-      console.log(benevole)
       if (benevole == null) {
         this.exist = false
         this.new = false;
@@ -80,11 +86,10 @@ export class ConnexionComponent implements OnInit {
 
   subscribe(): void {
     this.nouveau = false;
-    console.log("subscribe")
+
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevoleService.add(this.benevole, this.organumber).subscribe(data => {
-      console.log("data")
-      console.log(data)
+
       localStorage.setItem('user', JSON.stringify(data))
       this.router.navigate(['/inscription/' + this.organumber]);
     },

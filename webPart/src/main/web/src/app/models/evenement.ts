@@ -10,6 +10,10 @@ export class Evenement {
   password: string;
   affiche:string | ArrayBuffer;
  
+  sitepersourl: string;
+  sitepersologo:string | ArrayBuffer;
+
+
   rappelDate: Date;
   validation: string;
   retour: string;

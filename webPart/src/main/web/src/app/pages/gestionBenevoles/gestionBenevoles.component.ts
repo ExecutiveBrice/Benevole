@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 })
 
 export class GestionBenevolesComponent implements OnInit {
+  authorize: boolean = false;
   organumber: number;
   croisements: Croisement[];
   benevoles: Benevole[];
@@ -43,21 +44,19 @@ export class GestionBenevolesComponent implements OnInit {
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams'));
 
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testGestion(this.organumber)
-
-    this.subscription = this.transmissionService.dataStream.subscribe(
-      data => {
-        console.log(data)
-        this.evenement = data
-      });
-
     this.benevoles = [];
     this.croisements = [];
     this.choix = "";
-    this.find();
-    this.getCroisement();
 
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    if(this.authorize){
+      this.transmissionService.dataTransmission(new Evenement());
+      this.find();
+      this.getCroisement();
+    }else{
+      this.router.navigate(['/gestion/' + this.organumber]);
+    }
   }
 
   exportAsXLSX(): void {
@@ -66,14 +65,12 @@ export class GestionBenevolesComponent implements OnInit {
 
   find(): void {
     this.benevoleService.getByEvenementId(this.organumber).subscribe(benevoles => {
-      console.log(benevoles)
       if (benevoles != null) {
         this.benevoles = benevoles;
 
         benevoles.forEach(benevole => {
           benevole.croisements = []
           this.croisementService.getByBenevole(benevole.id).subscribe(croisements => {
-            console.log(croisements)
             benevole.croisements = croisements
           },
             error => {
@@ -121,15 +118,12 @@ export class GestionBenevolesComponent implements OnInit {
 
 
   addCroisements(benevole: Benevole): void {
-    console.log("addCroisements")
-    console.log(benevole)
     let croisementsList = []
     benevole.croisements.forEach(croisement => {
       croisementsList.push(croisement.id)
     });
     benevole.email = benevole.email.toLowerCase();
     this.benevoleService.addCroisements(benevole.id, croisementsList).subscribe(data => {
-      console.log(data)
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -139,7 +133,6 @@ export class GestionBenevolesComponent implements OnInit {
 
   getCroisement(): void {
     this.croisementService.getAll(this.organumber).subscribe(data => {
-      console.log(data)
       this.croisements = data
     },
       error => {
@@ -149,7 +142,6 @@ export class GestionBenevolesComponent implements OnInit {
 
   send(benevole: Benevole) {
     this.benevoleService.update(benevole).subscribe(data => {
-      console.log(data)
       var email = new Email();
       email.to = benevole.email
 
@@ -163,7 +155,7 @@ export class GestionBenevolesComponent implements OnInit {
 
       email.text = email.text + benevole.reponse + "<br>"
 
-      email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params['url'] + "/connexion/" + this.evenement.id + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
+      email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params['url'] + "/" + this.evenement.id + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
       this.envoiMail(email)
     },
       error => {
@@ -174,8 +166,6 @@ export class GestionBenevolesComponent implements OnInit {
   envoiMail(email: Email) {
     this.mailService.sendMail(email)
       .subscribe(res => {
-        console.log("this.api.sendMail");
-        console.log(res);
       }, err => {
         console.log(err);
       });
@@ -185,7 +175,6 @@ export class GestionBenevolesComponent implements OnInit {
     this.benevoleService.deleteById(benevoleId)
       .subscribe(res => {
         this.benevoles = this.benevoles.filter(benevole => benevole.id != benevoleId)
-        console.log(res);
       }, err => {
         console.log(err);
       });

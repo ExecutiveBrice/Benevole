@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Controller de la vue globale
- */
 @RestController
 @RequestMapping("/croisement")
 public class CroisementController {

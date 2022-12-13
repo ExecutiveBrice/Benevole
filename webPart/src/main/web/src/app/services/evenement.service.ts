@@ -31,5 +31,25 @@ export class EvenementService {
     let params = new HttpParams().set('id', ''+creneau.id+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
   }
+  isAuthorize(id:number, password:string) {
+    let params = new HttpParams().set('id', '' + id + '').set('password', '' + password + '');
+    return this.http.get<boolean>(this.apiUrl + '/isAuthorize', {params, responseType: 'json'});
+  }
+  isOpen(id:number) {
+    let params = new HttpParams().set('id', '' + id + '');
+    return this.http.get<boolean>(this.apiUrl + '/isOpen', {params, responseType: 'json'});
+  }
+  opening(id:number) {
+    let params = new HttpParams().set('id', '' + id + '');
+    return this.http.put<boolean>(this.apiUrl + '/opening', null, {params, responseType: 'json'});
+  }
   
+  getAffiche(id:number) {
+    let params = new HttpParams().set('id', '' + id + '');
+    return this.http.get(this.apiUrl + '/getAffiche', {params, responseType: 'text'});
+  }
+  getLogo(id:number) {
+    let params = new HttpParams().set('id', '' + id + '');
+    return this.http.get(this.apiUrl + '/getLogo', {params, responseType: 'text'});
+  }
 }

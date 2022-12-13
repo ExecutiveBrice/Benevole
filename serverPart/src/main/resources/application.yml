@@ -1,6 +1,6 @@
 server:
   servlet:
-    contextPath: /GestionBenevole
+    contextPath: /benevoles
 spring:
   swagger:
     enable: true
@@ -14,7 +14,7 @@ spring:
       auth: true
       starttls.enable: true
 logging:
-  file: /var/java_gestion_benevole.log
+  file: /var/java_benevoles.log
   level:
     com.wild.corp: DEBUG
     root: WARN
@@ -42,7 +42,7 @@ evenement:
       retour: "Vous pouvez revenir à tout moment pour modifier vos choix en vous connectant sur <a href=\"<using_address>\">le site d'inscription</a> à l'aide de votre adresse e-mail."
       rappel: "L'équipe d'animation de l'ALOD vous rappel que :Ce <start_date> se déroule <event_name>."
 appparam :
-  url: "http://localhost:8091/GestionBenevole/#"
+  url: "http://localhost:8091/benevoles/#"
   messages:
     creation:
       title: "Création de l'evenement <event_name>"

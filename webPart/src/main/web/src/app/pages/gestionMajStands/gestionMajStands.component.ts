@@ -13,6 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class GestionMajStandsComponent implements OnInit {
+  authorize: boolean = false;
   stands: Stand[];
   creneaux: Creneau[] = [];
   newStand: Stand = new Stand();
@@ -36,15 +37,17 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testGestion(this.organumber)
-
     this.choix = "";
-    this.getAllStands();
-    this.getAllCreneaux();
+
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    if(this.authorize){
+      this.getAllStands();
+      this.getAllCreneaux();
+    }else{
+      this.router.navigate(['/gestion/' + this.organumber]);
+    }
   }
-
-
 
   existInCroisements(croisements: Croisement[], id: number): Croisement {
 
@@ -60,16 +63,13 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
   getAllStands(): void {
-    console.log("getAllStands")
     this.standService.getAll(this.organumber).subscribe(stands => {
-      console.log(stands)
       if(stands != null){
       this.stands = stands
       
       stands.forEach(stand => {
         stand.croisements = []
         this.croisementService.getByStand(stand.id).subscribe(croisements => {
-          console.log(croisements)
           stand.croisements = croisements
         },
           error => {
@@ -85,15 +85,11 @@ export class GestionMajStandsComponent implements OnInit {
       error => {
         console.log('😢 Oh no!', error);
       });
-    console.log(this.stands)
   }
 
 
   getAllCreneaux(): void {
-    console.log("getAllCreneaux")
     this.creneauService.getAll(this.organumber).subscribe(creneaux => {
-      console.log(creneaux)
-
       this.creneaux = creneaux;
     },
       error => {
@@ -102,9 +98,7 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
   update(stand): void {
-    console.log(stand)
     this.standService.update(stand).subscribe(data => {
-      console.log(data)
       this.getAllStands()
     },
       error => {
@@ -116,11 +110,8 @@ export class GestionMajStandsComponent implements OnInit {
 
 
   updateCroisement(croisement: Croisement, stand: Stand): void {
-    console.log(croisement)
-
     croisement.stand = stand
     this.croisementService.update(croisement).subscribe(data => {
-      console.log(data)
       this.getAllStands()
     },
       error => {
@@ -132,11 +123,6 @@ export class GestionMajStandsComponent implements OnInit {
 
 
   ajoutCroisement(stand: Stand, creneau: Creneau): void {
-    console.log("ajoutCroisement")
-
-    console.log(stand)
-    console.log(creneau)
-
     let croisement = new Croisement()
     croisement.stand = new Stand();
     croisement.stand.id = stand.id
@@ -145,10 +131,7 @@ export class GestionMajStandsComponent implements OnInit {
     croisement.selected = false;
     croisement.limite = 0;
 
-
-    console.log(croisement)
     this.croisementService.ajout(croisement).subscribe(data => {
-      console.log(data)
       this.getAllStands()
     },
       error => {
@@ -158,10 +141,7 @@ export class GestionMajStandsComponent implements OnInit {
 
 
   deleteCroisement(croisement: Croisement): void {
-    console.log("deleteCroisement")
-
     this.croisementService.delete(croisement).subscribe(data => {
-      console.log(data)
       this.getAllStands()
     },
       error => {
@@ -171,11 +151,8 @@ export class GestionMajStandsComponent implements OnInit {
 
 
   ajout(stand: Stand): void {
-    console.log("ajout")
-
     stand.type = 0
     this.standService.ajout(stand, this.organumber).subscribe(data => {
-      console.log(data)
       this.getAllStands()
     },
       error => {
@@ -185,9 +162,7 @@ export class GestionMajStandsComponent implements OnInit {
 
 
   delete(stand): void {
-    console.log("delete")
     this.standService.delete(stand).subscribe(data => {
-      console.log(data)
       this.getAllStands()
     },
       error => {

@@ -14,7 +14,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class GestionStandsComponent implements OnInit {
-  stands: Stand[];
+  authorize: boolean = false;
+  stands: Stand[] = [];
   organumber: number;
   choix: string;
 
@@ -34,30 +35,25 @@ export class GestionStandsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testGestion(this.organumber)
-
-
-
-    this.stands = [];
-
     this.choix = "";
-    this.getAll();
 
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    if(this.authorize){
+      this.getAll();
+    }else{
+      this.router.navigate(['/gestion/' + this.organumber]);
+    }
   }
 
 
   getAll(): void {
-    console.log("find")
     this.standService.getAll(this.organumber).subscribe(stands => {
-      console.log(stands)
-
       this.stands = stands;
 
       stands.forEach(stand => {
         stand.croisements = []
         this.croisementService.getByStand(stand.id).subscribe(croisements => {
-          console.log(croisements)
           stand.croisements = croisements
         },
           error => {

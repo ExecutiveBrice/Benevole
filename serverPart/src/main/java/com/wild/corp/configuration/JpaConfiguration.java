@@ -28,9 +28,6 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-/**
- * Classe de configuration globale
- */
 @Configuration
 @EnableJpaRepositories(basePackages = "com.wild.corp.repositories",
         entityManagerFactoryRef = "entityManagerFactory",

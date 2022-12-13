@@ -34,7 +34,7 @@ export class CreationComponent implements OnInit {
 
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams'));
-    console.log(this.params)
+
     this.new = true;
     this.ok = true;
   }
@@ -44,7 +44,7 @@ export class CreationComponent implements OnInit {
     var keyArray = ["contact", "eventName", "contactEmail", "startDate", "endDate", "password"]
     for (let index = 0; index < keyArray.length; index++) {
       if (evenement[keyArray[index]] == undefined || evenement[keyArray[index]] == null || evenement[keyArray[index]].length < 4) {
-        console.log(keyArray[index] + " is " + evenement[keyArray[index]])
+
         return true
       }
     }
@@ -58,12 +58,11 @@ export class CreationComponent implements OnInit {
     } else {
       this.error = false
       this.evenementService.ajout(evenement).subscribe(data => {
-        console.log(data)
-        console.log(evenement)
+
         this.new = false
         this.ok = true
 
-        var using_address = this.params['url'] + "/connexion/" + data.id
+        var using_address = this.params['url'] + "/" + data.id
         var managing_address = this.params['url'] + "/gestion/" + data.id
 
         this.header = this.configService.completeTemplate(this.params['header'], evenement.eventName, using_address, managing_address)
@@ -75,7 +74,7 @@ export class CreationComponent implements OnInit {
         QRCode.toDataURL(using_address)
           .then(url => {
             this.qrcode = url
-            console.log(url)
+
 
             let email = new Email()
             email.to = evenement.contactEmail
@@ -87,7 +86,7 @@ export class CreationComponent implements OnInit {
             email.text = email.text + "<br><br><a href=\"" + using_address + "\"><img src=\"" + url + "\" /></a>";
             email.text = email.text + "<br><br>"+this.managing;
             email.text = email.text + this.params['signature']
-            console.log(email);
+
     
     
     

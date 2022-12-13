@@ -1,4 +1,22 @@
-<div class="row">
+<div *ngIf="!authorize" class="row">
+  <div class="col-sm-6">
+    <div class="input-group mb-3 ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Mot de passe</span>
+      </div>
+      <input type="text" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="input-group mb-3 ">
+      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
+        Valider</button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="authorize" class="row">
   <div class="col-sm-6">
     <div class="alert alert-success">
       <strong>{{benevoles.length}} bénévoles</strong>
@@ -9,7 +27,7 @@
       bénévoles</button>
   </div>
 </div>
-<div class="row">
+<div *ngIf="authorize" class="row">
   <div *ngFor="let benevole of benevoles  | orderBy:'nom':false" class="col-sm-6">
     <button type="button" class="btn btn-block btn-info" (click)="choixBenevole(benevole.email)">
       {{benevole.nom}} {{benevole.prenom}}</button>
@@ -58,8 +76,8 @@
         </div>
 
         <div class="col-sm-12">
-        <button type="button" class="btn btn-block btn-danger" (click)="delete(benevole.id)">
-         Supprimer </button>
+          <button type="button" class="btn btn-block btn-danger" (click)="delete(benevole.id)">
+            Supprimer </button>
         </div>
       </div>
     </div>

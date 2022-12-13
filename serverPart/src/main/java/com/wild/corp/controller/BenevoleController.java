@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Controller de la vue globale
- */
 @RestController
 @RequestMapping("/benevole")
 public class BenevoleController {

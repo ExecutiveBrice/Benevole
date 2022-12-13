@@ -27,7 +27,7 @@ export class StandService {
     return this.http.put(this.apiUrl + '/', stand, {responseType: 'json'});
   }
   delete(stand:Stand) {
-    let params = new HttpParams().set('id', ''+stand.id+'');
+    let params = new HttpParams().set('standId', ''+stand.id+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
   }
   

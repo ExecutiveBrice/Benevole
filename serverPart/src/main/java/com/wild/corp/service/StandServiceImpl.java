@@ -12,9 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Classe implémentant les services IG
- */
 @Service("StandService")
 @Transactional
 public class StandServiceImpl implements StandService {
@@ -41,8 +38,6 @@ public class StandServiceImpl implements StandService {
         persist(stand);
     }
 
-
-
     @Override
     public void delete(Integer standId) {
         Stand stand = findById(standId);
@@ -50,23 +45,15 @@ public class StandServiceImpl implements StandService {
         standRepository.delete(stand);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Stand> findAll() {
         return standRepository.findAll();
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Stand findById(Integer childId) {
         return standRepository.getOne(childId);
     }
-
 
     @Override
     public void update(Stand stand) {
@@ -81,15 +68,9 @@ public class StandServiceImpl implements StandService {
         standRepository.save(realStand);
     }
 
-
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Stand> findByEvenementId(Integer evenementId) {
         return standRepository.findByEvenementId(evenementId);
     }
-
 
 }

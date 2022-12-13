@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Controller de la vue globale
- */
 @RestController
 @RequestMapping("/creneau")
 public class CreneauController {
@@ -39,6 +36,12 @@ public class CreneauController {
         return new ResponseEntity<>(creneau, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.DELETE)
+    public ResponseEntity<?> add(@RequestParam Integer creneauId) {
+        logger.debug("delete Creneau");
+        creneauService.delete(creneauId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<Creneau> update(@RequestBody Creneau creneau) {

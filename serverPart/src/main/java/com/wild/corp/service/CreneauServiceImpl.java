@@ -2,6 +2,7 @@ package com.wild.corp.service;
 
 
 import com.wild.corp.model.Creneau;
+import com.wild.corp.model.Croisement;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.repositories.CreneauRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Classe implémentant les services IG
- */
 @Service("CreneauService")
 @Transactional
 public class CreneauServiceImpl implements CreneauService {
@@ -24,12 +22,22 @@ public class CreneauServiceImpl implements CreneauService {
     @Autowired
     private EvenementService evenementService;
 
+    @Autowired
+    private CroisementService croisementService;
 
     @Override
     public void persist(Creneau creneau) {
         creneauRepository.save(creneau);
     }
 
+    @Override
+    public void delete(Integer idCreneau) {
+        List<Croisement> croisements = croisementService.getCroisementByCreneau(idCreneau);
+        for (Croisement croisement:croisements) {
+            croisementService.delete(croisement.getId());
+        }
+        creneauRepository.delete(findById(idCreneau));
+    }
 
     @Override
     public void addCreneau(Creneau creneau, Integer evenementId){
@@ -50,34 +58,21 @@ public class CreneauServiceImpl implements CreneauService {
         persist(creneau);
     }
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Creneau> findAll() {
         return creneauRepository.findAll();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Creneau findById(Integer childId) {
         return creneauRepository.getOne(childId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Creneau> findByGroupeAndEvenementId(Integer groupe, Integer evenementId){
         return creneauRepository.findByEvenementId(evenementId);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public List<Creneau> findByEvenementId(Integer evenementId){
         return creneauRepository.findByEvenementId(evenementId);

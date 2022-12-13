@@ -5,7 +5,6 @@ import { ErrorComponent, InscriptionComponent, ConnexionComponent, GestionCompon
 const appRoutes: Routes = [
 // { path: '', redirectTo: '/', pathMatch: 'full' },
   { path: 'creation', component: CreationComponent},
-  { path: 'connexion/:id', component: ConnexionComponent},
   { path: 'inscription/:id', component: InscriptionComponent},
   { path: 'gestion/:id', component: GestionComponent},
   { path: 'gestionmajconfig/:id', component: GestionMajConfigComponent},
@@ -16,7 +15,8 @@ const appRoutes: Routes = [
   { path: 'gestionbenevoles/:id', component: GestionBenevolesComponent},
   { path: 'gestionevenements', component: GestionEvenementsComponent},
   { path: 'error', component: ErrorComponent},
-//  { path: '**', redirectTo: 'error'}
+  { path: ':id', component: ConnexionComponent},
+  { path: '**', redirectTo: 'error'}
 ];
 
 @NgModule({

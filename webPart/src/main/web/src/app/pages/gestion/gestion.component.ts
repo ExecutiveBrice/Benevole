@@ -17,6 +17,8 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 })
 
 export class GestionComponent implements OnInit {
+  subscription = new Subscription()
+  authorize: boolean = false;
   rappel;
   benevoles: Benevole[] = [];
   benevolesWithChoice: Benevole[] = [];
@@ -51,7 +53,6 @@ export class GestionComponent implements OnInit {
   }]
 
   organumber: number;
-  subscription = new Subscription();
 
   constructor(
     public route: ActivatedRoute,
@@ -71,43 +72,64 @@ export class GestionComponent implements OnInit {
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams'));
     this.evenement = new Evenement();
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testGestion(this.organumber)
-
-
-    this.subscription = this.transmissionService.dataStream.subscribe(
-      data => {
-        console.log(data)
-        this.evenement = data
-
-
-        this.using_address = this.params['url'] + "/connexion/" + this.evenement.id
-        // With promises
-        QRCode.toDataURL(this.using_address)
-          .then(url => {
-            this.qrcode = url
-            console.log(url)
-          })
-          .catch(err => {
-            console.error(err)
-          })
-      });
     this.rappel = false;
     this.mail = false;
 
-    this.getBenevoles();
+
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    if(this.authorize){
+      this.getEvenement(this.organumber)
+      this.getBenevoles();
+    }
   }
 
+  valider(password: string) {
+
+    this.validationService.testGestion(this.organumber, password).then(response => {
+      console.log(response)
+      this.authorize = response;
+      if(response){
+        this.getEvenement(this.organumber)
+        this.getBenevoles();
+      }else{
+        this.router.navigate(['error']);
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      this.router.navigate(['error']);
+    })
+  }
+
+  getEvenement(organumber: number): void {
+
+    this.using_address = this.params['url'] + "/" + organumber
+    // With promises
+    QRCode.toDataURL(this.using_address)
+      .then(url => {
+        this.qrcode = url
+      })
+      .catch(err => {
+        console.error(err)
+      })
+
+    this.evenementService.getById(organumber).subscribe(data => {
+      this.transmissionService.dataTransmission(data);
+      this.evenement = data;
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
   imageChangedEvent: any = '';
   croppedImage: any = '';
 
   fileChangeEvent(event: any): void {
-    console.log("fileChangeEvent")
     this.imageChangedEvent = event;
   }
   imageCropped(event: ImageCroppedEvent) {
-    console.log(event)
     this.croppedImage = event.base64;
   }
   imageLoaded() {
@@ -120,7 +142,6 @@ export class GestionComponent implements OnInit {
     /* show message */
   }
   uploadImage(croppedImage: any) {
-console.log(croppedImage)
     this.evenement.affiche = croppedImage
 
     this.evenementService.updateAffiche(this.evenement.id, croppedImage).subscribe(data => {
@@ -139,14 +160,6 @@ console.log(croppedImage)
     var standsLite = []
 
     this.standService.getAll(this.organumber).subscribe(stands => {
-
-
-
-
-
-
-
-
       stands.forEach(stand => {
         stand.croisements = []
         promises.push(new Promise((resolve, reject) => {
@@ -159,13 +172,13 @@ console.log(croppedImage)
               nom: "",
               creneaux: []
             };
-            standLite.nom = stand.nom;
+            standLite.nom = stand.nom.slice(0,30);
             standLite.creneaux = [];
 
             for (let indexR = 0; indexR < 100; indexR++) {
               let creneau = {};
 
-              if (stand.croisements.length > 0) {
+              if (stand.croisements !=null && stand.croisements.length > 0) {
                 stand.croisements.sort(function (a, b) { return a.creneau.ordre - b.creneau.ordre; })
                 for (let index = 0; index < stand.croisements.length; index++) {
                   const croisement = stand.croisements[index];
@@ -189,46 +202,20 @@ console.log(croppedImage)
 
       });
 
-
-
-
-
-
-
-
-
       Promise.all(promises)
         .then(data => {
-          console.log("Initial data", data);
-          console.log(standsLite)
           this.excelService.multiExportAsExcelFile(standsLite, 'Stands');
         });
-
-
-
-
-
-
-
-
-
 
     },
       error => {
         console.log('😢 Oh no!', error);
       });
 
-
-
-
   }
 
-
-
   update(evenement: Evenement): void {
-    console.log(evenement)
     this.evenementService.update(evenement).subscribe(data => {
-      console.log(data)
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -244,12 +231,15 @@ console.log(croppedImage)
 
   updateBlocage() {
     this.evenement.lock = !this.evenement.lock
-    this.update(this.evenement)
+    this.evenementService.opening(this.evenement.id).subscribe(data => {
+      this.evenement.lock = data
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
   }
 
   getMailingList(option): void {
-    console.log("getMailingList")
-    console.log(option);
     if (option.id == 1) {
       this.mailingList = this.benevoles
     } else if (option.id == 2) {
@@ -262,17 +252,13 @@ console.log(croppedImage)
 
 
   getBenevoles(): void {
-    console.log("getBenevoles")
-
     this.benevoleService.getByEvenementId(this.organumber).subscribe(benevoles => {
-      console.log(benevoles)
       if (benevoles) {
         this.benevoles = benevoles;
 
         benevoles.forEach(benevole => {
           benevole.croisements = []
           this.croisementService.getByBenevole(benevole.id).subscribe(croisements => {
-            console.log(croisements)
             if (croisements != null) {
               benevole.croisements = croisements
 
@@ -308,15 +294,10 @@ console.log(croppedImage)
 
   envoiMail(email: Email) {
     this.mail = false;
-    console.log(email.text)
     email.text = email.text.replace(/\n/g, "<br>");
-    console.log(email.text)
-
-    console.log(this.rappel)
 
     this.mailingList.forEach(benevole => {
       let emailCopy = JSON.parse(JSON.stringify(email))
-      console.log(benevole)
       emailCopy.to = benevole.email
       if (this.rappel) {
         emailCopy.text = emailCopy.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
@@ -332,8 +313,6 @@ console.log(croppedImage)
 
       this.mailService.sendMail(emailCopy)
         .subscribe(res => {
-          console.log("this.api.sendMail");
-          console.log(res);
         }, err => {
           console.log(err);
         });

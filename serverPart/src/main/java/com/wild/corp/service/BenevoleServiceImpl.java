@@ -12,13 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Classe implémentant les services IG
- */
 @Service("BenevoleService")
 @Transactional
 public class BenevoleServiceImpl implements BenevoleService {
-
 
     @Autowired
     private BenevoleRepository benevoleRepository;
@@ -33,7 +29,6 @@ public class BenevoleServiceImpl implements BenevoleService {
     public void persist(Benevole benevole) {
         benevoleRepository.save(benevole);
     }
-
 
     @Override
     public void add(Benevole benevole, Integer evenementId){

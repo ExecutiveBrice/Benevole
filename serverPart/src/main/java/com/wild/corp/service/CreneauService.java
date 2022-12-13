@@ -5,9 +5,6 @@ import com.wild.corp.model.Creneau;
 
 import java.util.List;
 
-/**
- * Classe des services portant sur les IG
- */
 public interface CreneauService {
 
     void persist(Creneau creneau);
@@ -16,7 +13,7 @@ public interface CreneauService {
 
     void updateCreneau(Creneau creneau);
 
-
+    void delete(Integer idCreneau);
 
     List<Creneau> findByGroupeAndEvenementId(Integer groupe, Integer evenementId);
 

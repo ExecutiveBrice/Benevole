@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-/**
- * Controller de la vue globale
- */
 @RestController
 @RequestMapping("/config")
 public class configController {

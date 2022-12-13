@@ -6,21 +6,21 @@
 
 ## URL point d'entrée :
 ### Swagger
-* http://<serveur>:<port>/GestionBenevole/swagger-ui.html
-* http://<serveur>:<port>/GestionBenevole/v2/api-docs
+* http://<serveur>:<port>/benevoles/swagger-ui.html
+* http://<serveur>:<port>/benevoles/v2/api-docs
 
 ### Utilisation
-* http://<serveur>:<port>/GestionBenevole/#/creation
-* http://<serveur>:<port>/GestionBenevole/#/gestionevenements
+* http://<serveur>:<port>/benevoles/#/creation
+* http://<serveur>:<port>/benevoles/#/gestionevenements
 
 ## Commandes utiles :
 ### Démarage de l'appli :
 *L'application s'arrete de fonctionner après fermeture de la session*
->java -jar <file_location>\gestion_benevole.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///<file_location>\application.yml"
+>java -jar <file_location>\benevoles.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///<file_location>\application.yml"
 
 ### Démarage de l'appli nohup :
 *L'application continu de fonctionner après fermeture de la session*
->nohup java -jar <file_location>\gestion_benevole.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///<file_location>\application.yml" > /dev/null &
+>nohup java -jar <file_location>\benevoles.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///<file_location>\application.yml" > /dev/null &
 
 
 ## Paramétrage de l'application
@@ -35,4 +35,4 @@
 * auto : update *remplissage si existant*
 
 ### super
-java -jar D:\Ionic\GestionBenevole\serverPart\target\gestion_benevole.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///D:\Ionic\GestionBenevole\application.yml
+java -jar D:\Ionic\GestionBenevole\serverPart\target\benevoles.jar --server.port=8091 --management.server.port=8191 --spring.config.location="file:///D:\Ionic\GestionBenevole\application.yml"

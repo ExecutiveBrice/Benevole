@@ -24,20 +24,14 @@ export class GestionSMSComponent {
 
   }
 
-
-
   send(sms): void {
-    console.log(sms);
     this.smsList = [];
     let numeros = sms.numeros.split(";")
 
     numeros.forEach(num => {
 
-
       this.smsService.send(num, sms.message).subscribe(data => {
-        console.log(data)
         this.smsList.push({numero : num,resultat : "OK"})
-        console.log(this.smsList)
       },
         error => {
           this.smsList.push({numero : num,resultat : "ERREUR"})

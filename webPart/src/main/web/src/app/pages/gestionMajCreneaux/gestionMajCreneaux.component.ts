@@ -4,7 +4,7 @@ import { ValidationService, CreneauService,EvenementService, TransmissionService
 import { DomSanitizer } from '@angular/platform-browser';
 import { Creneau, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -14,6 +14,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class GestionMajCreneauxComponent implements OnInit {
+  subscription = new Subscription();
+  authorize: boolean = false;
   creneaux: Creneau[];
   newCreneau: Creneau = new Creneau();
   choix: string;
@@ -32,21 +34,20 @@ export class GestionMajCreneauxComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testGestion(this.organumber)
-
     this.creneaux = [];
-
     this.choix = "";
-    this.getAll();
 
+    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    if(this.authorize){
+      this.getAll()
+    }else{
+      this.router.navigate(['/gestion/' + this.organumber]);
+    }
   }
 
   getAll(): void {
-    console.log("getAll")
     this.creneauService.getAll(this.organumber).subscribe(data => {
-      console.log(data)
-
       this.creneaux = data;
     },
       error => {
@@ -56,10 +57,7 @@ export class GestionMajCreneauxComponent implements OnInit {
 
 
   update(creneau): void {
-    console.log("update")
     this.creneauService.update(creneau).subscribe(data => {
-      console.log(data)
-
       this.getAll();
     },
       error => {
@@ -68,12 +66,8 @@ export class GestionMajCreneauxComponent implements OnInit {
   }
 
   ajout(creneau:Creneau): void {
-    console.log("ajout")
-
     creneau.chevauchement = []
     this.creneauService.ajout(creneau, this.organumber).subscribe(data => {
-      console.log(data)
-     
       this.getAll();
     },
       error => {
@@ -84,7 +78,6 @@ export class GestionMajCreneauxComponent implements OnInit {
 
 
   choisir(creneau:Creneau, creneauChevauche:Creneau): void {
-    console.log("choisir")
     let existe = false;
     creneau.chevauchement.forEach(element => {
         if(creneauChevauche.id == element){
@@ -95,11 +88,9 @@ export class GestionMajCreneauxComponent implements OnInit {
     if(existe){
       creneau.chevauchement.splice( creneau.chevauchement.indexOf(creneauChevauche.id), 1 );
       creneauChevauche.chevauchement.splice( creneauChevauche.chevauchement.indexOf(creneau.id), 1 );
-      console.log("retrait")
     }else{
       creneau.chevauchement.push(creneauChevauche.id)
       creneauChevauche.chevauchement.push(creneau.id)
-      console.log("ajout")
     }
   
     this.update(creneau)
@@ -107,10 +98,7 @@ export class GestionMajCreneauxComponent implements OnInit {
   }
 
   delete(creneau): void {
-    console.log("delete")
     this.creneauService.delete(creneau).subscribe(data => {
-      console.log(data)
-
       this.getAll();
     },
       error => {

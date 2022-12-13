@@ -1,28 +1,45 @@
-<div class="row">
+<div *ngIf="!authorize" class="row">
+  <div class="col-sm-6">
+    <div class="input-group mb-3 ">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Mot de passe</span>
+      </div>
+      <input type="text" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="input-group mb-3 ">
+      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
+        Valider</button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="authorize" class="row">
   <div class="input-group col-sm-2">
     <div class="input-group-prepend">
       <span class="input-group-text">Ordre : </span>
     </div>
-    <input type="text" [(ngModel)]="newStand.ordre" class="form-control" id="ordre">
+    <input type="text" [(ngModel)]="newStand.ordre" class="form-control" id="newStandordre">
   </div>
   <div class="input-group col-sm-4">
     <div class="input-group-prepend">
       <span class="input-group-text">Nom : </span>
     </div>
-    <input type="text" [(ngModel)]="newStand.nom" class="form-control" id="nom">
+    <input type="text" [(ngModel)]="newStand.nom" class="form-control" id="newStandnom">
   </div>
   <div class="input-group col-sm-4">
     <div class="input-group-prepend">
       <span class="input-group-text">Info : </span>
     </div>
-    <input type="text" [(ngModel)]="newStand.bulle" class="form-control" id="bulle">
+    <input type="text" [(ngModel)]="newStand.bulle" class="form-control" id="newStandbulle">
   </div>
   <div class="col-sm-2">
     <button type="button" class="btn btn-block btn-info" (click)="ajout(newStand)">Ajouter</button>
   </div>
 </div>
 
-<div class="row">
+<div *ngIf="authorize" class="row">
   <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-sm-4 ">
     <div class="row bordered">
       <div class="input-group col-sm-10">
