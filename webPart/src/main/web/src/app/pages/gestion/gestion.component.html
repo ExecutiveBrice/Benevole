@@ -37,15 +37,15 @@
     </div>
   </div>
   <div class="col-sm-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionbenevoles/', organumber]">Gestion des
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionbenevoles/', idEvenement]">Gestion des
       Bénévoles</button>
   </div>
   <div class="col-sm-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionstands/', organumber]">Gestion des
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionstands/', idEvenement]">Gestion des
       Stands</button>
   </div>
 
-  <div class="col-sm-3">
+  <div *ngIf="evenement" class="col-sm-3">
     <button type="button" class="btn btn-block btn-success overflow-visibles" [ngClass]="{'btn-danger':evenement.lock}"
       (click)="updateBlocage()">Je clique
       pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
@@ -86,22 +86,22 @@
     </div>
   </div>
   <div class="col-sm-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajstands/', organumber]">Maj des
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajstands/', idEvenement]">Maj des
       Stands</button>
   </div>
   <div class="col-sm-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajcreneaux/', organumber]">Maj des
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajcreneaux/', idEvenement]">Maj des
       Creneaux</button>
   </div>
   <div class="col-sm-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajconfig/', organumber]">Maj des
+    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajconfig/', idEvenement]">Maj des
       Infos</button>
   </div>
   <div class="col-sm-3">
     <a href="{{using_address}}"> <img src="{{qrcode}}" /></a>
   </div>
 
-  <div class="col-12">
+  <div *ngIf="evenement != undefined" class="col-12">
     <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
 
 

@@ -1,6 +1,7 @@
 package com.wild.corp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -66,6 +67,7 @@ public class Evenement {
     @Column(name = "LOCK")
     private boolean lock;
 
+    //@JsonIgnoreProperties({"prenom","nom","telephone","email","commentaire","reponse", "evenement" })
     @JsonIgnore
     @OneToMany(mappedBy="evenement" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benevole> benevoles;

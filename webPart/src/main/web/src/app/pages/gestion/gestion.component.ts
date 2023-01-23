@@ -30,7 +30,7 @@ export class GestionComponent implements OnInit {
   selectedDeviceObj: any
   evenement: Evenement
   params: Map<string, string>
-
+  idEvenement: number
   emailInfo: Email = {
     to: "",
     subject: "",
@@ -52,7 +52,7 @@ export class GestionComponent implements OnInit {
     name: 'Les inscrits SANS choix',
   }]
 
-  organumber: number;
+
 
   constructor(
     public route: ActivatedRoute,
@@ -71,40 +71,51 @@ export class GestionComponent implements OnInit {
 
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams'));
-    this.evenement = new Evenement();
+
     this.rappel = false;
     this.mail = false;
 
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
 
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
-    if(this.authorize){
-      this.getEvenement(this.organumber)
+    this.getEvenement(this.idEvenement);
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')) == this.idEvenement ? true : false;
+    if (this.authorize) {
+      this.getQRcode(this.idEvenement)
       this.getBenevoles();
     }
   }
 
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
   valider(password: string) {
 
-    this.validationService.testGestion(this.organumber, password).then(response => {
+    this.validationService.testGestion(this.idEvenement, password).then(response => {
       console.log(response)
       this.authorize = response;
-      if(response){
-        this.getEvenement(this.organumber)
+      if (response) {
+        this.getQRcode(this.idEvenement)
         this.getBenevoles();
-      }else{
+      } else {
         this.router.navigate(['error']);
       }
     })
-    .catch(err => {
-      console.error(err)
-      this.router.navigate(['error']);
-    })
+      .catch(err => {
+        console.error(err)
+        this.router.navigate(['error']);
+      })
   }
 
-  getEvenement(organumber: number): void {
+  getQRcode(idEvenement: number): void {
 
-    this.using_address = this.params['url'] + "/" + organumber
+    this.using_address = this.params['url'] + "/" + idEvenement
     // With promises
     QRCode.toDataURL(this.using_address)
       .then(url => {
@@ -113,14 +124,6 @@ export class GestionComponent implements OnInit {
       .catch(err => {
         console.error(err)
       })
-
-    this.evenementService.getById(organumber).subscribe(data => {
-      this.transmissionService.dataTransmission(data);
-      this.evenement = data;
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
   }
 
   imageChangedEvent: any = '';
@@ -144,14 +147,14 @@ export class GestionComponent implements OnInit {
   uploadImage(croppedImage: any) {
     this.evenement.affiche = croppedImage
 
-    this.evenementService.updateAffiche(this.evenement.id, croppedImage).subscribe(data => {
+    this.evenementService.updateAffiche(this.idEvenement, croppedImage).subscribe(data => {
       this.evenement = data;
     },
       error => {
         console.log('😢 Oh no!', error);
       });
   }
-  
+
 
 
 
@@ -159,7 +162,7 @@ export class GestionComponent implements OnInit {
     var promises = []
     var standsLite = []
 
-    this.standService.getAll(this.organumber).subscribe(stands => {
+    this.standService.getAll(this.idEvenement).subscribe(stands => {
       stands.forEach(stand => {
         stand.croisements = []
         promises.push(new Promise((resolve, reject) => {
@@ -172,13 +175,13 @@ export class GestionComponent implements OnInit {
               nom: "",
               creneaux: []
             };
-            standLite.nom = stand.nom.slice(0,30);
+            standLite.nom = stand.nom.slice(0, 30);
             standLite.creneaux = [];
 
             for (let indexR = 0; indexR < 100; indexR++) {
               let creneau = {};
 
-              if (stand.croisements !=null && stand.croisements.length > 0) {
+              if (stand.croisements != null && stand.croisements.length > 0) {
                 stand.croisements.sort(function (a, b) { return a.creneau.ordre - b.creneau.ordre; })
                 for (let index = 0; index < stand.croisements.length; index++) {
                   const croisement = stand.croisements[index];
@@ -231,7 +234,7 @@ export class GestionComponent implements OnInit {
 
   updateBlocage() {
     this.evenement.lock = !this.evenement.lock
-    this.evenementService.opening(this.evenement.id).subscribe(data => {
+    this.evenementService.opening(this.idEvenement).subscribe(data => {
       this.evenement.lock = data
     },
       error => {
@@ -252,7 +255,7 @@ export class GestionComponent implements OnInit {
 
 
   getBenevoles(): void {
-    this.benevoleService.getByEvenementId(this.organumber).subscribe(benevoles => {
+    this.benevoleService.getByEvenementId(this.idEvenement).subscribe(benevoles => {
       if (benevoles) {
         this.benevoles = benevoles;
 
@@ -275,8 +278,8 @@ export class GestionComponent implements OnInit {
                   }
                 });
               }
-            }else{
-                this.benevolesWithoutChoice.push(benevole);
+            } else {
+              this.benevolesWithoutChoice.push(benevole);
             }
           },
             error => {
@@ -327,6 +330,6 @@ export class GestionComponent implements OnInit {
     this.rappel = e.target.checked;
   }
 
-  
+
 
 }

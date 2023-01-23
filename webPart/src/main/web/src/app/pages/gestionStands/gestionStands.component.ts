@@ -1,9 +1,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { ValidationService, TransmissionService, CroisementService, StandService, MailService, EvenementService } from '../../services';
+import { ValidationService, CroisementService, StandService, MailService, EvenementService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Stand } from '../../models';
+import { Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -16,16 +16,17 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class GestionStandsComponent implements OnInit {
   authorize: boolean = false;
   stands: Stand[] = [];
-  organumber: number;
+  evenement: Evenement = new Evenement();
   choix: string;
-
+  idEvenement:number
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public evenementService: EvenementService,
+    
+    public transmissionService: TransmissionService,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
-    public transmissionService: TransmissionService,
     public standService: StandService,
     public mailService: MailService,
     public validationService: ValidationService,
@@ -36,19 +37,28 @@ export class GestionStandsComponent implements OnInit {
 
   ngOnInit() {
     this.choix = "";
-
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getEvenement(this.idEvenement);
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
     if(this.authorize){
       this.getAll();
     }else{
-      this.router.navigate(['/gestion/' + this.organumber]);
+      this.router.navigate(['/gestion/' + this.idEvenement]);
     }
   }
 
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
   getAll(): void {
-    this.standService.getAll(this.organumber).subscribe(stands => {
+    this.standService.getAll(this.idEvenement).subscribe(stands => {
       this.stands = stands;
 
       stands.forEach(stand => {

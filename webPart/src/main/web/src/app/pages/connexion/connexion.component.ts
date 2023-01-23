@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { TransmissionService, ValidationService, BenevoleService, EvenementService } from '../../services';
+import { ValidationService, BenevoleService, TransmissionService, EvenementService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Evenement } from '../../models';
@@ -14,32 +14,33 @@ import { Subscription } from 'rxjs';
 })
 
 export class ConnexionComponent implements OnInit {
-  evenement: Evenement;
-  organumber: number;
+  evenement: Evenement = new Evenement();
   new: boolean;
   nouveau: boolean;
   exist: boolean;
   benevole: Benevole;
-  affiche:string;
+  idEvenement:number
 
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
     public route: ActivatedRoute,
-    public transmissionService: TransmissionService,
+
     public router: Router,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
+    public transmissionService: TransmissionService,
     public validationService: ValidationService,
     public sanitizer: DomSanitizer) { }
 
     subscription = new Subscription();
+
+
   ngOnInit() {
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testCommun(this.organumber).then(response => {
-      if(response){
-        this.getAffiche(this.organumber);
-      }else{
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getEvenement(this.idEvenement);
+    this.validationService.testCommun(this.idEvenement).then(response => {
+      if(!response){
         this.router.navigate(['error']);
       }
     })
@@ -51,14 +52,13 @@ export class ConnexionComponent implements OnInit {
     this.exist = false;
     this.nouveau = false;
     this.new = true;
-    console.log("numberTransmission"+this.organumber);
-    this.transmissionService.numberTransmission(this.organumber);
+
   }
 
-
-  getAffiche(organumber:number): void {
-    this.evenementService.getAffiche(organumber).subscribe(affiche => {
-      this.affiche = affiche;
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -67,13 +67,13 @@ export class ConnexionComponent implements OnInit {
 
   find(): void {
     this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.getByMail(this.benevole.email, this.organumber).subscribe(benevole => {
+    this.benevoleService.getByMail(this.benevole.email, this.idEvenement).subscribe(benevole => {
       if (benevole == null) {
         this.exist = false
         this.new = false;
       } else {
         localStorage.setItem('user', JSON.stringify(benevole));
-        this.router.navigate(['/inscription/' + this.organumber]);
+        this.router.navigate(['/inscription/' + this.idEvenement]);
       }
 
     },
@@ -88,10 +88,10 @@ export class ConnexionComponent implements OnInit {
     this.nouveau = false;
 
     this.benevole.email = this.benevole.email.toLowerCase();
-    this.benevoleService.add(this.benevole, this.organumber).subscribe(data => {
+    this.benevoleService.add(this.benevole, this.idEvenement).subscribe(data => {
 
       localStorage.setItem('user', JSON.stringify(data))
-      this.router.navigate(['/inscription/' + this.organumber]);
+      this.router.navigate(['/inscription/' + this.idEvenement]);
     },
       error => {
         this.exist = false;

@@ -14,6 +14,11 @@ export class BenevoleService {
     return this.http.get<Benevole[]>(this.apiUrl + '/getAll', { responseType: 'json' });
   }
 
+  getById(id: number) {
+    let params = new HttpParams().set('id', '' + id + '');
+    return this.http.get<Benevole>(this.apiUrl + '/getById', { params, responseType: 'json' });
+  }
+
   getByEvenementId(eventId: number) {
     let params = new HttpParams().set('eventId', '' + eventId + '');
     return this.http.get<Benevole[]>(this.apiUrl + '/getByEvenementId', { params, responseType: 'json' });

@@ -59,7 +59,17 @@ public class BenevoleController {
         return new ResponseEntity<>(benevole, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getById", method = RequestMethod.GET)
+    public ResponseEntity<Benevole> getById(@RequestParam Integer id) {
+        logger.debug("getById Benevole");
+        Benevole benevole = benevoleService.findById(id);
 
+        if(benevole == null) {
+            return new ResponseEntity(benevole, HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(benevole, HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/getByEvenementId", method = RequestMethod.GET)
     public ResponseEntity<List<Benevole>> getByEvenementId(@RequestParam Integer eventId) {

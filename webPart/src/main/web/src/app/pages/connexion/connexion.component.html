@@ -64,9 +64,9 @@
   </div>
 </div>
 
-<div class="row">
+<div *ngIf="evenement" class="row">
   <div class="col-sm-12 ">
-    <img class="container" *ngIf="affiche" [src]="affiche" alt="Affiche">
+    <img class="container" *ngIf="evenement.affiche" [src]="evenement.affiche" alt="Affiche">
   </div>
 </div>
 <div class="row">

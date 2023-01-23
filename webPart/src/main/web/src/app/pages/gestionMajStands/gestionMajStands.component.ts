@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ValidationService, CroisementService, StandService, CreneauService, EvenementService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Croisement, Stand, Creneau } from '../../models';
+import { Croisement, Stand, Creneau, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 
 
@@ -19,17 +19,18 @@ export class GestionMajStandsComponent implements OnInit {
   newStand: Stand = new Stand();
   choix: string;
   ajouterCroisement: number = 0;
-  organumber: number;
+  evenement: Evenement = new Evenement();
   modifTypeStand: number = 0;
-
+  idEvenement:number
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public evenementService: EvenementService,
-    public transmissionService: TransmissionService,
     public creneauService: CreneauService,
     public croisementService: CroisementService,
+    
+    public transmissionService: TransmissionService,
     public standService: StandService,
     public validationService: ValidationService,
     public sanitizer: DomSanitizer) {
@@ -38,15 +39,25 @@ export class GestionMajStandsComponent implements OnInit {
 
   ngOnInit() {
     this.choix = "";
-
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getEvenement(this.idEvenement);
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
     if(this.authorize){
       this.getAllStands();
       this.getAllCreneaux();
     }else{
-      this.router.navigate(['/gestion/' + this.organumber]);
+      this.router.navigate(['/gestion/' + this.idEvenement]);
     }
+  }
+
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
   }
 
   existInCroisements(croisements: Croisement[], id: number): Croisement {
@@ -63,7 +74,7 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
   getAllStands(): void {
-    this.standService.getAll(this.organumber).subscribe(stands => {
+    this.standService.getAll(this.idEvenement).subscribe(stands => {
       if(stands != null){
       this.stands = stands
       
@@ -89,7 +100,7 @@ export class GestionMajStandsComponent implements OnInit {
 
 
   getAllCreneaux(): void {
-    this.creneauService.getAll(this.organumber).subscribe(creneaux => {
+    this.creneauService.getAll(this.idEvenement).subscribe(creneaux => {
       this.creneaux = creneaux;
     },
       error => {
@@ -152,7 +163,7 @@ export class GestionMajStandsComponent implements OnInit {
 
   ajout(stand: Stand): void {
     stand.type = 0
-    this.standService.ajout(stand, this.organumber).subscribe(data => {
+    this.standService.ajout(stand, this.idEvenement).subscribe(data => {
       this.getAllStands()
     },
       error => {

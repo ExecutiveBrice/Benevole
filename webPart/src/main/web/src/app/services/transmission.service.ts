@@ -17,14 +17,4 @@ export class TransmissionService {
     this.dataSource.next(evenement);
   }
 
-  // Observable string sources
-  private idSource = new Subject<number>();
-
-  // Observable string streams
-  numberStream = this.idSource.asObservable();
-
-  // Service message commands
-  numberTransmission(number: number) {
-    this.idSource.next(number);
-  }
 }

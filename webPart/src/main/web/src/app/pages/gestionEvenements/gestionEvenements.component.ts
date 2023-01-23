@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, TransmissionService, EvenementService, ConfigService } from '../../services';
+import { ValidationService, EvenementService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,7 +16,6 @@ import { Subscription } from 'rxjs';
 export class GestionEvenementsComponent implements OnInit {
   subscription = new Subscription()
   authorize: boolean = false;
-  organumber: number;
   evenements: Evenement[];
   choix: number;
   params: Map<string, string>
@@ -27,7 +26,6 @@ export class GestionEvenementsComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public evenementService: EvenementService,
-    public transmissionService: TransmissionService,
     public configService: ConfigService,
     public validationService: ValidationService,
     public sanitizer: DomSanitizer) {

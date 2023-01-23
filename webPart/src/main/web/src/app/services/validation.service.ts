@@ -13,29 +13,29 @@ export class ValidationService {
     public router: Router
   ) { }
 
-  async testCommun(organumber: number): Promise<boolean> {
+  async testCommun(idEvenement: number): Promise<boolean> {
     localStorage.setItem('isGestion', JSON.stringify(false))
 
-    if (!organumber || isNaN(organumber) || organumber < 1) {
+    if (!idEvenement || isNaN(idEvenement) || idEvenement < 1) {
       return false
     }
 
-    return await this.evenementService.isOpen(organumber).toPromise();
+    return await this.evenementService.isOpen(idEvenement).toPromise();
   }
 
-  async testGestion(organumber: number, password: string): Promise<boolean> {
+  async testGestion(idEvenement: number, password: string): Promise<boolean> {
     localStorage.removeItem('isGestion');
     localStorage.removeItem('isValidAccessForEvent');
 
-    if (isNaN(organumber)) {
+    if (isNaN(idEvenement)) {
       return false;
     } else {
-      if (organumber != 0) {
-        const authorisation = await this.evenementService.isAuthorize(organumber, password).toPromise();
+      if (idEvenement != 0) {
+        const authorisation = await this.evenementService.isAuthorize(idEvenement, password).toPromise();
         if (!authorisation) {
           return false;
         } else {
-          localStorage.setItem('isValidAccessForEvent', JSON.stringify(organumber));
+          localStorage.setItem('isValidAccessForEvent', JSON.stringify(idEvenement));
           localStorage.setItem('isGestion', JSON.stringify(true))
           return true;
         }
@@ -45,7 +45,7 @@ export class ValidationService {
         if (password != "super") {
           return false;
         }
-        localStorage.setItem('isValidAccessForEvent', JSON.stringify(organumber));
+        localStorage.setItem('isValidAccessForEvent', JSON.stringify(idEvenement));
         return true;
       }
     }

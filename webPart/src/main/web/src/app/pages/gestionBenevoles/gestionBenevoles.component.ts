@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BenevoleService } from '../../services';
-import { ConfigService, ValidationService, TransmissionService, EvenementService, CroisementService, StandService, MailService, ExcelService } from '../../services';
+import { ConfigService, ValidationService, EvenementService, CroisementService, StandService, MailService, ExcelService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,20 +16,20 @@ import { Subscription } from 'rxjs';
 
 export class GestionBenevolesComponent implements OnInit {
   authorize: boolean = false;
-  organumber: number;
   croisements: Croisement[];
   benevoles: Benevole[];
   choix: string;
   params: Map<string, string>
-  evenement: Evenement;
+  evenement: Evenement = new Evenement();
   subscription = new Subscription()
-
+  idEvenement: number
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public configService: ConfigService,
     public evenementService: EvenementService,
+    
     public transmissionService: TransmissionService,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
@@ -47,24 +47,36 @@ export class GestionBenevolesComponent implements OnInit {
     this.benevoles = [];
     this.croisements = [];
     this.choix = "";
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    console.log(parseInt(this.route.snapshot.paramMap.get('id')))
+    this.getEvenement(this.idEvenement);
 
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
     if(this.authorize){
-      this.transmissionService.dataTransmission(new Evenement());
       this.find();
       this.getCroisement();
     }else{
-      this.router.navigate(['/gestion/' + this.organumber]);
+      this.router.navigate(['/gestion/' + this.idEvenement]);
     }
+  }
+
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
   }
 
   exportAsXLSX(): void {
     this.excelService.exportAsExcelFile(this.benevoles, 'sample');
   }
 
+
   find(): void {
-    this.benevoleService.getByEvenementId(this.organumber).subscribe(benevoles => {
+    this.benevoleService.getByEvenementId(this.idEvenement).subscribe(benevoles => {
       if (benevoles != null) {
         this.benevoles = benevoles;
 
@@ -132,7 +144,7 @@ export class GestionBenevolesComponent implements OnInit {
 
 
   getCroisement(): void {
-    this.croisementService.getAll(this.organumber).subscribe(data => {
+    this.croisementService.getAll(this.idEvenement).subscribe(data => {
       this.croisements = data
     },
       error => {
@@ -155,7 +167,7 @@ export class GestionBenevolesComponent implements OnInit {
 
       email.text = email.text + benevole.reponse + "<br>"
 
-      email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params['url'] + "/" + this.evenement.id + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
+      email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params['url'] + "/" + this.idEvenement + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
       this.envoiMail(email)
     },
       error => {

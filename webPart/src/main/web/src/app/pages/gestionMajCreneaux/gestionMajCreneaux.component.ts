@@ -19,8 +19,8 @@ export class GestionMajCreneauxComponent implements OnInit {
   creneaux: Creneau[];
   newCreneau: Creneau = new Creneau();
   choix: string;
-  organumber:number;
-
+  evenement: Evenement = new Evenement();
+  idEvenement:number
   constructor(
 
     public route: ActivatedRoute,
@@ -36,18 +36,28 @@ export class GestionMajCreneauxComponent implements OnInit {
   ngOnInit() {
     this.creneaux = [];
     this.choix = "";
-
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getEvenement(this.idEvenement);
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
     if(this.authorize){
       this.getAll()
     }else{
-      this.router.navigate(['/gestion/' + this.organumber]);
+      this.router.navigate(['/gestion/' + this.idEvenement]);
     }
   }
 
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
   getAll(): void {
-    this.creneauService.getAll(this.organumber).subscribe(data => {
+    this.creneauService.getAll(this.idEvenement).subscribe(data => {
       this.creneaux = data;
     },
       error => {
@@ -67,7 +77,7 @@ export class GestionMajCreneauxComponent implements OnInit {
 
   ajout(creneau:Creneau): void {
     creneau.chevauchement = []
-    this.creneauService.ajout(creneau, this.organumber).subscribe(data => {
+    this.creneauService.ajout(creneau, this.idEvenement).subscribe(data => {
       this.getAll();
     },
       error => {

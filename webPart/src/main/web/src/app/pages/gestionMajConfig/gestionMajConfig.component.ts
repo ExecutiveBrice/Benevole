@@ -15,9 +15,8 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 export class GestionMajConfigComponent implements OnInit {
   subscription = new Subscription();
   authorize: boolean = false;
-  organumber: number;
-  evenement: Evenement;
-
+  evenement: Evenement = new Evenement();
+  idEvenement:number
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -28,19 +27,18 @@ export class GestionMajConfigComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.organumber?true:false;
-    if(this.authorize){
-      this.getEvenement(this.organumber)
-    }else{
-      this.router.navigate(['/gestion/' + this.organumber]);
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getEvenement(this.idEvenement);
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
+    if(!this.authorize){
+      this.router.navigate(['/gestion/' + this.idEvenement]);
     }
   }
 
-  getEvenement(organumber: number): void {
-    this.evenementService.getById(organumber).subscribe(data => {
-      this.transmissionService.dataTransmission(data);
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
       this.evenement = data;
+      this.transmissionService.dataTransmission(data);
     },
       error => {
         console.log('😢 Oh no!', error);

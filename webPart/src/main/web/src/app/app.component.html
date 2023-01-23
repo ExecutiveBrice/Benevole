@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md bg-dark navbar-dark ">
-  <a href="evenement.sitepersourl" class="navbar-left"> <img class="container" *ngIf="evenement.sitepersologo" [src]="evenement.sitepersologo" alt="logo"></a>
-  <a href="https://alod.fr" class="navbar-left"> <img class="container" *ngIf="!evenement.sitepersologo" src="assets/logo.png" alt="lossgo"></a>
+  <a href="evenement.sitepersourl" class="navbar-left"> <img class="container" *ngIf="evenement != undefined && evenement.sitepersologo" [src]="evenement.sitepersologo" alt="logo"></a>
+  <a href="https://alod.fr" class="navbar-left"> <img class="container" *ngIf="evenement == undefined || !evenement.sitepersologo" src="assets/logo.png" alt="lossgo"></a>
 
   <div class="mx-auto flex-column" id="navbar">
     <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
@@ -10,7 +10,7 @@
     </ul>
   </div>
 
-  <div *ngIf="isGestion">
+  <div *ngIf="evenement != undefined && isValidAccessForEvent == evenement.id">
     <button type="button" class="btn btn-block btn-warning" [routerLink]="['/gestion/', evenement.id]">Gestion</button>
   </div>
 </nav>
@@ -22,15 +22,6 @@
 <nav *ngIf="canSendAlerte" class="navbar navbar-expand-md bg-dark navbar-dark">
 
   <div *ngIf="evenement != undefined" class="navbar-expand m-auto navbar-text">
-    {{evenement.contact}} - {{evenement.contactTel}} - {{evenement.contactEmail}}
-  </div>
-
-  <div *ngIf="!mail">
-    <button type="button" class="btn btn-block btn-danger" (click)="mail = !mail">Nous envoyer un email</button>
-  </div>
-  <div *ngIf="mail">
-    <textarea rows="3" [(ngModel)]="text" placeholder="Un problème, une question, une remarque,..."
-      class="form-control"></textarea>
-    <button type="button" class="btn btn-block btn-danger" (click)="envoiMail(text)">Envoi de l'email</button>
+    {{evenement.contact}} - {{evenement.contactEmail}}
   </div>
 </nav>

@@ -10,6 +10,8 @@ export class EvenementService {
     private http: HttpClient
   ) { }
 
+
+
   getAll() {
     return this.http.get<Evenement[]>(this.apiUrl + '/getAll', {responseType: 'json'});
   }

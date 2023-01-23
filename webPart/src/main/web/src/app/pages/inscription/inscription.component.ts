@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs';
 
 export class InscriptionComponent implements OnInit {
 
-  organumber: number;
   validation: boolean;
   choix: String;
   sansChoix: Croisement[];
@@ -30,11 +29,11 @@ export class InscriptionComponent implements OnInit {
   emailText1: string;
   emailText2: string;
   choixStand: string;
-  evenement: Evenement;
+  evenement: Evenement = new Evenement();
   subscription = new Subscription()
   params: Map<string, string>
   using_address: string;
-
+  idEvenement:number
 
   constructor(
     public benevoleService: BenevoleService,
@@ -50,26 +49,25 @@ export class InscriptionComponent implements OnInit {
 
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams'));
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getEvenement(this.idEvenement);
 
-    this.organumber = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.validationService.testCommun(this.organumber).then(response => {
+    this.validationService.testCommun(this.idEvenement).then(response => {
       if (response) {
 
-
-        this.using_address = this.params['url'] + "/" + this.organumber
+        this.using_address = this.params['url'] + "/" + this.idEvenement
 
         if (localStorage.getItem('user')) {
           this.benevole = JSON.parse(localStorage.getItem('user'));
           this.actualiseBenevole()
         } else {
-          this.router.navigate(['/' + this.organumber]);
+          this.router.navigate(['/' + this.idEvenement]);
         }
 
         this.plein = false;
         this.validation = false;
         this.chevauchement = false;
-        console.log("numberTransmission"+this.organumber);
-        this.transmissionService.numberTransmission(this.organumber);
+
         this.getStand();
 
       } else {
@@ -84,12 +82,18 @@ export class InscriptionComponent implements OnInit {
 
   }
 
+  getEvenement(idEvenement: number): void {
+    this.evenementService.getById(idEvenement).subscribe(data => {
+      this.evenement = data;
+      this.transmissionService.dataTransmission(data);
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
-
-
-
-  actualiseBenevole(): void {
-    this.benevoleService.getByMail(this.benevole.email, this.organumber).subscribe(benevole => {
+ actualiseBenevole(): void {
+    this.benevoleService.getByMail(this.benevole.email, this.idEvenement).subscribe(benevole => {
       benevole.croisements = []
       this.benevole = benevole;
 
@@ -118,7 +122,7 @@ export class InscriptionComponent implements OnInit {
     this.preparatifs = []
     this.postparatifs = []
     this.stands = []
-    this.standService.getAll(this.organumber).subscribe(stands => {
+    this.standService.getAll(this.idEvenement).subscribe(stands => {
       stands.forEach(stand => {
 
         stand.croisements = []

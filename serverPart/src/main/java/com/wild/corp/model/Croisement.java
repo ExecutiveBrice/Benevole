@@ -35,9 +35,6 @@ public class Croisement {
     @ManyToOne
     private Creneau creneau;
 
-
-
-    @JsonIgnoreProperties({"prenom","nom","telephone","email","commentaire","reponse", "evenement" })
     @ManyToMany(mappedBy="croisements")
     private List<Benevole> benevoles;
 
