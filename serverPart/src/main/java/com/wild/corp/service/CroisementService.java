@@ -1,29 +1,61 @@
 package com.wild.corp.service;
 
 
-
 import com.wild.corp.model.Croisement;
+import com.wild.corp.repositories.CroisementRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 import java.util.List;
 
-public interface CroisementService {
+@Service("CroisementService")
+@Transactional
+public class CroisementService {
 
-    void persist(Croisement croisement);
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class NotFoundException extends RuntimeException{}
 
-    List<Croisement> findByEtatAndEvenementId(Integer etat, Integer eventId);
+    @Autowired
+    private CroisementRepository croisementRepository;
 
-    List<Croisement> findAll();
+    public void persist(Croisement croisement) {
+        croisementRepository.save(croisement);
+    }
 
-    void delete(Integer croisementId);
+    public List<Croisement> findByEtatAndEvenementId(Integer etat, Integer eventId) {
+        return croisementRepository.findByStandTypeAndStandEvenementId(etat, eventId);
+    }
 
-    Croisement findById(Integer croisementId);
+    public void delete(Integer croisementId) {
+        Croisement croisement = findById(croisementId);
+        croisementRepository.delete(croisement);
+    }
 
-    List<Croisement> getCroisementByEvenement(Integer evenementId);
+    public Croisement findById(Integer croisementId){
+        return croisementRepository.findAllById(croisementId).get(0);
+    }
 
-    List<Croisement> getCroisementByStand(Integer standId);
+    public List<Croisement> getCroisementByStand(Integer standId){
+        return croisementRepository.findByStandId(standId);
+    }
 
-    List<Croisement> getCroisementByCreneau(Integer creneauId);
+    public List<Croisement> getCroisementByEvenement(Integer evenementId){
+        return croisementRepository.findByStandEvenementId(evenementId);
+    }
 
-    List<Croisement> getCroisementByBenveole(Integer benevoleId);
+    public List<Croisement> getCroisementByCreneau(Integer creneauId){
+        return croisementRepository.findByCreneauId(creneauId);
+    }
 
+    public List<Croisement> getCroisementByBenveole(Integer benevoleId){
+        return croisementRepository.findByBenevolesId(benevoleId);
+    }
+
+    public List<Croisement> findAll() {
+        return croisementRepository.findAll();
+    }
 
 }

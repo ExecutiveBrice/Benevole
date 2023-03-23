@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-md bg-dark navbar-dark ">
+  <a href="evenement.sitepersourl" class="navbar-left"> <img class="container" *ngIf="evenement != undefined && evenement.sitepersologo" [src]="evenement.sitepersologo" alt="logo"></a>
+
+  <div class="mx-auto flex-column" id="navbar">
+    <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
+      <li *ngIf="evenement != undefined" class="nav-item gros_titre">
+        {{evenement.eventName}}
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="evenement != undefined && isValidAccessForEvent == evenement.id">
+    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/gestion/', evenement.id]">Gestion</button>
+  </div>
+</nav>
+<!-- main app container -->
+
+<div #myIdentifier class="container">
+  <router-outlet></router-outlet>
+</div>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark bas_de_page">
+
+  <div *ngIf="evenement != undefined" class="navbar-expand m-auto navbar-text">
+    Contact de l'évènement : {{evenement.contact}} - {{evenement.contactEmail}}
+  </div>
+
+
+  <div *ngIf="evenement != undefined" class="navbar-expand m-auto navbar-text">
+    Conception : brice_morel@hotmail.com, laurent.boureau.nantes@gmail.com
+  </div>
+
+</nav>

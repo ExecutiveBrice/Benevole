@@ -1,0 +1,9 @@
+.petite_ecriture {
+    font-size: x-small;
+}
+
+.topright {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

@@ -1,0 +1,30 @@
+spring:
+  swagger:
+    enable: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: <gmail_adresse>
+    password: <App_key>
+    properties.mail.smtp:
+      ssl.trust: smtp.gmail.com
+      auth: true
+      starttls.enable: true
+logging:
+  file: /var/java_benevoles.log
+  level:
+    com.wild.corp: DEBUG
+    root: WARN
+    org.springframework.web: WARN
+    org.hibernate: WARN
+datasource:
+  driverClassName: org.postgresql.Driver
+  defaultSchema:
+  maxPoolSize: 20
+  hibernate:
+    hbm2ddl.method: create-drop
+    hbm2ddl.auto: update
+    show_sql: false
+    format_sql: true
+    dialect: org.hibernate.dialect.PostgreSQLDialect
+

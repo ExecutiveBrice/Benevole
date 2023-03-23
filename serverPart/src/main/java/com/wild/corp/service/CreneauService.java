@@ -2,24 +2,71 @@ package com.wild.corp.service;
 
 
 import com.wild.corp.model.Creneau;
+import com.wild.corp.model.Croisement;
+import com.wild.corp.model.Evenement;
+import com.wild.corp.repositories.CreneauRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface CreneauService {
+@Service("CreneauService")
+@Transactional
+public class CreneauService {
 
-    void persist(Creneau creneau);
+    @Autowired
+    private CreneauRepository creneauRepository;
 
-    void addCreneau(Creneau creneau, Integer evenementId);
+    @Autowired
+    private EvenementService evenementService;
 
-    void updateCreneau(Creneau creneau);
+    @Autowired
+    private CroisementService croisementService;
 
-    void delete(Integer idCreneau);
+    public void persist(Creneau creneau) {
+        creneauRepository.save(creneau);
+    }
 
-    List<Creneau> findByGroupeAndEvenementId(Integer groupe, Integer evenementId);
+    public void delete(Integer idCreneau) {
+        List<Croisement> croisements = croisementService.getCroisementByCreneau(idCreneau);
+        for (Croisement croisement:croisements) {
+            croisementService.delete(croisement.getId());
+        }
+        creneauRepository.delete(findById(idCreneau));
+    }
 
-    List<Creneau> findByEvenementId(Integer evenementId);
+    public void addCreneau(Creneau creneau, Integer evenementId){
+        Evenement evenement = evenementService.findById(evenementId);
 
-    List<Creneau> findAll();
+        creneau.setEvenement(evenement);
 
-    Creneau findById(Integer childId);
+        persist(creneau);
+    }
+
+    public void updateCreneau(Creneau newCreneau){
+        Creneau creneau = findById(newCreneau.getId());
+
+        creneau.setOrdre(newCreneau.getOrdre());
+        creneau.setPlage(newCreneau.getPlage());
+        creneau.setChevauchement(newCreneau.getChevauchement());
+        persist(creneau);
+    }
+
+    public List<Creneau> findAll() {
+        return creneauRepository.findAll();
+    }
+
+    public Creneau findById(Integer childId) {
+        return creneauRepository.getOne(childId);
+    }
+
+    public List<Creneau> findByGroupeAndEvenementId(Integer groupe, Integer evenementId){
+        return creneauRepository.findByEvenementId(evenementId);
+    }
+
+    public List<Creneau> findByEvenementId(Integer evenementId){
+        return creneauRepository.findByEvenementId(evenementId);
+    }
+
 }

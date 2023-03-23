@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  client:
+    image: nginx
+    depends_on:
+      - app
+    ports:
+        - 127.0.0.1:8090:80
+    volumes:
+        - ./dist:/usr/share/nginx/html
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: ./app
+    container_name: app
+    networks:
+      - spring_net
+    depends_on:
+      - db
+    environment:
+      - DATASOURCE_URL=jdbc:postgresql://db:5432/benevoles
+      - DATASOURCE_USERNAME=benevoles
+      - DATASOURCE_PASSWORD=benevolespass
+      - SERVER_PORT=8000
+    ports:
+      - 127.0.0.1:8000:8000
+  db:
+    image: postgres:14.1-alpine
+    container_name: db
+    networks:
+      - spring_net
+    environment:
+      - POSTGRES_USER=benevoles
+      - POSTGRES_DB=benevoles
+      - POSTGRES_PASSWORD=benevolespass
+networks:
+  spring_net:

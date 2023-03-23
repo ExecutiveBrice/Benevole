@@ -1,0 +1,24 @@
+<div *ngIf="authorize" class="row">
+  <div class="col-sm-12">
+    <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
+  </div>
+
+  <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-sm-4">
+    <button type="button" class="btn btn-block btn-info" (click)="choixstand(stand.nom)">{{stand.nom}} </button>
+
+    <div class="col-sm-12" *ngIf="choix == stand.nom">
+      <div class="row">
+        <div *ngFor="let standcroisement of stand.croisements | orderBy:'Creneau.ordre':false "
+          class="col-sm-12 dropdown">
+          <h3><strong>{{standcroisement.creneau.plage}} :
+              ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong></h3>
+          <div class="row">
+            <div *ngFor="let benevole of standcroisement.benevoles | orderBy:'nom':false " class="col-sm-12 dropdown">
+              {{benevole.prenom}} {{benevole.nom}} - {{benevole.email}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

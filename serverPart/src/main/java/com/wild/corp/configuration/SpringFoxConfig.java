@@ -23,7 +23,7 @@ public class SpringFoxConfig {
     @Bean
     public Docket api() {
 
-
+System.out.println(environment.getProperty("server.port"));
         return new Docket(DocumentationType.SWAGGER_2).enable("true".equalsIgnoreCase(environment.getRequiredProperty("spring.swagger.enable")))
                 .select()
                 .apis(RequestHandlerSelectors.any())

@@ -1,18 +1,9 @@
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# compiled output
-
-/webPart/webPart.iml
-/webPart/target
-
-/webPart/src/main/web/node_modules
-/webPart/src/main/web/node
-/webPart/src/main/web/dist
-
-/serverPart/target
-/serverPart/serverPart.iml
-
-parentPart.iml
-.git
-.idea
-application.yml
+/front/.angular/
+/front/dist/
+/front/node_modules/
+/front/package-lock.json
+/serverPart/.idea/
+/serverPart/.settings/
+/serverPart/target/
+/serverPart/.project
+/serverPart/.classpath
