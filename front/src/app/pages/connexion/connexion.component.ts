@@ -37,6 +37,8 @@ export class ConnexionComponent implements OnInit {
 
 
   ngOnInit() {
+
+
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
     this.getEvenement(this.idEvenement);
     this.validationService.testCommun(this.idEvenement).then(response => {
@@ -47,7 +49,7 @@ export class ConnexionComponent implements OnInit {
     .catch(err => {
       this.router.navigate(['error']);
     })
-
+    
     this.benevole = new Benevole();
     this.exist = false;
     this.nouveau = false;
@@ -67,6 +69,9 @@ export class ConnexionComponent implements OnInit {
 
   find(): void {
     this.benevole.email = this.benevole.email.toLowerCase();
+    this.benevole.email = this.benevole.email.trimEnd();
+    this.benevole.email = this.benevole.email.trimStart();
+
     this.benevoleService.getByMail(this.benevole.email, this.idEvenement).subscribe(benevole => {
       if (benevole == null) {
         this.exist = false
@@ -88,6 +93,9 @@ export class ConnexionComponent implements OnInit {
     this.nouveau = false;
 
     this.benevole.email = this.benevole.email.toLowerCase();
+    this.benevole.email = this.benevole.email.trimEnd();
+    this.benevole.email = this.benevole.email.trimStart();
+    
     this.benevoleService.add(this.benevole, this.idEvenement).subscribe(data => {
 
       localStorage.setItem('user', JSON.stringify(data))

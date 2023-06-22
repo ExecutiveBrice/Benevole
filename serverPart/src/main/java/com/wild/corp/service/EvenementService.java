@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +93,7 @@ public class EvenementService {
         event.setSignature(evenement.getSignature());
         event.setValidation(evenement.getValidation());
         event.setLock(evenement.isLock());
-
+        event.setNeedtel(evenement.isNeedtel());
         event.setSitepersourl(evenement.getSitepersourl());
         event.setSitepersologo(evenement.getSitepersologo());
 

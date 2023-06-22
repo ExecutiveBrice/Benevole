@@ -20,4 +20,5 @@ export class Evenement {
   signature: string;
   rappel: string;
   lock : boolean;
+  needtel: boolean;
 }

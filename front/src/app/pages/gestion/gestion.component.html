@@ -36,26 +36,26 @@
       </strong>
     </div>
   </div>
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block" [routerLink]="['/gestionbenevoles/', idEvenement]">Gestion des
       Bénévoles</button>
   </div>
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block" [routerLink]="['/gestionstands/', idEvenement]">Gestion des
       Stands</button>
   </div>
 
-  <div *ngIf="evenement" class="col-sm-3">
+  <div *ngIf="evenement" class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block btn-success overflow-visibles" [ngClass]="{'btn-danger':evenement.lock}"
       (click)="updateBlocage()">Je clique
       pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block" (click)="mail = !mail">Envoi de mails</button>
   </div>
 
-  <div *ngIf="mail" class="form-group col-sm-12 ">
+  <div *ngIf="mail" class="form-group col-sm-12">
 
     <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
       <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
@@ -95,19 +95,19 @@
       </strong>
     </div>
   </div>
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block" [routerLink]="['/gestionmajstands/', idEvenement]">Maj des
       Stands</button>
   </div>
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block" [routerLink]="['/gestionmajcreneaux/', idEvenement]">Maj des
       Creneaux</button>
   </div>
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <button type="button" class="btn btn-block" [routerLink]="['/gestionmajconfig/', idEvenement]">Maj des
       Infos</button>
   </div>
-  <div class="col-sm-3">
+  <div class="col-md-6 col-lg-3">
     <a href="{{using_address}}"> <img src="{{qrcode}}" /></a>
   </div>
 
@@ -118,7 +118,7 @@
     <img class="container" *ngIf="evenement.affiche" [src]="evenement.affiche" alt="Affiche">
 
 
-    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="3 / 1"
+    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" 
       [resizeToWidth]="640" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
       (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
     </image-cropper>

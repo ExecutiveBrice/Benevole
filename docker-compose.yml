@@ -8,31 +8,33 @@ services:
     ports:
         - 127.0.0.1:8090:80
     volumes:
-        - ./dist:/usr/share/nginx/html
+        - ./front/dist:/usr/share/nginx/html
   app:
-    image: 'docker-spring-boot-postgres:latest'
+    image: 'docker-spring-boot-benevole'
     build:
-      context: ./app
+      context: ./serverPart
     container_name: app
     networks:
-      - spring_net
+      - spring_network_benevole
     depends_on:
-      - db
+      - db_benevoles
     environment:
-      - DATASOURCE_URL=jdbc:postgresql://db:5432/benevoles
+      - DATASOURCE_URL=jdbc:postgresql://db_benevoles:5432/benevoles
       - DATASOURCE_USERNAME=benevoles
       - DATASOURCE_PASSWORD=benevolespass
       - SERVER_PORT=8000
     ports:
       - 127.0.0.1:8000:8000
-  db:
+  db_benevoles:
     image: postgres:14.1-alpine
-    container_name: db
+    container_name: db_benevoles
     networks:
-      - spring_net
+      - spring_network_benevole
     environment:
       - POSTGRES_USER=benevoles
       - POSTGRES_DB=benevoles
       - POSTGRES_PASSWORD=benevolespass
+    ports:
+      - 127.0.0.1:8010:5432
 networks:
-  spring_net:
+  spring_network_benevole:

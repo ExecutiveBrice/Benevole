@@ -80,16 +80,6 @@ export class GestionStandsComponent implements OnInit {
 
 
 
-  choixstand(nom: string) {
-    if (this.choix != nom) {
-      this.choix = nom
-    } else {
-      this.choix = null
-    }
-  }
-
-  
-
 
   async exportAsXLSX() {
     var promises = []
@@ -148,5 +138,15 @@ export class GestionStandsComponent implements OnInit {
         console.log('😢 Oh no!', error);
       });
 
+  }
+
+
+  toggleList = [];
+  toggle(toggleName: String) {
+    if (this.toggleList.indexOf(toggleName) > -1) {
+      this.toggleList = this.toggleList.filter(elem => elem != toggleName)
+    } else {
+      this.toggleList.push(toggleName);
+    }
   }
 }

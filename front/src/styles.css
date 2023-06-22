@@ -1,5 +1,6 @@
 body {
     background-color : rgb(217, 217, 217);
+    padding-bottom: 200px;
 }
 
 [class*='row'] {
@@ -11,7 +12,10 @@ body {
     padding: 5px;
 }
 
-  
+.petite_ecriture {
+    font-size: x-small;
+}
+
 
 
 .bordered {

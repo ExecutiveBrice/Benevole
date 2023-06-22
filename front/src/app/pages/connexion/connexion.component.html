@@ -1,3 +1,4 @@
+<div class="container">
 <div class="row">
   <div class="col-sm-12 ">
     <div class="alert alert-success">
@@ -55,6 +56,17 @@
           <input type="text" [(ngModel)]="benevole.prenom" class="form-control" id="firstname">
         </div>
       </div>
+
+      <div *ngIf="evenement.needtel" class="col-sm-12 ">
+        <div class="input-group mb-3 input-group-lg">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Tel : </span>
+          </div>
+          <input type="text" [(ngModel)]="benevole.telephone" class="form-control" id="telephone">
+        </div>
+      </div>
+
+
       <div class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info btn-lg" (click)="subscribe()">Je m'inscris</button>
       </div>
@@ -80,3 +92,17 @@
     </div>
   </div>
 </div>
+</div>
+
+<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-bottom">
+
+  <div  class="navbar-expand m-auto navbar-text">
+    Contact de l'évènement : {{evenement.contact}} - {{evenement.contactEmail}}
+  </div>
+
+
+  <div class="navbar-expand m-auto navbar-text">
+    Conception : brice_morel@hotmail.com, laurent.boureau.nantes@gmail.com
+  </div>
+
+</nav>

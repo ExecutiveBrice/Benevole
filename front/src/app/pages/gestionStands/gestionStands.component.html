@@ -3,18 +3,18 @@
     <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
   </div>
 
-  <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-sm-4">
-    <button type="button" class="btn btn-block btn-info" (click)="choixstand(stand.nom)">{{stand.nom}} </button>
+  <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-lg-2">
+    <button type="button" class="btn btn-block btn-info" (click)="toggle(stand.id)">{{stand.nom}} </button>
 
-    <div class="col-sm-12" *ngIf="choix == stand.nom">
+    <div class="col-sm-12" *ngIf="toggleList.indexOf(stand.id)>-1">
       <div class="row">
-        <div *ngFor="let standcroisement of stand.croisements | orderBy:'Creneau.ordre':false "
+        <div *ngFor="let standcroisement of stand.croisements | orderBy:'creneau.ordre':false "
           class="col-sm-12 dropdown">
-          <h3><strong>{{standcroisement.creneau.plage}} :
-              ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong></h3>
+          <strong>{{standcroisement.creneau.plage}} :
+              ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
           <div class="row">
-            <div *ngFor="let benevole of standcroisement.benevoles | orderBy:'nom':false " class="col-sm-12 dropdown">
-              {{benevole.prenom}} {{benevole.nom}} - {{benevole.email}}
+            <div *ngFor="let benevole of standcroisement.benevoles | orderBy:'nom':false " class="col-sm-12 dropdown petite_ecriture">
+              {{benevole.prenom}} {{benevole.nom}} - {{benevole.email}} {{benevole.telephone}}
             </div>
           </div>
         </div>

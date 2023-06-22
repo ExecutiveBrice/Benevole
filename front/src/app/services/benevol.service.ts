@@ -55,6 +55,7 @@ export class BenevoleService {
     lBenevole.id = benevole.id
     lBenevole.commentaire = benevole.commentaire
     lBenevole.email = benevole.email
+    lBenevole.telephone = benevole.telephone
     lBenevole.nom = benevole.nom 
     lBenevole.prenom = benevole.prenom
     lBenevole.reponse = benevole.reponse

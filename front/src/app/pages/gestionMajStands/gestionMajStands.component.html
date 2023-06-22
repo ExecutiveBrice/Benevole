@@ -1,30 +1,30 @@
 
 <div *ngIf="authorize" class="row">
-  <div class="input-group col-sm-2">
+  <div class="input-group col-md-2">
     <div class="input-group-prepend">
       <span class="input-group-text">Ordre : </span>
     </div>
     <input type="text" [(ngModel)]="newStand.ordre" class="form-control" id="newStandordre">
   </div>
-  <div class="input-group col-sm-4">
+  <div class="input-group col-md-4">
     <div class="input-group-prepend">
       <span class="input-group-text">Nom : </span>
     </div>
     <input type="text" [(ngModel)]="newStand.nom" class="form-control" id="newStandnom">
   </div>
-  <div class="input-group col-sm-4">
+  <div class="input-group col-md-4">
     <div class="input-group-prepend">
       <span class="input-group-text">Info : </span>
     </div>
     <input type="text" [(ngModel)]="newStand.bulle" class="form-control" id="newStandbulle">
   </div>
-  <div class="col-sm-2">
+  <div class="col-md-2">
     <button type="button" class="btn btn-block btn-info" (click)="ajout(newStand)">Ajouter</button>
   </div>
 </div>
 
 <div *ngIf="authorize" class="row">
-  <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-sm-4 ">
+  <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-md-6 col-lg-3">
     <div class="row bordered">
       <div class="input-group col-sm-10">
         <div class="input-group-prepend">
@@ -52,9 +52,9 @@
       </div>
       <div *ngIf="stand.type != 1" class="col-sm-12 ">
         <button type="button" class="btn btn-block btn-info"
-          (click)="modifTypeStand == stand.id?modifTypeStand = 0:modifTypeStand= stand.id">Modifier le type</button>
+          (click)="toggle(stand.id)">Modifier le type</button>
       </div>
-      <div class="input-group col-sm-12 " *ngIf="modifTypeStand == stand.id">
+      <div class="input-group col-sm-12 " *ngIf="toggleList.indexOf(stand.id)>-1">
         <button type="button" class="btn btn-block" [ngClass]="{'btn-warning':stand.type == 5 }"
           (click)="stand.type = 5; update(stand)">Préparatifs</button>
         <button type="button" class="btn btn-block" [ngClass]="{'btn-warning':stand.type == 2 }"

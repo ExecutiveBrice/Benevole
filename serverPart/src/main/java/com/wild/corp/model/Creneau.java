@@ -9,6 +9,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "CRENEAU")
 public class Creneau {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "ID", nullable = false)
@@ -63,6 +64,10 @@ public class Creneau {
     }
 
     public Integer[] getChevauchement() {
+        if(this.chevauchement == null){
+            Integer[] chevauchement = {};
+            return chevauchement;
+        }
         return chevauchement;
     }
 
@@ -77,7 +82,6 @@ public class Creneau {
     public void setEvenement(Evenement evenement) {
         this.evenement = evenement;
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -181,5 +181,12 @@ export class GestionMajStandsComponent implements OnInit {
       });
   }
 
-
+  toggleList = [];
+  toggle(toggleName: String) {
+    if (this.toggleList.indexOf(toggleName) > -1) {
+      this.toggleList = this.toggleList.filter(elem => elem != toggleName)
+    } else {
+      this.toggleList.push(toggleName);
+    }
+  }
 }

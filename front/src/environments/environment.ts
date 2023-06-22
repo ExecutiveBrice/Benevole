@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  url: "http://localhost:8091/"
+  //url: "https://bmoexperience.fr/apis/"
+  url: "http://localhost:8000/"
 };

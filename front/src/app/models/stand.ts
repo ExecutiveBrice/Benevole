@@ -11,6 +11,7 @@ export class Stand {
   bulle:string;
   ordre:number;
   type:number;
+  placeRestante:number;
   croisements: Croisement[];
   evenement:Evenement;
 }

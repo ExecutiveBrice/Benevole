@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { faQuestionCircle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-inscription',
@@ -15,9 +15,6 @@ import { faQuestionCircle, faEye, faEyeSlash } from '@fortawesome/free-solid-svg
 })
 
 export class InscriptionComponent implements OnInit {
-  faQuestionCircle = faQuestionCircle;
-  faEyeSlash = faEyeSlash;
-  faEye = faEye;
   validation: boolean;
   visuel: number;
   choix: String;
@@ -182,6 +179,8 @@ export class InscriptionComponent implements OnInit {
             }
           }
         }
+        stand.placeRestante =0
+        stand.croisements.forEach(croisement => stand.placeRestante += (croisement.limite - croisement.benevoles.length))
         },
           error => {
             console.log('😢 Oh no!', error);

@@ -6,7 +6,6 @@ import { Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-
 @Component({
   selector: 'app-gestionEvenements',
   templateUrl: './gestionEvenements.component.html',
@@ -14,6 +13,7 @@ import { Subscription } from 'rxjs';
 })
 
 export class GestionEvenementsComponent implements OnInit {
+
   subscription = new Subscription()
   authorize: boolean = false;
   evenements: Evenement[];

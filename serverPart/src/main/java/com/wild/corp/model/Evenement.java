@@ -64,6 +64,8 @@ public class Evenement {
     @Column(name = "RAPPEL")
     private String rappel;
 
+    @Column(name = "NEEDTEL")
+    private Boolean needtel;
     @Column(name = "LOCK")
     private boolean lock;
 
@@ -79,6 +81,14 @@ public class Evenement {
     @JsonIgnore
     @OneToMany(mappedBy="evenement" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stand> stands;
+
+    public Boolean isNeedtel() {
+        return needtel;
+    }
+
+    public void setNeedtel(Boolean needtel) {
+        this.needtel = needtel;
+    }
 
     public Integer getId() { return id; }
 

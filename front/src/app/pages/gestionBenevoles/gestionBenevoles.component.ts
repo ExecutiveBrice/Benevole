@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import { faEnvelope, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-gestionBenevoles',
@@ -15,6 +15,8 @@ import { Subscription } from 'rxjs';
 })
 
 export class GestionBenevolesComponent implements OnInit {
+  attention = faExclamationTriangle;
+  envelope = faEnvelope;
   authorize: boolean = false;
   croisements: Croisement[];
   benevoles: Benevole[];
@@ -119,15 +121,6 @@ export class GestionBenevolesComponent implements OnInit {
       });
   }
 
-  choixBenevole(email: string) {
-    if (this.choix != email) {
-      this.choix = email
-    } else {
-      this.choix = null
-    }
-
-  }
-
   choisir(benevole: Benevole, benecroisement: Croisement, croisement: Croisement): void {
     if (benecroisement != null) {
       if (benecroisement.id) {
@@ -163,6 +156,14 @@ export class GestionBenevolesComponent implements OnInit {
       });
   }
 
+  modify(benevole: Benevole){
+    this.benevoleService.update(benevole).subscribe(data => {
+      console.log(data)
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
   send(benevole: Benevole) {
     this.benevoleService.update(benevole).subscribe(data => {
       var email = new Email();
@@ -170,10 +171,11 @@ export class GestionBenevolesComponent implements OnInit {
 
 
       email.subject = "Réponse au commentaire de l'évenement " + this.evenement.eventName;
-      email.text = "Vous nous aviez communiqué que :<br>";
 
-      email.text = email.text + benevole.commentaire + "<br>"
-
+      if (benevole.commentaire) {
+        email.text = "Vous nous aviez communiqué que :<br>";
+        email.text = email.text + benevole.commentaire + "<br>"
+      }
       email.text = email.text + "<br>Notre réponse :<br>"
 
       email.text = email.text + benevole.reponse + "<br>"
@@ -181,10 +183,16 @@ export class GestionBenevolesComponent implements OnInit {
       email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params['url'] + "/" + this.idEvenement + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
 
       email.text = email.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
-      benevole.croisements.sort((a, b) => (a.creneau.ordre > b.creneau.ordre) ? 1 : ((b.creneau.ordre > a.creneau.ordre) ? -1 : 0));
-      benevole.croisements.forEach(croisement => {
-        email.text = email.text + (croisement.stand.nom == "tous" ? "N'importe quel stand" : croisement.stand.nom) + " - " + croisement.creneau.plage + "<br>"
-      })
+      if (benevole.croisements) {
+        benevole.croisements.sort((a, b) => (a.creneau.ordre > b.creneau.ordre) ? 1 : ((b.creneau.ordre > a.creneau.ordre) ? -1 : 0));
+        benevole.croisements.forEach(croisement => {
+          email.text = email.text + (croisement.stand.nom == "tous" ? "N'importe quel stand" : croisement.stand.nom) + " - " + croisement.creneau.plage + "<br>"
+        })
+      } else {
+        email.text = email.text + "Quoi ?! Vous n'êtes pas inscrit !"
+      }
+
+
 
 
       this.envoiMail(email)
@@ -193,6 +201,16 @@ export class GestionBenevolesComponent implements OnInit {
         console.log('😢 Oh no!', error);
       });
   }
+
+  toggleList = [];
+  toggle(toggleName: String) {
+    if (this.toggleList.indexOf(toggleName) > -1) {
+      this.toggleList = this.toggleList.filter(elem => elem != toggleName)
+    } else {
+      this.toggleList.push(toggleName);
+    }
+  }
+
 
   envoiMail(email: Email) {
     this.mailService.sendMail(email)

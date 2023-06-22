@@ -1,4 +1,7 @@
 export const environment = {
   production: true,
-  url: "https://bmoexperience.fr/apis/"
+  
+  //url: "/apis/"
+  //url: "https://bmoexperience.fr/apis/"
+  url: "https://alod.fr/apis/"
 };
