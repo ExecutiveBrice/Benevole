@@ -1,40 +1,67 @@
 version: '3.8'
 
 services:
-  client:
-    image: nginx
+  client_benevole:
+    image: nginx:latest
+    container_name: client_benevole
     depends_on:
-      - app
-    ports:
-        - 127.0.0.1:8090:80
+      - app_benevole
     volumes:
-        - ./front/dist:/usr/share/nginx/html
-  app:
+      - ./client:/usr/share/nginx/html
+    networks:
+      - traefik_web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.client_benevole.rule=Host(`bmoexperience.fr`) && PathPrefix(`/benevoles`)"
+      - "traefik.http.routers.client_benevole.entrypoints=websecure"
+      - "traefik.http.routers.client_benevole.middlewares=client_benevole-replacepathregex"
+      - "traefik.http.middlewares.client_benevole-replacepathregex.replacepathregex.regex=^/benevoles/(.*)"
+      - "traefik.http.middlewares.client_benevole-replacepathregex.replacepathregex.replacement=/$$1"
+
+
+  app_benevole:
     image: 'docker-spring-boot-benevole'
+    container_name: app_benevole
     build:
-      context: ./serverPart
-    container_name: app
-    networks:
-      - spring_network_benevole
+      context: ./app
     depends_on:
-      - db_benevoles
+      - db_benevole
     environment:
-      - DATASOURCE_URL=jdbc:postgresql://db_benevoles:5432/benevoles
-      - DATASOURCE_USERNAME=benevoles
-      - DATASOURCE_PASSWORD=benevolespass
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SERVER_PORT=8000
-    ports:
-      - 127.0.0.1:8000:8000
-  db_benevoles:
-    image: postgres:14.1-alpine
-    container_name: db_benevoles
     networks:
-      - spring_network_benevole
+      - traefik_web
+    expose:
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app_benevole.rule=Host(`bmoexperience.fr`) && PathPrefix(`/api_benevole/`)"
+      - "traefik.http.routers.app_benevole.entrypoints=websecure"
+      - "traefik.http.routers.app_benevole.middlewares=app_benevole-replacepathregex"
+      - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/api_benevole/(.*)"
+      - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.replacement=/$$1"
+
+
+  db_benevole:
+    image: postgres:14.1-alpine
+    container_name: db_benevole
     environment:
-      - POSTGRES_USER=benevoles
-      - POSTGRES_DB=benevoles
-      - POSTGRES_PASSWORD=benevolespass
-    ports:
-      - 127.0.0.1:8010:5432
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:          #supprimer en remote
+      - "8106:5432" #supprimer en remote
+    networks:
+      - traefik_web
+    labels:
+      - traefik.enable=true
+      - traefik.tcp.routers.db_benevole.rule=HostSNI(`*`)
+      - traefik.tcp.routers.db_benevole.entrypoints=postgres2
+      - traefik.tcp.services.db_benevole.loadbalancer.server.port=5432
+
+
 networks:
-  spring_network_benevole:
+  traefik_web:
+    external: true

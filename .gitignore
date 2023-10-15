@@ -1,9 +1,10 @@
-/front/.angular/
-/front/dist/
-/front/node_modules/
-/front/package-lock.json
+/client/.angular/
+/client/dist/
+/client/node_modules/
+/client/package-lock.json
 /serverPart/.idea/
 /serverPart/.settings/
 /serverPart/target/
 /serverPart/.project
 /serverPart/.classpath
+.env
