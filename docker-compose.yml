@@ -12,18 +12,22 @@ services:
       - traefik_web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.client_benevole.rule=Host(`bmoexperience.fr`) && PathPrefix(`/benevoles`)"
-      - "traefik.http.routers.client_benevole.entrypoints=websecure"
+      - "traefik.http.routers.client_benevole.rule=Host(`${DNS_NAME}`) && PathPrefix(`/benevoles`)"
+
       - "traefik.http.routers.client_benevole.middlewares=client_benevole-replacepathregex"
       - "traefik.http.middlewares.client_benevole-replacepathregex.replacepathregex.regex=^/benevoles/(.*)"
       - "traefik.http.middlewares.client_benevole-replacepathregex.replacepathregex.replacement=/$$1"
 
+      - "traefik.http.routers.client_benevole.entrypoints=websecure"
+      - "traefik.http.routers.client_benevole.tls=true"
+      - "traefik.http.routers.client_benevole.tls.certresolver=myresolver"
 
   app_benevole:
     image: 'docker-spring-boot-benevole'
     container_name: app_benevole
     build:
       context: ./app
+    env_file: .env
     depends_on:
       - db_benevole
     environment:
@@ -37,12 +41,15 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app_benevole.rule=Host(`bmoexperience.fr`) && PathPrefix(`/api_benevole/`)"
-      - "traefik.http.routers.app_benevole.entrypoints=websecure"
+      - "traefik.http.routers.app_benevole.rule=Host(`${DNS_NAME}`) && PathPrefix(`/api_benevole/`)"
+
       - "traefik.http.routers.app_benevole.middlewares=app_benevole-replacepathregex"
       - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/api_benevole/(.*)"
       - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.replacement=/$$1"
 
+      - "traefik.http.routers.app_benevole.entrypoints=websecure"
+      - "traefik.http.routers.app_benevole.tls=true"
+      - "traefik.http.routers.app_benevole.tls.certresolver=myresolver"
 
   db_benevole:
     image: postgres:14.1-alpine
@@ -53,14 +60,18 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:          #supprimer en remote
       - "8106:5432" #supprimer en remote
+    volumes:
+      - data-volume:/var/lib/postgresql
     networks:
       - traefik_web
     labels:
-      - traefik.enable=true
-      - traefik.tcp.routers.db_benevole.rule=HostSNI(`*`)
-      - traefik.tcp.routers.db_benevole.entrypoints=postgres2
-      - traefik.tcp.services.db_benevole.loadbalancer.server.port=5432
+      - "traefik.enable=true"
+      - "traefik.tcp.routers.db_benevole.rule=HostSNI(`*`)"
+      - "traefik.tcp.routers.db_benevole.entrypoints=benevole_db"
+      - "traefik.tcp.services.db_benevole.loadbalancer.server.port=5432"
 
+volumes:
+  data-volume:
 
 networks:
   traefik_web:
