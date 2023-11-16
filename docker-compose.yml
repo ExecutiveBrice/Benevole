@@ -7,16 +7,13 @@ services:
     depends_on:
       - app_benevole
     volumes:
-      - ./client:/usr/share/nginx/html
+      - ./client:/usr/share/nginx/html/benevole
     networks:
       - traefik_web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.client_benevole.rule=Host(`${DNS_NAME}`) && PathPrefix(`/benevoles`)"
-
-      - "traefik.http.routers.client_benevole.middlewares=client_benevole-replacepathregex"
-      - "traefik.http.middlewares.client_benevole-replacepathregex.replacepathregex.regex=^/benevoles/(.*)"
-      - "traefik.http.middlewares.client_benevole-replacepathregex.replacepathregex.replacement=/$$1"
+      - "traefik.http.routers.client_benevole.priority=1000"
+      - "traefik.http.routers.client_benevole.rule=(Host(`${DNS_NAME}`) || Host(`www.${DNS_NAME}`)) && PathPrefix(`/benevoles/`)"
 
       - "traefik.http.routers.client_benevole.entrypoints=websecure"
       - "traefik.http.routers.client_benevole.tls=true"
@@ -34,6 +31,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - MAIL_ADRESSE=${MAIL_ADRESSE}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
       - SERVER_PORT=8000
     networks:
       - traefik_web
@@ -41,10 +40,11 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.app_benevole.rule=Host(`${DNS_NAME}`) && PathPrefix(`/api_benevole/`)"
+      - "traefik.http.routers.app_benevole.priority=10000"
+      - "traefik.http.routers.app_benevole.rule=(Host(`${DNS_NAME}`) || Host(`www.${DNS_NAME}`)) && PathPrefix(`/benevoles/api/`)"
 
       - "traefik.http.routers.app_benevole.middlewares=app_benevole-replacepathregex"
-      - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/api_benevole/(.*)"
+      - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/benevoles/api/(.*)"
       - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.replacement=/$$1"
 
       - "traefik.http.routers.app_benevole.entrypoints=websecure"

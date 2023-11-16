@@ -5,7 +5,8 @@
   "description": "Projet de gestionnaire de bénévoles associatif",
   "scripts": {
     "ng": "ng",
-    "build": "ng build --base-href /benevoles/ --configuration production --aot",
+    "build:production": "ng build --base-href /benevoles/ --aot --configuration=production",
+    "build": "ng build",
     "start": "ng serve",
     "test": "ng test",
     "lint": "tslint ./src/**/*.ts -t verbose",
