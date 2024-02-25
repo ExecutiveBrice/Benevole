@@ -27,6 +27,8 @@ services:
     env_file: .env
     depends_on:
       - db_benevole
+    volumes:
+      - /home/ubuntu/benevole/:/home/ubuntu/benevole/
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
