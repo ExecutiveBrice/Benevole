@@ -8,10 +8,8 @@ export class Evenement {
   startDate: Date;
   endDate: Date;
   password: string;
-  affiche:string | ArrayBuffer;
  
   sitepersourl: string;
-  sitepersologo:string | ArrayBuffer;
 
 
   rappelDate: Date;

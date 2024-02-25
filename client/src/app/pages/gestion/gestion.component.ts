@@ -1,12 +1,12 @@
 
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, TransmissionService, CroisementService, EvenementService, StandService, MailService, ExcelService, BenevoleService } from '../../services';
+import { ValidationService, TransmissionService, CroisementService, EvenementService, StandService, MailService, ExcelService, BenevoleService, FileService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper';
 
 
 
@@ -21,6 +21,7 @@ export class GestionComponent implements OnInit {
   authorize: boolean = false
   rappel
   password: string
+  affiche: string;
   benevoles: Benevole[] = [];
   benevolesWithChoice: Benevole[] = []
   benevolesWithoutChoice: Benevole[] = [];
@@ -29,7 +30,7 @@ export class GestionComponent implements OnInit {
   mail: boolean;
   sendingProgress: boolean;
   counter: number;
-  totalCount: number;  
+  totalCount: number;
   errorMailingList: String[];
   theCheckbox: any
   selectedDeviceObj: any
@@ -70,6 +71,7 @@ export class GestionComponent implements OnInit {
     public excelService: ExcelService,
     public mailService: MailService,
     public validationService: ValidationService,
+    public fileService: FileService,
     public sanitizer: DomSanitizer) {
 
   }
@@ -87,6 +89,7 @@ export class GestionComponent implements OnInit {
     if (this.authorize) {
       this.getQRcode(this.idEvenement)
       this.getBenevoles();
+      this.getAffiche()
     }
   }
 
@@ -138,6 +141,7 @@ export class GestionComponent implements OnInit {
     this.imageChangedEvent = event;
   }
   imageCropped(event: ImageCroppedEvent) {
+    console.log(event)
     this.croppedImage = event.base64;
   }
   imageLoaded() {
@@ -149,17 +153,26 @@ export class GestionComponent implements OnInit {
   loadImageFailed() {
     /* show message */
   }
-  uploadImage(croppedImage: any) {
-    this.evenement.affiche = croppedImage
 
-    this.evenementService.updateAffiche(this.idEvenement, croppedImage).subscribe(data => {
-      this.evenement = data;
+  uploadImage(croppedImage: any) {
+    const contentFile = croppedImage.replace("data:image/jpeg;base64,", "")
+    this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe(data => {
+      console.log(data)
+      this.getAffiche()
     },
       error => {
         console.log('😢 Oh no!', error);
       });
   }
 
+  getAffiche() {
+    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
+     this.affiche = "data:image/jpeg;base64," + data
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
 
 
   update(evenement: Evenement): void {
@@ -262,7 +275,7 @@ export class GestionComponent implements OnInit {
 
       emailCopy.text = emailCopy.text + "<br />"
       emailCopy.text = emailCopy.text + "Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />";
-      emailCopy.text = emailCopy.text + this.evenement.contact + " - "+ this.evenement.contactEmail + "<br />"
+      emailCopy.text = emailCopy.text + this.evenement.contact + " - " + this.evenement.contactEmail + "<br />"
 
       this.mailService.sendMail(emailCopy)
         .subscribe(res => {

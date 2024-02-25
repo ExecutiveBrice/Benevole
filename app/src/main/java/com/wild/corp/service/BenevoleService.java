@@ -75,6 +75,7 @@ public class BenevoleService {
     }
 
     public List<Benevole> findByEvenementId(Integer evenementId){
-        return benevoleRepository.findByEvenementId(evenementId);
+        List<Benevole> benevoles = benevoleRepository.findByEvenementId(evenementId);
+        return benevoles;
     }
 }

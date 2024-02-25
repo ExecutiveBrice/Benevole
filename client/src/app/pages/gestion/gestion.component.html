@@ -114,12 +114,10 @@
   <div *ngIf="evenement != undefined" class="col-12">
     <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
 
-
-    <img class="container" *ngIf="evenement.affiche" [src]="evenement.affiche" alt="Affiche">
-
+<img class="container" *ngIf="affiche" [src]="affiche" alt="Affiche">
 
     <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" 
-      [resizeToWidth]="640" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+      [resizeToWidth]="1280" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
       (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
     </image-cropper>
     <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Valider cette

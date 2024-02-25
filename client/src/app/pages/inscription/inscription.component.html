@@ -86,11 +86,7 @@
                         {{(croisement.limite - croisement.benevoles.length)==0?'Complet':(croisement.limite -
                         croisement.benevoles.length)>1?'il reste '+(croisement.limite - croisement.benevoles.length)+'
                         places':'il reste une place'}}
-                        <div *ngIf="visuel == croisement.id">
-                          <div *ngFor="let benevole of croisement.benevoles | orderBy:'prenom':false" class="col-sm-4">
-                            {{benevole.prenom}}
-                          </div>
-                        </div>
+
                       </button>
                     </div>
                   </div>
@@ -210,10 +206,7 @@
 
         <div class="col-sm-12 ">
           <h4>Votre planning :</h4>
-          <div *ngIf="chevauchement" class="alert alert-danger">
-            <strong>Attention!</strong> Vous vous êtes inscrit sur au moins 2 creneaux identique
-            <br>(si vous êtes plusieurs, précisez le dans le commentaire).
-          </div>
+
 
           <div *ngIf="benevole && benevole.croisements != undefined && benevole.croisements.length == 0"
             class="alert alert-success">

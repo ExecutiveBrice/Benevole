@@ -3,13 +3,9 @@ package com.wild.corp.model;
 import com.fasterxml.jackson.annotation.*;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -17,6 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "STAND")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Stand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +36,14 @@ public class Stand {
     private Integer type;
 
     @JsonIgnore
-    @OneToMany(mappedBy="stand", orphanRemoval=true)
+    @OneToMany(mappedBy="stand", orphanRemoval=true, fetch = FetchType.EAGER)
+    @ToString.Exclude
     private List<Croisement> croisements;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"affiche", "sitepersologo"})
+    @ToString.Exclude
     private Evenement evenement;
 
 }

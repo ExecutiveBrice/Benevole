@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -19,6 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "EVENEMENT")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Evenement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,16 +46,8 @@ public class Evenement {
     @Column(name = "RAPPEL_DATE")
     private Date rappelDate;
 
-    @Lob
-    @Column(name = "IMAGE")
-    private String affiche;
-
     @Column(name = "SITEPERSOURL")
     private String sitepersourl;
-
-    @Lob
-    @Column(name = "SITEPERSOLOGO")
-    private String sitepersologo;
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
@@ -79,7 +71,7 @@ public class Evenement {
 
     //@JsonIgnoreProperties({"prenom","nom","telephone","email","commentaire","reponse", "evenement" })
     @JsonIgnore
-    @OneToMany(mappedBy="evenement" , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="evenement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Benevole> benevoles;
 
     @JsonIgnore

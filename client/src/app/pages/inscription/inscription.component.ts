@@ -16,11 +16,11 @@ import { Subscription } from 'rxjs';
 
 export class InscriptionComponent implements OnInit {
   validation: boolean;
-  visuel: number;
+
   choix: String;
   sansChoix: Croisement[];
   stands: Stand[];
-  chevauchement: boolean;
+
   besoins: Croisement[];
   preparatifs: Stand[];
   postparatifs: Stand[];
@@ -67,7 +67,7 @@ export class InscriptionComponent implements OnInit {
 
         this.plein = false;
         this.validation = false;
-        this.chevauchement = false;
+
 
         this.getStand();
 
@@ -225,7 +225,7 @@ export class InscriptionComponent implements OnInit {
 
 
   choisir(croisement: Croisement): void {
-    this.chevauchement = false;
+
     let added = false;
     for (let index = 0; index < this.benevole.croisements.length; index++) {
       if (croisement.id == this.benevole.croisements[index].id) {
@@ -254,23 +254,8 @@ export class InscriptionComponent implements OnInit {
     } else {
       this.plein = true;
     }
-    this.calculChevauchement(this.benevole)
 
-  }
 
-  calculChevauchement(benevole: Benevole) {
-    this.chevauchement = false;
-
-    let listePlages = []
-    for (let index = 0; index < benevole.croisements.length; index++) {
-      if (listePlages.indexOf(benevole.croisements[index].creneau.id) >= 0) {
-        this.chevauchement = true;
-        break;
-      } else {
-        listePlages.push(benevole.croisements[index].creneau.id)
-        listePlages = listePlages.concat(benevole.croisements[index].creneau.chevauchement)
-      }
-    };
   }
 
   updateBenevoleAttributes(benevole: Benevole) {

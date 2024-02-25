@@ -39,7 +39,8 @@ public class CroisementService {
     }
 
     public List<Croisement> getCroisementByStand(Integer standId){
-        return croisementRepository.findByStandId(standId);
+        List<Croisement> crois = croisementRepository.findByStandId(standId);
+        return crois;
     }
 
     public List<Croisement> getCroisementByEvenement(Integer evenementId){

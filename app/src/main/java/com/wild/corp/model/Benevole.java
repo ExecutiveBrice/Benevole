@@ -4,10 +4,7 @@ package com.wild.corp.model;
 import com.fasterxml.jackson.annotation.*;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -17,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "BENEVOLE")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Benevole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,11 +40,14 @@ public class Benevole {
     private String reponse;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @ToString.Exclude
     private List<Croisement> croisements;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"affiche", "sitepersologo"})
+    @ToString.Exclude
     private Evenement evenement;
 
 }

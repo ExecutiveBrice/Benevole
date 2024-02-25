@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { EvenementService, MailService, ConfigService } from './services';
+import { EvenementService, MailService, ConfigService, FileService } from './services';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Benevole, Email, Evenement } from './models';
+import { Benevole, Evenement } from './models';
 import { Subscription } from 'rxjs';
 import { TransmissionService } from './services/transmission.service';
 
@@ -10,13 +10,6 @@ import { TransmissionService } from './services/transmission.service';
   templateUrl: 'app.component.html',
   styleUrls: ['./app.component.css']
 })
-
-
-
-  
-
-
-
 
 export class AppComponent {
   subscription = new Subscription()
@@ -30,8 +23,9 @@ export class AppComponent {
   isValidAccessForEvent: number
   benevole: Benevole
   params: Map<string, string>
-  @ViewChild('myIdentifier')
+  logo: string;
 
+  @ViewChild('myIdentifier')
   myIdentifier: ElementRef;
 
   constructor(
@@ -40,11 +34,12 @@ export class AppComponent {
     public evenementService: EvenementService,
     public configService: ConfigService,
     public router: Router,
+    public fileService: FileService,
     public route: ActivatedRoute) {
 
   }
 
-  
+
   ngAfterViewChecked() {
     var width = this.myIdentifier.nativeElement.offsetWidth;
     var height = this.myIdentifier.nativeElement.offsetHeight;
@@ -66,11 +61,21 @@ export class AppComponent {
 
       console.log(this.evenement.id == this.isValidAccessForEvent)
       this.benevole = JSON.parse(localStorage.getItem('user'));
+      this.getLogo()
     });
 
   }
 
-   getParams() {
+  getLogo() {
+    this.fileService.get(this.evenement.id, 'logo.jpeg').subscribe(data => {
+      this.logo = "data:image/jpeg;base64," + data
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+  getParams() {
     this.configService.getParams().subscribe(allParams => {
       this.params = allParams
       localStorage.setItem('allParams', JSON.stringify(allParams))

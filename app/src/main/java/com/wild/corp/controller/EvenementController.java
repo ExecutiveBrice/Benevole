@@ -29,12 +29,6 @@ public class EvenementController {
         return new ResponseEntity<>(evenement, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateAffiche", method = RequestMethod.PUT)
-    public ResponseEntity<Evenement> updateAffiche(@RequestParam Integer id, @RequestBody String affiche) {
-        Evenement evenement = evenementService.updateAffiche(id, affiche);
-        return new ResponseEntity<>(evenement, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<Evenement> update(@RequestBody Evenement evenement) {
         evenementService.update(evenement);
@@ -80,17 +74,6 @@ public class EvenementController {
         return new ResponseEntity<>(isOpen, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getAffiche", method = RequestMethod.GET)
-    public ResponseEntity<String> getAffiche(@RequestParam Integer id) {
-        String affiche = evenementService.getAffiche(id);
-        return new ResponseEntity<>(affiche, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/getLogo", method = RequestMethod.GET)
-    public ResponseEntity<String> getLogo(@RequestParam Integer id) {
-        String affiche = evenementService.getLogo(id);
-        return new ResponseEntity<>(affiche, HttpStatus.OK);
-    }
     @RequestMapping(value = "/opening", method = RequestMethod.PUT)
     public ResponseEntity<Boolean> updateOpening(@RequestParam Integer id) {
         Boolean isOpen =  evenementService.updateOpening(id);

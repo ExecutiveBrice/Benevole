@@ -92,15 +92,7 @@ public class EvenementService {
         event.setLock(evenement.isLock());
         event.setNeedtel(evenement.getNeedtel());
         event.setSitepersourl(evenement.getSitepersourl());
-        event.setSitepersologo(evenement.getSitepersologo());
 
-        return evenementRepository.save(event);
-    }
-
-    public Evenement updateAffiche(Integer evenementId, String affiche) {
-        logger.debug(affiche);
-        Evenement event = findById(evenementId);
-        event.setAffiche(affiche);
         return evenementRepository.save(event);
     }
 
@@ -115,7 +107,6 @@ public class EvenementService {
         }else{
             return evenements.get(0);
         }
-
     }
 
     public void deleteById(Integer evenementId) {
@@ -145,22 +136,6 @@ public class EvenementService {
             Evenement evenement = findById(evenementId);
             evenement.setLock(!evenement.isLock());
             return evenement.isLock();
-        }
-        return null;
-    }
-
-    public String getAffiche(Integer evenementId) {
-        if(evenementId != null) {
-            Evenement evenement = findById(evenementId);
-            return evenement.getAffiche();
-        }
-        return null;
-    }
-
-    public String getLogo(Integer evenementId) {
-        if(evenementId != null) {
-            Evenement evenement = findById(evenementId);
-            return evenement.getSitepersologo();
         }
         return null;
     }

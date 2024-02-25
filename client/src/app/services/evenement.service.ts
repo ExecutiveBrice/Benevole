@@ -26,10 +26,7 @@ export class EvenementService {
   update(creneau:Evenement) {
     return this.http.put<Evenement>(this.apiUrl + '/', creneau, {responseType: 'json'});
   }
-  updateAffiche(id:number, affiche:string) {
-    let params = new HttpParams().set('id', ''+id+'');
-    return this.http.put<Evenement>(this.apiUrl + '/updateAffiche', affiche, {params, responseType: 'json'});
-  }
+
   delete(creneau:Evenement) {
     let params = new HttpParams().set('id', ''+creneau.id+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
@@ -47,10 +44,7 @@ export class EvenementService {
     return this.http.put<boolean>(this.apiUrl + '/opening', null, {params, responseType: 'json'});
   }
   
-  getAffiche(id:number) {
-    let params = new HttpParams().set('id', '' + id + '');
-    return this.http.get(this.apiUrl + '/getAffiche', {params, responseType: 'text'});
-  }
+
   getLogo(id:number) {
     let params = new HttpParams().set('id', '' + id + '');
     return this.http.get(this.apiUrl + '/getLogo', {params, responseType: 'text'});

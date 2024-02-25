@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, BenevoleService, TransmissionService, EvenementService } from '../../services';
+import { ValidationService, BenevoleService, TransmissionService, EvenementService, FileService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Evenement } from '../../models';
@@ -20,6 +20,7 @@ export class ConnexionComponent implements OnInit {
   exist: boolean;
   benevole: Benevole;
   idEvenement:number
+  affiche:string;
 
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
@@ -31,6 +32,7 @@ export class ConnexionComponent implements OnInit {
     public mailService: MailService,
     public transmissionService: TransmissionService,
     public validationService: ValidationService,
+    public fileService: FileService,
     public sanitizer: DomSanitizer) { }
 
     subscription = new Subscription();
@@ -41,6 +43,7 @@ export class ConnexionComponent implements OnInit {
 
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
     this.getEvenement(this.idEvenement);
+    this.getAffiche()
     this.validationService.testCommun(this.idEvenement).then(response => {
       if(!response){
         this.router.navigate(['error']);
@@ -56,6 +59,16 @@ export class ConnexionComponent implements OnInit {
     this.new = true;
 
   }
+
+  getAffiche() {
+    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
+     this.affiche = "data:image/jpeg;base64," + data
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
 
   getEvenement(idEvenement: number): void {
     this.evenementService.getById(idEvenement).subscribe(data => {

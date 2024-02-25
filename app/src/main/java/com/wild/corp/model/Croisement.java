@@ -1,10 +1,8 @@
 package com.wild.corp.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -21,6 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "CROISEMENT")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Croisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,13 +34,16 @@ public class Croisement {
     @Column(name = "SELECTED", nullable = false)
     private Boolean selected;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"croisements", "evenement"})
     private Stand stand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"evenement"})
     private Creneau creneau;
 
-    @ManyToMany(mappedBy="croisements")
+    @ManyToMany(mappedBy="croisements", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"croisements", "evenement"})
     private List<Benevole> benevoles;
 
 }

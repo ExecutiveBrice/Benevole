@@ -2,14 +2,10 @@ package com.wild.corp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Arrays;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -17,6 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Table(name = "CRENEAU")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Creneau {
 
     @Id
@@ -37,7 +34,9 @@ public class Creneau {
     private Integer[] chevauchement;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"affiche", "sitepersologo"})
+    @ToString.Exclude
     private Evenement evenement;
 
 }
