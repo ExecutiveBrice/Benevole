@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Evenement } from '../models';
 
@@ -16,5 +16,10 @@ export class TransmissionService {
   dataTransmission(evenement: Evenement) {
     this.dataSource.next(evenement);
   }
+
+
+  public someEvent: EventEmitter<string> = new EventEmitter();
+
+
 
 }

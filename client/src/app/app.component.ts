@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, EventEmitter, Output  } from '@angular/core';
 import { EvenementService, MailService, ConfigService, FileService } from './services';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Benevole, Evenement } from './models';
@@ -28,6 +28,8 @@ export class AppComponent {
   @ViewChild('myIdentifier')
   myIdentifier: ElementRef;
 
+  @Output() valid: EventEmitter<any> = new EventEmitter();
+  
   constructor(
     public transmissionService: TransmissionService,
     public mailService: MailService,
@@ -64,6 +66,12 @@ export class AppComponent {
       this.getLogo()
     });
 
+  }
+
+
+
+  validate(){
+    this.transmissionService.someEvent.emit("validation");
   }
 
   getLogo() {

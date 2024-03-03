@@ -5,6 +5,7 @@ body {
 
 [class*='row'] {
     margin: 0px;
+    width: 100%;
 }
 
 [class*='col-'] {
@@ -24,3 +25,4 @@ body {
     margin: 5px;
     font-size: small;
 }
+

@@ -1,19 +1,31 @@
-<nav class="navbar navbar-expand-md bg-dark navbar-dark ">
-  <a href="{{evenement!=undefined?evenement.sitepersourl:''}}" class="navbar-left"> <img *ngIf="logo" [src]="logo" alt="logo"></a>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark ">
+  <div class="row">
+    <div class="col-4">
+      <a href="{{evenement!=undefined?evenement.sitepersourl:''}}" class="navbar-left"> <img *ngIf="logo" [src]="logo"
+          alt="logo"></a>
+    </div>
+    <div class="col-8">
+      <div class="mx-auto flex-column" id="navbar">
+        <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
+          <li *ngIf="evenement != undefined" class="nav-item gros_titre">
+            {{evenement.eventName}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-12">
+      <div *ngIf="evenement != undefined && isValidAccessForEvent == evenement.id">
+        <button type="button" class="btn btn-block btn-warning"
+          [routerLink]="['/gestion/', evenement.id]">Gestion</button>
+      </div>
 
-  <div class="mx-auto flex-column" id="navbar">
-    <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
-      <li *ngIf="evenement != undefined" class="nav-item gros_titre">
-        {{evenement.eventName}}
-      </li>
-    </ul>
-  </div>
-
-  <div *ngIf="evenement != undefined && isValidAccessForEvent == evenement.id">
-    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/gestion/', evenement.id]">Gestion</button>
+      <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide mon
+        inscription</button>
+ 
+    </div>
   </div>
 </nav>
 <!-- main app container -->
 
 
-  <router-outlet></router-outlet>
+<router-outlet></router-outlet>

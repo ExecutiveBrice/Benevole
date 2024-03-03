@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ValidationService, BenevoleService, EvenementService, TransmissionService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,6 +15,9 @@ import { Subscription } from 'rxjs';
 })
 
 export class InscriptionComponent implements OnInit {
+
+  @Input() valid: string
+
   validation: boolean;
 
   choix: String;
@@ -79,8 +82,14 @@ export class InscriptionComponent implements OnInit {
         this.router.navigate(['error']);
       })
 
-
-
+      
+      this.transmissionService.someEvent.subscribe(data => {
+        console.log(data)
+        if(data == "validation"){
+          this.validate();
+        }
+        
+      })
   }
 
   getEvenement(idEvenement: number): void {

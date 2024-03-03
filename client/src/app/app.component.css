@@ -11,3 +11,17 @@ img {
     width: 150px;
   }
 
+  @media only screen and (max-width: 600px) {
+    img {
+        background-color: rgb(255, 255, 255);
+        border-radius: 4px;
+        padding: 5px;
+        width: 100px;
+      }
+
+      .gros_titre {
+        text-align: center;
+        font-size: X-large;
+        color: honeydew;
+    }
+  } 
