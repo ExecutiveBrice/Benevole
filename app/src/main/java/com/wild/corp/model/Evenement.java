@@ -15,8 +15,6 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "EVENEMENT")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Evenement {
@@ -37,14 +35,8 @@ public class Evenement {
     @Column(name = "EVENT_NAME", nullable = false)
     private String eventName;
 
-    @Column(name = "START_DATE", nullable = false)
-    private Date startDate;
-
     @Column(name = "END_DATE")
     private Date endDate;
-
-    @Column(name = "RAPPEL_DATE")
-    private Date rappelDate;
 
     @Column(name = "SITEPERSOURL")
     private String sitepersourl;
@@ -55,17 +47,18 @@ public class Evenement {
     @Column(name = "VALIDATION")
     private String validation;
 
-    @Column(name = "RETOUR")
-    private String retour;
-
     @Column(name = "SIGNATURE")
     private String signature;
 
-    @Column(name = "RAPPEL")
-    private String rappel;
+    @Column(name = "AFFICHER_MESSAGE")
+    private boolean afficherMessage;
+
+    @Column(name = "MESSAGE")
+    private String message;
 
     @Column(name = "NEEDTEL")
     private Boolean needtel;
+
     @Column(name = "LOCK")
     private boolean lock;
 

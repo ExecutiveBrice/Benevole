@@ -17,8 +17,8 @@ export class GestionStandsComponent implements OnInit {
   authorize: boolean = false;
   stands: Stand[] = [];
   evenement: Evenement = new Evenement();
-  choix: string;
-  idEvenement:number
+  choix!: string;
+  idEvenement!:number
   
   constructor(
     public route: ActivatedRoute,
@@ -38,9 +38,9 @@ export class GestionStandsComponent implements OnInit {
 
   ngOnInit() {
     this.choix = "";
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
     this.getEvenement(this.idEvenement);
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!)==this.idEvenement?true:false;
     if(this.authorize){
       this.getAll();
     }else{
@@ -82,8 +82,8 @@ export class GestionStandsComponent implements OnInit {
 
 
   async exportAsXLSX() {
-    var promises = []
-    var standsLite = []
+    var promises: any[] = []
+    var standsLite: any[] = []
 
     this.standService.getAll(this.idEvenement).subscribe(stands => {
       stands.forEach(stand => {
@@ -95,20 +95,19 @@ export class GestionStandsComponent implements OnInit {
 
 
             let standLite = {
-              nom: "",
+              nom: stand.nom.slice(0, 30),
               creneaux: []
             };
-            standLite.nom = stand.nom.slice(0, 30);
-            standLite.creneaux = [];
+
 
             for (let indexR = 0; indexR < 100; indexR++) {
-              let creneau = {};
+              let creneau :  Map<string, string>;
 
               if (stand.croisements != null && stand.croisements.length > 0) {
                 stand.croisements.sort(function (a, b) { return a.creneau.ordre - b.creneau.ordre; })
                 for (let index = 0; index < stand.croisements.length; index++) {
                   const croisement = stand.croisements[index];
-                  creneau[croisement.creneau.plage] = "";
+                  creneau.get(croisement.creneau.plage) = "";
                   if (croisement.benevoles[indexR]) {
                     creneau[croisement.creneau.plage] = croisement.benevoles[indexR].nom + " " + croisement.benevoles[indexR].prenom;
                     if( croisement.benevoles[indexR].telephone){
@@ -144,8 +143,8 @@ export class GestionStandsComponent implements OnInit {
   }
 
 
-  toggleList = [];
-  toggle(toggleName: String) {
+  toggleList : string[]= [];
+  toggle(toggleName: string) {
     if (this.toggleList.indexOf(toggleName) > -1) {
       this.toggleList = this.toggleList.filter(elem => elem != toggleName)
     } else {

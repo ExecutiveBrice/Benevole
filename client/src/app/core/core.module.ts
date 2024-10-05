@@ -5,10 +5,11 @@ import { AppRoutingModule} from "../app-routing.module";
 import { FormsModule} from "@angular/forms";
 import { OrderByPipe} from "../sort.pipe";
 import { FileService, ConfigService, ValidationService, TransmissionService, CroisementService, EvenementService, BenevoleService, StandService, MailService, ExcelService, CreneauService} from "../services";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbModalConfig, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { GestionEvenementsComponent, ErrorComponent, InscriptionComponent, ConnexionComponent, GestionComponent, CreationComponent, GestionStandsComponent, GestionMajStandsComponent, GestionMajConfigComponent, GestionBenevolesComponent, GestionMajCreneauxComponent} from "../pages";
-import { ImageCropperModule } from 'ngx-image-cropper';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ModalComponent } from '../pages/modal/modal.component';
+import { ImageCropperComponent } from 'ngx-image-cropper';
 
 
 @NgModule({
@@ -17,9 +18,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ImageCropperModule,
     NgbModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ImageCropperComponent
   ],
   exports: [
     AppRoutingModule
@@ -35,7 +36,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     EvenementService,
     TransmissionService,
     ValidationService,
-    ConfigService
+    ConfigService,
+    NgbModalConfig,
+    NgbModal
   ],
   declarations: [
     CreationComponent,
@@ -48,6 +51,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     GestionMajConfigComponent,
     GestionEvenementsComponent,
     ErrorComponent,
+    ModalComponent,
     OrderByPipe
   ]
 })

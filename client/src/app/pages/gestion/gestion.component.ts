@@ -6,8 +6,7 @@ import { Benevole, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
-import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper';
-
+import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 
 
 @Component({
@@ -19,31 +18,31 @@ import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper';
 export class GestionComponent implements OnInit {
   subscription = new Subscription()
   authorize: boolean = false
-  rappel
-  password: string
-  affiche: string;
+  rappel!: boolean
+  password!: string
+  affiche!: string;
   benevoles: Benevole[] = [];
   benevolesWithChoice: Benevole[] = []
   benevolesWithoutChoice: Benevole[] = [];
   benevolesToChange: Benevole[] = [];
-  dateRappel: string;
-  mail: boolean;
-  sendingProgress: boolean;
-  counter: number;
-  totalCount: number;
-  errorMailingList: String[];
+  dateRappel!: string;
+  mail!: boolean;
+  sendingProgress!: boolean;
+  counter!: number;
+  totalCount!: number;
+  errorMailingList!: String[];
   theCheckbox: any
   selectedDeviceObj: any
-  evenement: Evenement
-  params: Map<string, string>
-  idEvenement: number
+  evenement!: Evenement
+  params!: Map<string, string>
+  idEvenement!: number
   emailInfo: Email = {
     to: "",
     subject: "",
     text: "Bla bla"
   }
-  qrcode: Blob
-  using_address: String;
+  qrcode!: Blob
+  using_address!: String;
   mailingList: Benevole[] = [];
   mailingLists = [{
     id: '1',
@@ -77,15 +76,15 @@ export class GestionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams'));
+    this.params = JSON.parse(localStorage.getItem('allParams')!);
 
     this.rappel = false;
     this.mail = false;
 
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
 
     this.getEvenement(this.idEvenement);
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')) == this.idEvenement ? true : false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
       this.getQRcode(this.idEvenement)
       this.getBenevoles();
@@ -123,13 +122,13 @@ export class GestionComponent implements OnInit {
 
   getQRcode(idEvenement: number): void {
 
-    this.using_address = this.params['url'] + "/" + idEvenement
+    this.using_address = this.params.get('url') + "/" + idEvenement
     // With promises
     QRCode.toDataURL(this.using_address)
-      .then(url => {
-        this.qrcode = url
+      .then((urdqsdsq: Blob) => {
+        this.qrcode = urdqsdsq
       })
-      .catch(err => {
+      .catch((err: any) => {
         console.error(err)
       })
   }
@@ -200,7 +199,7 @@ export class GestionComponent implements OnInit {
       });
   }
 
-  getMailingList(option): void {
+  getMailingList(option: { id: number; }): void {
     if (option.id == 1) {
       this.mailingList = this.benevoles
     } else if (option.id == 2) {
@@ -291,7 +290,7 @@ export class GestionComponent implements OnInit {
   }
 
 
-  toggleVisibility(e) {
+  toggleVisibility(e: { target: { checked: boolean; }; }) {
     this.rappel = e.target.checked;
   }
 

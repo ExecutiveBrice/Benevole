@@ -1,6 +1,7 @@
 package com.wild.corp.service;
 
 
+import com.wild.corp.model.Croisement;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.model.Stand;
 import com.wild.corp.repositories.EvenementRepository;
@@ -38,8 +39,11 @@ public class StandService {
 
     public void delete(Integer standId) {
         Stand stand = findById(standId);
-
+    try {
         standRepository.delete(stand);
+    }catch (Exception pl){
+        throw new RuntimeException();
+    }
     }
 
     public List<Stand> findAll() {
@@ -54,11 +58,14 @@ public class StandService {
         Stand realStand = findById(stand.getId());
 
         realStand.setNom(stand.getNom());
-        realStand.setBulle(stand.getBulle());
-        realStand.setDescription(stand.getDescription());
         realStand.setOrdre(stand.getOrdre());
-
         realStand.setType(stand.getType());
+
+        realStand.getCroisements().forEach(croisement -> {
+            Croisement croisementFront = stand.getCroisements().stream().filter(croisement1 -> croisement1.getId().equals(croisement.getId())).findFirst().get();
+            croisement.setLimite(croisementFront.getLimite());
+            croisement.setBesoin(croisementFront.getBesoin());
+        });
         standRepository.save(realStand);
     }
 

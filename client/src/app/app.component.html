@@ -1,10 +1,10 @@
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark ">
   <div class="row">
-    <div class="col-4">
+    <div class="col-4 col-md-1">
       <a href="{{evenement!=undefined?evenement.sitepersourl:''}}" class="navbar-left"> <img *ngIf="logo" [src]="logo"
           alt="logo"></a>
     </div>
-    <div class="col-8">
+    <div class="col-8 col-md-11">
       <div class="mx-auto flex-column" id="navbar">
         <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
           <li *ngIf="evenement != undefined" class="nav-item gros_titre">
@@ -19,8 +19,7 @@
           [routerLink]="['/gestion/', evenement.id]">Gestion</button>
       </div>
 
-      <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide mon
-        inscription</button>
+     
  
     </div>
   </div>

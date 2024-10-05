@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "CRENEAU")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Creneau {
@@ -27,15 +27,13 @@ public class Creneau {
     @Column(name = "ORDRE")
     private Integer ordre;
 
-    @Column(name = "GROUPE")
-    private Integer groupe;
-
-    @Column(name = "CHEVAUCHEMENT")
-    private Integer[] chevauchement;
+    @OneToMany(mappedBy="creneau", orphanRemoval=true, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties({"stand"})
+    @ToString.Exclude
+    private List<Croisement> croisements;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"affiche", "sitepersologo"})
     @ToString.Exclude
     private Evenement evenement;
 

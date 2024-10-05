@@ -1,12 +1,12 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, HostListener  } from '@angular/core';
 import { ValidationService, BenevoleService, EvenementService, TransmissionService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Stand, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-inscription',
@@ -16,28 +16,31 @@ import { Subscription } from 'rxjs';
 
 export class InscriptionComponent implements OnInit {
 
-  @Input() valid: string
+  @Input() valid?: string
 
-  validation: boolean;
+  validation: boolean = false;
 
-  choix: String;
-  sansChoix: Croisement[];
-  stands: Stand[];
+  choix!: String;
+  sansChoix!: Croisement[];
+  stands: Stand[] = [];
 
-  besoins: Croisement[];
-  preparatifs: Stand[];
-  postparatifs: Stand[];
-  croisements: Croisement[];
+  besoins!: Croisement[];
+  preparatifs!: Stand[];
+  postparatifs!: Stand[];
+  croisements!: Croisement[];
   benevole: Benevole = new Benevole();
-  plein: boolean;
-  emailText1: string;
-  emailText2: string;
-  choixStand: string;
+  plein!: boolean;
+  emailText1!: string;
+  emailText2!: string;
+  choixStand!: string;
   evenement: Evenement = new Evenement();
   subscription = new Subscription()
-  params: Map<string, string>
-  using_address: string;
-  idEvenement:number
+  params!: Map<string, string>
+  using_address!: string;
+  idEvenement!: number
+  faEnvelope=faEnvelope;
+  clignotage: boolean = false;
+  valider: boolean = false;
 
   constructor(
     public benevoleService: BenevoleService,
@@ -52,17 +55,20 @@ export class InscriptionComponent implements OnInit {
     public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams'));
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.getScreenWidth = window.innerWidth;
+    this.getScreenHeight = window.innerHeight;
+
+    this.params = JSON.parse(localStorage.getItem('allParams')!);
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
     this.getEvenement(this.idEvenement);
 
     this.validationService.testCommun(this.idEvenement).then(response => {
       if (response) {
 
-        this.using_address = this.params['url'] + "/" + this.idEvenement
+        this.using_address = this.params?.get("url") + "/" + this.idEvenement;
 
         if (localStorage.getItem('user')) {
-          this.benevole = JSON.parse(localStorage.getItem('user'));
+          this.benevole = JSON.parse(localStorage.getItem('user')!);
           this.actualiseBenevole()
         } else {
           this.router.navigate(['/' + this.idEvenement]);
@@ -82,14 +88,14 @@ export class InscriptionComponent implements OnInit {
         this.router.navigate(['error']);
       })
 
-      
-      this.transmissionService.someEvent.subscribe(data => {
-        console.log(data)
-        if(data == "validation"){
-          this.validate();
-        }
-        
-      })
+
+    this.transmissionService.someEvent.subscribe(data => {
+      console.log(data)
+      if (data == "validation") {
+        this.validate();
+      }
+
+    })
   }
 
   getEvenement(idEvenement: number): void {
@@ -102,8 +108,8 @@ export class InscriptionComponent implements OnInit {
       });
   }
 
- actualiseBenevole(): void {
-    this.benevoleService.getByMail(this.benevole.email, this.idEvenement).subscribe(benevole => {
+  actualiseBenevole(): void {
+    this.benevoleService.getByMail(this.benevole.email, this.idEvenement!).subscribe(benevole => {
       benevole.croisements = []
       this.benevole = benevole;
 
@@ -132,64 +138,64 @@ export class InscriptionComponent implements OnInit {
     this.preparatifs = []
     this.postparatifs = []
     this.stands = []
-    this.standService.getAll(this.idEvenement).subscribe(stands => {
+    this.standService.getAll(this.idEvenement!).subscribe(stands => {
       stands.forEach(stand => {
 
         stand.croisements = []
         this.croisementService.getByStand(stand.id).subscribe(croisements => {
           console.log(croisements)
-          if(croisements != null){
-          croisements.forEach(croisement => {
-            croisement.benevoles.forEach(benevole => {
-              if (benevole.id == this.benevole.id) {
-                croisement.selected = true;
-              }
-            })
-
-          });
           if (croisements != null) {
-            stand.croisements = croisements
-
-            if (stand.type == 2 || stand.type == 3) {
-              stand.croisements.forEach(croisement => {
-                if (croisement.besoin == true) {
-                  this.besoins.push(croisement);
+            croisements.forEach(croisement => {
+              croisement.benevoles.forEach(benevole => {
+                if (benevole.id == this.benevole.id) {
+                  croisement.selected = true;
                 }
-                croisement.stand = stand
               })
-              this.stands.push(stand)
 
-            } else if (stand.type == 1) {
-              stand.croisements.forEach(croisement => {
-                if (croisement.besoin == true) {
-                  this.besoins.push(croisement);
-                }
-                croisement.stand = stand
-                this.sansChoix.push(croisement)
-              })
-            } else if (stand.type == 5) {
-              stand.croisements.forEach(croisement => {
-                if (croisement.besoin == true) {
-                  this.besoins.push(croisement);
-                }
-                croisement.stand = stand
-              })
-              this.preparatifs.push(stand)
+            });
+            if (croisements != null) {
+              stand.croisements = croisements
 
-            } else if (stand.type == 6) {
-              stand.croisements.forEach(croisement => {
-                if (croisement.besoin == true) {
-                  this.besoins.push(croisement);
-                }
-                croisement.stand = stand
-              })
-              this.postparatifs.push(stand)
+              if (stand.type == 2 || stand.type == 3) {
+                stand.croisements.forEach(croisement => {
+                  if (croisement.besoin == true) {
+                    this.besoins!.push(croisement);
+                  }
+                  croisement.stand = stand
+                })
+                this.stands.push(stand)
 
+              } else if (stand.type == 1) {
+                stand.croisements.forEach(croisement => {
+                  if (croisement.besoin == true) {
+                    this.besoins!.push(croisement);
+                  }
+                  croisement.stand = stand
+                  this.sansChoix!.push(croisement)
+                })
+              } else if (stand.type == 5) {
+                stand.croisements.forEach(croisement => {
+                  if (croisement.besoin == true) {
+                    this.besoins!.push(croisement);
+                  }
+                  croisement.stand = stand
+                })
+                this.preparatifs!.push(stand)
+
+              } else if (stand.type == 6) {
+                stand.croisements.forEach(croisement => {
+                  if (croisement.besoin == true) {
+                    this.besoins!.push(croisement);
+                  }
+                  croisement.stand = stand
+                })
+                this.postparatifs!.push(stand)
+
+              }
             }
           }
-        }
-        stand.placeRestante =0
-        stand.croisements.forEach(croisement => stand.placeRestante += (croisement.limite - croisement.benevoles.length))
+          stand.placeRestante = 0
+          stand.croisements.forEach(croisement => stand.placeRestante += (croisement.limite - croisement.benevoles.length))
         },
           error => {
             console.log('😢 Oh no!', error);
@@ -215,12 +221,13 @@ export class InscriptionComponent implements OnInit {
         }
       }
     }
+    this.clignotage = true;
   }
 
 
   addCroisements(benevole: Benevole): void {
 
-    let croisementsList = []
+    let croisementsList: number[] = []
     benevole.croisements.forEach(croisement => {
       croisementsList.push(croisement.id)
     });
@@ -230,6 +237,7 @@ export class InscriptionComponent implements OnInit {
       error => {
         console.log('😢 Oh no!', error);
       });
+      this.clignotage = true;
   }
 
 
@@ -263,8 +271,7 @@ export class InscriptionComponent implements OnInit {
     } else {
       this.plein = true;
     }
-
-
+    this.clignotage = true;
   }
 
   updateBenevoleAttributes(benevole: Benevole) {
@@ -273,9 +280,11 @@ export class InscriptionComponent implements OnInit {
       error => {
         console.log('😢 Oh no!', error);
       });
+      this.clignotage = true;
   }
 
   validate(): void {
+
     this.validation = true;
     this.addCroisements(this.benevole);
     this.updateBenevoleAttributes(this.benevole);
@@ -295,8 +304,8 @@ export class InscriptionComponent implements OnInit {
 
     email.text = email.text + "<br />"
     email.text = email.text + "Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />";
-    email.text = email.text + this.evenement.contact + " - "+ this.evenement.contactEmail + "<br />"
-    
+    email.text = email.text + this.evenement.contact + " - " + this.evenement.contactEmail + "<br />"
+
     email.text = this.completeTemplate(email.text)
     this.envoiMail(email)
   }
@@ -306,7 +315,7 @@ export class InscriptionComponent implements OnInit {
       text = text.replace("<event_name>", this.evenement.eventName)
     }
     while (text.match("<using_address>")) {
-      text = text.replace("<using_address>", this.using_address)
+      text = text.replace("<using_address>", this.using_address!)
     }
     return text
   }
@@ -317,5 +326,17 @@ export class InscriptionComponent implements OnInit {
       }, err => {
         console.log(err);
       });
+  }
+
+
+
+  public getScreenWidth: any;
+  public getScreenHeight: any;
+
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.getScreenWidth = window.innerWidth;
+    this.getScreenHeight = window.innerHeight;
   }
 }

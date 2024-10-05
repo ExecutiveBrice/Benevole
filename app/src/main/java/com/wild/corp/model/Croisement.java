@@ -15,11 +15,10 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "CROISEMENT")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Croisement {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID", nullable = false)
@@ -31,19 +30,18 @@ public class Croisement {
     @Column(name = "BESOIN", nullable = false)
     private Boolean besoin;
 
-    @Column(name = "SELECTED", nullable = false)
-    private Boolean selected;
+    @ManyToMany(mappedBy="croisements")
+    @JsonIgnoreProperties({"croisements", "evenement", "telephone", "email"})
+    private List<Benevole> benevoles;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"croisements", "evenement"})
+    @ManyToOne
+    @JsonIgnoreProperties({"croisements"})
     private Stand stand;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"evenement"})
+    @ManyToOne
+    @JsonIgnoreProperties({"croisements"})
     private Creneau creneau;
 
-    @ManyToMany(mappedBy="croisements", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"croisements", "evenement"})
-    private List<Benevole> benevoles;
+
 
 }

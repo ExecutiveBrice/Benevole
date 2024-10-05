@@ -1,8 +1,10 @@
 <div class="container">
 <div class="row">
-  <div class="col-sm-12 ">
+  <div class="col-12 ">
     <div *ngIf="!(nouveau && !exist)" class="alert alert-success">
-      <strong>Toutes les informations personnelles seront détruites à la fin de l'évènement</strong>
+      <strong>Toutes les informations personnelles seront détruites à la fin de l'évènement</strong><br />
+      
+      <a href="https://alod.fr/tuto-benevoles/" target="_blank"><fa-icon class="fa-1x" [icon]="faQuestionCircle"></fa-icon>Ici, vous trouverez le tutoriel d'utilisation</a>
     </div>
     <div *ngIf="nouveau && !exist" class="alert alert-success">
       Vos informations personnlles nous seront utiles le jour de l'évènement pour afficher le tableau de bénévoles, faire un appel, ...
@@ -10,11 +12,11 @@
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-3 ">
+  <div class="col-md-3 ">
   </div>
-  <div class="col-sm-6 ">
+  <div class="col-md-6 ">
     <div class="row" *ngIf="!exist">
-      <div class="col-sm-12 ">
+      <div class="col-12 ">
         <div class="input-group mb-3 input-group-lg">
           <div class="input-group-prepend">
             <span class="input-group-text">Email : </span>
@@ -24,7 +26,7 @@
       </div>
     </div>
     <div *ngIf="!exist" class="row">
-      <div class="col-sm-12 ">
+      <div class="col-12 ">
         <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg " (click)="find()">Entrer</button>
         <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg" (click)="find()">Je me
           suis trompé dans mon email, j'essaie à nouveau</button>
@@ -35,7 +37,7 @@
       </div>
     </div>
     <div *ngIf="nouveau && !exist" class="row">
-      <div class="col-sm-12 ">
+      <div class="col-12 ">
         <div class="input-group mb-3 input-group-lg">
           <div class="input-group-prepend">
             <span class="input-group-text">Prenom : </span>
@@ -44,7 +46,7 @@
         </div>
       </div>
       
-      <div class="col-sm-12 ">
+      <div class="col-12 ">
         <div class="input-group mb-3 input-group-lg">
           <div class="input-group-prepend">
             <span class="input-group-text">Nom : </span>
@@ -54,7 +56,7 @@
       </div>
 
 
-      <div *ngIf="evenement.needtel" class="col-sm-12 ">
+      <div *ngIf="evenement.needtel" class="col-12 ">
         <div class="input-group mb-3 input-group-lg">
           <div class="input-group-prepend">
             <span class="input-group-text">Tel : </span>
@@ -64,25 +66,25 @@
       </div>
 
 
-      <div class="col-sm-12 ">
+      <div class="col-12 ">
         <button type="button" class="btn btn-block btn-info btn-lg" (click)="subscribe()">Je m'inscris</button>
       </div>
     </div>
   </div>
-  <div class="col-sm-3 ">
+  <div class="col-md-3 ">
   </div>
 </div>
 
 <div *ngIf="evenement" class="row">
-  <div class="col-sm-12 ">
+  <div class="col-12 ">
     <img class="container" *ngIf="affiche" [src]="affiche" alt="Affiche">
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-12 ">
+  <div class="col-12 ">
     <div class="alert alert-warning">
       <strong>Attention</strong><br>
-      Les mails issus de l'application proviennent de l'adresse benevoles.nepasrepondre@gmail.com,<br>
+      Les mails issus de l'application proviennent de l'adresse benevoles.nepasrepondregmail.com,<br>
       Ce sont des mails automatiques et sont tres souvent placés dans votre dossier SPAM<br>
       Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement:<br>
       {{evenement.contact}} - {{evenement.contactEmail}}
@@ -93,6 +95,12 @@
 
 <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-bottom">
   <div  class="navbar-expand m-auto navbar-text">
-    Contact : {{evenement.contact}} - {{evenement.contactEmail}}
+    <fa-icon class="btn-nopadding" [icon]="faEnvelope"></fa-icon> {{evenement.contact}} - {{evenement.contactEmail}} {{evenement.contactTel}}
+
+    <fa-icon class="btn-nopadding" (click)="affichageConception = !affichageConception" [icon]="faQuestionCircle"></fa-icon>
+  </div>
+
+  <div  *ngIf="affichageConception" class="navbar-expand m-auto navbar-text">
+    <br/>Conception/Développement :<br/>brice_morelhotmail.com<br/>https://github.com/ExecutiveBrice
   </div>
 </nav>

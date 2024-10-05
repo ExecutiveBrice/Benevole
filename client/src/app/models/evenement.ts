@@ -11,6 +11,8 @@ export class Evenement {
  
   sitepersourl: string;
 
+  message:string;
+  afficherMessage:boolean;
 
   rappelDate: Date;
   validation: string;

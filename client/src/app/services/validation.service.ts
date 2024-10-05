@@ -20,7 +20,7 @@ export class ValidationService {
       return false
     }
 
-    return await this.evenementService.isOpen(idEvenement).toPromise();
+    return! await this.evenementService.isOpen(idEvenement);
   }
 
   async testGestion(idEvenement: number, password: string): Promise<boolean> {

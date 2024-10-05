@@ -31,9 +31,16 @@ public class CroisementController {
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@RequestParam Integer croisementId) {
-        croisementService.delete(croisementId);
+        try {
+            croisementService.delete(croisementId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (RuntimeException runtimeException){
 
-        return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
+
+
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)

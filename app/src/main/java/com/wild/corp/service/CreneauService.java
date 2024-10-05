@@ -49,7 +49,6 @@ public class CreneauService {
 
         creneau.setOrdre(newCreneau.getOrdre());
         creneau.setPlage(newCreneau.getPlage());
-        creneau.setChevauchement(newCreneau.getChevauchement());
         persist(creneau);
     }
 

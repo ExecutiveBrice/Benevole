@@ -44,11 +44,8 @@ public class EvenementService {
         evenementRepository.save(evenement);
         evenement.setLock(Constante.LOCK);
         evenement.setValidation(Constante.VALIDATION);
-        evenement.setRetour(Constante.RETOUR.replaceAll("<using_address>", Constante.URL+String.valueOf(evenement.getId()) ));
         evenement.setSignature(Constante.SIGNATURE);
 
-        evenement.setRappel(replaceText(Constante.RAPPEL, evenement));
-        evenement.setRappelDate(new Date(evenement.getStartDate().getTime() - Integer.valueOf(7*24*60*60)));
 
 
         evenementRepository.save(evenement);
@@ -67,7 +64,6 @@ public class EvenementService {
     }
 
     String replaceText(String text, Evenement evenement){
-        text = text.replaceAll("<start_date>", String.valueOf(evenement.getStartDate()) );
         text = text.replaceAll("<event_name>", String.valueOf(evenement.getEventName()) );
 
         return text;
@@ -76,17 +72,16 @@ public class EvenementService {
     public Evenement update(Evenement evenement) {
 
         Evenement event = findById(evenement.getId());
-        event.setStartDate(evenement.getStartDate());
-        event.setRappelDate(evenement.getRappelDate());
         event.setEndDate(evenement.getEndDate());
         event.setEventName(evenement.getEventName());
         event.setContactTel(evenement.getContactTel());
         event.setContact(evenement.getContact());
         event.setContactEmail(evenement.getContactEmail());
 
+        event.setAfficherMessage(evenement.isAfficherMessage());
+        event.setMessage(evenement.getMessage());
+
         event.setPassword(evenement.getPassword());
-        event.setRetour(evenement.getRetour());
-        event.setRappel(evenement.getRappel());
         event.setSignature(evenement.getSignature());
         event.setValidation(evenement.getValidation());
         event.setLock(evenement.isLock());

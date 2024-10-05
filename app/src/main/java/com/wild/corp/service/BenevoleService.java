@@ -2,6 +2,7 @@ package com.wild.corp.service;
 
 
 import com.wild.corp.model.Benevole;
+import com.wild.corp.model.Croisement;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.repositories.BenevoleRepository;
 import com.wild.corp.repositories.EvenementRepository;
@@ -28,33 +29,38 @@ public class BenevoleService {
         benevoleRepository.save(benevole);
     }
 
-    public void add(Benevole benevole, Integer evenementId){
+    public void add(Benevole benevole, Integer evenementId) {
         Evenement evenement = evenementRepository.findById(evenementId).get();
         benevole.setEvenement(evenement);
         persist(benevole);
     }
 
-  public void update(Benevole benevole) {
+    public void update(Benevole benevole) {
 
         Benevole pBenevole = findById(benevole.getId());
-        pBenevole.setCommentaire(benevole.getCommentaire());
+
 
         pBenevole.setEmail(benevole.getEmail());
         pBenevole.setNom(benevole.getNom());
         pBenevole.setPrenom(benevole.getPrenom());
         pBenevole.setTelephone(benevole.getTelephone());
-        pBenevole.setReponse(benevole.getReponse());
+
         persist(pBenevole);
     }
 
-    public Benevole updateCroisements(Integer benevoleId, List<Integer> croisementListId){
-
+    public Benevole updateCroisement(Integer benevoleId, Integer croisementId) {
         Benevole benevole = findById(benevoleId);
-        benevole.getCroisements().clear();
-        for (Integer croisementId:croisementListId) {
-            benevole.getCroisements().add(croisementService.findById(croisementId));
+        Croisement croisement = croisementService.findById(croisementId);
+
+        if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
+            benevole.getCroisements().remove(croisementService.findById(croisementId));
+        } else {
+            if (croisement.getBenevoles().size() < croisement.getLimite()) {
+                benevole.getCroisements().add(croisementService.findById(croisementId));
+            }
         }
         persist(benevole);
+
         return benevole;
     }
 
@@ -70,11 +76,11 @@ public class BenevoleService {
         benevoleRepository.deleteById(benevoleId);
     }
 
-    public Benevole findByEmail(String email, Integer evenementId){
+    public Benevole findByEmail(String email, Integer evenementId) {
         return benevoleRepository.findByEmailAndEvenementId(email, evenementId);
     }
 
-    public List<Benevole> findByEvenementId(Integer evenementId){
+    public List<Benevole> findByEvenementId(Integer evenementId) {
         List<Benevole> benevoles = benevoleRepository.findByEvenementId(evenementId);
         return benevoles;
     }

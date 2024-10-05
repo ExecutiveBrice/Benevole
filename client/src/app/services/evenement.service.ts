@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Evenement } from '../models';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class EvenementService {
@@ -35,7 +36,7 @@ export class EvenementService {
     let params = new HttpParams().set('id', '' + id + '').set('password', '' + password + '');
     return this.http.get<boolean>(this.apiUrl + '/isAuthorize', {params, responseType: 'json'});
   }
-  isOpen(id:number) {
+  isOpen(id:number): Observable<boolean> {
     let params = new HttpParams().set('id', '' + id + '');
     return this.http.get<boolean>(this.apiUrl + '/isOpen', {params, responseType: 'json'});
   }

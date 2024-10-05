@@ -18,8 +18,6 @@ public class MailController {
     @Autowired
     private EmailService emailService;
 
-
-
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Stand> send(@RequestBody Email mail) {
 

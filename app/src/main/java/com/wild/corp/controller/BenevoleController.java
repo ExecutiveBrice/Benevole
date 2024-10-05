@@ -34,9 +34,9 @@ public class BenevoleController {
         return new ResponseEntity<>(benevole, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/addCroisements", method = RequestMethod.PUT)
-    public ResponseEntity<Benevole> updateCroisements(@RequestParam Integer benevoleId, @RequestBody List<Integer> croisementListId) {
-        benevoleService.updateCroisements(benevoleId, croisementListId);
+    @RequestMapping(value = "/updateCroisement", method = RequestMethod.PUT)
+    public ResponseEntity<Benevole> updateCroisement(@RequestParam Integer benevoleId, @RequestParam Integer croisementId) {
+        benevoleService.updateCroisement(benevoleId, croisementId);
         return new ResponseEntity<>(null,HttpStatus.OK);
     }
 

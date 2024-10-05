@@ -7,7 +7,7 @@ services:
     depends_on:
       - app_benevole
     volumes:
-      - ./client:/usr/share/nginx/html/benevole
+      - ./client:/usr/share/nginx/html/benevoles
     networks:
       - traefik_web
     labels:
@@ -33,8 +33,9 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - MAIL_ADRESSE=${MAIL_ADRESSE}
-      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MJ_MAIL=${MJ_MAIL}
+      - MJ_APIKEY_PUBLIC=${MJ_APIKEY_PUBLIC}
+      - MJ_APIKEY_PRIVATE=${MJ_APIKEY_PRIVATE}
       - SERVER_PORT=8000
     networks:
       - traefik_web

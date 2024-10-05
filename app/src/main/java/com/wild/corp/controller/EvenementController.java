@@ -63,13 +63,13 @@ public class EvenementController {
     }
 
     @RequestMapping(value = "/isAuthorize", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> authorize(@RequestParam Integer id, @RequestParam String password) {
+    public ResponseEntity<Boolean> isAuthorize(@RequestParam Integer id, @RequestParam String password) {
         Boolean authorisation = evenementService.authorize(id, password);
         return new ResponseEntity<>(authorisation, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/isOpen", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> authorize(@RequestParam Integer id) {
+    public ResponseEntity<Boolean> isOpen(@RequestParam Integer id) {
         Boolean isOpen = evenementService.isOpen(id);
         return new ResponseEntity<>(isOpen, HttpStatus.OK);
     }

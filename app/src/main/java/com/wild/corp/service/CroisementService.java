@@ -29,9 +29,14 @@ public class CroisementService {
         return croisementRepository.findByStandTypeAndStandEvenementId(etat, eventId);
     }
 
-    public void delete(Integer croisementId) {
+    public void delete(Integer croisementId)throws RuntimeException {
         Croisement croisement = findById(croisementId);
-        croisementRepository.delete(croisement);
+        try {
+            croisementRepository.delete(croisement);
+        }catch (Exception pl){
+           throw new RuntimeException();
+        }
+
     }
 
     public Croisement findById(Integer croisementId){

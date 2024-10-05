@@ -10,8 +10,6 @@ import java.util.List;
 @Repository
 public interface CreneauRepository extends JpaRepository<Creneau, Integer> {
 
-    List<Creneau> findByGroupeAndEvenementId(Integer groupe, Integer evenementId);
-
     List<Creneau> findByEvenementId(Integer evenementId);
 
     List<Creneau> findAll();

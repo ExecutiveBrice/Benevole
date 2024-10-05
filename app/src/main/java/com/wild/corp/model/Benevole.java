@@ -11,8 +11,6 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
 @Table(name = "BENEVOLE")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Benevole {
@@ -33,20 +31,12 @@ public class Benevole {
     @Column(name = "EMAIL", nullable = false)
     private String email;
 
-    @Column(name = "COMMENTAIRE")
-    private String commentaire;
-
-    @Column(name = "REPONSE")
-    private String reponse;
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.EAGER)
-    @ToString.Exclude
+    @ManyToMany
+    @JsonIgnoreProperties({"benevoles"})
     private List<Croisement> croisements;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnoreProperties({"affiche", "sitepersologo"})
+    @ManyToOne
     @ToString.Exclude
     private Evenement evenement;
 

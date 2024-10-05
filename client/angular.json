@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular.io-example": {
+    "BenevoleApp": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,24 +56,33 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "angular.io-example:build"
-          },
           "configurations": {
             "production": {
-              "browserTarget": "angular.io-example:build"
+              "browserTarget": "BenevoleApp:build:production"
+            },
+            "development": {
+              "browserTarget": "BenevoleApp:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angular.io-example:build"
+            "browserTarget": "BenevoleApp:build"
           }
         },
         "test": {
@@ -110,18 +119,18 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "angular.io-example:serve"
+            "devServerTarget": "BenevoleApp:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "angular.io-example:serve"
+              "devServerTarget": "BenevoleApp:serve"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "angular.io-example",
+  "defaultProject": "BenevoleApp",
   "cli": {
     "analytics": false
   }

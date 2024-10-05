@@ -6,7 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import { faQuestionCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 @Component({
   selector: 'app-connexion',
   templateUrl: './connexion.component.html',
@@ -15,13 +15,15 @@ import { Subscription } from 'rxjs';
 
 export class ConnexionComponent implements OnInit {
   evenement: Evenement = new Evenement();
-  new: boolean;
-  nouveau: boolean;
-  exist: boolean;
-  benevole: Benevole;
-  idEvenement:number
-  affiche:string;
-
+  new!: boolean;
+  nouveau!: boolean;
+  exist!: boolean;
+  benevole!: Benevole;
+  idEvenement!:number
+  affiche!:string;
+  affichageConception: boolean = false;
+  faQuestionCircle=faQuestionCircle
+  faEnvelope=faEnvelope
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
     public route: ActivatedRoute,
@@ -41,7 +43,7 @@ export class ConnexionComponent implements OnInit {
   ngOnInit() {
 
 
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
     this.getEvenement(this.idEvenement);
     this.getAffiche()
     this.validationService.testCommun(this.idEvenement).then(response => {

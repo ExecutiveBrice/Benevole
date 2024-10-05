@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { BenevoleService } from '../../services';
 import { ConfigService, ValidationService, EvenementService, CroisementService, StandService, MailService, ExcelService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -7,7 +7,8 @@ import { Benevole, Croisement, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { faEnvelope, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UtilService } from 'src/app/services/util.service';
 @Component({
   selector: 'app-gestionBenevoles',
   templateUrl: './gestionBenevoles.component.html',
@@ -18,21 +19,21 @@ export class GestionBenevolesComponent implements OnInit {
   attention = faExclamationTriangle;
   envelope = faEnvelope;
   authorize: boolean = false;
-  croisements: Croisement[];
-  benevoles: Benevole[];
-  choix: string;
-  params: Map<string, string>
+  croisements!: Croisement[];
+  benevoles!: Benevole[];
+  choix!: string;
+  params!: Map<string, string>
   evenement: Evenement = new Evenement();
   subscription = new Subscription()
-  idEvenement: number
-  stands: Stand[];
+  idEvenement!: number
+  stands!: Stand[];
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
     public configService: ConfigService,
     public evenementService: EvenementService,
-
+    public utilService: UtilService,
     public transmissionService: TransmissionService,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
@@ -44,17 +45,18 @@ export class GestionBenevolesComponent implements OnInit {
 
   }
 
+
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams'));
+    this.params = JSON.parse(localStorage.getItem('allParams')!);
 
     this.benevoles = [];
     this.croisements = [];
     this.choix = "";
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
-    console.log(parseInt(this.route.snapshot.paramMap.get('id')))
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
+    console.log(parseInt(this.route.snapshot.paramMap.get('id')!))
     this.getEvenement(this.idEvenement);
 
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')) == this.idEvenement ? true : false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
       this.find();
       this.getStand();
@@ -144,7 +146,7 @@ export class GestionBenevolesComponent implements OnInit {
 
 
   addCroisements(benevole: Benevole): void {
-    let croisementsList = []
+    let croisementsList: number[] = []
     benevole.croisements.forEach(croisement => {
       croisementsList.push(croisement.id)
     });
@@ -180,7 +182,7 @@ export class GestionBenevolesComponent implements OnInit {
 
       email.text = email.text + benevole.reponse + "<br>"
 
-      email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params['url'] + "/" + this.idEvenement + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
+      email.text = email.text + "<br>Vous pourrez bien entendu retrouver cette réponse sur <a href=" + this.params.get('url') + "/" + this.idEvenement + ">le site d'inscription</a><br>Cordialement,<br>L'équipe d'animation"
 
       email.text = email.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
       if (benevole.croisements) {
@@ -202,8 +204,8 @@ export class GestionBenevolesComponent implements OnInit {
       });
   }
 
-  toggleList = [];
-  toggle(toggleName: String) {
+  toggleList : string[]= [];
+  toggle(toggleName: string) {
     if (this.toggleList.indexOf(toggleName) > -1) {
       this.toggleList = this.toggleList.filter(elem => elem != toggleName)
     } else {
@@ -220,12 +222,26 @@ export class GestionBenevolesComponent implements OnInit {
       });
   }
 
-  delete(benevoleId: number) {
-    this.benevoleService.deleteById(benevoleId)
+  delete(benevole: Benevole) {
+
+
+
+    this.utilService.openModal("Etes vous sûr de vouloir supprimer l'adhérent "+benevole.prenom +" "+benevole.nom, "Suppression Bénévole", true,true,false,"lg").then((reponse) => {
+      console.log(reponse)
+      this.benevoleService.deleteById(benevole.id)
       .subscribe(res => {
-        this.benevoles = this.benevoles.filter(benevole => benevole.id != benevoleId)
+        this.benevoles = this.benevoles.filter(ben=> ben.id != benevole.id)
       }, err => {
         console.log(err);
       });
+      // on close
+    }, (reason) => {
+      console.log(reason)
+      // on dismiss
+    });
+
+
+
+
   }
 }

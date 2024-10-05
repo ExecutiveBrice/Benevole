@@ -1,31 +1,30 @@
-
 <div *ngIf="authorize && evenement != undefined" class="row">
 
   <div class="col-sm-6">
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">eventName</span>
+        <span class="input-group-text">Nom de l'évènement</span>
       </div>
       <input type="text" [(ngModel)]="evenement.eventName" class="form-control" id="eventName">
     </div>
 
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">contact</span>
+        <span class="input-group-text">Nom du contacte</span>
       </div>
       <input type="text" [(ngModel)]="evenement.contact" class="form-control" id="contact">
     </div>
 
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">contactEmail</span>
+        <span class="input-group-text">Email du contacte</span>
       </div>
       <input type="text" [(ngModel)]="evenement.contactEmail" class="form-control" id="contactEmail">
     </div>
 
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">contactTel</span>
+        <span class="input-group-text">Téléphone du contacte</span>
       </div>
       <input type="text" [(ngModel)]="evenement.contactTel" class="form-control" id="contactTel">
     </div>
@@ -36,14 +35,14 @@
 
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">startDate</span>
+        <span class="input-group-text">Date de début</span>
       </div>
       <input type="date" [ngModel]="evenement.startDate | date:'yyyy-MM-dd'"
         (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate">
     </div>
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">endDate</span>
+        <span class="input-group-text">Date de fin</span>
       </div>
       <input type="date" [ngModel]="evenement.endDate | date:'yyyy-MM-dd'" (ngModelChange)="evenement.endDate = $event"
         class="form-control" id="endDate">
@@ -51,14 +50,14 @@
 
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">rappelDate</span>
+        <span class="input-group-text">Date de rappel</span>
       </div>
       <input type="date" [ngModel]="evenement.rappelDate | date:'yyyy-MM-dd'"
         (ngModelChange)="evenement.rappelDate = $event" class="form-control" id="rappelDate">
     </div>
     <div class="input-group mb-3 input-group-lg">
       <div class="input-group-prepend">
-        <span class="input-group-text">password</span>
+        <span class="input-group-text">Mot de passe de gestion</span>
       </div>
       <input type="text" [(ngModel)]="evenement.password" class="form-control" id="evenementpassword">
     </div>
@@ -68,7 +67,7 @@
 
   <div class="col-sm-6">
     <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">validation</span>
+      <span class="input-group-text">Message de validation</span>
       <textarea [(ngModel)]="evenement.validation" id="validation" name="w3review" rows="4" cols="100">
        {{evenement.validation}}
         </textarea>
@@ -76,7 +75,7 @@
 
 
     <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">retour</span>
+      <span class="input-group-text">Message de retour</span>
       <textarea [(ngModel)]="evenement.retour" id="retour" name="w3review" rows="4" cols="100">
         {{evenement.retour}}
          </textarea>
@@ -86,14 +85,14 @@
 
   <div class="col-sm-6">
     <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">signature</span>
+      <span class="input-group-text">Signature des messages</span>
       <textarea [(ngModel)]="evenement.signature" id="signature" name="w3review" rows="4" cols="100">
         {{evenement.signature}}
          </textarea>
     </div>
 
     <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">rappel</span>
+      <span class="input-group-text">Message de rappel</span>
       <textarea [(ngModel)]="evenement.rappel" id="rappel" name="w3review" rows="4" cols="100">
         {{evenement.rappel}}
          </textarea>
@@ -103,35 +102,54 @@
 
   <div class="col-sm-6">
     <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">url site perso</span>
-        <input type="text" [(ngModel)]="evenement.sitepersourl" class="form-control" id="siteperso">
+      <span class="input-group-text">url du site perso</span>
+      <input type="text" [(ngModel)]="evenement.sitepersourl" class="form-control" id="siteperso">
     </div>
   </div>
 
   <div class="col-sm-6">
-    <div >
+    <div>
       <button type="button" class="btn btn-primary" [ngClass]="{'btn-success':evenement.needtel == true}"
         (click)="evenement.needtel = true">Besoin du tel</button>
-        <button type="button" class="btn btn-primary " [ngClass]="{'btn-danger':evenement.needtel == false}"
+      <button type="button" class="btn btn-primary " [ngClass]="{'btn-danger':evenement.needtel == false}"
         (click)="evenement.needtel = false">Pas besoin du tel</button>
+    </div>
+  </div>
+
+
+  <div class="col-sm-6">
+    <div>
+      <button type="button" class="btn btn-primary" [ngClass]="{'btn-success':evenement.afficherMessage == true}"
+        (click)="evenement.afficherMessage = true">Afficher le message</button>
+      <button type="button" class="btn btn-primary " [ngClass]="{'btn-danger':evenement.afficherMessage == false}"
+        (click)="evenement.afficherMessage = false">Ne pas afficher le message</button>
 
     </div>
 
-</div>
+    <div class="input-group mb-3 input-group-lg">
+      <span class="input-group-text">Message</span>
+      <textarea [(ngModel)]="evenement.message" id="message" name="w3review" rows="4" cols="100">
+        {{evenement.message}}
+         </textarea>
+    </div>
+  </div>
+  <div class="col-sm-12 ">
+    <button type="button" class="btn btn-block btn-warning" (click)="update(evenement)">MAJ</button>
+  </div>
+
   <div class="col-12">
-    <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
 
     <img class="container" *ngIf="logo" [src]="logo" alt="Logo">
 
+    
+    <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
     <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="14/9"
       [resizeToWidth]="150" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
       (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
     </image-cropper>
-    <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Valider cette
+    <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Enregistrer cette
       image</button>
   </div>
 
-  <div class="col-sm-12 ">
-    <button type="button" class="btn btn-block btn-warning" (click)="update(evenement)">MAJ</button>
-  </div>
+
 </div>

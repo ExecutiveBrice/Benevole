@@ -1,10 +1,8 @@
 package com.wild.corp.controller;
 
 
-
 import com.wild.corp.model.Stand;
 import com.wild.corp.service.StandService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,18 +22,21 @@ public class StandController {
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
     public ResponseEntity<?> delete(@RequestParam Integer standId) {
 
-        standService.delete(standId);
+        try {
+            standService.delete(standId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (RuntimeException runtimeException) {
 
-
-        return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Stand> add(@RequestBody Stand stand,@RequestParam Integer eventId) {
+    public ResponseEntity<Stand> add(@RequestBody Stand stand, @RequestParam Integer eventId) {
 
-        standService.addStand(stand,eventId);
+        standService.addStand(stand, eventId);
 
-        if(stand.getId() == null) {
+        if (stand.getId() == null) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -56,8 +57,8 @@ public class StandController {
 
         List<Stand> stands = standService.findByEvenementId(eventId);
 
-        if(stands.isEmpty()) {
-            return new ResponseEntity(stands,HttpStatus.NO_CONTENT);
+        if (stands.isEmpty()) {
+            return new ResponseEntity(stands, HttpStatus.NO_CONTENT);
         }
 
         return new ResponseEntity<>(stands, HttpStatus.OK);

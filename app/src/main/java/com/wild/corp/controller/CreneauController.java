@@ -33,7 +33,7 @@ public class CreneauController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<?> add(@RequestParam Integer creneauId) {
+    public ResponseEntity<?> delete(@RequestParam Integer creneauId) {
         creneauService.delete(creneauId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

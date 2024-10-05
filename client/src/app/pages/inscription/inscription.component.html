@@ -12,7 +12,7 @@
     <div class="col-sm-12 ">
       <div class="alert alert-warning">
         <strong>Attention</strong><br>
-        Les mails issus de l'application proviennent de l'adresse benevoles.nepasrepondre@gmail.com,<br>
+        Les mails issus de l'application proviennent de l'adresse benevoles.nepasrepondregmail.com,<br>
         Ce sont des mails automatiques et sont tres souvent placés dans votre dossier SPAM<br>
         Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet
         évènement:<br>
@@ -21,6 +21,10 @@
     </div>
   </div>
 
+  
+  <div class="col-sm-12 " *ngIf="evenement.afficherMessage" class="alert alert-success">
+    <div [innerHtml]="evenement.message"></div>
+  </div>
 
   <div *ngIf="!validation" class="row">
     <div class="col-sm-6 order-sm-1 ">
@@ -199,20 +203,20 @@
 
 
 
-
-
     <div class="col-sm-6 ">
       <div class="row">
 
-        <div class="col-sm-12 ">
-          <h4>Votre planning :</h4>
 
+
+
+        <div *ngIf="stands.length > 0" class="col-sm-12 ">
+          <h4>Votre planning :</h4>
 
           <div *ngIf="benevole && benevole.croisements != undefined && benevole.croisements.length == 0"
             class="alert alert-success">
             <strong>Pour ajouter un moment de bénévolat :</strong><br>
-            Cliquez sur les choix à droite puis choisissez le créneau qui vous convient.<br>
-            Vous pouvez bien évidement en choisir plusieurs
+            Cliquez sur la liste puis choisissez le créneau qui vous convient.<br>
+            Vous pouvez en choisir plusieurs !
           </div>
           <div *ngIf="benevole && benevole.croisements != undefined && benevole.croisements.length > 0">
             <div *ngFor="let croisement of benevole.croisements | orderBy:'creneau.ordre':false" class="col-md-12">
@@ -224,8 +228,8 @@
         </div>
 
         <div *ngIf="benevole" class="col-sm-12 ">
-          <h4>Commentaire :</h4>
-          <textarea rows="3" [(ngModel)]="benevole.commentaire" class="form-control">
+          <h4>Un message à nous transmettre ?</h4>
+          <textarea rows="5" [(ngModel)]="benevole.commentaire" class="form-control">
             </textarea>
         </div>
 
@@ -233,19 +237,28 @@
           <h4>Reponse :</h4>
           <input type="text" [(ngModel)]="benevole.reponse" readonly class="form-control">
         </div>
-
         <div class="col-sm-12 ">
-          <button type="button" class="btn btn-block btn-danger" (click)="validate()">Je valide mon
-            inscription</button>
-        </div>
 
+          <button *ngIf="getScreenWidth > 570 && !validation" type="button" [ngClass]="{'elem':clignotage}"
+            class="btn btn-lg btn-danger btn-block elem " (click)="validate()">Valider l'inscription</button>
+
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-bottom">
-  <div  class="navbar-expand m-auto navbar-text">
-    Contact : {{evenement.contact}} - {{evenement.contactEmail}}
+
+  <button *ngIf="getScreenWidth < 570 && !validation" type="button" [ngClass]="{'elem':clignotage}"
+    class="btn btn-lg btn-danger btn-block elem " (click)="validate()">Valider l'inscription</button>
+
+  <div class="navbar-expand m-auto navbar-text">
+    <fa-icon class="btn-nopadding" [icon]="faEnvelope"></fa-icon> {{evenement.contact}} - {{evenement.contactEmail}}
+    {{evenement.contactTel}}
+
+    
   </div>
+
+
 </nav>

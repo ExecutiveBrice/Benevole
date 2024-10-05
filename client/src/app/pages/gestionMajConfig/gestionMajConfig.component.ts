@@ -4,7 +4,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ImageCroppedEvent } from 'ngx-image-cropper';
+
+import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 
 @Component({
   selector: 'app-gestionMajConfig',
@@ -16,8 +17,8 @@ export class GestionMajConfigComponent implements OnInit {
   subscription = new Subscription();
   authorize: boolean = false;
   evenement: Evenement = new Evenement();
-  idEvenement:number
-  logo: string;
+  idEvenement!:number
+  logo!: string;
 
   constructor(
     public route: ActivatedRoute,
@@ -30,10 +31,10 @@ export class GestionMajConfigComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id'))
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
     this.getEvenement(this.idEvenement);
     this.getLogo()
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==this.idEvenement?true:false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!)==this.idEvenement?true:false;
     if(!this.authorize){
       this.router.navigate(['/gestion/' + this.idEvenement]);
 
@@ -84,6 +85,8 @@ export class GestionMajConfigComponent implements OnInit {
     const contentFile = croppedImage.replace("data:image/jpeg;base64,", "")
     this.fileService.update(this.idEvenement, 'logo.jpeg', contentFile).subscribe(data => {
       console.log(data)
+      this.imageChangedEvent = undefined
+      this.croppedImage = undefined;
       this.getLogo()
     },
       error => {
