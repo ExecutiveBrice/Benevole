@@ -27,7 +27,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "ngx-image-cropper": "^8.0.0",
-    "ngx-toastr": "^18.0.0",
+    "ngx-toastr": "^19.0.0",
     "qrcode": "^1.5.3",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -45,8 +45,8 @@
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
+    "karma-jasmine": "^4.0.2",
+    "karma-jasmine-html-reporter": "^1.7.0",
     "typescript": "~5.4.2"
   }
 }
