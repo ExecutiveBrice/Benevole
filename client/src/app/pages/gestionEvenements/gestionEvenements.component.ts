@@ -3,23 +3,38 @@ import { Component, OnInit } from '@angular/core';
 import { ValidationService, EvenementService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { DatePipe, NgClass } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { OrderByPipe } from "../../services/sort.pipe";
 
 @Component({
-  selector: 'app-gestionEvenements',
-  templateUrl: './gestionEvenements.component.html',
-  styleUrls: ['./gestionEvenements.component.css']
+    selector: 'app-gestionEvenements',
+    standalone: true,
+    templateUrl: './gestionEvenements.component.html',
+    styleUrls: ['./gestionEvenements.component.scss'],
+    imports: [NgClass,
+        FontAwesomeModule,
+        FormsModule,
+        DatePipe,
+        RouterModule, OrderByPipe],
+        providers: [
+          EvenementService,
+          ValidationService,
+          ConfigService
+        ],
 })
 
 export class GestionEvenementsComponent implements OnInit {
 
   subscription = new Subscription()
   authorize: boolean = false;
-  evenements: Evenement[];
-  choix: number;
-  params: Map<string, string>
-  password: string;
+  evenements!: Evenement[];
+  choix!: number;
+  params!: Map<string, string>
+  password!: string;
 
 
   constructor(
@@ -33,13 +48,13 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams'));
+    this.params = JSON.parse(localStorage.getItem('allParams')!);
     this.evenements = [];
 
     localStorage.removeItem('isGestion');
     localStorage.removeItem('isValidAccessForEvent');
 
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent'))==0?true:false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!)==0?true:false;
     if(this.authorize){
       this.getAllEvenements();
     }
@@ -67,7 +82,7 @@ export class GestionEvenementsComponent implements OnInit {
     if (this.choix != id) {
       this.choix = id
     } else {
-      this.choix = null
+      this.choix = 0
     }
   }
 

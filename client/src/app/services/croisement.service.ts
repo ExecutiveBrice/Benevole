@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Croisement } from '../models';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class CroisementService {
@@ -43,15 +43,15 @@ export class CroisementService {
   }
 
   ajout(croisement:Croisement) {
-    return this.http.post(this.apiUrl + '/', croisement, {responseType: 'json'});
+    return this.http.post<Croisement>(this.apiUrl + '/', croisement, {responseType: 'json'});
   }
 
   update(croisement:Croisement) {
-    return this.http.put(this.apiUrl + '/', croisement, {responseType: 'json'});
+    return this.http.put<Croisement>(this.apiUrl + '/', croisement, {responseType: 'json'});
   }
 
-  delete(croisement:Croisement) {
-    let params = new HttpParams().set('croisementId', ''+croisement.id+'');
+  delete(croisementId:number) {
+    let params = new HttpParams().set('croisementId', ''+croisementId+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
   }
 

@@ -17,6 +17,16 @@ export class TransmissionService {
     this.dataSource.next(evenement);
   }
 
+    // Observable string sources
+    private toggleSource = new Subject<boolean>();
+
+    // Observable string streams
+    toggleStream = this.toggleSource.asObservable();
+  
+    // Service message commands
+    toggleTransmission(toggle: boolean) {
+      this.toggleSource.next(toggle);
+    }
 
   public someEvent: EventEmitter<string> = new EventEmitter();
 

@@ -1,6 +1,5 @@
 ﻿export * from './creation/creation.component';
 export * from './connexion/connexion.component';
-export * from './inscription/inscription.component';
 export * from './error/error.component';
 export * from './gestion/gestion.component';
 export * from './gestionBenevoles/gestionBenevoles.component';

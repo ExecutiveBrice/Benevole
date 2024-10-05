@@ -1,24 +1,95 @@
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, TransmissionService, EvenementService, FileService } from '../../services';
+import { ValidationService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
+import { DatePipe, NgClass } from '@angular/common';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatStepperModule } from '@angular/material/stepper';
+import { OrderByPipe } from '../../services/sort.pipe';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
+import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
+import 'moment/locale/fr';
+
+
+
 
 @Component({
   selector: 'app-gestionMajConfig',
+  standalone: true,
+  providers: [
+    {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
+    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
+    // to your app config. We provide it at the component level here, due to limitations
+    // of our example generation script.
+    provideMomentDateAdapter(),
+    EvenementService,
+    TransmissionService,
+
+    ValidationService,
+    FileService,
+    ConfigService
+  ],
+  imports: [NgClass,
+    DatePipe,
+    FormsModule,
+    ImageCropperComponent,
+    RouterModule,
+    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
+    ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
+    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+
   templateUrl: './gestionMajConfig.component.html',
-  styleUrls: ['./gestionMajConfig.component.css']
+  styleUrls: ['./gestionMajConfig.component.scss']
 })
 
 export class GestionMajConfigComponent implements OnInit {
   subscription = new Subscription();
   authorize: boolean = false;
   evenement: Evenement = new Evenement();
-  idEvenement!:number
+  idEvenement!: number
   logo!: string;
+
+
+  readonly minDate = new Date();
+  readonly maxDate = new Date(this.minDate.getFullYear() + 1, 11, 31);
+
+  
+  formulaireEvent = this.formBuilder.group({
+
+    eventName: new FormControl(this.evenement.eventName, [Validators.required, Validators.minLength(2)]),
+    contact: new FormControl(this.evenement.contact, [Validators.required, Validators.minLength(2)]),
+    contactTel: new FormControl(this.evenement.contactTel, []),
+    contactEmail: new FormControl(this.evenement.contactEmail, [Validators.required, Validators.minLength(2)]),
+    endDate: new FormControl(this.evenement.endDate, [Validators.required]),
+    sitepersourl: new FormControl(this.evenement.sitepersourl, [Validators.required, Validators.minLength(2)]),
+    password: new FormControl(this.evenement.password, [Validators.required, Validators.minLength(2)]),
+    validation: new FormControl(this.evenement.validation, [Validators.required, Validators.minLength(2)]),
+    retour: new FormControl(this.evenement.retour, [Validators.required, Validators.minLength(2)]),
+    signature: new FormControl(this.evenement.signature, [Validators.required, Validators.minLength(2)]),
+    rappel: new FormControl(this.evenement.rappel, [Validators.required, Validators.minLength(2)]),
+    afficherMessage: new FormControl(this.evenement.afficherMessage, [Validators.required]),
+    message: new FormControl(this.evenement.message, []),
+    needtel: new FormControl(this.evenement.needtel, [Validators.required]),
+
+  })
+
 
   constructor(
     public route: ActivatedRoute,
@@ -27,31 +98,58 @@ export class GestionMajConfigComponent implements OnInit {
     public evenementService: EvenementService,
     public validationService: ValidationService,
     public fileService: FileService,
-    public sanitizer: DomSanitizer) {
-  }
-
+    public sanitizer: DomSanitizer,
+    public configService: ConfigService,
+    public formBuilder: FormBuilder) { }
+  
   ngOnInit() {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
     this.getEvenement(this.idEvenement);
-    this.getLogo()
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!)==this.idEvenement?true:false;
-    if(!this.authorize){
-      this.router.navigate(['/gestion/' + this.idEvenement]);
 
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
+    if (!this.authorize) {
+      this.router.navigate(['/gestion/' + this.idEvenement]);
+    }else{
+      this.getLogo()
     }
   }
 
+
+
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
-      this.evenement = data;
-      this.transmissionService.dataTransmission(data);
+    this.evenementService.getById(idEvenement).subscribe(evenement => {
+      this.evenement = evenement;
+      this.transmissionService.dataTransmission(evenement);
+
+
+      this.formulaireEvent.get("eventName")?.setValue(evenement.eventName);
+      this.formulaireEvent.get("contact")?.setValue(evenement.contact);
+
+      this.formulaireEvent.get("contactTel")?.setValue(evenement.contactTel);
+      this.formulaireEvent.get("contactEmail")?.setValue(evenement.contactEmail);
+      this.formulaireEvent.get("endDate")?.setValue(evenement.endDate);
+      this.formulaireEvent.get("sitepersourl")?.setValue(evenement.sitepersourl);
+      this.formulaireEvent.get("password")?.setValue(evenement.password);
+      this.formulaireEvent.get("validation")?.setValue(evenement.validation);
+      this.formulaireEvent.get("retour")?.setValue(evenement.retour);
+      this.formulaireEvent.get("signature")?.setValue(evenement.signature);
+      this.formulaireEvent.get("rappel")?.setValue(evenement.rappel);
+      this.formulaireEvent.get("afficherMessage")?.setValue(evenement.afficherMessage);
+      this.formulaireEvent.get("message")?.setValue(evenement.message);
+      this.formulaireEvent.get("needtel")?.setValue(evenement.needtel);
+
+
+      console.log(this.formulaireEvent)
     },
       error => {
         console.log('😢 Oh no!', error);
       });
   }
 
-  update(evenement: Evenement): void {
+  update(): void {
+
+    let evenement = Object.assign(this.evenement, this.formulaireEvent.value)
+
     this.evenementService.update(evenement).subscribe(data => {
       this.evenement = data;
     },
@@ -81,12 +179,12 @@ export class GestionMajConfigComponent implements OnInit {
   }
 
 
-  uploadImage(croppedImage: any) {
-    const contentFile = croppedImage.replace("data:image/jpeg;base64,", "")
+  uploadImage() {
+    const contentFile = this.croppedImage.replace("data:image/jpeg;base64,", "")
     this.fileService.update(this.idEvenement, 'logo.jpeg', contentFile).subscribe(data => {
       console.log(data)
       this.imageChangedEvent = undefined
-      this.croppedImage = undefined;
+      this.croppedImage = '';
       this.getLogo()
     },
       error => {
@@ -96,7 +194,7 @@ export class GestionMajConfigComponent implements OnInit {
 
   getLogo() {
     this.fileService.get(this.idEvenement, 'logo.jpeg').subscribe(data => {
-     this.logo = "data:image/jpeg;base64," + data
+      this.logo = "data:image/jpeg;base64," + data
     },
       error => {
         console.log('😢 Oh no!', error);

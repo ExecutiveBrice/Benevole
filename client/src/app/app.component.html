@@ -1,30 +1,20 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark ">
-  <div class="row">
-    <div class="col-4 col-md-1">
-      <a href="{{evenement!=undefined?evenement.sitepersourl:''}}" class="navbar-left"> <img *ngIf="logo" [src]="logo"
-          alt="logo"></a>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+  <div class="container-fluid">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+      <a class="navbar-brand" href="{{evenement!=undefined?evenement.sitepersourl:''}}">
+        <img [src]="logo">
+      </a>
     </div>
-    <div class="col-8 col-md-11">
-      <div class="mx-auto flex-column" id="navbar">
-        <ul class="navbar-nav mx-auto w-100 d-flex justify-content-center">
-          <li *ngIf="evenement != undefined" class="nav-item gros_titre">
-            {{evenement.eventName}}
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="col-12">
-      <div *ngIf="evenement != undefined && isValidAccessForEvent == evenement.id">
-        <button type="button" class="btn btn-block btn-warning"
-          [routerLink]="['/gestion/', evenement.id]">Gestion</button>
-      </div>
+    <div class="mx-auto order-0">
+      @if (evenement != undefined) {
 
-     
- 
+      <h1 class="navbar-brand mx-auto">{{evenement.eventName}}</h1>
+      }
+    </div>
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+
     </div>
   </div>
 </nav>
-<!-- main app container -->
 
-
-<router-outlet></router-outlet>
+<router-outlet />

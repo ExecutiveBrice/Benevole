@@ -1,80 +1,109 @@
-<div *ngIf="authorize" class="row">
-  <div class="col-sm-6">
-    <div class="alert alert-success">
-      <strong>{{benevoles.length}} bénévoles</strong>
-    </div>
+@if (authorize && evenement != undefined) {
+
+<div class="row marge">
+  <div class="col-sm-12">
+
+
+    <mat-card appearance="raised">
+      <mat-grid-list cols="3" rowHeight="50px">
+        <mat-grid-tile [colspan]="2">
+
+          <button type="button" class="btn btn-block btn-warning">Télécharger la liste des {{benevoles.length}}
+            bénévoles</button>
+
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button class="full-width" mat-flat-button type="button"
+            [routerLink]="['/',evenement.id,'gestion']">Retour</button>
+
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card>
+
   </div>
-  <div class="col-sm-6">
-    <button (click)="exportAsXLSX()" type="button" class="btn btn-block btn-warning">Télécharger la liste des
-      bénévoles</button>
+
+
+  @for (benevole of benevoles | orderBy:'nom':false; track $index) {
+  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+
+    <mat-expansion-panel #mep="matExpansionPanel" [formGroup]="benevole.formulaire">
+      <mat-expansion-panel-header>
+        <mat-panel-title> {{benevole.nom}} {{benevole.prenom}} </mat-panel-title>
+
+      </mat-expansion-panel-header>
+
+      @if (mep.expanded) {
+
+      <mat-form-field class="full-width">
+        <mat-label>Email</mat-label>
+        <input type="email" matInput formControlName="email">
+        @if (benevole.formulaire.get('email')?.hasError('email')) {
+        <mat-error>Le format est incorecte</mat-error>
+        }
+        @if (benevole.formulaire.get('email')?.hasError('required')) {
+        <mat-error>L'email est obligatoire</mat-error>
+        }
+      </mat-form-field>
+
+      @if (!benevole.formulaire.get('telephone')?.disabled) {
+      <mat-form-field class="full-width">
+        <mat-label>telephone</mat-label>
+        <input type="text" matInput formControlName="telephone">
+
+        @if (benevole.formulaire.get('telephone')?.hasError('required')) {
+        <mat-error>Le telephone est obligatoire</mat-error>
+        }
+      </mat-form-field>
+      }
+      @for (benecroisement of benevole.croisements | orderBy:'stand.ordre':false; track $index) {
+
+
+      <mat-form-field class="full-width">
+        <mat-label>{{benecroisement.stand.nom == "tous"?"N'importe quel stand":benecroisement.stand.nom}}</mat-label>
+        <select matNativeControl name="crois">
+          @for (stand of stands | orderBy:'ordre':false; track $index) {
+          <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
+            @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
+            <option [selected]="benecroisement.id == croisement.id"
+              (click)="choisir(benevole, benecroisement, croisement)">
+              {{croisement.creneau.plage}}
+              ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+            }
+
+
+          </optgroup>
+          }
+          <option matInput (click)="choisir(benevole, benecroisement, null)">
+            <font color="red"><b>Suppression</b></font>
+          </option>
+        </select>
+      </mat-form-field>
+
+      }
+
+      <mat-form-field class="full-width">
+        <mat-label>Nouveau</mat-label>
+        <select matNativeControl name="crois">
+          <option value="" selected></option>
+          @for (stand of stands | orderBy:'ordre':false; track $index) {
+          <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
+
+            @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
+
+            <option matInput (click)="choisir(benevole, null, croisement)"> {{croisement.creneau.plage}}
+              ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+            }
+
+
+          </optgroup>
+          }
+        </select>
+      </mat-form-field>
+      }
+    </mat-expansion-panel>
   </div>
+  }
+
 </div>
-<div *ngIf="authorize" class="row">
-  <div *ngFor="let benevole of benevoles  | orderBy:'nom':false" class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block btn-info" (click)="toggle(benevole.id)">
-      {{benevole.nom}} {{benevole.prenom}} <fa-icon  class="btn-nopadding" *ngIf="benevole.commentaire" [icon]="attention "></fa-icon> <fa-icon  class="btn-nopadding" *ngIf="benevole.reponse" [icon]="envelope"></fa-icon></button>
-    <div class="col-sm-12" *ngIf="toggleList.indexOf(benevole.id)>-1">
-      <div class="row">
-        <div class="col-sm-10">
-          <input type="text" [(ngModel)]="benevole.email" (blur)="modify(benevole)" class="form-control" id="ordre">
-          <input *ngIf="evenement.needtel" type="text" [(ngModel)]="benevole.telephone" (blur)="modify(benevole)" class="form-control" id="ordre">
 
-        </div>
-        <div class="col-sm-2">
-          <button type="button" class="btn-nopadding btn btn-block btn-danger" (click)="delete(benevole)">X</button>
-        </div>
-        <div class="col-sm-12">
-          Commentaire : {{benevole.commentaire}}
-        </div>
-        <div class="col-sm-12">
-          <textarea [(ngModel)]="benevole.reponse" rows="3" cols="20"></textarea>
-        </div>
-        <div class="col-sm-12">
-          <button type="button" class="btn btn-block btn-info" (click)="send(benevole)">Envoyer la réponse</button>
-        </div>
-
-        <div *ngFor="let benecroisement of benevole.croisements | orderBy:'stand.ordre':false"
-          class="col-sm-12 dropdown">
-          <button type="button" class="btn btn-block btn-warning dropdown-toggle"
-            data-toggle="dropdown">{{benecroisement.stand.nom == "tous"?"N'importe quel
-            stand":benecroisement.stand.nom}}
-            à {{benecroisement.creneau.plage}}</button>
-          <div class="dropdown-menu scrollable-menu">
-            <div *ngFor="let stand of stands  | orderBy:'ordre':false">
-              <h1 class="dropdown-header dropdown-header-title">{{stand.nom == "tous"?"N'importe quel stand":stand.nom}}</h1>
-              <a class="dropdown-item" *ngFor="let croisement of stand.croisements  | orderBy:'creneau.ordre':false"
-                (click)="choisir(benevole, benecroisement, croisement)">
-                {{croisement.creneau.plage}} ({{croisement.benevoles.length}}/{{croisement.limite}})</a>
-            </div>
-
-            <a class="dropdown-item" (click)="choisir(benevole, benecroisement, null)">
-              <font color="red"><b>Suppression</b></font>
-            </a>
-          </div>
-
-        </div>
-        <div class="col-sm-12 dropdown">
-          <button type="button" class="btn btn-block btn-warning dropdown-toggle"
-            data-toggle="dropdown">Nouveau</button>
-
-
-            
-
-
-        <div class="dropdown-menu scrollable-menu">
-          <div *ngFor="let stand of stands  | orderBy:'ordre':false">
-            <h2 class="dropdown-header">{{stand.nom == "tous"?"N'importe quel stand":stand.nom}}</h2>
-            <a class="dropdown-item" *ngFor="let croisement of stand.croisements  | orderBy:'creneau.ordre':false"
-              (click)="choisir(benevole, null, croisement)">
-              {{croisement.creneau.plage}} ({{croisement.benevoles.length}}/{{croisement.limite}})</a>
-          </div>
-
-        </div>
-
-        </div>
-
-
-      </div>
-    </div>
-  </div>
-</div>
+}

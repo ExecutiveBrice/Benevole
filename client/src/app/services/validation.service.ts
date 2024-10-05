@@ -14,12 +14,9 @@ export class ValidationService {
   ) { }
 
   async testCommun(idEvenement: number): Promise<boolean> {
-    localStorage.setItem('isGestion', JSON.stringify(false))
-
     if (!idEvenement || isNaN(idEvenement) || idEvenement < 1) {
       return false
     }
-
     return! await this.evenementService.isOpen(idEvenement);
   }
 

@@ -6,11 +6,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-error',
   templateUrl: './error.component.html',
-  styleUrls: ['./error.component.css']
+  styleUrls: ['./error.component.scss']
 })
 
 export class ErrorComponent {
-  text:string
+  text!:string
 
   constructor(  
     public route: ActivatedRoute,

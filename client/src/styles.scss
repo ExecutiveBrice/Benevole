@@ -1,0 +1,136 @@
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
+body {
+  margin: 0px;
+  background-color: rgb(216, 215, 223);
+}
+
+
+
+mat-card {
+  margin-top: 10px;
+}
+
+.mat-expansion-panel {
+
+  margin-bottom: 10px !important;
+}
+
+.mat-expansion-panel-header {
+  background-color: rgb(176, 185, 231);
+
+}
+.mat-expansion-panel-header.mat-expanded {
+
+  margin-bottom: 10px;
+}
+
+
+.mat-expansion-panel-header.mat-expanded:focus,
+.mat-expansion-panel-header:hover {
+  background-color: rgb(183, 201, 242) !important;
+}
+
+.mat-mdc-chip-disabled {
+  background-color: rgb(200, 200, 200) !important;
+}
+
+.mat-expansion-panel-header-title {
+  flex-basis: unset !important;
+}
+
+.mat-expansion-panel-header-description {
+  font-size: x-small;
+}
+
+.mat-grid-tile {
+  font-size: smaller;
+}
+
+
+.mat-mdc-card,
+.mat-expansion-panel,
+.mat-expansion-panel-header,
+.mat-mdc-standard-chip,
+.mdc-button,
+.mdc-flat-button,
+.mdc-icon-button,
+.mdc-stroked-button {
+  border-radius: 5px !important;
+}
+
+.mat-mdc-chip-option {
+  text-align: center;
+  width: 31%;
+  aspect-ratio: 5/4;
+  height: auto !important;
+}
+
+
+mat-card-header {
+  display: unset !important;
+  text-align: center;
+}
+
+.mat-mdc-form-field{
+  display: block !important;
+}
+
+
+
+.warning {
+  background-color: rgb(235, 157, 61) !important;
+}
+
+.red {
+  background-color: rgb(226, 114, 100) !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-height {
+  height: 100%;
+
+}
+
+
+
+.marge {
+  margin: 1%;
+}
+
+.padding-top {
+  padding-top: 10px;
+}
+
+h1 {
+  font-family: cursive !important;
+}
+
+@media screen and (max-width: 1024px) {
+  h1 {
+    font-size: 4rem!important;
+  }
+}
+
+@media screen and (max-width: 950px) {
+  h1 {
+    font-size: 3rem!important;
+  }
+}
+
+
+@media screen and (max-width: 650px) {
+  h1 {
+    font-size: 2rem!important;
+  }
+
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 1rem!important;
+  }
+}

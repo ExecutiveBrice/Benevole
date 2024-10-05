@@ -1,155 +1,223 @@
-<div *ngIf="authorize && evenement != undefined" class="row">
+@if (authorize && evenement != undefined) {
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Nom de l'évènement</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.eventName" class="form-control" id="eventName">
-    </div>
+  
+<div class="row marge">
+  <div class="col-sm-12">
 
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Nom du contacte</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.contact" class="form-control" id="contact">
-    </div>
+<mat-card appearance="raised">
+  <mat-grid-list cols="3" rowHeight="50px">
+    <mat-grid-tile [colspan]="2">
 
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Email du contacte</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.contactEmail" class="form-control" id="contactEmail">
-    </div>
+      <button class="full-width" mat-flat-button type="button" (click)="update()">Enregistrer les modifications</button>
 
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Téléphone du contacte</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.contactTel" class="form-control" id="contactTel">
-    </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
 
-  </div>
+      <button class="full-width" mat-flat-button type="button"
+        [routerLink]="['/',evenement.id,'gestion']">Retour</button>
 
-  <div class="col-sm-6">
-
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Date de début</span>
-      </div>
-      <input type="date" [ngModel]="evenement.startDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate">
-    </div>
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Date de fin</span>
-      </div>
-      <input type="date" [ngModel]="evenement.endDate | date:'yyyy-MM-dd'" (ngModelChange)="evenement.endDate = $event"
-        class="form-control" id="endDate">
-    </div>
-
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Date de rappel</span>
-      </div>
-      <input type="date" [ngModel]="evenement.rappelDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="evenement.rappelDate = $event" class="form-control" id="rappelDate">
-    </div>
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Mot de passe de gestion</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.password" class="form-control" id="evenementpassword">
-    </div>
-
-  </div>
-
-
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">Message de validation</span>
-      <textarea [(ngModel)]="evenement.validation" id="validation" name="w3review" rows="4" cols="100">
-       {{evenement.validation}}
-        </textarea>
-    </div>
-
-
-    <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">Message de retour</span>
-      <textarea [(ngModel)]="evenement.retour" id="retour" name="w3review" rows="4" cols="100">
-        {{evenement.retour}}
-         </textarea>
-    </div>
-
-  </div>
-
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">Signature des messages</span>
-      <textarea [(ngModel)]="evenement.signature" id="signature" name="w3review" rows="4" cols="100">
-        {{evenement.signature}}
-         </textarea>
-    </div>
-
-    <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">Message de rappel</span>
-      <textarea [(ngModel)]="evenement.rappel" id="rappel" name="w3review" rows="4" cols="100">
-        {{evenement.rappel}}
-         </textarea>
-    </div>
-  </div>
-
-
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">url du site perso</span>
-      <input type="text" [(ngModel)]="evenement.sitepersourl" class="form-control" id="siteperso">
-    </div>
-  </div>
-
-  <div class="col-sm-6">
-    <div>
-      <button type="button" class="btn btn-primary" [ngClass]="{'btn-success':evenement.needtel == true}"
-        (click)="evenement.needtel = true">Besoin du tel</button>
-      <button type="button" class="btn btn-primary " [ngClass]="{'btn-danger':evenement.needtel == false}"
-        (click)="evenement.needtel = false">Pas besoin du tel</button>
-    </div>
-  </div>
-
-
-  <div class="col-sm-6">
-    <div>
-      <button type="button" class="btn btn-primary" [ngClass]="{'btn-success':evenement.afficherMessage == true}"
-        (click)="evenement.afficherMessage = true">Afficher le message</button>
-      <button type="button" class="btn btn-primary " [ngClass]="{'btn-danger':evenement.afficherMessage == false}"
-        (click)="evenement.afficherMessage = false">Ne pas afficher le message</button>
-
-    </div>
-
-    <div class="input-group mb-3 input-group-lg">
-      <span class="input-group-text">Message</span>
-      <textarea [(ngModel)]="evenement.message" id="message" name="w3review" rows="4" cols="100">
-        {{evenement.message}}
-         </textarea>
-    </div>
-  </div>
-  <div class="col-sm-12 ">
-    <button type="button" class="btn btn-block btn-warning" (click)="update(evenement)">MAJ</button>
-  </div>
-
-  <div class="col-12">
-
-    <img class="container" *ngIf="logo" [src]="logo" alt="Logo">
-
-    
-    <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
-    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="14/9"
-      [resizeToWidth]="150" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
-      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-    </image-cropper>
-    <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Enregistrer cette
-      image</button>
-  </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-card>
 
 
 </div>
+
+
+<div class="col-md-4">
+
+
+
+    <mat-card appearance="raised">
+      <form [formGroup]="formulaireEvent">
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Nom de l'évènement</mat-label>
+            <input type="text" matInput formControlName="eventName">
+
+            @if (formulaireEvent.get('eventName')?.hasError('required')) {
+            <mat-error>Le nom de l'évènement est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Mot de passe d'accès à la configuration</mat-label>
+            <input type="password" matInput formControlName="password">
+
+            @if (formulaireEvent.get('password')?.hasError('required')) {
+            <mat-error>Le mot de passe est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+
+
+        <mat-card-content>
+
+          <mat-form-field>
+            <mat-label>Vidange de la base donnée des bénévoles</mat-label>
+            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp" formControlName="endDate">
+
+            <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+            @if (formulaireEvent.get('endDate')?.hasError('min')) {
+            <mat-error>La date minimale est {{minDate}}</mat-error>
+            }
+
+          </mat-form-field>
+
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Nom complet du contact</mat-label>
+            <input type="text" matInput formControlName="contact">
+
+            @if (formulaireEvent.get('contact')?.hasError('required')) {
+            <mat-error>Le nom du contact est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Numéro de tel du téléphone</mat-label>
+            <input type="text" matInput formControlName="contactTel">
+
+            @if (formulaireEvent.get('contactTel')?.hasError('required')) {
+            <mat-error>Le nom du contactTel est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Nom complet du contactEmail</mat-label>
+            <input type="email" matInput formControlName="contactEmail">
+
+            @if (formulaireEvent.get('contactEmail')?.hasError('required')) {
+            <mat-error>Le nom du contactTel est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Nom complet du sitepersourl</mat-label>
+            <input type="text" matInput formControlName="sitepersourl">
+
+            @if (formulaireEvent.get('sitepersourl')?.hasError('required')) {
+            <mat-error>Le nom du contactTel est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="needtel">
+            Besoin du téléphone des bénévoles?
+          </mat-slide-toggle>
+
+        </mat-card-content>
+      </form>
+
+    </mat-card>
+
+  </div>
+
+
+  <div class="col-md-4">
+
+    <mat-card appearance="raised">
+      <form [formGroup]="formulaireEvent">
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Contenu de l'email de validation</mat-label>
+            <textarea matInput rows="5" formControlName="validation"></textarea>
+
+            @if (formulaireEvent.get('validation')?.hasError('required')) {
+            <mat-error>Le contenu de l'email de validation est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Signature automatique des emails de l'application</mat-label>
+            <textarea matInput rows="5" formControlName="signature"></textarea>
+
+            @if (formulaireEvent.get('signature')?.hasError('required')) {
+            <mat-error>La signature est obligatoire</mat-error>
+            }
+
+          </mat-form-field>
+        </mat-card-content>
+
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="afficherMessage">
+            Afficher le message d'accueil ci dessous?
+          </mat-slide-toggle>
+
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Message d'accueil</mat-label>
+            <textarea matInput rows="5" formControlName="message"></textarea>
+
+
+          </mat-form-field>
+        </mat-card-content>
+
+
+      </form>
+
+    </mat-card>
+
+  </div>
+
+
+  <div class="col-md-4">
+
+    <mat-card appearance="raised">
+      <mat-card-content>
+
+        @if (logo) {
+        <img mat-card-image [src]="logo" alt="logo">
+        }
+
+
+
+        <button class="full-width" type="button" mat-stroked-button (click)="fileInput.click()">Modifier le
+          logo</button>
+        <input hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
+        @if (croppedImage.length > 5) {
+        <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadImage()">Enregistrer cette
+          image</button>
+        }
+
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [output]="'base64'" [aspectRatio]="14/9"
+          [resizeToWidth]="150" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+        </image-cropper>
+
+
+      </mat-card-content>
+    </mat-card>
+
+
+
+  </div>
+</div>
+
+}

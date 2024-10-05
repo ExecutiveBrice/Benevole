@@ -1,24 +1,53 @@
-<div *ngIf="authorize" class="row">
+@if (authorize && evenement != undefined) {
+
+
+
+  <mat-card appearance="raised">
+    <mat-grid-list cols="3" rowHeight="50px">
+      <mat-grid-tile [colspan]="2">
+  
+        <strong>
+          {{stands.length}} créneaux
+        </strong>
+  
+  
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button class="full-width" mat-flat-button type="button"
+          [routerLink]="['/',evenement.id,'gestion']">Retour</button>
+  
+      </mat-grid-tile>
+    </mat-grid-list>
+  </mat-card>
+
+
+<div class="row">
   <div class="col-sm-12">
     <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
   </div>
-
-  <div *ngFor="let stand of stands | orderBy:'ordre':false " class="col-lg-2">
+  @for (stand of stands | orderBy:'ordre':false; track $index) {
+  <div class="col-lg-2">
     <button type="button" class="btn btn-block btn-info" (click)="toggle(stand.id)">{{stand.nom}} </button>
-
-    <div class="col-sm-12" *ngIf="toggleList.indexOf(stand.id)>-1">
+    @if (toggleList.indexOf(stand.id)>-1) {
+    <div class="col-sm-12">
       <div class="row">
-        <div *ngFor="let standcroisement of stand.croisements | orderBy:'creneau.ordre':false "
-          class="col-sm-12 dropdown">
+        @for (standcroisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
+        <div class="col-sm-12 dropdown">
           <strong>{{standcroisement.creneau.plage}} :
-              ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
+            ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
           <div class="row">
-            <div *ngFor="let benevole of standcroisement.benevoles | orderBy:'nom':false " class="col-sm-12 dropdown petite_ecriture">
+            @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track $index) {
+            <div class="col-sm-12 dropdown petite_ecriture">
               {{benevole.prenom}} {{benevole.nom}} - {{benevole.email}} {{benevole.telephone}}
             </div>
+            }
           </div>
         </div>
+        }
       </div>
     </div>
+    }
   </div>
+  }
 </div>
+}

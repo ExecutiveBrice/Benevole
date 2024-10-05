@@ -1,18 +1,54 @@
 
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, TransmissionService, CroisementService, EvenementService, StandService, MailService, ExcelService, BenevoleService, FileService } from '../../services';
+import { ValidationService, TransmissionService, CroisementService, EvenementService, StandService, MailService, BenevoleService, FileService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Email, Evenement } from '../../models';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
+import { NgClass } from '@angular/common';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatStepperModule } from '@angular/material/stepper';
+import { OrderByPipe } from '../../services/sort.pipe';
+import { Params } from '../../models/params';
 
 
 @Component({
   selector: 'app-gestion',
+  standalone: true,
+  imports: [NgClass,
+    FormsModule,
+    ImageCropperComponent,
+    RouterModule,
+    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
+    ReactiveFormsModule, MatCardModule,
+    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+  providers: [
+    EvenementService,
+    TransmissionService,
+    BenevoleService,
+    CroisementService,
+    StandService,
+    MailService,
+    ValidationService,
+    FileService,
+    ConfigService
+  ],
+
   templateUrl: './gestion.component.html',
-  styleUrls: ['./gestion.component.css']
+  styleUrls: ['./gestion.component.scss']
 })
 
 export class GestionComponent implements OnInit {
@@ -34,15 +70,16 @@ export class GestionComponent implements OnInit {
   theCheckbox: any
   selectedDeviceObj: any
   evenement!: Evenement
-  params!: Map<string, string>
+  params!: Params
   idEvenement!: number
+  isValidAccessForEvent?: number
   emailInfo: Email = {
     to: "",
     subject: "",
     text: "Bla bla"
   }
-  qrcode!: Blob
-  using_address!: String;
+  qrcode!: string
+  using_address!: string;
   mailingList: Benevole[] = [];
   mailingLists = [{
     id: '1',
@@ -57,6 +94,10 @@ export class GestionComponent implements OnInit {
     name: 'Les inscrits SANS choix',
   }]
 
+  authorizeForm = this.formBuilder.group({
+    password: new FormControl("", [Validators.required])
+
+  })
 
 
   constructor(
@@ -67,13 +108,13 @@ export class GestionComponent implements OnInit {
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
-    public excelService: ExcelService,
     public mailService: MailService,
     public validationService: ValidationService,
     public fileService: FileService,
-    public sanitizer: DomSanitizer) {
+    public sanitizer: DomSanitizer,
+    public formBuilder: FormBuilder) { }
 
-  }
+
 
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams')!);
@@ -102,8 +143,8 @@ export class GestionComponent implements OnInit {
       });
   }
 
-  valider(password: string) {
-
+  valider() {
+    let password: string = this.authorizeForm?.value?.password!;
     this.validationService.testGestion(this.idEvenement, password).then(response => {
       console.log(response)
       this.authorize = response;
@@ -121,16 +162,16 @@ export class GestionComponent implements OnInit {
   }
 
   getQRcode(idEvenement: number): void {
-
-    this.using_address = this.params.get('url') + "/" + idEvenement
+    this.using_address = this.params.url + "/" + idEvenement
     // With promises
-    QRCode.toDataURL(this.using_address)
-      .then((urdqsdsq: Blob) => {
+    QRCode.toDataURL(this.using_address, { errorCorrectionLevel: 'H', width: 500 })
+      .then((urdqsdsq: string) => {
         this.qrcode = urdqsdsq
       })
       .catch((err: any) => {
         console.error(err)
       })
+
   }
 
   imageChangedEvent: any = '';
@@ -153,10 +194,11 @@ export class GestionComponent implements OnInit {
     /* show message */
   }
 
-  uploadImage(croppedImage: any) {
-    const contentFile = croppedImage.replace("data:image/jpeg;base64,", "")
+  uploadImage() {
+    const contentFile = this.croppedImage.replace("data:image/jpeg;base64,", "")
     this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe(data => {
       console.log(data)
+      this.croppedImage = '';
       this.getAffiche()
     },
       error => {
@@ -166,7 +208,7 @@ export class GestionComponent implements OnInit {
 
   getAffiche() {
     this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
-     this.affiche = "data:image/jpeg;base64," + data
+      this.affiche = "data:image/jpeg;base64," + data
     },
       error => {
         console.log('😢 Oh no!', error);

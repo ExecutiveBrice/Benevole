@@ -1,10 +1,12 @@
-<div *ngIf="!authorize" class="row">
+@if (!authorize) {
+<div class="row">
   <div class="col-sm-6">
     <div class="input-group mb-3 ">
       <div class="input-group-prepend">
         <span class="input-group-text">Mot de passe</span>
       </div>
-      <input type="password" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
+      <input type="password" [(ngModel)]="password" class="form-control" id="password"
+        (keyup.enter)="valider(password)">
     </div>
   </div>
   <div class="col-sm-3">
@@ -15,17 +17,19 @@
   </div>
 </div>
 
-
-
-<div *ngIf="authorize" class="row">
+}
+@if (authorize) {
+<div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/creation/']">Créé un nouvel évenement</button>
+    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/creation/']">Créé un nouvel
+      évenement</button>
   </div>
-
-  <div *ngFor="let evenement of evenements  | orderBy:'id':false" class="col-sm-12">
+  @for (evenement of evenements | orderBy:'id':false; track $index) {
+  <div class="col-sm-12">
     <button type="button" class="btn btn-block btn-info" (click)="choixEvenement(evenement.id)">
       {{evenement.id}} - {{evenement.eventName}} {{evenement.startDate | date:'dd/MM/yyyy'}}</button>
-    <div class="col-sm-12" *ngIf="choix == evenement.id">
+    @if (choix == evenement.id) {
+    <div class="col-sm-12">
 
       <div class="col-sm-6">
         <div class="input-group mb-3 ">
@@ -113,5 +117,8 @@
 
 
     </div>
+    }
   </div>
+  }
 </div>
+}

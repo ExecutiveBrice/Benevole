@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Stand } from '../models';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class StandService {
@@ -22,13 +22,13 @@ export class StandService {
   }
   ajout(stand:Stand, eventId: number) {
     let params = new HttpParams().set('eventId', ''+eventId+'');
-    return this.http.post(this.apiUrl + '/', stand, {params, responseType: 'json'});
+    return this.http.post<Stand>(this.apiUrl + '/', stand, {params, responseType: 'json'});
   }
   update(stand:Stand) {
-    return this.http.put(this.apiUrl + '/', stand, {responseType: 'json'});
+    return this.http.put<Stand>(this.apiUrl + '/', stand, {responseType: 'json'});
   }
-  delete(stand:Stand) {
-    let params = new HttpParams().set('standId', ''+stand.id+'');
+  delete(standId:number) {
+    let params = new HttpParams().set('standId', ''+standId+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
   }
   

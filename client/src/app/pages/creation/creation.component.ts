@@ -1,73 +1,102 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ConfigService, EvenementService, TransmissionService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement, Email } from '../../models';
 import QRCode from 'qrcode'
+import { DatePipe, NgClass } from '@angular/common';
+import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {provideNativeDateAdapter} from '@angular/material/core';
+import {MatIconModule} from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { Params } from '../../models/params';
+
 
 @Component({
   selector: 'app-creation',
+  standalone: true,
+  providers: [provideNativeDateAdapter()],
+  imports: [NgClass,
+    FontAwesomeModule,
+    DatePipe,ReactiveFormsModule,
+    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule  ],
+   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './creation.component.html',
-  styleUrls: ['./creation.component.css']
+  styleUrls: ['./creation.component.scss']
 })
 
 export class CreationComponent implements OnInit {
 
-  qrcode: Blob
-  header: string
-  using: string
-  managing: string
+
+  qrcode!: string
+  header!: string
+  using!: string
+  managing!: string
 
   evenement: Evenement = new Evenement();
-  new: boolean;
-  ok: boolean;
-  params: Map<string, string>
-  error: boolean
+  new!: boolean;
+  ok!: boolean;
+  params!: Params
+  error!: boolean
+hide: any;
+formulaire = this.formBuilder.group({
 
+  eventName: [this.evenement.eventName, [Validators.required]],
+  contactEmail: [this.evenement.contactEmail, [Validators.required, Validators.email]],
+  password : [this.evenement.password, Validators.required],
+  contactTel: [this.evenement.contactTel, []],
+  contact: [this.evenement.contact, []],
+  startDate: [this.evenement.startDate, []],
+  endDate : [this.evenement.endDate, []]
+
+  
+})
 
   constructor(
     public mailService: MailService,
     public configService: ConfigService,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
-    public sanitizer: DomSanitizer) { }
+    public sanitizer: DomSanitizer,
+    public formBuilder:FormBuilder) { 
+      console.log(this.formulaire)
+    }
 
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams'));
+    this.params = JSON.parse(localStorage.getItem('allParams')!);
+console.log(this.params)
 
     this.new = true;
     this.ok = true;
   }
 
-  oneEmpty(evenement: Evenement): boolean {
 
-    var keyArray = ["contact", "eventName", "contactEmail", "startDate", "endDate", "password"]
-    for (let index = 0; index < keyArray.length; index++) {
-      if (evenement[keyArray[index]] == undefined || evenement[keyArray[index]] == null || evenement[keyArray[index]].length < 4) {
 
-        return true
-      }
-    }
-    return false
-  }
+  create(): void {
+    console.log(this.formulaire)
 
-  create(evenement: Evenement): void {
 
-    if (this.oneEmpty(evenement)) {
-      this.error = true
-    } else {
-      this.error = false
-      this.evenementService.ajout(evenement).subscribe(data => {
+
+    if (this.formulaire.valid) {
+
+
+
+      this.evenementService.ajout(Object.assign(this.evenement, this.formulaire.value)).subscribe(data => {
 
         this.new = false
         this.ok = true
 
-        var using_address = this.params['url'] + "/" + data.id
-        var managing_address = this.params['url'] + "/gestion/" + data.id
+        var using_address = this.params.url + "/" + data.id
+        var managing_address = this.params.url  + "/gestion/" + data.id
 
-        this.header = this.configService.completeTemplate(this.params['header'], evenement.eventName, using_address, managing_address)
-        this.using = this.configService.completeTemplate(this.params['using'], evenement.eventName, using_address, managing_address)
-        this.managing = this.configService.completeTemplate(this.params['managing'], evenement.eventName, using_address, managing_address)
+        this.header = this.configService.completeTemplate(this.params.header, this.evenement.eventName, using_address, managing_address)
+        this.using = this.configService.completeTemplate(this.params.using, this.evenement.eventName, using_address, managing_address)
+        this.managing = this.configService.completeTemplate(this.params.managing, this.evenement.eventName, using_address, managing_address)
 
 
         // With promises
@@ -77,8 +106,8 @@ export class CreationComponent implements OnInit {
 
 
             let email = new Email()
-            email.to = evenement.contactEmail
-            email.subject = this.configService.completeTemplate(this.params['title'], evenement.eventName, using_address, managing_address)
+            email.to = this.evenement.contactEmail
+            email.subject = this.configService.completeTemplate(this.params.title, this.evenement.eventName, using_address, managing_address)
     
             email.text = "Bonjour <br />";
             email.text = email.text + this.header;
@@ -92,7 +121,7 @@ export class CreationComponent implements OnInit {
     
             this.mailService.sendMail(email)
               .subscribe(res => {
-                console.log("email sent to " + evenement.contactEmail);
+                console.log("email sent to " + this.evenement.contactEmail);
               }, err => {
                 console.log(err);
               });
@@ -112,6 +141,7 @@ export class CreationComponent implements OnInit {
 
 
     }
+        
   }
 
 

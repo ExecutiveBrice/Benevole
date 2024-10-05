@@ -1,3 +1,4 @@
+import { FormGroup } from "@angular/forms";
 import { Croisement } from "./croisement";
 import { Evenement } from './evenement';
 
@@ -5,13 +6,12 @@ import { Evenement } from './evenement';
 
 
 export class Stand {
-  id:number;
-  nom: string;
-  description:string;
-  bulle:string;
-  ordre:number;
-  type:number;
-  placeRestante:number;
-  croisements: Croisement[];
-  evenement:Evenement;
+  id!:number;
+  nom!: string;
+  ordre!:number;
+  type!:number;
+  placeRestante!:number;
+  croisements!: Croisement[];
+  evenement!:Evenement;
+  formulaire!:FormGroup;
 }

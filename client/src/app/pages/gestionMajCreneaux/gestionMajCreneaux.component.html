@@ -1,48 +1,99 @@
+@if (authorize && evenement != undefined) {
 
-<div *ngIf="authorize" class="row">
-  <div class="input-group col-md-4 ">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Ordre : </span>
-    </div>
-    <input type="text" [(ngModel)]="newCreneau.ordre" class="form-control" id="ordre">
-  </div>
-  <div class="input-group col-md-4 ">
-    <div class="input-group-prepend">
-      <span class="input-group-text">Plage Horaire : </span>
-    </div>
-    <input type="text" [(ngModel)]="newCreneau.plage" class="form-control" id="plage">
+
+<div class="row marge">
+  <div class="col-sm-12">
+    <mat-card appearance="raised">
+      <mat-grid-list cols="3" rowHeight="50px">
+        <mat-grid-tile [colspan]="2">
+
+          <strong>
+            {{creneaux.length}} créneaux
+          </strong>
+
+
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button class="full-width full-height" mat-flat-button type="button"
+            [routerLink]="['/',evenement.id,'gestion']">Retour</button>
+
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card>
+
   </div>
 
-  <div class="input-group col-md-4">
-    <button type="button" class="btn btn-block btn-info" (click)="ajout(newCreneau)">Ajout</button>
-  </div>
-</div>
-<div *ngIf="authorize" class="row">
-  <div *ngFor="let creneau of creneaux | orderBy:'ordre':false " class="col-md-6 col-lg-3">
-    <div class="row bordered">
-      <div class="input-group col-sm-8 ">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Ordre : </span>
+
+
+
+
+  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+    <mat-card class="padding-top" appearance="raised" [formGroup]="formulaireNewCreneau">
+      <div class="row marge">
+        <div class="col-sm-8">
+          <mat-form-field class="full-width">
+            <mat-label>Ordre</mat-label>
+            <input type="text" matInput formControlName="ordre">
+
+            @if (formulaireNewCreneau.get('ordre')?.hasError('required')) {
+            <mat-error>Le numéro d'ordre est obligatoire</mat-error>
+            }
+          </mat-form-field>
+
         </div>
-        <input type="text" [(ngModel)]="creneau.ordre" (blur)="update(creneau)" class="form-control">
-      </div>
-      <div class="input-group col-sm-4 ">
-        <button type="button" class="btn btn-block btn-danger" (click)="delete(creneau)">X</button>
-      </div>
-      <div class="input-group col-sm-12 ">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Plage : </span>
+        <div class="col-4 marge-bas">
+          <button class="full-width full-height" mat-flat-button type="button"
+            (click)="ajout(formulaireNewCreneau)">Ajouter</button>
         </div>
-        <input type="text" [(ngModel)]="creneau.plage" (blur)="update(creneau)" class="form-control">
+        <div class="col-sm-12">
+          <mat-form-field class="full-width">
+            <mat-label>Plage horaire</mat-label>
+            <input type="text" matInput formControlName="plage">
+
+            @if (formulaireNewCreneau.get('plage')?.hasError('required')) {
+            <mat-error>La plage horaire est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </div>
       </div>
 
-      <div *ngFor="let creneauChevauche of creneaux | orderBy:'ordre':false " class="col-sm-6">
-        <button [disabled]="creneauChevauche.id == creneau.id" type="button" class="btn btn-block btn-info "
-          [ngClass]="{'btn-warning':creneau.chevauchement && creneau.chevauchement.indexOf(creneauChevauche.id)>-1}"
-          (click)="choisir(creneau, creneauChevauche)">{{creneauChevauche.plage}}
-        </button>
-      </div>
-
-    </div>
+    </mat-card>
   </div>
+  @for (creneau of creneaux | orderBy:'ordre':false; track $index) {
+
+  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+    <mat-card  class="padding-top" appearance="raised" [formGroup]="creneau.formulaire">
+      <div class="row marge">
+
+        <div class="col-8">
+          <mat-form-field class="full-width">
+            <mat-label>Ordre</mat-label>
+            <input type="text" matInput formControlName="ordre" (blur)="update(creneau)">
+
+            @if (creneau.formulaire.get('ordre')?.hasError('required')) {
+            <mat-error>Le numéro d'ordre est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div class="col-4 marge-bas">
+
+          <button class="btn btn-danger full-width full-height " type="button" (click)="delete(creneau)">X</button>
+        </div>
+        <div class="col-12">
+          <mat-form-field class="full-width">
+            <mat-label>Plage horaire</mat-label>
+            <input type="text" matInput formControlName="plage" (blur)="update(creneau)">
+
+            @if (creneau.formulaire.get('plage')?.hasError('required')) {
+            <mat-error>La plage horaire est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+  }
+
 </div>
+}

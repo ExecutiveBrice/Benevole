@@ -1,130 +1,192 @@
-<div *ngIf="!authorize" class="row">
-  <div class="col-sm-6">
-    <div class="input-group mb-3 ">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Mot de passe</span>
-      </div>
-      <input type="password" [(ngModel)]="password" class="form-control" id="password" (keyup.enter)="valider(password)">
-    </div>
+@if (!authorize) {
+
+<form [formGroup]="authorizeForm">
+  <mat-card appearance="raised">
+    <mat-card-content>
+      <mat-form-field>
+        <mat-label>Mot de passe de l'évènement {{evenement.eventName}}</mat-label>
+        <input type="password" matInput formControlName="password" (keyup.enter)="valider()">
+
+        @if (authorizeForm.get('password')?.hasError('required')) {
+        <mat-error>L'email est obligatoire</mat-error>
+        }
+
+      </mat-form-field>
+    </mat-card-content>
+
+
+    <mat-card-content>
+      <button mat-stroked-button type="submit" (click)="valider()">Entrer</button>
+    </mat-card-content>
+  </mat-card>
+</form>
+
+}
+@if (authorize) {
+
+<div class="row marge">
+  <div class="col-sm-12">
+
+
+    <mat-card appearance="raised">
+      <mat-grid-list cols="3" rowHeight="50px">
+        <mat-grid-tile [colspan]="3">
+
+          <strong>
+            {{benevoles.length}} bénévoles inscrits /
+            {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi /
+            {{benevolesToChange.length}} bénévoles à positionner
+          </strong>
+
+        </mat-grid-tile>
+
+      </mat-grid-list>
+    </mat-card>
+
   </div>
-  <div class="col-sm-3">
-    <div class="input-group mb-3 ">
-      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
-        Valider</button>
-    </div>
+
+
+  <div class="col-md-4">
+
+
+    <mat-card appearance="raised">
+
+
+      <mat-card-content>
+        <button class="full-width" mat-stroked-button type="button" [routerLink]="['benevoles']">Remplissage par
+          bénévole</button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="raised">
+
+      <mat-card-content>
+        <button class="full-width" mat-stroked-button type="button" [routerLink]="['stands']">Remplissage par
+          stand</button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="raised">
+      <mat-card-content>
+        <button class="full-width" mat-stroked-button type="button" [routerLink]="['majconfig']">Paramètrage de
+          l'évènement</button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="raised">
+      <mat-card-content>
+        @if (evenement) {
+        <button class="full-width" mat-stroked-button type="button" [ngClass]="{'red':evenement.lock}"
+          (click)="updateBlocage()">Je clique
+          pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
+
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="raised">
+
+      <img mat-card-image src="{{qrcode}}" />
+
+    </mat-card>
+
   </div>
+
+
+  <div class="col-md-4">
+
+    <mat-card appearance="raised">
+
+
+      <mat-card-content>
+        <button class="full-width" mat-stroked-button type="button" [routerLink]="['majstands']">Gestion des
+          Stands</button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="raised">
+      <mat-card-content>
+        <button class="full-width" mat-stroked-button type="button" [routerLink]="['majcreneaux']">Gestion des
+          Creneaux</button>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="raised">
+
+
+      <mat-card-content>
+
+        <button class="full-width" mat-stroked-button type="button" (click)="mail = !mail">Envoi de mails</button>
+      </mat-card-content>
+      <mat-card-content>
+        @if (mail) {
+        <div class="form-group col-sm-12">
+
+          <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
+            <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
+            </option>
+          </select>
+
+          <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
+          <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
+
+          <div class="checkbox">
+            <label><input type="checkbox" [(ngModel)]="theCheckbox">Rappel des
+              choix des inscrits</label>
+          </div>
+
+          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail(emailInfo)">
+            Envoyer ce message à la liste choisi</button>
+        </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+
+    <mat-card appearance="raised">
+      <mat-card-content>
+
+
+
+
+        <button class="full-width" type="button" mat-stroked-button (click)="fileInput.click()">Modifier l'affiche de
+          l'évènement</button>
+        <input hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
+        @if (croppedImage.length > 5) {
+        <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadImage()">Enregistrer cette
+          image</button>
+        }
+
+        <image-cropper [imageChangedEvent]="imageChangedEvent" [output]="'base64'" [maintainAspectRatio]="false"
+          [resizeToWidth]="1280" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+        </image-cropper>
+
+
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+
+  <div class="col-md-4">
+
+
+    <mat-card appearance="raised">
+
+      @if (affiche) {
+      <img mat-card-image [src]="affiche" alt="Affiche">
+      }
+
+    </mat-card>
+
+
+
+
+
+  </div>
+
+
 </div>
 
-
-<div *ngIf="authorize" class="row">
-  <div class="col-sm-12 ">
-    <div class="alert alert-success">
-      <strong>
-        {{benevoles.length}} bénévoles inscrits /
-        {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi /
-        {{benevolesToChange.length}} bénévoles à positionner
-      </strong>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="authorize" class="row">
-  <div class="col-sm-12 ">
-    <div class="alert">
-      <strong>
-        Gestion de l'evenement
-      </strong>
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionbenevoles/', idEvenement]">Gestion des
-      Bénévoles</button>
-  </div>
-  <div class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionstands/', idEvenement]">Gestion des
-      Stands</button>
-  </div>
-
-  <div *ngIf="evenement" class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block btn-success overflow-visibles" [ngClass]="{'btn-danger':evenement.lock}"
-      (click)="updateBlocage()">Je clique
-      pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
-  </div>
-
-  <div class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block" (click)="mail = !mail">Envoi de mails</button>
-  </div>
-
-  <div *ngIf="mail" class="form-group col-sm-12">
-
-    <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
-      <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
-      </option>
-    </select>
-
-    <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
-    <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
-
-    <div class="checkbox">
-      <label><input type="checkbox" [(ngModel)]="theCheckbox" (change)="toggleVisibility($event)">Rappel des
-        choix des inscrits</label>
-    </div>
-
-    <button type="button" class="btn btn-block" (click)="envoiMail(emailInfo)">
-      Envoyer ce message à la liste choisi</button>
-  </div>
-
-  <div *ngIf="sendingProgress" class="alert alert-success" class="col-md-12">
-    <strong>Envoi en cours</strong><br>
-    {{counter}} sur {{totalCount}} envoyés
-
-    <div *ngIf="errorMailingList.length > 0">
-      Quelques envois ont échoués :
-      <div *ngFor="let mail of errorMailingList">
-        {{mail}}<br>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="authorize" class="row">
-  <div class="col-sm-12 ">
-    <div class="alert">
-      <strong>
-        Parametrage de l'evenement
-      </strong>
-    </div>
-  </div>
-  <div class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajstands/', idEvenement]">Maj des
-      Stands</button>
-  </div>
-  <div class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajcreneaux/', idEvenement]">Maj des
-      Creneaux</button>
-  </div>
-  <div class="col-md-6 col-lg-3">
-    <button type="button" class="btn btn-block" [routerLink]="['/gestionmajconfig/', idEvenement]">Maj des
-      Infos</button>
-  </div>
-  <div class="col-md-6 col-lg-3">
-    <a href="{{using_address}}"> <img src="{{qrcode}}" /></a>
-  </div>
-
-
-
-  <div *ngIf="evenement != undefined" class="col-12">
-
-    <img class="container" *ngIf="affiche" [src]="affiche" alt="Affiche">
-
-
-    <input type="file" (change)="fileChangeEvent($event)" accept="image/*">
-    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="false" 
-      [resizeToWidth]="1280" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
-      (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-    </image-cropper>
-    <button type="button" class="btn btn-block btn-info" (click)="uploadImage(croppedImage)">Enregistrer cette
-      image</button>
-  </div>
-
-</div>
+}

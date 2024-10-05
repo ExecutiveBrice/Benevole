@@ -1,125 +1,115 @@
-<div class="row" *ngIf="new">
+@if (new) {
 
-  <div *ngIf="error" class="col-sm-12 ">
-    <div class="alert alert-warning">
-      <strong>Attention</strong><br>
-      Il manque au moins un champ à saisir!
-    </div>
-  </div>
+  <form [formGroup]="formulaire" class="example-form">
+
+    <mat-grid-list cols="3" rowHeight="100px">
 
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Email</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.contactEmail" class="form-control" id="contactemail" placeholder="machin@truc.fr" required>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    C'est à cette adresse mail que seront envoyé les mails des bénévoles
-  </div>
+      <mat-grid-tile [colspan]="3">
+        <mat-form-field class="full-width">
+          <mat-label>Nom de l'évenement</mat-label>
+          <input matInput formControlName="eventName" placeholder="Fiesta de los Muertes Caramba!">
+          @if (formulaire.get('eventName')?.hasError('required')) {
+            <mat-error>Le nom de l'évènement est obligatoire</mat-error>
+            }
+          <mat-hint>Le nom de l'évènement, c'est le titre qui s'affichera en en-tête du site et, que les participants
+            scanderont dans les rues !</mat-hint>
+        </mat-form-field>
+      </mat-grid-tile>
 
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Nom Prenom</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.contact" class="form-control" id="contact" placeholder="Sarah CONOR" required>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    C'est le contact qui sera affiché sur le site pour les bénévoles
-  </div>
+      <mat-grid-tile>
+        <mat-form-field class="full-width">
+          <mat-label>Nom Prenom</mat-label>
+          <input matInput formControlName="contact" placeholder="Sarah Connor">
+          <mat-hint>C'est le contact qui sera affiché sur le site pour les bénévoles</mat-hint>
+        </mat-form-field>
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Tel</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.contactTel" class="form-control" id="contactTel" placeholder="066666666666666">
-    </div>
-  </div>
-  <div class="col-sm-6">
-    Votre numéro de téléphone, enfin c'est pas obligé
-  </div>
+      </mat-grid-tile>
 
+      <mat-grid-tile>
+        <mat-form-field class="full-width">
+          <mat-label>Email</mat-label>
+          <input type="email" matInput formControlName="contactEmail" placeholder="Ex. pat@example.com">
+          @if (formulaire.get('contactEmail')?.hasError('contactEmail')) {
+          <mat-error>Le format est incorecte</mat-error>
+          }
+          @if (formulaire.get('contactEmail')?.hasError('required')) {
+          <mat-error>L'email est obligatoire</mat-error>
+          }
+          <mat-hint> C'est à cette adresse mail que seront envoyé les mails des bénévoles</mat-hint>
+        </mat-form-field>
 
-  
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Evenement</span>
-      </div>
-      <input type="text" [(ngModel)]="evenement.eventName" class="form-control" id="eventname" placeholder="Fête de l'école 2021" required>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    Le nom de l'évènement, c'est le titre qui s'affichera en en-tête du site et, que les participants scanderont dans
-    les rues !
-  </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field class="full-width">
+          <mat-label>Tel</mat-label>
+          <input matInput formControlName="contactTel" placeholder="06 95 48 32 45 45 98 78 97 45 31 56">
+          <mat-hint>Votre numéro de téléphone, enfin c'est pas obligé</mat-hint>
+        </mat-form-field>
+
+      </mat-grid-tile>
 
 
 
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Début</span>
-      </div>
-      <input type="date" [ngModel]="evenement.startDate | date:'yyyy-MM-dd'"
-        (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate" required>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    C'est la date de l'évenement, le jour J quoi ! ;)
-  </div>
+      <mat-grid-tile>
+        <mat-form-field class="full-width">
+          <mat-label>Début</mat-label>
+          <input matInput [matDatepicker]="startDate" formControlName="startDate">
+          <mat-hint>MM/DD/YYYY, C'est la date de l'évenement, le jour J quoi ! ;)</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="startDate"></mat-datepicker-toggle>
+          <mat-datepicker #startDate></mat-datepicker>
+        </mat-form-field>
+      </mat-grid-tile>
+
+
+      <mat-grid-tile>
+        <mat-form-field class="full-width">
+          <mat-label>Fin</mat-label>
+          <input matInput [matDatepicker]="endDate"  formControlName="endDate">
+          <mat-hint>MM/DD/YYYY C'est la date ou tout est terminé, ou le contenu des informations des bénévoles sera
+            supprimé
+            <br />
+            <I>NB : Prévoire large, pour permetre éventuellement de recontacter vos bénévoles en cas de fête de
+              remerciements ou
+              de problème (COVID,... )</I></mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="endDate"></mat-datepicker-toggle>
+          <mat-datepicker #endDate></mat-datepicker>
+        </mat-form-field>
+      </mat-grid-tile>
+
+
+      <mat-grid-tile>
+
+
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password"
+            required><mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' :
+            'visibility'}}</mat-icon>
+          <mat-hint>Nécéssaire pour garder la main sur les paramétrages de l'évenement</mat-hint>
+        </mat-form-field>
+      </mat-grid-tile>
+
+
+      <mat-grid-tile [colspan]="3">
+        <button class="full-width" mat-flat-button (click)="create()">Je valide la création de mon
+          évenement</button>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+
+
+  </form>
 
 
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Fin</span>
-      </div>
-      <input type="date" [ngModel]="evenement.endDate | date:'yyyy-MM-dd'" (ngModelChange)="evenement.endDate = $event"
-        class="form-control" id="endDate" required>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    C'est la date ou tout est terminé, ou le contenu des informations des bénévoles sera supprimé
-    <br />
-    <I>NB : Prévoire large, pour permetre éventuellement de recontacter vos bénévoles en cas de fête de remerciements ou
-      de problème (COVID,... )</I>
-  </div>
+}
 
 
-  <div class="col-sm-6">
-    <div class="input-group mb-3 input-group-lg">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Mot de passe</span>
-      </div>
-      <input type="password" [(ngModel)]="evenement.password" class="form-control" id="password" minlength="4" required>
-    </div>
-  </div>
-  <div class="col-sm-6">
-    Nécéssaire pour garder la main sur les paramétrages de l'évenement
-  </div>
-
-
-  <div class="col-sm-12 ">
-    <button type="button" class="btn btn-block btn-danger" (click)="create(evenement)">Je valide la création de mon
-      évenement</button>
-  </div>
-
-</div>
-
-
-
-
-
-<div class="row" *ngIf="!new && ok">
+@if (!new && ok) {
+<div class="row">
   <div class="col-sm-12 ">
     <div [innerHTML]="header"></div>
 
@@ -136,20 +126,4 @@
   </div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-<div class="row" *ngIf="!new && !ok">
-  <div class="col-sm-12 ">
-    La création à échoué veuillez contacter un administrateur
-  </div>
-
-</div>
+}

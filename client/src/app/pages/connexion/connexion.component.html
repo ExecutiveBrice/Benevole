@@ -1,106 +1,361 @@
-<div class="container">
-<div class="row">
-  <div class="col-12 ">
-    <div *ngIf="!(nouveau && !exist)" class="alert alert-success">
-      <strong>Toutes les informations personnelles seront détruites à la fin de l'évènement</strong><br />
-      
-      <a href="https://alod.fr/tuto-benevoles/" target="_blank"><fa-icon class="fa-1x" [icon]="faQuestionCircle"></fa-icon>Ici, vous trouverez le tutoriel d'utilisation</a>
-    </div>
-    <div *ngIf="nouveau && !exist" class="alert alert-success">
-      Vos informations personnlles nous seront utiles le jour de l'évènement pour afficher le tableau de bénévoles, faire un appel, ...
-    </div>
+<div class="row marge">
+  <div class="col-lg-4">
+    <mat-card appearance="raised">
+
+      @if (!wanted) {
+      <mat-card-header>
+        <mat-card-title> <strong>Inscrivez vous :</strong></mat-card-title>
+        <mat-card-subtitle>
+          Toutes les informations personnelles seront détruites à la fin de l'évènement
+        </mat-card-subtitle>
+      </mat-card-header>
+      }
+      @if (!userExist) {
+      @if (!wanted) {
+      <form [formGroup]="formulaire">
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
+            @if (formulaire.get('email')?.hasError('email')) {
+            <mat-error>Le format est incorecte</mat-error>
+            }
+            @if (formulaire.get('email')?.hasError('required')) {
+            <mat-error>L'email est obligatoire</mat-error>
+            }
+            <mat-hint>C'est le contact privilégié pour échanger avec vous</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+
+
+        <mat-card-content>
+          <button class="full-width" mat-stroked-button type="submit" (click)="find()">Entrer</button>
+        </mat-card-content>
+      </form>
+      }@else {
+      <mat-card-content>
+        Email : {{benevole.email}}
+      </mat-card-content>
+
+      <form [formGroup]="formulaireBenevole">
+        <mat-card-content>
+
+          <mat-form-field class="full-width">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="nom" placeholder="Ex: Connor">
+            @if (formulaireBenevole.get('nom')?.hasError('required')) {
+            <mat-error>Le nom est obligatoire</mat-error>
+            }
+            @if (formulaireBenevole.get('nom')?.hasError('minlength')) {
+            <mat-error>C'est un peu court comme nom!</mat-error>
+            }
+            <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
+          </mat-form-field>
+
+        </mat-card-content>
+        <mat-card-content>
+
+          <mat-form-field class="full-width">
+            <mat-label>Prenom</mat-label>
+            <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+            @if (formulaireBenevole.get('prenom')?.hasError('required')) {
+            <mat-error>Le prenom est obligatoire</mat-error>
+            }
+            @if (formulaireBenevole.get('prenom')?.hasError('minlength')) {
+            <mat-error>C'est un peu court comme prenom!</mat-error>
+            }
+            <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+
+          @if (!formulaireBenevole.get('telephone')?.disabled) {
+          <mat-form-field class="full-width">
+            <mat-label>Téléphone</mat-label>
+            <input matInput formControlName="telephone" placeholder="Ex: 06 95 48 32 45 45 98 78 97 45 31 56">
+            <mat-hint>Votre numéro de téléphone, si il est demandé c'est que les organisateurs en auront
+              besoin</mat-hint>
+          </mat-form-field>
+          }
+        </mat-card-content>
+        <mat-card-content>
+
+
+          <button class="full-width" mat-stroked-button type="submit" (click)="addBenevole()">Je m'inscris</button>
+        </mat-card-content>
+      </form>
+      }
+
+
+      } @else {
+      <mat-card-header>
+        <mat-card-title>Bonjour {{ formulaireBenevole.value.prenom }} {{ formulaireBenevole.value.nom
+          }}</mat-card-title>
+        <mat-card-subtitle>
+
+          @if (evenement.afficherMessage) {
+
+
+          <div [innerHtml]="evenement.message"></div>
+
+          }
+        </mat-card-subtitle>
+      </mat-card-header>
+      }
+
+    </mat-card>
+
+
+    @if (userExist) {
+    <mat-card appearance="raised">
+      <mat-card-header>
+        <mat-card-title> <strong>Votre planning :</strong></mat-card-title>
+
+      </mat-card-header>
+
+
+      @if(stands.length > 0) {
+
+
+      @if(benevole && benevole.croisements != undefined && benevole.croisements.length == 0){
+      <mat-card-content>
+
+        <strong>Pour ajouter un moment de bénévolat :</strong><br>
+        Cliquez sur la liste puis choisissez le créneau qui vous convient.<br>
+        Vous pouvez en choisir plusieurs !
+      </mat-card-content>
+      }
+      @if(benevole && benevole.croisements != undefined && benevole.croisements.length > 0){
+
+      @for (croisement of benevole.croisements | orderBy:'creneau.ordre':false; track $index) {
+      <mat-card-content>
+        <mat-icon fontIcon="delete" (click)="choisir(croisement)"></mat-icon>
+
+        {{croisement.creneau.plage}} :
+        {{croisement.stand.nom == "tous"?"N'importe quel stand":croisement.stand.nom}}
+      </mat-card-content>
+      }
+      }
+      }
+
+
+
+    </mat-card>
+
+
+    <mat-card class="alerte" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title> <strong>Attention</strong></mat-card-title>
+
+      </mat-card-header>
+      <mat-card-content align="end">
+        <div [innerHtml]=attentionMessage></div>
+        {{evenement.contact}} - {{evenement.contactEmail}}
+      </mat-card-content>
+    </mat-card>
+    }
   </div>
-</div>
-<div class="row">
-  <div class="col-md-3 ">
-  </div>
-  <div class="col-md-6 ">
-    <div class="row" *ngIf="!exist">
-      <div class="col-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Email : </span>
+
+  <div class="col-lg-4">
+
+
+
+
+
+
+    @if (preparatifs.length > 0) {
+
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Les préparatifs</mat-panel-title>
+        <mat-panel-description>(avant l'évenement)</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{stand.nom}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-chip-set aria-label="Fish selection">
+          <div class="row">
+            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+            <div class="col-6">
+              <mat-chip-option selected="{{croisement.selected === true}}"
+                [ngClass]="{'full':croisement.benevoles.length >= croisement.limite}"
+                [disabled]="!userExist || croisement.benevoles.length >= croisement.limite"
+                (click)="choisir(croisement)">
+                {{croisement.creneau.plage}}<br>
+                {{ croisement.benevoles.length >=
+                croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
+              </mat-chip-option>
+            </div>
+            }
           </div>
-          <input type="text" [(ngModel)]="benevole.email" class="form-control" id="email" (keyup.enter)="find()">
+        </mat-chip-set>
+      </mat-expansion-panel>
+      }
+
+    </mat-expansion-panel>
+    }
+
+    @if (stands && stands.length > 0) {
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Je choisis mon stand</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      @for (stand of stands | orderBy:'ordre':false; track $index) {
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>{{stand.nom}}</mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-chip-set aria-label="Fish selection">
+          <div class="row">
+            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+            <div class="col-6">
+              <mat-chip-option selected="{{croisement.selected === true}}"
+                [disabled]="!userExist || croisement.benevoles.length >= croisement.limite"
+                (click)="choisir(croisement)">
+                {{croisement.creneau.plage}}<br>
+                {{croisement.benevoles.length >=
+                croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
+              </mat-chip-option>
+            </div>
+            }
+          </div>
+        </mat-chip-set>
+      </mat-expansion-panel>
+      }
+    </mat-expansion-panel>
+    }
+
+
+    @if (sansChoix.length > 0) {
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Le stand m'est égal
+          mais je
+          suis disponible à :</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-chip-set aria-label="Fish selection">
+        <div class="row">
+          @for (croisement of sansChoix| orderBy:'creneau.ordre':false; track $index) {
+          <div class="col-6">
+            <mat-chip-option selected="{{croisement.selected === true}}"
+              [disabled]="!userExist || croisement.benevoles.length >= croisement.limite" (click)="choisir(croisement)">
+              {{croisement.creneau.plage}}<br>
+              {{croisement.benevoles.length >=
+              croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
+            </mat-chip-option>
+          </div>
+          }
+        </div>
+      </mat-chip-set>
+    </mat-expansion-panel>
+    }
+
+    @if (besoins.length > 0) {
+    <mat-expansion-panel [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Là où vous avez
+          besoin</mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-chip-set aria-label="Fish selection">
+        <div class="row">
+          @for (croisement of besoins| orderBy:'creneau.ordre':false; track $index) {
+          <div class="col-6">
+            <mat-chip-option selected="{{croisement.selected === true}}"
+              [disabled]="!userExist || croisement.benevoles.length >= croisement.limite" (click)="choisir(croisement)">
+              {{croisement.creneau.plage}}<br>
+              {{croisement.benevoles.length >=
+              croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
+            </mat-chip-option>
+          </div>
+          }
+        </div>
+      </mat-chip-set>
+    </mat-expansion-panel>
+    }
+
+
+
+
+
+
+  </div>
+
+  <div class="col-lg-4">
+
+
+
+
+
+
+    <mat-card appearance="raised">
+      @if (affiche) {
+      <img mat-card-image [src]="affiche" alt="Affiche">
+      }
+
+    </mat-card>
+
+
+
+
+    <mat-card appearance="raised">
+
+
+
+      <div class="row">
+
+        <div class="col-lg-12">
+
+          <a href="https://alod.fr/tuto-benevoles/" target="_blank">
+            <mat-icon fontIcon="help"></mat-icon> Ici, le tutoriel de l'application bénévoles</a>
+        </div>
+        <div class="col-lg-12">
+          <b>Organisateur</b>
+        </div>
+
+
+        <div class="col-lg-4">
+          {{evenement.contact}}
+        </div>
+
+
+        <div class="col-lg-4">
+          {{evenement.contactEmail}}
+        </div>
+
+
+        <div class="col-lg-4">
+          {{evenement.contactTel}}
+        </div>
+
+        <div class="col-lg-12">
+          <b>Concepteur</b>
+        </div>
+
+
+        <div class="col-lg-4">
+          Brice MOREL
+        </div>
+
+
+        <div class="col-lg-4">
+          {{'brice_morel@hotmail.com'}}
+        </div>
+
+
+        <div class="col-lg-4">
+          <a href="https://github.com/ExecutiveBrice">Github</a>
         </div>
       </div>
-    </div>
-    <div *ngIf="!exist" class="row">
-      <div class="col-12 ">
-        <button *ngIf="new " type="button" class="btn btn-block btn-info btn-lg " (click)="find()">Entrer</button>
-        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-warning btn-lg" (click)="find()">Je me
-          suis trompé dans mon email, j'essaie à nouveau</button>
 
-        <button *ngIf="!new && !nouveau " type="button" class="btn btn-block btn-info btn-lg"
-          (click)="nouveau = true">Je
-          suis nouveau, je souhaiterai m'inscrire</button>
-      </div>
-    </div>
-    <div *ngIf="nouveau && !exist" class="row">
-      <div class="col-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Prenom : </span>
-          </div>
-          <input type="text" [(ngModel)]="benevole.prenom" class="form-control" id="firstname">
-        </div>
-      </div>
-      
-      <div class="col-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Nom : </span>
-          </div>
-          <input type="text" [(ngModel)]="benevole.nom" class="form-control" id="lastname">
-        </div>
-      </div>
+    </mat-card>
 
-
-      <div *ngIf="evenement.needtel" class="col-12 ">
-        <div class="input-group mb-3 input-group-lg">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Tel : </span>
-          </div>
-          <input type="text" [(ngModel)]="benevole.telephone" class="form-control" id="telephone">
-        </div>
-      </div>
-
-
-      <div class="col-12 ">
-        <button type="button" class="btn btn-block btn-info btn-lg" (click)="subscribe()">Je m'inscris</button>
-      </div>
-    </div>
   </div>
-  <div class="col-md-3 ">
-  </div>
+
 </div>
-
-<div *ngIf="evenement" class="row">
-  <div class="col-12 ">
-    <img class="container" *ngIf="affiche" [src]="affiche" alt="Affiche">
-  </div>
-</div>
-<div class="row">
-  <div class="col-12 ">
-    <div class="alert alert-warning">
-      <strong>Attention</strong><br>
-      Les mails issus de l'application proviennent de l'adresse benevoles.nepasrepondregmail.com,<br>
-      Ce sont des mails automatiques et sont tres souvent placés dans votre dossier SPAM<br>
-      Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement:<br>
-      {{evenement.contact}} - {{evenement.contactEmail}}
-    </div>
-  </div>
-</div>
-</div>
-
-<nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-bottom">
-  <div  class="navbar-expand m-auto navbar-text">
-    <fa-icon class="btn-nopadding" [icon]="faEnvelope"></fa-icon> {{evenement.contact}} - {{evenement.contactEmail}} {{evenement.contactTel}}
-
-    <fa-icon class="btn-nopadding" (click)="affichageConception = !affichageConception" [icon]="faQuestionCircle"></fa-icon>
-  </div>
-
-  <div  *ngIf="affichageConception" class="navbar-expand m-auto navbar-text">
-    <br/>Conception/Développement :<br/>brice_morelhotmail.com<br/>https://github.com/ExecutiveBrice
-  </div>
-</nav>

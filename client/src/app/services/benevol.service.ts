@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Benevole } from '../models';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class BenevoleService {
@@ -62,9 +62,9 @@ export class BenevoleService {
     return this.http.put(this.apiUrl + '/', lBenevole, { responseType: 'json' });
   }
 
-  addCroisements(benevoleId: number, croisementListId: number[]) {
-    let params = new HttpParams().set('benevoleId', '' + benevoleId + '');
-    return this.http.put(this.apiUrl + '/addCroisements', croisementListId, { params, responseType: 'json' });
+  updateCroisement(benevoleId: number, croisementId: number) {
+    let params = new HttpParams().set('benevoleId', '' + benevoleId + '').set('croisementId', '' + croisementId + '');
+    return this.http.put(this.apiUrl + '/updateCroisement', {}, { params, responseType: 'json' });
   }
 
 
