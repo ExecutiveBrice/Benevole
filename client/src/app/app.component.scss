@@ -4,5 +4,32 @@
 }
 
 .text-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 110px;
+}
+
+
+
+img{
+    margin-top: 5px;
+    border-radius: 5px;
+    width: 150px;
+    max-width: 150px;
+}
+.align-right{
+    text-align: end;
+}
+
+.align-center{
     text-align: center;
 }
+mat-icon {
+    font-size: 30px;
+        height: 30px;
+        width: 30px;
+    cursor: pointer;
+
+  }
+

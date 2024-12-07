@@ -53,21 +53,22 @@ export class BenevoleService {
   update(benevole: Benevole) {
     let lBenevole = new Benevole();
     lBenevole.id = benevole.id
-    lBenevole.commentaire = benevole.commentaire
     lBenevole.email = benevole.email
     lBenevole.telephone = benevole.telephone
     lBenevole.nom = benevole.nom 
     lBenevole.prenom = benevole.prenom
-    lBenevole.reponse = benevole.reponse
     return this.http.put(this.apiUrl + '/', lBenevole, { responseType: 'json' });
   }
 
-  updateCroisement(benevoleId: number, croisementId: number) {
+  removeToCroisement(benevoleId: number, croisementId: number) {
     let params = new HttpParams().set('benevoleId', '' + benevoleId + '').set('croisementId', '' + croisementId + '');
-    return this.http.put(this.apiUrl + '/updateCroisement', {}, { params, responseType: 'json' });
+    return this.http.put<Benevole>(this.apiUrl + '/removeToCroisement', {}, { params, responseType: 'json' });
   }
 
-
+  addToCroisement(benevoleId: number, croisementId: number, force: boolean) {
+    let params = new HttpParams().set('benevoleId', '' + benevoleId + '').set('croisementId', '' + croisementId + '').set('force', '' + force + '');
+    return this.http.put<Benevole>(this.apiUrl + '/addToCroisement', {}, { params, responseType: 'json' });
+  }
   error(benevole: Benevole) {
     return this.http.post(this.apiUrl + '/error', benevole, { responseType: 'json' });
   }

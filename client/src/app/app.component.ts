@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, Renderer2, RendererStyleFlags2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { Evenement } from './models';
-import { BenevoleService, CroisementService, EvenementService, FileService, TransmissionService } from './services';
+import {MatIconModule} from '@angular/material/icon';
 
+import { Evenement } from './models';
+import { EvenementService, FileService, TransmissionService } from './services';
+import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
+
 
 
 @Component({
@@ -12,7 +14,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
   standalone: true,
   imports: [RouterOutlet,
     RouterModule,
-    MatGridListModule
+    MatGridListModule,
+    MatButtonModule,
+    MatIconModule
   ],
   providers: [
     TransmissionService,
@@ -25,25 +29,27 @@ import { MatGridListModule } from '@angular/material/grid-list';
 })
 export class AppComponent  implements OnInit{
 
-  subscription = new Subscription()
   evenement?: Evenement;
   isValidAccessForEvent?: number
   logo?: string;
 
   constructor(
+
     public transmissionService: TransmissionService,
     public evenementService: EvenementService,
     public router: Router,
     public fileService: FileService,
-    public route: ActivatedRoute) {
-  }
+    public route: ActivatedRoute,private elementRef: ElementRef) {}
 
 
   ngOnInit() {
-    this.subscription = this.transmissionService.dataStream.subscribe(data => {
+    this.getScreenWidth = window.innerWidth;
+    this.getScreenHeight = window.innerHeight;
+    this.transmissionService.dataStream.subscribe(data => {
       this.evenement = data
+      this.elementRef.nativeElement.ownerDocument
+      .body.style.backgroundColor = data.couleurFond;
       this.isValidAccessForEvent = JSON.parse(localStorage.getItem('isValidAccessForEvent')!);
-
       this.getLogo()
     });
   }
@@ -57,6 +63,17 @@ export class AppComponent  implements OnInit{
       });
   }
 
+
+  
+  public getScreenWidth: any;
+  public getScreenHeight: any;
+
+
+@HostListener('window:resize', ['$event'])
+onWindowResize() {
+  this.getScreenWidth = window.innerWidth;
+  this.getScreenHeight = window.innerHeight;
+}
 
 }
 

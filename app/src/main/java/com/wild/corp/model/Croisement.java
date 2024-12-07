@@ -4,10 +4,7 @@ package com.wild.corp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import java.util.List;
@@ -32,6 +29,7 @@ public class Croisement {
 
     @ManyToMany(mappedBy="croisements")
     @JsonIgnoreProperties({"croisements", "evenement", "telephone", "email"})
+    @ToString.Exclude
     private List<Benevole> benevoles;
 
     @ManyToOne

@@ -10,7 +10,8 @@ export class Stand {
   nom!: string;
   ordre!:number;
   type!:number;
-  placeRestante!:number;
+  placeOccupe!:number;
+  placeTotal!:number;
   croisements!: Croisement[];
   evenement!:Evenement;
   formulaire!:FormGroup;

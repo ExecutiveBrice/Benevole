@@ -1,12 +1,12 @@
 
 import { Component, inject, OnInit } from '@angular/core';
-import { ValidationService, CroisementService, StandService, CreneauService, EvenementService, TransmissionService, ConfigService } from '../../services';
+import { CroisementService, StandService, CreneauService, EvenementService, TransmissionService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Croisement, Stand, Creneau, Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { NgClass } from '@angular/common';
 
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
 import { OrderObjectByPipe } from "../../services/sortObject.pipe";
 import { MatButtonModule } from '@angular/material/button';
@@ -38,13 +38,12 @@ import { ToastrService } from 'ngx-toastr';
     RouterModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, OrderObjectByPipe, MatExpansionModule],
+ MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, OrderObjectByPipe, MatExpansionModule],
   providers: [
     EvenementService,
-    TransmissionService,
     CroisementService,
     StandService,
-    ValidationService,
+    
     CreneauService,
     ConfigService
   ]
@@ -70,7 +69,6 @@ export class GestionMajStandsComponent implements OnInit {
     private toastr: ToastrService,
     public transmissionService: TransmissionService,
     public standService: StandService,
-    public validationService: ValidationService,
     public sanitizer: DomSanitizer,
     public fb: FormBuilder) {
 
@@ -81,16 +79,11 @@ export class GestionMajStandsComponent implements OnInit {
     nom: ["", [Validators.required, Validators.minLength(2)]],
   });
 
-  standsFormulaire: FormArray = this.fb.array([]) 
+  standsFormulaire: FormArray = this.fb.array([])
 
 
-  getStand(stand: AbstractControl) {
-    return stand as FormGroup
-  }
 
-  get standsForm() {
-    return this.standsFormulaire as FormArray<FormGroup>
-  }
+
 
   getCroisement(stand: FormGroup) {
     return <FormArray<FormGroup>>stand.get('croisements');
@@ -100,19 +93,22 @@ export class GestionMajStandsComponent implements OnInit {
   ngOnInit() {
     this.choix = "";
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-    this.getEvenement(this.idEvenement);
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
+     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
+      console.log("authorize");
+      this.getEvenement(this.idEvenement);
       this.getAllStands();
       this.getAllCreneaux();
     } else {
-      this.router.navigate(['/gestion/' + this.idEvenement]);
+      console.log("not authorize");
+      this.router.navigate([ this.idEvenement+'/gestion/']);
     }
   }
 
   getEvenement(idEvenement: number): void {
     this.evenementService.getById(idEvenement).subscribe(data => {
       this.evenement = data;
+      console.log(data)
       this.transmissionService.dataTransmission(data);
     },
       error => {
@@ -239,7 +235,7 @@ export class GestionMajStandsComponent implements OnInit {
           limite: [croisement.limite, [Validators.required]],
         })
         croisements.controls.push(croisementFormulaire);
-        this.toastr.success(croisement.creneau + " à bien été ajouté", 'Succès');
+        this.toastr.success(croisement.creneau.plage  + " à bien été ajouté", 'Succès');
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
@@ -264,6 +260,8 @@ export class GestionMajStandsComponent implements OnInit {
       newStand.type = 2
       this.standService.ajout(newStand, this.idEvenement).subscribe(stand => {
         this.standsFormulaire.push(this.fillForm(stand));
+        this.standsFormulaire.controls.sort((a, b) => Number(a.get('ordre')?.value) - Number(b.get('ordre')?.value))
+        console.log(this.standsFormulaire)
       },
         error => {
           console.log('😢 Oh no!', error);

@@ -8,14 +8,11 @@
       <mat-grid-list cols="3" rowHeight="50px">
         <mat-grid-tile [colspan]="2">
 
-          <button type="button" class="btn btn-block btn-warning">Télécharger la liste des {{benevoles.length}}
-            bénévoles</button>
+         {{benevoles.length}} bénévoles
 
         </mat-grid-tile>
         <mat-grid-tile>
-          <button class="full-width" mat-flat-button type="button"
-            [routerLink]="['/',evenement.id,'gestion']">Retour</button>
-
+          <button class="full-width" mat-flat-button type="button" (click)="exportAsXLSX()">Télécharger</button>
         </mat-grid-tile>
       </mat-grid-list>
     </mat-card>

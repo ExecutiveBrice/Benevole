@@ -1,0 +1,73 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<mat-dialog-content>
+  <mat-form-field class="example-full-width">
+    <mat-label>liste des benevoles déjà inscrits</mat-label>
+    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+      (optionSelected)='selectBen($event.option.value)'>
+      @for (benevole of filteredOptions | async; track benevole) {
+      <mat-option [value]="benevole">{{benevole.prenom}} {{benevole.nom}}</mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+
+
+
+  <form [formGroup]="benevoleForm">
+    <mat-form-field class="full-width">
+      <mat-label>Prenom</mat-label>
+      <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+      @if (benevoleForm.get('prenom')?.hasError('required')) {
+      <mat-error>Le prenom est obligatoire</mat-error>
+      }
+      @if (benevoleForm.get('prenom')?.hasError('minlength')) {
+      <mat-error>C'est un peu court comme prenom!</mat-error>
+      }
+      <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="nom" placeholder="Ex: Connor">
+      @if (benevoleForm.get('nom')?.hasError('required')) {
+      <mat-error>Le nom est obligatoire</mat-error>
+      }
+      @if (benevoleForm.get('nom')?.hasError('minlength')) {
+      <mat-error>C'est un peu court comme nom!</mat-error>
+      }
+      <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
+    </mat-form-field>
+
+
+
+
+
+    <mat-form-field class="full-width">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
+      @if (benevoleForm.get('email')?.hasError('email')) {
+      <mat-error>Le format est incorecte</mat-error>
+      }
+      @if (benevoleForm.get('email')?.hasError('required')) {
+      <mat-error>L'email est obligatoire</mat-error>
+      }
+      <mat-hint>C'est le contact privilégié pour échanger avec vous</mat-hint>
+    </mat-form-field>
+
+    @if (!benevoleForm.get('telephone')?.disabled) {
+    <mat-form-field class="full-width">
+      <mat-label>Téléphone</mat-label>
+      <input matInput formControlName="telephone" placeholder="Ex: 06 95 48 32 45 45 98 78 97 45 31 56">
+      <mat-hint>Votre numéro de téléphone, si il est demandé c'est que les organisateurs en auront
+        besoin</mat-hint>
+    </mat-form-field>
+    }
+
+
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="cancel()">Annuler</button>
+  <button mat-button mat-dialog-close cdkFocusInitial (click)="accept()">Ajouter</button>
+</mat-dialog-actions>

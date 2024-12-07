@@ -3,10 +3,25 @@
     font-size: xx-small;
   }
 
-.full{
-  background-color:  rgb(176, 108, 108)!important;
+  .square{
+ margin-top: 10px;
+    height: 100px;
+width: 100%;
+  }
+
+.complet{
+  background-color:  rgb(196, 98, 108)!important;
 }
 
 .mat-mdc-standard-chip{
   width: 100%;
+}
+
+.red-icon {
+  background-color: rgb(228, 28, 28);
+  color: white;
+}
+
+mat-card-content{
+  padding: 16px 16px 0 16px;
 }

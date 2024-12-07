@@ -1,6 +1,6 @@
 
-import { Component, OnInit } from '@angular/core';
-import { ValidationService, TransmissionService, CroisementService, EvenementService, StandService, MailService, BenevoleService, FileService, ConfigService } from '../../services';
+import { Component, inject, OnInit } from '@angular/core';
+import { TransmissionService, CroisementService, EvenementService, StandService, MailService, BenevoleService, FileService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Email, Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -8,8 +8,8 @@ import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { NgClass } from '@angular/common';
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ModalConnexionComponent } from '../../components/modalConnexion/modalConnexion.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -23,6 +23,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { OrderByPipe } from '../../services/sort.pipe';
 import { Params } from '../../models/params';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -37,12 +40,11 @@ import { Params } from '../../models/params';
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
   providers: [
     EvenementService,
-    TransmissionService,
     BenevoleService,
     CroisementService,
     StandService,
     MailService,
-    ValidationService,
+
     FileService,
     ConfigService
   ],
@@ -52,7 +54,7 @@ import { Params } from '../../models/params';
 })
 
 export class GestionComponent implements OnInit {
-  subscription = new Subscription()
+
   authorize: boolean = false
   rappel!: boolean
   password!: string
@@ -69,7 +71,7 @@ export class GestionComponent implements OnInit {
   errorMailingList!: String[];
   theCheckbox: any
   selectedDeviceObj: any
-  evenement!: Evenement
+  evenement?: Evenement;
   params!: Params
   idEvenement!: number
   isValidAccessForEvent?: number
@@ -94,26 +96,23 @@ export class GestionComponent implements OnInit {
     name: 'Les inscrits SANS choix',
   }]
 
-  authorizeForm = this.formBuilder.group({
-    password: new FormControl("", [Validators.required])
 
-  })
-
+  dialog = inject(MatDialog);
 
   constructor(
     public route: ActivatedRoute,
+    private toastr: ToastrService,
     public router: Router,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
+    public configService: ConfigService,
     public mailService: MailService,
-    public validationService: ValidationService,
     public fileService: FileService,
     public sanitizer: DomSanitizer,
     public formBuilder: FormBuilder) { }
-
 
 
   ngOnInit() {
@@ -124,13 +123,73 @@ export class GestionComponent implements OnInit {
 
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
 
-    this.getEvenement(this.idEvenement);
+
     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
-      this.getQRcode(this.idEvenement)
-      this.getBenevoles();
-      this.getAffiche()
+      this.loadPage()
+    } else {
+      this.authorizeAccess()
     }
+
+
+
+
+  }
+
+
+
+  loadPage() {
+    console.log("loadpage");
+    
+    this.getParams();
+    this.getEvenement(this.idEvenement);
+    this.getBenevoles();
+    this.getAffiche();
+  }
+
+  authorizeAccess(): void {
+    this.dialog.open(ModalConnexionComponent, {
+      hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
+      data: {
+        title: 'Accès mode gestionnaire',
+        question: 'Saisissez le mot de passe de l\'évènement :',
+      },
+    }).afterClosed().subscribe(result => {
+      if (result instanceof FormGroup) {
+        this.evenementService.isAuthorize(this.idEvenement, result.get('passwood')?.value).subscribe({
+          next: (data) => {
+            console.log(data);
+            this.authorize = data;
+            localStorage.setItem('isValidAccessForEvent', JSON.stringify(this.idEvenement));
+            this.loadPage()
+          },
+          error: (error: HttpErrorResponse) => {
+            this.router.navigate(['/' + this.idEvenement]);
+            this.toastr.error("Mot de passe incorect", 'Erreur');
+          }
+        })
+      } else {
+        this.router.navigate(['/' + this.idEvenement]);
+      }
+    });
+  }
+
+
+
+  getParams() {
+    this.configService.getParams().subscribe({
+      next: (params) => {
+        console.log(params);
+
+        this.params = params;
+        this.getQRcode(this.idEvenement)
+      },
+      error: (error: HttpErrorResponse) => {
+
+
+      }
+    })
+
   }
 
   getEvenement(idEvenement: number): void {
@@ -143,30 +202,14 @@ export class GestionComponent implements OnInit {
       });
   }
 
-  valider() {
-    let password: string = this.authorizeForm?.value?.password!;
-    this.validationService.testGestion(this.idEvenement, password).then(response => {
-      console.log(response)
-      this.authorize = response;
-      if (response) {
-        this.getQRcode(this.idEvenement)
-        this.getBenevoles();
-      } else {
-        this.router.navigate(['error']);
-      }
-    })
-      .catch(err => {
-        console.error(err)
-        this.router.navigate(['error']);
-      })
-  }
+
 
   getQRcode(idEvenement: number): void {
-    this.using_address = this.params.url + "/" + idEvenement
+    this.using_address = this.params.url+"#/" + idEvenement
     // With promises
     QRCode.toDataURL(this.using_address, { errorCorrectionLevel: 'H', width: 500 })
-      .then((urdqsdsq: string) => {
-        this.qrcode = urdqsdsq
+      .then((qrcode: string) => {
+        this.qrcode = qrcode
       })
       .catch((err: any) => {
         console.error(err)
@@ -225,16 +268,18 @@ export class GestionComponent implements OnInit {
   }
 
 
-  updateDateRappel() {
-    this.evenement.rappelDate = new Date()
-    this.update(this.evenement)
+  updateDateRappel(evenement: Evenement) {
+
+    evenement.rappelDate = new Date()
+    this.update(evenement)
   }
 
 
-  updateBlocage() {
-    this.evenement.lock = !this.evenement.lock
+  updateBlocage(evenement: Evenement) {
+
+    evenement.lock = !evenement.lock
     this.evenementService.opening(this.idEvenement).subscribe(data => {
-      this.evenement.lock = data
+      evenement.lock = data
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -255,37 +300,24 @@ export class GestionComponent implements OnInit {
 
   getBenevoles(): void {
     this.benevoleService.getByEvenementId(this.idEvenement).subscribe(benevoles => {
-      if (benevoles) {
-        this.benevoles = benevoles;
 
-        benevoles.forEach(benevole => {
-          benevole.croisements = []
-          this.croisementService.getByBenevole(benevole.id).subscribe(croisements => {
-            if (croisements != null) {
-              benevole.croisements = croisements
-
-              if (benevole.croisements.length > 0) {
-                this.benevolesWithChoice.push(benevole);
-              }
-              if (benevole.croisements.length == 0) {
-                this.benevolesWithoutChoice.push(benevole);
-              }
-              if (benevole.croisements) {
-                benevole.croisements.forEach(croisement => {
-                  if (croisement.stand.type == 1 || croisement.stand.type == 3) {
-                    this.benevolesToChange.push(benevole);
-                  }
-                });
-              }
-            } else {
-              this.benevolesWithoutChoice.push(benevole);
+      this.benevoles = benevoles;
+      benevoles.forEach(benevole => {
+        if (benevole.croisements.length > 0) {
+          this.benevolesWithChoice.push(benevole);
+        }
+        if (benevole.croisements.length == 0) {
+          this.benevolesWithoutChoice.push(benevole);
+        }
+        if (benevole.croisements) {
+          benevole.croisements.forEach(croisement => {
+            if (croisement.stand.type == 1 || croisement.stand.type == 3) {
+              this.benevolesToChange.push(benevole);
             }
-          },
-            error => {
-              console.log('😢 Oh no!', error);
-            });
-        });
-      }
+          });
+        }
+      });
+
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -294,7 +326,7 @@ export class GestionComponent implements OnInit {
 
 
 
-  envoiMail(email: Email) {
+  envoiMail(email: Email, evenement:Evenement) {
     this.mail = false;
     this.errorMailingList = []
     this.sendingProgress = true;
@@ -316,7 +348,7 @@ export class GestionComponent implements OnInit {
 
       emailCopy.text = emailCopy.text + "<br />"
       emailCopy.text = emailCopy.text + "Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />";
-      emailCopy.text = emailCopy.text + this.evenement.contact + " - " + this.evenement.contactEmail + "<br />"
+      emailCopy.text = emailCopy.text + evenement.contact + " - " + evenement.contactEmail + "<br />"
 
       this.mailService.sendMail(emailCopy)
         .subscribe(res => {
@@ -328,7 +360,7 @@ export class GestionComponent implements OnInit {
     })
     this.rappel = false;
     this.mailingList = [];
-    this.updateDateRappel()
+    this.updateDateRappel(evenement)
   }
 
 

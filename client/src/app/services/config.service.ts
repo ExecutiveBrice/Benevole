@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+import { Params } from '../models/params';
 
 @Injectable()
 export class ConfigService {
@@ -10,8 +12,8 @@ export class ConfigService {
     private http: HttpClient
   ) { }
 
-  getParams() {
-    return this.http.get<Map<string, string>>(this.apiUrl + '/getParams', { responseType: 'json'});
+  getParams():Observable<Params> {
+    return this.http.get<Params>(this.apiUrl + '/getParams', { responseType: 'json'});
   }
 
 

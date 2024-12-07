@@ -5,7 +5,7 @@ import { Evenement, Email } from '../../models';
 import QRCode from 'qrcode'
 import { DatePipe, NgClass } from '@angular/common';
 import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -21,7 +21,6 @@ import { Params } from '../../models/params';
   standalone: true,
   providers: [provideNativeDateAdapter()],
   imports: [NgClass,
-    FontAwesomeModule,
     DatePipe,ReactiveFormsModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule  ],
    changeDetection: ChangeDetectionStrategy.OnPush,

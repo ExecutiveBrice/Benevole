@@ -1,23 +1,4 @@
-@if (!authorize) {
-<div class="row">
-  <div class="col-sm-6">
-    <div class="input-group mb-3 ">
-      <div class="input-group-prepend">
-        <span class="input-group-text">Mot de passe</span>
-      </div>
-      <input type="password" [(ngModel)]="password" class="form-control" id="password"
-        (keyup.enter)="valider(password)">
-    </div>
-  </div>
-  <div class="col-sm-3">
-    <div class="input-group mb-3 ">
-      <button type="button" class="btn btn-block btn-warning" (click)="valider(password)">
-        Valider </button>
-    </div>
-  </div>
-</div>
 
-}
 @if (authorize) {
 <div class="row">
   <div class="col-sm-12">

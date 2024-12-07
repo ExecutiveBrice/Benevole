@@ -30,6 +30,7 @@ services:
     volumes:
       - /home/ubuntu/benevole/:/home/ubuntu/benevole/
     environment:
+      - DNS_NAME=${DNS_NAME}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}

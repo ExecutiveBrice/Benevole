@@ -1,14 +1,17 @@
 
-import { Component, OnInit } from '@angular/core';
-import { ValidationService, EvenementService, ConfigService } from '../../services';
+import { Component, inject, OnInit } from '@angular/core';
+import { EvenementService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DatePipe, NgClass } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
+import { Params } from '../../models/params';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalConnexionComponent } from '../../components/modalConnexion/modalConnexion.component';
 
 @Component({
     selector: 'app-gestionEvenements',
@@ -16,13 +19,12 @@ import { OrderByPipe } from "../../services/sort.pipe";
     templateUrl: './gestionEvenements.component.html',
     styleUrls: ['./gestionEvenements.component.scss'],
     imports: [NgClass,
-        FontAwesomeModule,
         FormsModule,
         DatePipe,
         RouterModule, OrderByPipe],
         providers: [
           EvenementService,
-          ValidationService,
+          
           ConfigService
         ],
 })
@@ -33,8 +35,8 @@ export class GestionEvenementsComponent implements OnInit {
   authorize: boolean = false;
   evenements!: Evenement[];
   choix!: number;
-  params!: Map<string, string>
   password!: string;
+  dialog = inject(MatDialog);
 
 
   constructor(
@@ -42,40 +44,45 @@ export class GestionEvenementsComponent implements OnInit {
     public router: Router,
     public evenementService: EvenementService,
     public configService: ConfigService,
-    public validationService: ValidationService,
     public sanitizer: DomSanitizer) {
 
   }
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams')!);
     this.evenements = [];
 
-    localStorage.removeItem('isGestion');
     localStorage.removeItem('isValidAccessForEvent');
+this.authorizeAccess()
+   
 
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!)==0?true:false;
-    if(this.authorize){
-      this.getAllEvenements();
-    }
   }
-
-  valider(password: string) {
-    this.validationService.testGestion(0, password).then(response => {
-      console.log(response)
-      this.authorize = response;
-      if(response){
-        this.getAllEvenements();
+  authorizeAccess(): void {
+    this.dialog.open(ModalConnexionComponent, {
+      hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
+      data: {
+        title: 'Accès mode gestionnaire',
+        question: 'Saisissez le mot de passe de l\'évènement :',
+      },
+    }).afterClosed().subscribe(result => {
+      if (result instanceof FormGroup) {
+        this.evenementService.isAuthorize(0, result.get('passwood')?.value).subscribe({
+          next: (data) => {
+            console.log(data);
+            this.authorize = data;
+            localStorage.setItem('isValidAccessForEvent', JSON.stringify(0));
+            this.getAllEvenements();
+          },
+          error: (error: HttpErrorResponse) => {
+           
+          }
+        })
       }
-    })
-    .catch(err => {
-      console.error(err)
-    })
-
+    });
   }
+
 
   goToGestion(evenement: Evenement) {
-    this.router.navigate(['/gestion/' + evenement.id]);
+    this.router.navigate([ evenement.id+'/gestion/']);
   }
 
   choixEvenement(id: number) {

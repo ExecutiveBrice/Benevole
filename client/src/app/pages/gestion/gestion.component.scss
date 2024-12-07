@@ -1,0 +1,13 @@
+::ng-deep {
+    .backdropBackground{
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color:aliceblue;
+    opacity: 0.7!important;
+    z-index: 998;
+    height: 100%;
+    width: 100%;
+}
+}

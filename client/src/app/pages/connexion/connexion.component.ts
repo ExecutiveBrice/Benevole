@@ -1,27 +1,28 @@
 
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit, input, signal } from '@angular/core';
-import { ValidationService, BenevoleService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
+import { Component, HostListener, OnInit } from '@angular/core';
+import { BenevoleService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { CommonModule, NgClass } from '@angular/common';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgClass } from '@angular/common';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 
 import { OrderByPipe } from "../../services/sort.pipe";
-import { MatStepper, MatStepperModule } from '@angular/material/stepper';
+import { MatStepperModule } from '@angular/material/stepper';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ToastrService } from 'ngx-toastr';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatChipsModule } from '@angular/material/chips';
+import { HttpErrorResponse } from '@angular/common/http';
 
 
 @Component({
@@ -29,13 +30,12 @@ import { MatChipsModule } from '@angular/material/chips';
   standalone: true,
   templateUrl: './connexion.component.html',
   styleUrls: ['./connexion.component.scss'],
-  imports: [NgClass,
+  imports: [NgClass, MatTooltipModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
   providers: [
     StandService,
-    ValidationService,
     CroisementService,
     ConfigService,
     BenevoleService
@@ -47,12 +47,9 @@ export class ConnexionComponent implements OnInit {
   evenement: Evenement = new Evenement();
   idEvenement!: number
   affiche!: string;
-
+  benevole = new Benevole();
 
   attentionMessage = "Les mails issus de l'application proviennent de l'adresse benevoles.nepasrepondre@gmail.com<br> Ce sont des mails automatiques et sont tres souvent placés dans votre dossier SPAM<br> Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement:<br>";
-
-
-  @Input() public toggleSideNav: boolean = false
 
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
@@ -63,13 +60,10 @@ export class ConnexionComponent implements OnInit {
     public standService: StandService,
     public mailService: MailService,
     public transmissionService: TransmissionService,
-    public validationService: ValidationService,
     public fileService: FileService,
     public sanitizer: DomSanitizer,
-    public formBuilder: FormBuilder) { }
-
-  subscription = new Subscription();
-  benevole = new Benevole();
+    public formBuilder: FormBuilder,
+  ) { }
 
 
   formulaire = this.formBuilder.group({
@@ -102,18 +96,20 @@ export class ConnexionComponent implements OnInit {
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
 
-    this.validationService.testCommun(this.idEvenement).then(response => {
-      if (!response) {
+    this.evenementService.isOpen(this.idEvenement).subscribe({
+      next: (data) => {
+
         this.getStand();
         this.getEvenement(this.idEvenement);
         this.getAffiche()
-      } else {
-        // this.router.navigate(['error']);
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+
+        // this.toastr.error(error.message, 'Erreur');
+
       }
     })
-      .catch(err => {
-        //this.router.navigate(['error']);
-      })
 
 
   }
@@ -121,25 +117,36 @@ export class ConnexionComponent implements OnInit {
 
 
   getAffiche() {
-    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
-      this.affiche = "data:image/jpeg;base64," + data
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-  }
+    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe({
+      next: (data) => {
+        this.affiche = "data:image/jpeg;base64," + data
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
 
+        this.toastr.error(error.message, 'Erreur');
+
+      }
+
+    })
+  }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
-      this.evenement = data;
-      this.transmissionService.dataTransmission(data);
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-  }
+    this.evenementService.getById(idEvenement).subscribe({
+      next: (data) => {
+        this.evenement = data;
+        this.transmissionService.dataTransmission(data);
 
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+
+        this.toastr.error(error.message, 'Erreur');
+
+      }
+
+    })
+  }
 
 
 
@@ -161,34 +168,44 @@ export class ConnexionComponent implements OnInit {
 
 
 
-      this.benevoleService.getByMail(this.benevole.email, this.idEvenement).subscribe(benevole => {
+      this.benevoleService.getByMail(this.benevole.email, this.idEvenement).subscribe({
+        next: (benevole) => {
+          this.fillBenevole(benevole);
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error)
 
-        if (benevole != null) {
-          this.benevole = benevole;
-          this.userExist = true
-          this.formulaireBenevole.get("nom")?.setValue(benevole.nom);
-          this.formulaireBenevole.get("prenom")?.setValue(benevole.prenom);
-          this.checkStands(this.preparatifs)
-          this.checkStands(this.stands)
-          this.checkStands(this.postparatifs)
-          this.checkCroisements(this.besoins)
-          this.checkCroisements(this.sansChoix)
-        } else {
-          console.log("pas de benevole à cette email")
-          this.userExist = false
+          this.toastr.error(error.message, 'Erreur');
 
         }
 
-
-        this.wanted = true;
-        console.log(this.formulaire)
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
+      })
     }
   }
 
+
+  fillBenevole(benevole: Benevole) {
+    console.log(benevole);
+    
+    if (benevole != null) {
+      this.benevole = benevole;
+      this.userExist = true
+      this.formulaireBenevole.get("nom")?.setValue(benevole.nom);
+      this.formulaireBenevole.get("prenom")?.setValue(benevole.prenom);
+      this.checkStands(this.preparatifs)
+      this.checkStands(this.activites)
+      this.checkStands(this.postparatifs)
+      this.checkCroisements(this.besoins)
+      this.checkCroisements(this.sansChoix)
+      this.updateSum()
+    } else {
+      console.log("pas de benevole avec cette email")
+      this.userExist = false
+
+    }
+    this.wanted = true;
+    console.log(this.formulaire)
+  }
 
   addBenevole(): void {
 
@@ -196,33 +213,42 @@ export class ConnexionComponent implements OnInit {
     this.benevole.email = this.benevole.email.trimEnd();
     this.benevole.email = this.benevole.email.trimStart();
     this.benevole = Object.assign(this.benevole, this.formulaire.value)
-    this.benevoleService.add(this.benevole, this.idEvenement).subscribe(benevole => {
-      this.benevole = benevole;
-      this.userExist = true;
-    },
-      error => {
+    this.benevoleService.add(this.benevole, this.idEvenement).subscribe({
+      next: (benevole) => {
+        this.benevole = benevole;
+        this.userExist = true;
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
 
-        console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+
+      }
+
+    })
   }
 
 
-  checkStands(stands: Stand[]) {
+  checkStands(stands: Stand[]): number {
+    let nbben = 0;
     stands.forEach(stand => {
-      this.checkCroisements(stand.croisements)
+      nbben += this.checkCroisements(stand.croisements)
     });
+    return nbben;
   }
 
 
-  checkCroisements(croisements: Croisement[]) {
+  checkCroisements(croisements: Croisement[]): number {
+    let nbben = 0;
     croisements.forEach(croisement => {
+      nbben += croisement.benevoles.length;
       croisement.benevoles.forEach(benevole => {
         if (benevole.id == this.benevole.id) {
           croisement.selected = true;
         }
       })
     })
-
+    return nbben;
   }
 
 
@@ -245,18 +271,14 @@ export class ConnexionComponent implements OnInit {
 
 
 
-
+  stands: Stand[] = [];
   choix!: String;
   sansChoix: Croisement[] = [];
-  stands: Stand[] = [];
+  activites: Stand[] = [];
 
   besoins: Croisement[] = [];
   preparatifs: Stand[] = [];
   postparatifs: Stand[] = [];
-  croisements: Croisement[] = [];
-
-
-  
 
 
 
@@ -264,66 +286,92 @@ export class ConnexionComponent implements OnInit {
 
 
 
+
+
+  occupepreparatifs: number = 0;
+  occupeactivites: number = 0;
+  occupesansChoix: number = 0;
+  occupebesoins: number = 0;
+  occupepostparatifs: number = 0;
+  totalpreparatifs: number = 0;
+  totalactivites: number = 0;
+  totalsansChoix: number = 0;
+  totalbesoins: number = 0;
+  totalpostparatifs: number = 0;
+
+  updateSum() {
+    this.occupepreparatifs = this.preparatifs.reduce((sum, current) => sum + current.placeOccupe, 0)
+    this.occupeactivites = this.activites.reduce((sum, current) => sum + current.placeOccupe, 0)
+    this.occupesansChoix = this.sansChoix.reduce((sum, current) => sum + current.benevoles.length, 0)
+    this.occupebesoins = this.besoins.reduce((sum, current) => sum + current.benevoles.length, 0)
+    this.occupepostparatifs = this.postparatifs.reduce((sum, current) => sum + current.placeOccupe, 0)
+
+    this.totalpreparatifs = this.preparatifs.reduce((sum, current) => sum + current.placeTotal, 0)
+    this.totalactivites = this.activites.reduce((sum, current) => sum + current.placeTotal, 0)
+    this.totalsansChoix = this.sansChoix.reduce((sum, current) => sum + current.limite, 0)
+    this.totalbesoins = this.besoins.reduce((sum, current) => sum + current.limite, 0)
+    this.totalpostparatifs = this.postparatifs.reduce((sum, current) => sum + current.placeTotal, 0)
+
+    this.stands.forEach(stand => {
+      stand.croisements.forEach(croisement => {
+        stand.placeOccupe += croisement.benevoles.length;
+        stand.placeTotal += croisement.limite;
+      })
+    })
+  }
+
+  updateStand(stand: Stand) {
+    stand.placeOccupe = 0
+    stand.placeTotal = 0
+    stand.croisements.forEach(croisement => {
+      if (croisement.besoin == true) {
+        this.besoins!.push(croisement);
+      }
+      stand.placeOccupe += croisement.benevoles.length;
+      stand.placeTotal += croisement.limite;
+    })
+  }
 
   getStand(): void {
     this.besoins = []
     this.sansChoix = []
     this.preparatifs = []
     this.postparatifs = []
-    this.stands = []
-    this.standService.getAll(this.idEvenement!).subscribe(stands => {
-      stands.forEach(stand => {
+    this.activites = []
+    this.standService.getAll(this.idEvenement!).subscribe({
+      next: (stands) => {
+        this.stands = stands;
+        stands.forEach(stand => {
+          if (stand.croisements != null) {
+            if (stand.type == 2) {
+              this.updateStand(stand)
+              this.activites.push(stand)
+            } else if (stand.type == 1) {
+              stand.croisements.forEach(croisement => {
+                if (croisement.besoin == true) {
+                  this.besoins!.push(croisement);
+                }
 
-        if (stand.croisements != null) {
+                this.sansChoix!.push(croisement)
+              })
+            } else if (stand.type == 5) {
+              this.updateStand(stand)
+              this.preparatifs!.push(stand)
 
-          if (stand.type == 2 || stand.type == 3) {
-            stand.croisements.forEach(croisement => {
-              if (croisement.besoin == true) {
-                this.besoins!.push(croisement);
-              }
-              croisement.stand = stand
-            })
-            this.stands.push(stand)
-
-          } else if (stand.type == 1) {
-            stand.croisements.forEach(croisement => {
-              if (croisement.besoin == true) {
-                this.besoins!.push(croisement);
-              }
-              croisement.stand = stand
-              this.sansChoix!.push(croisement)
-            })
-          } else if (stand.type == 5) {
-            stand.croisements.forEach(croisement => {
-              if (croisement.besoin == true) {
-                this.besoins!.push(croisement);
-              }
-              croisement.stand = stand
-            })
-            this.preparatifs!.push(stand)
-
-          } else if (stand.type == 6) {
-            stand.croisements.forEach(croisement => {
-              if (croisement.besoin == true) {
-                this.besoins!.push(croisement);
-              }
-              croisement.stand = stand
-            })
-            this.postparatifs!.push(stand)
-
+            } else if (stand.type == 6) {
+              this.updateStand(stand)
+              this.postparatifs!.push(stand)
+            }
           }
-        }
-
-        stand.placeRestante = 0
-        stand.croisements.forEach(croisement => stand.placeRestante += (croisement.limite - croisement.benevoles.length))
-
-      })
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
+        })
+        this.updateSum()
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+        this.toastr.error(error.message, 'Erreur');
+      }
+    })
   }
-
 
   updateCroisementListe(croisements: Croisement[]): void {
     for (let index = 0; index < croisements.length; index++) {
@@ -337,98 +385,65 @@ export class ConnexionComponent implements OnInit {
         }
       }
     }
-
   }
 
-
-
+  removeFromBenevole(croisement: Croisement) {
+    this.stands.forEach(stand => {
+      const crois = stand.croisements.find(crois => crois.id == croisement.id)
+      if (crois) {
+        this.choisir(crois)
+      }
+    })
+  }
 
   choisir(croisement: Croisement): void {
-    if (this.benevole.croisements.filter(crois => crois.id == croisement.id).length > 0) {
-      this.retraitCroisement(croisement);
+    if (!this.userExist) {
+      this.toastr.error("Connectez vous pour choisir un stand", 'Erreur');
+    } else if (croisement.benevoles != undefined && croisement.benevoles.find(benevole => benevole.id == this.benevole.id) == undefined && croisement.benevoles.length >= croisement.limite) {
+      this.toastr.error("Ce créneau est complet, choisisez en un autre", 'Erreur');
     } else {
-      this.ajoutCroisement(croisement);
+      if (this.benevole.croisements.filter(crois => crois.id == croisement.id).length > 0) {
+        this.retraitCroisement(croisement);
+      } else {
+        this.ajoutCroisement(croisement);
+      }
     }
   }
 
   retraitCroisement(croisement: Croisement) {
-    croisement.benevoles = croisement.benevoles.filter(bene => bene.id != this.benevole.id)
-    this.benevole.croisements = this.benevole.croisements.filter(crois => crois.id != croisement.id)
-    this.benevoleService.updateCroisement(this.benevole.id, croisement.id).subscribe(data => {
-      this.toastr.success("Votre choix à bien été retirée", "Merci,")
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-
-
+    this.benevoleService.removeToCroisement(this.benevole.id, croisement.id).subscribe({
+      next: (benevole) => {
+        croisement.selected = false;
+        croisement.benevoles = croisement.benevoles.filter(benevole => benevole.id != this.benevole.id)
+        this.fillBenevole(benevole);
+        this.toastr.success("Votre choix à bien été retirée", "Merci,")
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+        this.toastr.error(error.message, 'Erreur');
+      }
+    })
   }
 
   ajoutCroisement(croisement: Croisement) {
     if (croisement.benevoles.length < croisement.limite) {
-      croisement.selected = true;
-      this.benevole.croisements.push(croisement);
-      croisement.benevoles.push(this.benevole);
-      this.benevoleService.updateCroisement(this.benevole.id, croisement.id).subscribe(data => {
-        this.toastr.success("Votre choix à bien été ajouté", "Merci,")
-      },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
+      this.benevoleService.addToCroisement(this.benevole.id, croisement.id, false).subscribe({
+        next: (benevole) => {
+          croisement.selected = true;
+          croisement.benevoles.push(benevole)
+          this.fillBenevole(benevole);
+          this.toastr.success("Votre choix à bien été ajouté", "Merci,")
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error)
+          this.toastr.error(error.message, 'Erreur');
+        }
+      })
     }
   }
-
-  validate(): void {
-
-
-    var email = new Email();
-    email.to = this.benevole.email
-    email.subject = "Validation de participation pour l'evenement : " + this.evenement.eventName
-    email.text = "Bonjour,<br />" + this.evenement.validation + "<br />";
-
-    this.benevole.croisements.sort((a, b) => (a.creneau.ordre > b.creneau.ordre) ? 1 : ((b.creneau.ordre > a.creneau.ordre) ? -1 : 0));
-    this.benevole.croisements.forEach(croisement => {
-      email.text = email.text + (croisement.stand.nom == "tous" ? "N'importe quel stand" : croisement.stand.nom) + " - " + croisement.creneau.plage + "<br />"
-    });
-    email.text = email.text + "<br />"
-    email.text = email.text + this.evenement.retour;
-    email.text = email.text + "<br />"
-    email.text = email.text + this.evenement.signature;
-
-    email.text = email.text + "<br />"
-    email.text = email.text + "Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />";
-    email.text = email.text + this.evenement.contact + " - " + this.evenement.contactEmail + "<br />"
-
-    email.text = this.completeTemplate(email.text)
-    this.envoiMail(email)
-
-    this.showSuccess()
-  }
-
-  completeTemplate(text: string): string {
-    while (text.match("<event_name>")) {
-      text = text.replace("<event_name>", this.evenement.eventName)
-    }
-    while (text.match("<using_address>")) {
-      text = text.replace("<using_address>", "this.using_address")
-    }
-    return text
-  }
-
-  envoiMail(email: Email) {
-    this.mailService.sendMail(email)
-      .subscribe(res => {
-      }, err => {
-        console.log(err);
-      });
-  }
-
-
 
   public getScreenWidth: any;
   public getScreenHeight: any;
-
-
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
     this.getScreenWidth = window.innerWidth;

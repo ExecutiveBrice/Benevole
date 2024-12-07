@@ -1,0 +1,28 @@
+<form [formGroup]="authorizeForm">
+<h2 mat-dialog-title>{{data.title}}</h2>
+<mat-dialog-content>
+
+  <mat-form-field >
+    <mat-label>{{data.question}}</mat-label>
+    <input matInput formControlName="passwood" [type]="passwordVisible ? 'text' : 'password'" (keyup.enter)="accept(authorizeForm)">
+    <button type="button" mat-icon-button matSuffix (click)="passwordVisible = !passwordVisible" [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="!passwordVisible">
+        <mat-icon>{{passwordVisible ? 'visibility' : 'visibility_off'}}</mat-icon>
+      </button>
+
+  </mat-form-field>
+
+</mat-dialog-content>
+
+
+
+
+  
+ 
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close (click)="cancel()">Non</button>
+  <button mat-button mat-dialog-close cdkFocusInitial (click)="accept(authorizeForm)">Oui</button>
+</mat-dialog-actions>
+
+</form>

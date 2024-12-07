@@ -7,8 +7,7 @@ import com.wild.corp.model.Creneau;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.model.Stand;
 import com.wild.corp.repositories.EvenementRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,11 +18,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
 @Service("EvenementService")
 @Transactional
+@Slf4j
 public class EvenementService {
-
-    public static final Logger logger = LoggerFactory.getLogger(EvenementService.class);
 
     @Autowired
     private EvenementRepository evenementRepository;
@@ -32,7 +31,7 @@ public class EvenementService {
     private StandService standService;
 
     @Autowired
-    private CreneauService  creneauService;
+    private CreneauService creneauService;
 
     @Autowired
     private BenevoleService benevoleService;
@@ -45,7 +44,6 @@ public class EvenementService {
         evenement.setLock(Constante.LOCK);
         evenement.setValidation(Constante.VALIDATION);
         evenement.setSignature(Constante.SIGNATURE);
-
 
 
         evenementRepository.save(evenement);
@@ -63,8 +61,8 @@ public class EvenementService {
 
     }
 
-    String replaceText(String text, Evenement evenement){
-        text = text.replaceAll("<event_name>", String.valueOf(evenement.getEventName()) );
+    String replaceText(String text, Evenement evenement) {
+        text = text.replaceAll("<event_name>", String.valueOf(evenement.getEventName()));
 
         return text;
     }
@@ -81,12 +79,19 @@ public class EvenementService {
         event.setAfficherMessage(evenement.isAfficherMessage());
         event.setMessage(evenement.getMessage());
 
-        event.setPassword(evenement.getPassword());
         event.setSignature(evenement.getSignature());
         event.setValidation(evenement.getValidation());
         event.setLock(evenement.isLock());
         event.setNeedtel(evenement.getNeedtel());
         event.setSitepersourl(evenement.getSitepersourl());
+
+        event.setCouleurFond(evenement.getCouleurFond());
+        event.setCouleurBandeau(evenement.getCouleurBandeau());
+        event.setCouleurBandeau(evenement.getCouleurBandeau());
+
+
+        event.setCouleurTitre(evenement.getCouleurTitre());
+        event.setCouleurBloc(evenement.getCouleurBloc());
 
         return evenementRepository.save(event);
     }
@@ -97,9 +102,9 @@ public class EvenementService {
 
     public Evenement findById(Integer evenementId) {
         List<Evenement> evenements = evenementRepository.findAllById(evenementId);
-        if(evenements == null){
+        if (evenements == null) {
             return null;
-        }else{
+        } else {
             return evenements.get(0);
         }
     }
@@ -127,7 +132,7 @@ public class EvenementService {
     }
 
     public Boolean updateOpening(Integer evenementId) {
-        if(evenementId != null) {
+        if (evenementId != null) {
             Evenement evenement = findById(evenementId);
             evenement.setLock(!evenement.isLock());
             return evenement.isLock();
@@ -137,16 +142,16 @@ public class EvenementService {
 
     @Scheduled(cron = "0 0 1 * * ?")
     public void reset() {
-        logger.debug("reset");
+        log.debug("reset");
         Calendar caldendat = Calendar.getInstance();
         caldendat.setTime(new Date());
-        caldendat.add(Calendar.HOUR,24);
-        caldendat.set(Calendar.HOUR,0);
-        caldendat.set(Calendar.MINUTE,0);
-        caldendat.set(Calendar.MILLISECOND,0);
+        caldendat.add(Calendar.HOUR, 24);
+        caldendat.set(Calendar.HOUR, 0);
+        caldendat.set(Calendar.MINUTE, 0);
+        caldendat.set(Calendar.MILLISECOND, 0);
 
-        for (Evenement event:findAll()) {
-            if(event.getEndDate().before(caldendat.getTime())) {
+        for (Evenement event : findAll()) {
+            if (event.getEndDate().before(caldendat.getTime())) {
                 for (Benevole ben : benevoleService.findByEvenementId(event.getId())) {
                     benevoleService.deleteById(ben.getId());
                 }

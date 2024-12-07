@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ValidationService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
+import { TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -8,7 +8,6 @@ import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { DatePipe, NgClass } from '@angular/common';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -26,7 +25,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import 'moment/locale/fr';
-
+import { ColorPickerModule } from 'ngx-color-picker';
 
 
 
@@ -40,9 +39,6 @@ import 'moment/locale/fr';
     // of our example generation script.
     provideMomentDateAdapter(),
     EvenementService,
-    TransmissionService,
-
-    ValidationService,
     FileService,
     ConfigService
   ],
@@ -50,7 +46,7 @@ import 'moment/locale/fr';
     DatePipe,
     FormsModule,
     ImageCropperComponent,
-    RouterModule,
+    RouterModule,ColorPickerModule ,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
@@ -70,7 +66,8 @@ export class GestionMajConfigComponent implements OnInit {
   readonly minDate = new Date();
   readonly maxDate = new Date(this.minDate.getFullYear() + 1, 11, 31);
 
-  
+
+
   formulaireEvent = this.formBuilder.group({
 
     eventName: new FormControl(this.evenement.eventName, [Validators.required, Validators.minLength(2)]),
@@ -79,7 +76,7 @@ export class GestionMajConfigComponent implements OnInit {
     contactEmail: new FormControl(this.evenement.contactEmail, [Validators.required, Validators.minLength(2)]),
     endDate: new FormControl(this.evenement.endDate, [Validators.required]),
     sitepersourl: new FormControl(this.evenement.sitepersourl, [Validators.required, Validators.minLength(2)]),
-    password: new FormControl(this.evenement.password, [Validators.required, Validators.minLength(2)]),
+
     validation: new FormControl(this.evenement.validation, [Validators.required, Validators.minLength(2)]),
     retour: new FormControl(this.evenement.retour, [Validators.required, Validators.minLength(2)]),
     signature: new FormControl(this.evenement.signature, [Validators.required, Validators.minLength(2)]),
@@ -88,6 +85,12 @@ export class GestionMajConfigComponent implements OnInit {
     message: new FormControl(this.evenement.message, []),
     needtel: new FormControl(this.evenement.needtel, [Validators.required]),
 
+    couleurFond: new FormControl(this.evenement.couleurFond, [Validators.required]),
+    couleurBandeau: new FormControl(this.evenement.couleurBandeau, [Validators.required]),
+    couleurText: new FormControl(this.evenement.couleurText, [Validators.required]),
+    
+    couleurTitre: new FormControl(this.evenement.couleurTitre, [Validators.required]),
+    couleurBloc: new FormControl(this.evenement.couleurBloc, [Validators.required]),
   })
 
 
@@ -96,7 +99,6 @@ export class GestionMajConfigComponent implements OnInit {
     public router: Router,
     public transmissionService: TransmissionService,
     public evenementService: EvenementService,
-    public validationService: ValidationService,
     public fileService: FileService,
     public sanitizer: DomSanitizer,
     public configService: ConfigService,
@@ -104,13 +106,14 @@ export class GestionMajConfigComponent implements OnInit {
   
   ngOnInit() {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-    this.getEvenement(this.idEvenement);
+
 
     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
-    if (!this.authorize) {
-      this.router.navigate(['/gestion/' + this.idEvenement]);
-    }else{
+    if (this.authorize) {
+      this.getEvenement(this.idEvenement);
       this.getLogo()
+    }else{
+       this.router.navigate([ this.idEvenement+'/gestion/']);
     }
   }
 
@@ -129,7 +132,7 @@ export class GestionMajConfigComponent implements OnInit {
       this.formulaireEvent.get("contactEmail")?.setValue(evenement.contactEmail);
       this.formulaireEvent.get("endDate")?.setValue(evenement.endDate);
       this.formulaireEvent.get("sitepersourl")?.setValue(evenement.sitepersourl);
-      this.formulaireEvent.get("password")?.setValue(evenement.password);
+
       this.formulaireEvent.get("validation")?.setValue(evenement.validation);
       this.formulaireEvent.get("retour")?.setValue(evenement.retour);
       this.formulaireEvent.get("signature")?.setValue(evenement.signature);
@@ -138,7 +141,12 @@ export class GestionMajConfigComponent implements OnInit {
       this.formulaireEvent.get("message")?.setValue(evenement.message);
       this.formulaireEvent.get("needtel")?.setValue(evenement.needtel);
 
-
+      this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);
+      this.formulaireEvent.get("couleurBandeau")?.setValue(evenement.couleurBandeau);
+      this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);
+      
+      this.formulaireEvent.get("couleurTitre")?.setValue(evenement.couleurTitre);
+      this.formulaireEvent.get("couleurBloc")?.setValue(evenement.couleurBloc);
       console.log(this.formulaireEvent)
     },
       error => {

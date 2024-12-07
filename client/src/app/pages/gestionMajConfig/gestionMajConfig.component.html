@@ -42,17 +42,7 @@
           </mat-form-field>
         </mat-card-content>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Mot de passe d'accès à la configuration</mat-label>
-            <input type="password" matInput formControlName="password">
 
-            @if (formulaireEvent.get('password')?.hasError('required')) {
-            <mat-error>Le mot de passe est obligatoire</mat-error>
-            }
-
-          </mat-form-field>
-        </mat-card-content>
 
 
 
@@ -148,6 +138,7 @@
             }
 
           </mat-form-field>
+          
         </mat-card-content>
 
         <mat-card-content>
@@ -179,6 +170,56 @@
           </mat-form-field>
         </mat-card-content>
 
+
+
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>La couleur du fond</mat-label>
+            <input type="color" matInput formControlName="couleurFond">
+            @if (formulaireEvent.get('couleurFond')?.hasError('required')) {
+            <mat-error>La couleur du fond est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>La couleur du bandeau</mat-label>
+            <input type="color" matInput formControlName="couleurBandeau">
+            @if (formulaireEvent.get('couleurBandeau')?.hasError('required')) {
+            <mat-error>La couleur du bandeau est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>La couleur du texte du bandeau</mat-label>
+            <input type="color" matInput formControlName="couleurText">
+            @if (formulaireEvent.get('couleurText')?.hasError('required')) {
+            <mat-error>La couleur du texte du bandeau est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>La couleur des titres</mat-label>
+            <input type="color" matInput formControlName="couleurTitre">
+            @if (formulaireEvent.get('couleurTitre')?.hasError('required')) {
+            <mat-error>La couleur des titres est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>La couleur des blocs</mat-label>
+            <input type="color" matInput formControlName="couleurBloc">
+            @if (formulaireEvent.get('couleurBloc')?.hasError('required')) {
+            <mat-error>La couleur des blocs est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
 
       </form>
 

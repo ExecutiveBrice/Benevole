@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("BenevoleService")
 @Transactional
@@ -30,6 +31,10 @@ public class BenevoleService {
     }
 
     public void add(Benevole benevole, Integer evenementId) {
+
+        if(findByEmail(benevole.getEmail(), evenementId) != null){
+            throw new RuntimeException("existe déjà");
+        }
         Evenement evenement = evenementRepository.findById(evenementId).get();
         benevole.setEvenement(evenement);
         persist(benevole);
@@ -48,16 +53,29 @@ public class BenevoleService {
         persist(pBenevole);
     }
 
-    public Benevole updateCroisement(Integer benevoleId, Integer croisementId) {
+    public Benevole addToCroisement(Integer benevoleId, Integer croisementId, Boolean force) {
         Benevole benevole = findById(benevoleId);
         Croisement croisement = croisementService.findById(croisementId);
 
         if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
-            benevole.getCroisements().remove(croisementService.findById(croisementId));
+            throw new RuntimeException("existe déjà");
         } else {
-            if (croisement.getBenevoles().size() < croisement.getLimite()) {
+            if (croisement.getBenevoles().size() < croisement.getLimite() || force) {
                 benevole.getCroisements().add(croisementService.findById(croisementId));
+            }else{
+                throw new RuntimeException("pas de place");
             }
+        }
+        persist(benevole);
+
+        return benevole;
+    }
+
+    public Benevole removeToCroisement(Integer benevoleId, Integer croisementId) {
+        Benevole benevole = findById(benevoleId);
+
+        if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
+            benevole.getCroisements().remove(croisementService.findById(croisementId));
         }
         persist(benevole);
 
@@ -69,7 +87,13 @@ public class BenevoleService {
     }
 
     public Benevole findById(Integer benevoleId) {
-        return benevoleRepository.getOne(benevoleId);
+        Optional<Benevole> benevoleOpt = benevoleRepository.findById(benevoleId);
+        if (benevoleOpt.isPresent()){
+            return benevoleOpt.get();
+        }else {
+            return null;
+        }
+
     }
 
     public void deleteById(Integer benevoleId) {

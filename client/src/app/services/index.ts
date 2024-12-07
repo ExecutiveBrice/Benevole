@@ -7,6 +7,5 @@ export * from './creneau.service';
 export * from './excel.service';
 export * from './evenement.service';
 export * from './transmission.service';
-export * from './validation.service';
 export * from './config.service';
 export * from './file.service';

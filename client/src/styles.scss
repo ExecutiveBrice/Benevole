@@ -1,14 +1,9 @@
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
-body {
-  margin: 0px;
-  background-color: rgb(216, 215, 223);
-}
-
 
 
 mat-card {
-  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .mat-expansion-panel {
@@ -25,6 +20,10 @@ mat-card {
   margin-bottom: 10px;
 }
 
+.toast-custom-rigth {
+  top: 150px;
+  right: 12px;
+}
 
 .mat-expansion-panel-header.mat-expanded:focus,
 .mat-expansion-panel-header:hover {
@@ -46,7 +45,12 @@ mat-card {
 .mat-grid-tile {
   font-size: smaller;
 }
-
+.mat-expansion-panel-body{
+  padding-top: 0px !important;
+padding-right: 5px!important;
+padding-bottom: 16px!important;
+padding-left: 5px!important;
+}
 
 .mat-mdc-card,
 .mat-expansion-panel,
@@ -66,7 +70,6 @@ mat-card {
   height: auto !important;
 }
 
-
 mat-card-header {
   display: unset !important;
   text-align: center;
@@ -75,8 +78,6 @@ mat-card-header {
 .mat-mdc-form-field{
   display: block !important;
 }
-
-
 
 .warning {
   background-color: rgb(235, 157, 61) !important;
@@ -92,10 +93,7 @@ mat-card-header {
 
 .full-height {
   height: 100%;
-
 }
-
-
 
 .marge {
   margin: 1%;
@@ -105,32 +103,33 @@ mat-card-header {
   padding-top: 10px;
 }
 
-h1 {
-  font-family: cursive !important;
-}
 
-@media screen and (max-width: 1024px) {
-  h1 {
-    font-size: 4rem!important;
+
+
+@media screen and (min-width: 950px) {
+  .g1 {
+    font-size: 4rem;
+    align-self:center;
+    font-family: cursive !important;
   }
+
 }
 
 @media screen and (max-width: 950px) {
-  h1 {
-    font-size: 3rem!important;
+  .g1 {
+    font-size: 3rem;
+    align-self:center;
+    font-family: cursive !important;
   }
-}
 
+}
 
 @media screen and (max-width: 650px) {
-  h1 {
-    font-size: 2rem!important;
+  .g1 {
+    font-size: 1.5rem;
+    align-self:center;
+    font-family: cursive !important;
   }
 
 }
 
-@media screen and (max-width: 480px) {
-  h1 {
-    font-size: 1rem!important;
-  }
-}

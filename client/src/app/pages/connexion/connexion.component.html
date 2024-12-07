@@ -1,16 +1,14 @@
 <div class="row marge">
-  <div class="col-lg-4">
+  <div class="col-md-6 col-lg-4">
+    @if (!userExist) {
     <mat-card appearance="raised">
 
       @if (!wanted) {
       <mat-card-header>
         <mat-card-title> <strong>Inscrivez vous :</strong></mat-card-title>
-        <mat-card-subtitle>
-          Toutes les informations personnelles seront détruites à la fin de l'évènement
-        </mat-card-subtitle>
       </mat-card-header>
       }
-      @if (!userExist) {
+
       @if (!wanted) {
       <form [formGroup]="formulaire">
 
@@ -88,76 +86,97 @@
       }
 
 
-      } @else {
-      <mat-card-header>
-        <mat-card-title>Bonjour {{ formulaireBenevole.value.prenom }} {{ formulaireBenevole.value.nom
-          }}</mat-card-title>
-        <mat-card-subtitle>
-
-          @if (evenement.afficherMessage) {
-
-
-          <div [innerHtml]="evenement.message"></div>
-
-          }
-        </mat-card-subtitle>
-      </mat-card-header>
-      }
 
     </mat-card>
-
+  }
 
     @if (userExist) {
     <mat-card appearance="raised">
       <mat-card-header>
-        <mat-card-title> <strong>Votre planning :</strong></mat-card-title>
-
+        <mat-card-title><strong>Bonjour {{ formulaireBenevole.value.prenom }} {{ formulaireBenevole.value.nom }}</strong></mat-card-title>
       </mat-card-header>
 
 
       @if(stands.length > 0) {
 
 
-      @if(benevole && benevole.croisements != undefined && benevole.croisements.length == 0){
-      <mat-card-content>
+        @if(benevole && benevole.croisements != undefined && benevole.croisements.length == 0){
+        <mat-card-content>
 
-        <strong>Pour ajouter un moment de bénévolat :</strong><br>
-        Cliquez sur la liste puis choisissez le créneau qui vous convient.<br>
-        Vous pouvez en choisir plusieurs !
-      </mat-card-content>
-      }
-      @if(benevole && benevole.croisements != undefined && benevole.croisements.length > 0){
+          <strong>Pour ajouter un moment de bénévolat :</strong><br>
+          Cliquez sur la liste puis choisissez le créneau qui vous convient.<br>
+          Vous pouvez en choisir plusieurs !
+        </mat-card-content>
+        }
+        @if(benevole && benevole.croisements != undefined && benevole.croisements.length > 0){
 
-      @for (croisement of benevole.croisements | orderBy:'creneau.ordre':false; track $index) {
-      <mat-card-content>
-        <mat-icon fontIcon="delete" (click)="choisir(croisement)"></mat-icon>
+          @for (croisement of benevole.croisements | orderBy:'creneau.ordre':false; track $index) {
+          <mat-card-content>
+            <mat-icon class="red-icon" fontIcon="delete" (click)="removeFromBenevole(croisement)"></mat-icon>
 
-        {{croisement.creneau.plage}} :
-        {{croisement.stand.nom == "tous"?"N'importe quel stand":croisement.stand.nom}}
-      </mat-card-content>
-      }
-      }
+            {{croisement.creneau.plage}} :
+            {{croisement.stand.nom == "tous"?"N'importe quel stand":croisement.stand.nom}}
+          </mat-card-content>
+          }
+        }
       }
 
 
 
     </mat-card>
 
+  }
 
-    <mat-card class="alerte" appearance="outlined">
+  @if (getScreenWidth > 650) {
+    <mat-card appearance="raised">
       <mat-card-header>
-        <mat-card-title> <strong>Attention</strong></mat-card-title>
+        <mat-card-title> <strong>Informations :</strong></mat-card-title>
 
       </mat-card-header>
+      <mat-card-content>
+       
+        @if (evenement.afficherMessage) {
+          <div [innerHtml]="evenement.message"></div>
+          }
+      </mat-card-content>
+      <mat-card-content>
+      </mat-card-content>
       <mat-card-content align="end">
         <div [innerHtml]=attentionMessage></div>
-        {{evenement.contact}} - {{evenement.contactEmail}}
+
+      </mat-card-content>
+
+      <mat-card-content>
+        <div class="row">
+
+
+          <div class="col-lg-12">
+            <b>Organisateur</b>
+          </div>
+
+
+          <div class="col-lg-4">
+            {{evenement.contact}}
+          </div>
+
+
+          <div class="col-lg-4">
+            {{evenement.contactEmail}}
+          </div>
+
+
+          <div class="col-lg-4">
+            {{evenement.contactTel}}
+          </div>
+
+
+        </div>
       </mat-card-content>
     </mat-card>
-    }
+  }
   </div>
 
-  <div class="col-lg-4">
+  <div class="col-md-6 col-lg-4">
 
 
 
@@ -166,34 +185,36 @@
 
     @if (preparatifs.length > 0) {
 
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>Les préparatifs</mat-panel-title>
-        <mat-panel-description>(avant l'évenement)</mat-panel-description>
+    <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc" [expanded]="getScreenWidth > 650">
+      <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre">
+        <mat-panel-title>Les préparatifs ({{ occupepreparatifs }}/{{ totalpreparatifs }})</mat-panel-title>
+
       </mat-expansion-panel-header>
 
       @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
 
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>{{stand.nom}}</mat-panel-title>
+      <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
+        <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+          <mat-panel-title>{{stand.nom}} ({{stand.placeOccupe}}/{{stand.placeTotal}})</mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-chip-set aria-label="Fish selection">
-          <div class="row">
-            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
-            <div class="col-6">
-              <mat-chip-option selected="{{croisement.selected === true}}"
-                [ngClass]="{'full':croisement.benevoles.length >= croisement.limite}"
-                [disabled]="!userExist || croisement.benevoles.length >= croisement.limite"
-                (click)="choisir(croisement)">
-                {{croisement.creneau.plage}}<br>
-                {{ croisement.benevoles.length >=
-                croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
-              </mat-chip-option>
-            </div>
-            }
+
+        <div class="row">
+          @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+          <div class="col-6 col-lg-4 col-xxl-3">
+            <button mat-raised-button class="square"
+              [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite}"
+              matTooltip="Connectez vous pour choisir un stand" [matTooltipDisabled]="userExist"
+              (click)="choisir(croisement)">
+              <div>{{croisement.creneau.plage}}</div>
+              <div>{{ croisement.benevoles.length >=
+                croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}</div>
+
+              <div>@if (croisement.selected) {<mat-icon>check</mat-icon> }</div>
+            </button>
           </div>
-        </mat-chip-set>
+          }
+        </div>
+
       </mat-expansion-panel>
       }
 
@@ -201,32 +222,38 @@
     }
 
     @if (stands && stands.length > 0) {
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>Je choisis mon stand</mat-panel-title>
+    <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc" [expanded]="getScreenWidth > 650">
+      <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+        <mat-panel-title>Je choisis mon stand ({{ occupeactivites }}/{{ totalactivites }})</mat-panel-title>
       </mat-expansion-panel-header>
 
       @for (stand of stands | orderBy:'ordre':false; track $index) {
 
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>{{stand.nom}}</mat-panel-title>
+      <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc"
+        [style.backgroundColor]="evenement.couleurBloc">
+        <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+          <mat-panel-title>{{stand.nom}} ({{stand.placeOccupe}}/{{stand.placeTotal}})</mat-panel-title>
         </mat-expansion-panel-header>
-        <mat-chip-set aria-label="Fish selection">
-          <div class="row">
-            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
-            <div class="col-6">
-              <mat-chip-option selected="{{croisement.selected === true}}"
-                [disabled]="!userExist || croisement.benevoles.length >= croisement.limite"
-                (click)="choisir(croisement)">
-                {{croisement.creneau.plage}}<br>
-                {{croisement.benevoles.length >=
-                croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
-              </mat-chip-option>
-            </div>
-            }
+
+        <div class="row">
+          @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+
+            <div class="col-6 col-lg-4 col-xxl-3">
+            <button mat-raised-button class="square"
+              [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite}"
+              matTooltip="Connectez vous pour choisir un stand"
+              [matTooltipDisabled]="userExist || croisement.benevoles.length >= croisement.limite"
+              (click)="choisir(croisement)">
+              <div>{{croisement.creneau.plage}}</div>
+              <div>{{ croisement.benevoles.length >=
+                croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}</div>
+
+              <div>@if (croisement.selected) {<mat-icon>check</mat-icon> }</div>
+            </button>
           </div>
-        </mat-chip-set>
+
+          }
+        </div>
       </mat-expansion-panel>
       }
     </mat-expansion-panel>
@@ -234,63 +261,112 @@
 
 
     @if (sansChoix.length > 0) {
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
+    <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc" [expanded]="getScreenWidth > 650">
+      <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
         <mat-panel-title>Le stand m'est égal
           mais je
-          suis disponible à :</mat-panel-title>
+          suis disponible à : ({{ occupesansChoix }}/{{ totalsansChoix }})</mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-chip-set aria-label="Fish selection">
-        <div class="row">
-          @for (croisement of sansChoix| orderBy:'creneau.ordre':false; track $index) {
-          <div class="col-6">
-            <mat-chip-option selected="{{croisement.selected === true}}"
-              [disabled]="!userExist || croisement.benevoles.length >= croisement.limite" (click)="choisir(croisement)">
-              {{croisement.creneau.plage}}<br>
-              {{croisement.benevoles.length >=
-              croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
-            </mat-chip-option>
-          </div>
-          }
+
+      <div class="row">
+        @for (croisement of sansChoix| orderBy:'creneau.ordre':false; track $index) {
+          <div class="col-6 col-lg-4 col-xxl-3">
+          <button mat-raised-button class="square"
+            [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite}"
+            matTooltip="Connectez vous pour choisir un stand"
+            [matTooltipDisabled]="userExist || croisement.benevoles.length >= croisement.limite"
+            (click)="choisir(croisement)">
+            <div>{{croisement.creneau.plage}}</div>
+            <div>{{ croisement.benevoles.length >=
+              croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}</div>
+
+            <div>@if (croisement.selected) {<mat-icon>check</mat-icon> }</div>
+          </button>
         </div>
-      </mat-chip-set>
+
+
+
+        }
+      </div>
+
     </mat-expansion-panel>
     }
 
     @if (besoins.length > 0) {
-    <mat-expansion-panel [expanded]="true">
-      <mat-expansion-panel-header>
+    <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc" [expanded]="getScreenWidth > 650">
+      <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre">
         <mat-panel-title>Là où vous avez
-          besoin</mat-panel-title>
+          besoin ({{ occupebesoins }}/{{ totalbesoins }})</mat-panel-title>
       </mat-expansion-panel-header>
-      <mat-chip-set aria-label="Fish selection">
-        <div class="row">
-          @for (croisement of besoins| orderBy:'creneau.ordre':false; track $index) {
-          <div class="col-6">
-            <mat-chip-option selected="{{croisement.selected === true}}"
-              [disabled]="!userExist || croisement.benevoles.length >= croisement.limite" (click)="choisir(croisement)">
-              {{croisement.creneau.plage}}<br>
-              {{croisement.benevoles.length >=
-              croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}
-            </mat-chip-option>
-          </div>
-          }
+
+      <div class="row">
+        @for (croisement of besoins| orderBy:'creneau.ordre':false; track $index) {
+
+          <div class="col-6 col-lg-4 col-xxl-3">
+          <button mat-raised-button class="square"
+            [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite}"
+            matTooltip="Connectez vous pour choisir un stand"
+            [matTooltipDisabled]="userExist || croisement.benevoles.length >= croisement.limite"
+            (click)="choisir(croisement)">
+            <div>{{croisement.creneau.plage}}</div>
+            <div>{{ croisement.benevoles.length >=
+              croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}</div>
+
+            <div>@if (croisement.selected) {<mat-icon>check</mat-icon> }</div>
+          </button>
         </div>
-      </mat-chip-set>
+
+
+        }
+      </div>
+
     </mat-expansion-panel>
     }
 
 
+    @if (postparatifs.length > 0) {
 
+      <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc" [expanded]="getScreenWidth > 650">
+        <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre">
+          <mat-panel-title>Les préparatifs ({{ occupepostparatifs }}/{{ totalpostparatifs }})</mat-panel-title>
+  
+        </mat-expansion-panel-header>
+  
+        @for (stand of postparatifs | orderBy:'ordre':false; track $index) {
+  
+        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
+          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+            <mat-panel-title>{{stand.nom}} ({{stand.placeOccupe}}/{{stand.placeTotal}})</mat-panel-title>
+          </mat-expansion-panel-header>
+  
+          <div class="row">
+            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+            <div class="col-6 col-lg-4 col-xxl-3">
+              <button mat-raised-button class="square"
+                [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite}"
+                matTooltip="Connectez vous pour choisir un stand" [matTooltipDisabled]="userExist"
+                (click)="choisir(croisement)">
+                <div>{{croisement.creneau.plage}}</div>
+                <div>{{ croisement.benevoles.length >=
+                  croisement.limite?'Complet':croisement.benevoles.length+'\/'+croisement.limite}}</div>
+  
+                <div>@if (croisement.selected) {<mat-icon>check</mat-icon> }</div>
+              </button>
+            </div>
+            }
+          </div>
+  
+        </mat-expansion-panel>
+        }
+  
+      </mat-expansion-panel>
+      }
 
 
 
   </div>
 
-  <div class="col-lg-4">
-
-
-
+  <div class="col-md-6 col-lg-4">
 
 
 
@@ -298,63 +374,60 @@
       @if (affiche) {
       <img mat-card-image [src]="affiche" alt="Affiche">
       }
-
     </mat-card>
+      @if (getScreenWidth < 650) {
+        <mat-card appearance="raised">
+          <mat-card-header>
+            <mat-card-title> <strong>Informations :</strong></mat-card-title>
+    
+          </mat-card-header>
+          <mat-card-content>
+           
+            @if (evenement.afficherMessage) {
+              <div [innerHtml]="evenement.message"></div>
+              }
+          </mat-card-content>
+          <mat-card-content>
+          </mat-card-content>
+          <mat-card-content align="end">
+            <div [innerHtml]=attentionMessage></div>
+    
+          </mat-card-content>
+    
+          <mat-card-content>
+            <div class="row">
+    
+    
+              <div class="col-lg-12">
+                <b>Organisateur</b>
+              </div>
+    
+    
+              <div class="col-lg-4">
+                {{evenement.contact}}
+              </div>
+    
+    
+              <div class="col-lg-4">
+                {{evenement.contactEmail}}
+              </div>
+    
+    
+              <div class="col-lg-4">
+                {{evenement.contactTel}}
+              </div>
+    
+    
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    
 
 
 
 
-    <mat-card appearance="raised">
 
-
-
-      <div class="row">
-
-        <div class="col-lg-12">
-
-          <a href="https://alod.fr/tuto-benevoles/" target="_blank">
-            <mat-icon fontIcon="help"></mat-icon> Ici, le tutoriel de l'application bénévoles</a>
-        </div>
-        <div class="col-lg-12">
-          <b>Organisateur</b>
-        </div>
-
-
-        <div class="col-lg-4">
-          {{evenement.contact}}
-        </div>
-
-
-        <div class="col-lg-4">
-          {{evenement.contactEmail}}
-        </div>
-
-
-        <div class="col-lg-4">
-          {{evenement.contactTel}}
-        </div>
-
-        <div class="col-lg-12">
-          <b>Concepteur</b>
-        </div>
-
-
-        <div class="col-lg-4">
-          Brice MOREL
-        </div>
-
-
-        <div class="col-lg-4">
-          {{'brice_morel@hotmail.com'}}
-        </div>
-
-
-        <div class="col-lg-4">
-          <a href="https://github.com/ExecutiveBrice">Github</a>
-        </div>
-      </div>
-
-    </mat-card>
 
   </div>
 

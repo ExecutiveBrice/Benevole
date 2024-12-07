@@ -2,6 +2,7 @@ package com.wild.corp.controller;
 
 
 
+import com.wild.corp.model.Ressources.Params;
 import com.wild.corp.service.ConfigService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,9 @@ public class ConfigController {
     @Autowired
     private Environment environment;
     @RequestMapping(value = "/getParams", method = RequestMethod.GET)
-    public ResponseEntity< Map<String, String>> getParams() {
+    public ResponseEntity<Params> getParams() {
 
-        Map<String, String> params = configService.getParams();
+        Params params = configService.getParams();
 
         return new ResponseEntity<>(params, HttpStatus.OK);
     }

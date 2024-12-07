@@ -1,30 +1,7 @@
-@if (!authorize) {
 
-<form [formGroup]="authorizeForm">
-  <mat-card appearance="raised">
-    <mat-card-content>
-      <mat-form-field>
-        <mat-label>Mot de passe de l'évènement {{evenement.eventName}}</mat-label>
-        <input type="password" matInput formControlName="password" (keyup.enter)="valider()">
+@if (authorize && evenement) {
 
-        @if (authorizeForm.get('password')?.hasError('required')) {
-        <mat-error>L'email est obligatoire</mat-error>
-        }
-
-      </mat-form-field>
-    </mat-card-content>
-
-
-    <mat-card-content>
-      <button mat-stroked-button type="submit" (click)="valider()">Entrer</button>
-    </mat-card-content>
-  </mat-card>
-</form>
-
-}
-@if (authorize) {
-
-<div class="row marge">
+<div #backGround class="row marge">
   <div class="col-sm-12">
 
 
@@ -77,7 +54,7 @@
       <mat-card-content>
         @if (evenement) {
         <button class="full-width" mat-stroked-button type="button" [ngClass]="{'red':evenement.lock}"
-          (click)="updateBlocage()">Je clique
+          (click)="updateBlocage(evenement)">Je clique
           pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
 
         }
@@ -85,7 +62,9 @@
     </mat-card>
 
     <mat-card appearance="raised">
-
+      <a href="{{using_address}}">
+        {{using_address}}
+      </a>
       <img mat-card-image src="{{qrcode}}" />
 
     </mat-card>
@@ -135,7 +114,7 @@
               choix des inscrits</label>
           </div>
 
-          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail(emailInfo)">
+          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail(emailInfo, evenement)">
             Envoyer ce message à la liste choisi</button>
         </div>
         }

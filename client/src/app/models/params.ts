@@ -1,6 +1,3 @@
-
-
-
 export class Params {
   using!:string;
   header!: string;

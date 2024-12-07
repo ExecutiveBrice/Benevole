@@ -34,10 +34,29 @@ public class BenevoleController {
         return new ResponseEntity<>(benevole, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/updateCroisement", method = RequestMethod.PUT)
-    public ResponseEntity<Benevole> updateCroisement(@RequestParam Integer benevoleId, @RequestParam Integer croisementId) {
-        benevoleService.updateCroisement(benevoleId, croisementId);
-        return new ResponseEntity<>(null,HttpStatus.OK);
+    @RequestMapping(value = "/addToCroisement", method = RequestMethod.PUT)
+    public ResponseEntity<Benevole> addToCroisement(@RequestParam Integer benevoleId, @RequestParam Integer croisementId, @RequestParam Boolean force) {
+        try {
+            Benevole benevole = benevoleService.addToCroisement(benevoleId, croisementId,force);
+            return new ResponseEntity<>(benevole,HttpStatus.OK);
+        } catch (RuntimeException e) {
+            if(e.getMessage().equals("existe déjà")){
+                return new ResponseEntity(null, HttpStatus.CONFLICT);
+            } else{
+                return new ResponseEntity(null, HttpStatus.NOT_ACCEPTABLE);
+            }
+
+        }
+
+    }
+
+    @RequestMapping(value = "/removeToCroisement", method = RequestMethod.PUT)
+    public ResponseEntity<Benevole> removeToCroisement(@RequestParam Integer benevoleId, @RequestParam Integer croisementId) {
+
+            Benevole benevole = benevoleService.removeToCroisement(benevoleId, croisementId);
+            return new ResponseEntity<>(benevole,HttpStatus.OK);
+
+
     }
 
     @RequestMapping(value = "/byMail", method = RequestMethod.GET)

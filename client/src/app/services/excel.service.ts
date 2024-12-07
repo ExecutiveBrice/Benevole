@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { Croisement, Stand } from '../models';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -10,47 +11,51 @@ export class ExcelService {
 
   constructor() { }
 
-  public multiExportAsExcelFile(json: any[], excelFileName: string): void {
+  public multiExportAsExcelFile(stands: Stand[], excelFileName: string): void {
     /* generate workbook and add the worksheet */
     const workbook: XLSX.WorkBook = XLSX.utils.book_new();
-    var wscols = [
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 },
-      { wch: 20 }
-    ];
-    json.forEach(page => {
-      var worksheet = XLSX.utils.aoa_to_sheet([
-        [""],
-        [page.nom]
-      ]);
 
-      var wsrows = [
-        { hpx: 24, level: 3 },
-        { hpx: 24, level: 3 },
-        { hpx: 24, level: 3 },
-        // { hidden: true },
-        // { hidden: false }
-      ];
+    var worksheet = XLSX.utils.aoa_to_sheet([
+    ]);
 
+    let line = 0;
 
-      XLSX.utils.sheet_add_json(worksheet, page.creneaux, { origin: "A4" });
+    stands.forEach(stand => {
 
-      worksheet['!cols'] = wscols;
-      worksheet['!rows'] = wsrows;
+      XLSX.utils.sheet_add_aoa(worksheet, [
+        [stand.nom],
+        []
+      ], { origin: line });
+      line++;
 
-      XLSX.utils.book_append_sheet(workbook, worksheet, page.nom);
+      console.log(stand);
+      stand.croisements.forEach(croisement => {
+        XLSX.utils.sheet_add_aoa(worksheet, [
+          [croisement.creneau.plage]
+        ], { origin: line });
+        line++;
+        croisement.benevoles.forEach(benevole => {
+          XLSX.utils.sheet_add_aoa(worksheet, [
+            [benevole.prenom +' '+benevole.nom, benevole.email, benevole.telephone]
+          ], { origin: line });
+          line++;
+        });
+        XLSX.utils.sheet_add_aoa(worksheet, [
+          []
+        ], { origin: line });
+        line++;
     });
+    XLSX.utils.sheet_add_aoa(worksheet, [
+      []
+    ], { origin: line });
+    line++;
+    XLSX.utils.sheet_add_aoa(worksheet, [
+      []
+    ], { origin: line });
+    line++;
+  });
 
-
-
-
+    XLSX.utils.book_append_sheet(workbook, worksheet, "stands");
 
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);

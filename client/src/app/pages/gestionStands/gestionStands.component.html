@@ -2,51 +2,75 @@
 
 
 
-  <mat-card appearance="raised">
-    <mat-grid-list cols="3" rowHeight="50px">
-      <mat-grid-tile [colspan]="2">
-  
-        <strong>
-          {{stands.length}} créneaux
-        </strong>
-  
-  
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <button class="full-width" mat-flat-button type="button"
-          [routerLink]="['/',evenement.id,'gestion']">Retour</button>
-  
-      </mat-grid-tile>
-    </mat-grid-list>
-  </mat-card>
+<mat-card appearance="raised">
+  <mat-grid-list cols="3" rowHeight="50px">
+    <mat-grid-tile [colspan]="2">
+
+      <strong>
+        {{stands.length}} créneaux
+      </strong>
+
+
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <button class="full-width" mat-flat-button type="button" (click)="exportAsXLSX()">Télécharger</button>
+
+    </mat-grid-tile>
+  </mat-grid-list>
+</mat-card>
+
+
 
 
 <div class="row">
-  <div class="col-sm-12">
-    <button type="button" class="btn btn-block" (click)="exportAsXLSX()">Télécharger</button>
-  </div>
+
   @for (stand of stands | orderBy:'ordre':false; track $index) {
-  <div class="col-lg-2">
-    <button type="button" class="btn btn-block btn-info" (click)="toggle(stand.id)">{{stand.nom}} </button>
-    @if (toggleList.indexOf(stand.id)>-1) {
-    <div class="col-sm-12">
-      <div class="row">
-        @for (standcroisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
-        <div class="col-sm-12 dropdown">
-          <strong>{{standcroisement.creneau.plage}} :
-            ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
-          <div class="row">
-            @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track $index) {
-            <div class="col-sm-12 dropdown petite_ecriture">
-              {{benevole.prenom}} {{benevole.nom}} - {{benevole.email}} {{benevole.telephone}}
+  <div class="col-12 col-md-6 col-lg-4 col-xxl-3">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>{{stand.nom}}</mat-panel-title>
+      </mat-expansion-panel-header>
+
+
+      <div class="col-sm-12">
+        <div class="row">
+          @for (standcroisement of stand.croisements | orderBy:'creneau.ordre':false; track standcroisement) {
+          <div class="col-sm-12 dropdown">
+            <div class="row">
+              <div class="col-6">
+                <strong>{{standcroisement.creneau.plage}} :
+                  ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
+              </div>
+              <div class="col-6">
+                <button class="green-icon" mat-fab type="button" (click)="addBen(standcroisement, stand)">
+                  <mat-icon>person_add</mat-icon>
+                </button>
+              </div>
             </div>
+            @if (standcroisement.benevoles.length > 0) {
+            @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track benevole) {
+
+            <mat-grid-list cols="4" rowHeight="20px" class="carre">
+              <mat-grid-tile class="title" [colspan]="3" [rowspan]="1"> {{benevole.prenom}}
+                {{benevole.nom}}</mat-grid-tile>
+              <mat-grid-tile [colspan]="1" [rowspan]="3"> <button class="red-icon" mat-fab type="button"
+                  (click)="delete(benevole, standcroisement, stand)"><mat-icon>delete_forever</mat-icon></button></mat-grid-tile>
+              <mat-grid-tile [colspan]="3" [rowspan]="1"> email{{benevole.email}}</mat-grid-tile>
+              <mat-grid-tile [colspan]="3" [rowspan]="1"> tel{{benevole.telephone}}</mat-grid-tile>
+            </mat-grid-list>
+
+            }
             }
           </div>
+
+          }
+
+
         </div>
-        }
       </div>
-    </div>
-    }
+
+
+    </mat-expansion-panel>
   </div>
   }
 </div>

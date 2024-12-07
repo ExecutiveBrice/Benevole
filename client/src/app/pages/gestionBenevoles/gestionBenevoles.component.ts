@@ -1,7 +1,7 @@
 
 import { Component, OnInit, inject } from '@angular/core';
-import { BenevoleService } from '../../services';
-import { ConfigService, ValidationService, EvenementService, CroisementService, StandService, MailService, TransmissionService } from '../../services';
+import { BenevoleService, ExcelService } from '../../services';
+import { ConfigService, EvenementService, CroisementService, StandService, MailService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Croisement, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -38,12 +38,11 @@ import { MatSelectModule } from '@angular/material/select';
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
     providers: [
       EvenementService,
-      TransmissionService,
       BenevoleService,
       CroisementService,
       StandService,
       MailService,
-      ValidationService,
+      
       ConfigService
     ],
 })
@@ -64,6 +63,7 @@ export class GestionBenevolesComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    public excelService:ExcelService,
     public configService: ConfigService,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
@@ -71,27 +71,21 @@ export class GestionBenevolesComponent implements OnInit {
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
-    public validationService: ValidationService,
     public sanitizer: DomSanitizer,
     public formBuilder: FormBuilder) { }
 
 
   ngOnInit() {
-
-
-
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-    console.log(parseInt(this.route.snapshot.paramMap.get('id')!))
-    this.getEvenement(this.idEvenement);
-
     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
+      this.getEvenement(this.idEvenement);
       this.find();
       this.getStand();
       this.croisements = [];
       this.choix = "";
     } else {
-      this.router.navigate(['/gestion/' + this.idEvenement]);
+      this.router.navigate([ this.idEvenement+'/gestion/']);
     }
   }
 
@@ -201,6 +195,9 @@ export class GestionBenevolesComponent implements OnInit {
 
 
 
+  async exportAsXLSX() {
+    //this.excelService.multiExportAsExcelFile(this.benevoles, 'Benevoles');
+  }
 
 
 

@@ -2,69 +2,36 @@
 <div class="row marge">
   <div class="col-sm-12">
     <mat-card appearance="raised">
-      <mat-grid-list cols="3" rowHeight="50px">
-        <mat-grid-tile [colspan]="2">
-
-          <strong>
-
-          </strong>
-
-
-        </mat-grid-tile>
-        <mat-grid-tile>
-          <button class="full-width full-height" mat-flat-button type="button"
-            [routerLink]="['/',evenement.id,'gestion']">Retour</button>
-
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card>
-
-  </div>
-
-
-
-
-
-  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
-    <mat-card class="padding-top" appearance="raised" [formGroup]="formulaireNewStand">
-      <div class="row marge">
-        <div class="col-sm-6">
+      <div class="row marge" [formGroup]="formulaireNewStand">
+        <div class="col-12 col-md-5">
           <mat-form-field class="full-width">
             <mat-label>Ordre</mat-label>
             <input type="text" matInput formControlName="ordre">
-
             @if (formulaireNewStand.get('ordre')?.hasError('required')) {
             <mat-error>Le numéro d'ordre est obligatoire</mat-error>
             }
           </mat-form-field>
-
         </div>
-        <div class="col-3">
-          <button class="blue-icon" mat-fab type="button" (click)="ajout(formulaireNewStand)"><mat-icon>save</mat-icon>
-          </button>
-        </div>
-
-        <div class="col-3 ">
-
-        </div>
-        <div class="col-sm-12">
+        <div class="col-12 col-md-5">
           <mat-form-field class="full-width">
             <mat-label>Nom</mat-label>
             <input type="text" matInput formControlName="nom">
-
             @if (formulaireNewStand.get('nom')?.hasError('required')) {
             <mat-error>Le nom du stand est obligatoire</mat-error>
             }
           </mat-form-field>
         </div>
+        <div class="col-12 col-md-2">
+          <button class="blue-icon" mat-fab type="button" (click)="ajout(formulaireNewStand)"><mat-icon>save</mat-icon>
+          </button>
+        </div>
       </div>
-
     </mat-card>
   </div>
 
-  @if (standsForm != null && standsForm.controls.length > 0) {
-  @for (stand of standsForm.controls | orderObjectBy:"value.ordre":false; track stand) {
-  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2" [formGroup]="stand">
+  @if (standsFormulaire != null && standsFormulaire.controls.length > 0) {
+  @for (stand of standsFormulaire.controls | orderObjectBy:"value.ordre":false; track stand) {
+  <div class="col-12 col-md-6 col-lg-4 col-xxl-3" [formGroup]="stand">
     <mat-card class="padding-top" appearance="raised">
       <div class="row marge">
 
@@ -85,7 +52,8 @@
         </div>
         <div class="col-3">
 
-          <button class="red-icon" mat-fab type="button" (click)="delete(stand)"><mat-icon>delete_forever</mat-icon></button>
+          <button class="red-icon" mat-fab type="button"
+            (click)="delete(stand)"><mat-icon>delete_forever</mat-icon></button>
         </div>
 
         <div class="col-12">
@@ -113,29 +81,9 @@
               <mat-option [value]=1>Sans choix</mat-option>
             </mat-select>
           </mat-form-field>
-
-
-
         </div>
 
-
-
         <div class="col-12 ">
-
-
-
-          <mat-form-field>
-            <mat-label>Ajouter un creneau</mat-label>
-            <mat-select (selectionChange)="addCreneauToStand($event, stand)">
-              <mat-option></mat-option>
-
-              @for (creneau of creneaux; track creneau) {
-              <mat-option [value]="creneau">{{ creneau.plage }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-
           <div class="row max_width">
             <div class="col-12">
               <mat-expansion-panel>
@@ -143,7 +91,17 @@
                   <mat-panel-title>Créneaux:</mat-panel-title>
                 </mat-expansion-panel-header>
 
-                @if (getCroisement(stand) != null ) {
+                <mat-form-field>
+                  <mat-label>Ajouter un creneau</mat-label>
+                  <mat-select (selectionChange)="addCreneauToStand($event, stand)">
+                    <mat-option></mat-option>
+
+                    @for (creneau of creneaux; track creneau) {
+                    <mat-option [value]="creneau">{{ creneau.plage }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
                 @for (croisement of getCroisement(stand).controls | orderObjectBy:'value.id':false ; track $index) {
                 <div class="col-sm-12" [formGroup]="croisement">
                   <div class="row">
@@ -151,7 +109,6 @@
                     <div class="col-12">
                       -{{croisement.get('creneau')?.value.plage}}
                     </div>
-
                     <div class="col-5">
                       <mat-form-field class="full-width">
                         <mat-label>Limite</mat-label>
@@ -161,7 +118,6 @@
                         }
                       </mat-form-field>
                     </div>
-
 
                     <div class="col-4">
                       <mat-form-field>
@@ -180,7 +136,7 @@
                   </div>
                 </div>
                 }
-                }
+
               </mat-expansion-panel>
             </div>
           </div>

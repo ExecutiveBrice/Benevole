@@ -1,13 +1,13 @@
 
-import { Component, OnInit } from '@angular/core';
-import { BenevoleService, ConfigService } from '../../services';
-import { ValidationService, CroisementService, StandService, MailService, EvenementService, TransmissionService } from '../../services';
+import { Component, inject, OnInit } from '@angular/core';
+import { BenevoleService, ConfigService, ExcelService } from '../../services';
+import { CroisementService, StandService, MailService, EvenementService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Evenement, Stand } from '../../models';
+import { Benevole, Croisement, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { DatePipe, NgClass } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ModalAddBenComponent } from '../../components/modalAddBen/modalAddBen.component';
 import { OrderByPipe } from "../../services/sort.pipe";
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -23,7 +23,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ImageCropperComponent } from 'ngx-image-cropper';
-
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalComponent } from '../../components/modal/modal.component';
+import { ToastrService } from 'ngx-toastr';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { map, Observable, startWith } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-gestionStands',
@@ -31,19 +37,17 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
   templateUrl: './gestionStands.component.html',
   styleUrls: ['./gestionStands.component.scss'],
   imports: [NgClass,
-    DatePipe,
-    FormsModule,
+    DatePipe, AsyncPipe,
     ImageCropperComponent,
-    RouterModule,
+    RouterModule, MatAutocompleteModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
   providers: [
     EvenementService,
-    TransmissionService,
     CroisementService,
     StandService,
-    ValidationService,
+    ExcelService,
     BenevoleService,
     ConfigService
   ],
@@ -53,34 +57,37 @@ export class GestionStandsComponent implements OnInit {
   authorize: boolean = false;
   stands: Stand[] = [];
   evenement: Evenement = new Evenement();
-  choix!: string;
   idEvenement!: number
 
   constructor(
     public route: ActivatedRoute,
     public router: Router,
+    private toastr: ToastrService,
+    public excelService: ExcelService,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
     public mailService: MailService,
-    public validationService: ValidationService,
     public sanitizer: DomSanitizer) {
 
   }
 
 
   ngOnInit() {
-    this.choix = "";
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-    this.getEvenement(this.idEvenement);
+
     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
+      this.getEvenement(this.idEvenement);
       this.getAll();
     } else {
-      this.router.navigate(['/gestion/' + this.idEvenement]);
+      this.router.navigate([this.idEvenement + '/gestion/']);
     }
+
+
+
   }
 
   getEvenement(idEvenement: number): void {
@@ -93,97 +100,147 @@ export class GestionStandsComponent implements OnInit {
       });
   }
 
+  benevoles!: Benevole[]
   getAll(): void {
-    this.standService.getAll(this.idEvenement).subscribe(stands => {
-      this.stands = stands;
 
-      stands.forEach(stand => {
-        stand.croisements = []
-        this.croisementService.getByStand(stand.id).subscribe(croisements => {
-          stand.croisements = croisements
-        },
-          error => {
-            console.log('😢 Oh no!', error);
-          });
+    this.benevoleService.getByEvenementId(this.idEvenement).subscribe({
+      next: (benevoles) => {
+        this.benevoles = benevoles;
 
-      });
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
+        this.standService.getAll(this.idEvenement).subscribe({
+          next: (stands) => {
+            this.stands = stands;
+            console.log(this.stands);
+
+
+            stands.forEach(stand => {
+              stand.croisements.forEach(croisement => {
+                croisement.benevoles.forEach(benevole => {
+                  const ben = this.benevoles.find(ben => ben.id == benevole.id)!
+                  benevole.telephone = ben.telephone
+                  benevole.email = ben.email
+
+
+                })
+
+              });
+
+
+            });
+
+          },
+          error: (error: HttpErrorResponse) => {
+            this.toastr.error(error.message, 'Erreur');
+          }
+        })
+      },
+      error: (error: HttpErrorResponse) => {
+        this.toastr.error(error.message, 'Erreur');
+      }
+    })
+
+
   }
 
 
+  addBen(croisement: Croisement, stand: Stand) {
+    this.dialog.open(ModalAddBenComponent, {
+      height: '50%',
+      width: '50%',
+      hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
+      data: {
+        title: 'Ajout au stand ' + stand.nom + ' de ' + croisement.creneau.plage,
+        benevoles: this.benevoles,
+        needtel: this.evenement.needtel
+      },
+    }).afterClosed().subscribe(benevole => {
+      if (benevole.id == 0) {
 
+        benevole.email = benevole.email.toLowerCase();
+        benevole.email = benevole.email.trimEnd();
+        benevole.email = benevole.email.trimStart();
+
+        this.benevoleService.add(benevole, this.idEvenement).subscribe({
+          next: (data) => {
+            benevole = data;
+
+            this.updateCroisement(croisement, benevole,stand);
+          },
+            error: (error: HttpErrorResponse) => {
+              console.log(error)
+   
+                this.toastr.error(error.message, 'Erreur');
+              
+            }
+         
+        })
+
+      } else {
+
+        this.updateCroisement(croisement, benevole, stand);
+      }
+    });
+  }
+
+
+updateCroisement(croisement: Croisement,benevole :Benevole, stand: Stand) {
+  
+  this.benevoleService.addToCroisement(benevole.id, croisement.id, true).subscribe({
+    next: (data) => {
+      console.log(data);
+      croisement.benevoles.push(data)
+      this.toastr.success(benevole.nom + ' ' + benevole.prenom + ' à bien été ajouté à l\'horaire ' + croisement.creneau.plage + ' du stand ' + stand.nom, 'Succès');
+    },
+    error: (error: HttpErrorResponse) => {
+      console.log(error)
+      if (error.status == 406) {
+        this.toastr.error("Limite atteinte", 'Erreur');
+      } else if (error.status == 409) {
+        this.toastr.error("Déjà inscrit", 'Erreur');
+      }else {
+        this.toastr.error(error.message, 'Erreur');
+      }
+
+    }
+  })
+}
 
   async exportAsXLSX() {
-    var promises: any[] = []
-    var standsLite: any[] = []
+    this.excelService.multiExportAsExcelFile(this.stands, 'Stands');
 
-    this.standService.getAll(this.idEvenement).subscribe(stands => {
-      stands.forEach(stand => {
-        stand.croisements = []
-        promises.push(new Promise((resolve, reject) => {
-          this.croisementService.getByStand(stand.id).subscribe(croisements => {
-
-            stand.croisements = croisements
+  }
 
 
-            let standLite = {
-              nom: stand.nom.slice(0, 30),
-              creneaux: []
-            };
+  dialog = inject(MatDialog);
+  delete(benevole: Benevole, croisement: Croisement, stand: Stand): void {
+    console.log(croisement);
 
-            /*
-                        for (let indexR = 0; indexR < 100; indexR++) {
-                          let creneau :  Map<string, string>;
-            
-                          if (stand.croisements != null && stand.croisements.length > 0) {
-                            stand.croisements.sort(function (a, b) { return a.creneau.ordre - b.creneau.ordre; })
-                            for (let index = 0; index < stand.croisements.length; index++) {
-                              const croisement = stand.croisements[index];
-                              creneau.get(croisement.creneau.plage) = "";
-                              if (croisement.benevoles[indexR]) {
-                                creneau[croisement.creneau.plage] = croisement.benevoles[indexR].nom + " " + croisement.benevoles[indexR].prenom;
-                                if( croisement.benevoles[indexR].telephone){
-                                  creneau[croisement.creneau.plage] += " "+croisement.benevoles[indexR].telephone;
-                                }
-                              }
-                            }
-                            standLite.creneaux.push(creneau);
-                          }
-                        }
-            */
-            standsLite.push(standLite)
-            resolve("Completed " + standLite.nom)
+    this.dialog.open(ModalComponent, {
+      data: {
+        title: 'Suppression',
+        question: 'Souhaitez vous retirer ' + benevole.nom + ' ' + benevole.prenom + ' de l\'horaire ' + croisement.creneau.plage + ' du stand ' + stand.nom,
+      },
+    }).afterClosed().subscribe(result => {
+      if (result !== undefined && result == 'accept') {
+
+        this.benevoleService.removeToCroisement(benevole.id, croisement.id).subscribe({
+          next: (data) => {
+            console.log(data);
+            croisement.benevoles = croisement.benevoles.filter(ben => ben.id != benevole.id);
+            this.toastr.success(benevole.nom + ' ' + benevole.prenom + ' à bien été retiré de l\'horaire ' + croisement.creneau.plage + ' du stand ' + stand.nom, 'Succès');
           },
-            error => {
-              console.log('😢 Oh no!', error);
-              reject()
-            })
-        }))
-
-      });
-
-      Promise.all(promises)
-        .then(data => {
-          //this.excelService.multiExportAsExcelFile(standsLite, 'Stands');
-        });
-
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-
+          error: (error: HttpErrorResponse) => {
+            console.log(error)
+            this.toastr.error(error.message, 'Erreur');
+          }
+        })
+      }
+    });
   }
 
 
-  toggleList: string[] = [];
-  toggle(toggleName: string) {
-    if (this.toggleList.indexOf(toggleName) > -1) {
-      this.toggleList = this.toggleList.filter(elem => elem != toggleName)
-    } else {
-      this.toggleList.push(toggleName);
-    }
-  }
+
+
+
+
 }

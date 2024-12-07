@@ -6,8 +6,7 @@ import { FormGroup } from '@angular/forms';
   standalone: true
 })
 export class OrderObjectByPipe implements PipeTransform {
-  transform(values: FormGroup[], key: string, reverse?: boolean) {
-console.log(values)
+  transform(values: any, key: string, reverse?: boolean) {
 
     if (!Array.isArray(values) || values.length <= 0) {
       return null;

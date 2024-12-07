@@ -1,60 +1,44 @@
-package com.wild.corp.model;
+package com.wild.corp.model.Ressources;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import com.wild.corp.model.Benevole;
+import com.wild.corp.model.Creneau;
+import com.wild.corp.model.Stand;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
-@Entity
+
 @Data
 @NoArgsConstructor
-@Table(name = "EVENEMENT")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Evenement {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID", nullable = false)
+
     private Integer id;
 
-    @Column(name = "CONTACT", nullable = false)
     private String contact;
 
-    @Column(name = "CONTACT_TEL")
     private String contactTel;
 
-    @Column(name = "CONTACT_EMAIL", nullable = false)
     private String contactEmail;
 
-    @Column(name = "EVENT_NAME", nullable = false)
     private String eventName;
 
-    @Column(name = "END_DATE")
     private Date endDate;
 
-    @Column(name = "SITEPERSOURL")
     private String sitepersourl;
 
-    @JsonIgnore
-    @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "VALIDATION")
     private String validation;
 
-    @Column(name = "SIGNATURE")
     private String signature;
 
-    @Column(name = "AFFICHER_MESSAGE")
     private boolean afficherMessage;
 
-    @Column(name = "MESSAGE")
     private String message;
 
     @Column(name = "NEEDTEL")
@@ -68,9 +52,6 @@ public class Evenement {
 
     @Column(name = "couleur_bandeau")
     private String couleurBandeau;
-
-    @Column(name = "couleur_text")
-    private String couleurText;
 
     @Column(name = "couleur_titre")
     private String couleurTitre;

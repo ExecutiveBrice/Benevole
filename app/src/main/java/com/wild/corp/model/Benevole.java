@@ -33,6 +33,7 @@ public class Benevole {
 
     @ManyToMany
     @JsonIgnoreProperties({"benevoles"})
+
     private List<Croisement> croisements;
 
     @JsonIgnore

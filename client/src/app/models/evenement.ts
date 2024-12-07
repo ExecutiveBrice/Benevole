@@ -8,11 +8,11 @@ export class Evenement {
   startDate!: Date;
   endDate!: Date;
   password!: string;
- 
+
   sitepersourl!: string;
 
-  message!:string;
-  afficherMessage!:boolean;
+  message!: string;
+  afficherMessage!: boolean;
 
   rappelDate!: Date;
   validation!: string;
@@ -22,5 +22,11 @@ export class Evenement {
   lock!: boolean;
   needtel!: boolean;
 
- 
+
+  couleurFond!: string;
+  couleurBandeau!: string;
+  couleurText!: string;
+  couleurTitre!: string;
+  couleurBloc!: string;
+
 }
