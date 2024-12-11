@@ -12,6 +12,7 @@ import { Params } from '../../models/params';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalConnexionComponent } from '../../components/modalConnexion/modalConnexion.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-gestionEvenements',
@@ -40,6 +41,7 @@ export class GestionEvenementsComponent implements OnInit {
 
 
   constructor(
+    private toastr: ToastrService,
     public route: ActivatedRoute,
     public router: Router,
     public evenementService: EvenementService,
@@ -67,10 +69,22 @@ this.authorizeAccess()
       if (result instanceof FormGroup) {
         this.evenementService.isAuthorize(0, result.get('passwood')?.value).subscribe({
           next: (data) => {
+
+
             console.log(data);
-            this.authorize = data;
-            localStorage.setItem('isValidAccessForEvent', JSON.stringify(0));
-            this.getAllEvenements();
+
+            if (data) {
+              this.authorize = data;
+              localStorage.setItem('isValidAccessForEvent', JSON.stringify(0));
+              this.getAllEvenements();
+            } else {
+              this.toastr.error("Mot de passe incorect", 'Erreur');
+              this.authorizeAccess()
+            }
+
+
+
+       
           },
           error: (error: HttpErrorResponse) => {
            

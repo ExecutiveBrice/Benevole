@@ -106,7 +106,7 @@ export class ConnexionComponent implements OnInit {
       error: (error: HttpErrorResponse) => {
         console.log(error)
 
-        // this.toastr.error(error.message, 'Erreur');
+        this.toastr.error(error.message, 'Erreur');
 
       }
     })
@@ -123,9 +123,6 @@ export class ConnexionComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
-
-        this.toastr.error(error.message, 'Erreur');
-
       }
 
     })
@@ -313,6 +310,8 @@ export class ConnexionComponent implements OnInit {
     this.totalpostparatifs = this.postparatifs.reduce((sum, current) => sum + current.placeTotal, 0)
 
     this.stands.forEach(stand => {
+      stand.placeOccupe = 0;
+      stand.placeTotal = 0;
       stand.croisements.forEach(croisement => {
         stand.placeOccupe += croisement.benevoles.length;
         stand.placeTotal += croisement.limite;
@@ -340,6 +339,8 @@ export class ConnexionComponent implements OnInit {
     this.activites = []
     this.standService.getAll(this.idEvenement!).subscribe({
       next: (stands) => {
+        console.log(stands);
+        
         this.stands = stands;
         stands.forEach(stand => {
           if (stand.croisements != null) {

@@ -1,7 +1,8 @@
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
-
-
+.mat-mdc-raised-button {
+  color: black!important;
+}
 mat-card {
   margin-bottom: 10px;
 }

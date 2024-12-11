@@ -120,7 +120,7 @@ public class EvenementService {
                 return true;
             }
         }
-        return null;
+        return false;
     }
 
      public Boolean isOpen(Integer evenementId) {

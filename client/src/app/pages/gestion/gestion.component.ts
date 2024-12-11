@@ -140,7 +140,7 @@ export class GestionComponent implements OnInit {
 
   loadPage() {
     console.log("loadpage");
-    
+
     this.getParams();
     this.getEvenement(this.idEvenement);
     this.getBenevoles();
@@ -159,13 +159,18 @@ export class GestionComponent implements OnInit {
         this.evenementService.isAuthorize(this.idEvenement, result.get('passwood')?.value).subscribe({
           next: (data) => {
             console.log(data);
-            this.authorize = data;
-            localStorage.setItem('isValidAccessForEvent', JSON.stringify(this.idEvenement));
-            this.loadPage()
+            if (data) {
+              this.authorize = data;
+              localStorage.setItem('isValidAccessForEvent', JSON.stringify(this.idEvenement));
+              this.loadPage()
+            } else {
+              this.router.navigate(['/' + this.idEvenement]);
+              this.toastr.error("Mot de passe incorect", 'Erreur');
+            }
           },
           error: (error: HttpErrorResponse) => {
             this.router.navigate(['/' + this.idEvenement]);
-            this.toastr.error("Mot de passe incorect", 'Erreur');
+
           }
         })
       } else {
@@ -205,7 +210,7 @@ export class GestionComponent implements OnInit {
 
 
   getQRcode(idEvenement: number): void {
-    this.using_address = this.params.url+"#/" + idEvenement
+    this.using_address = this.params.url + "#/" + idEvenement
     // With promises
     QRCode.toDataURL(this.using_address, { errorCorrectionLevel: 'H', width: 500 })
       .then((qrcode: string) => {
@@ -326,7 +331,7 @@ export class GestionComponent implements OnInit {
 
 
 
-  envoiMail(email: Email, evenement:Evenement) {
+  envoiMail(email: Email, evenement: Evenement) {
     this.mail = false;
     this.errorMailingList = []
     this.sendingProgress = true;

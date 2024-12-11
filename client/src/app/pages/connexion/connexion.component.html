@@ -227,7 +227,7 @@
         <mat-panel-title>Je choisis mon stand ({{ occupeactivites }}/{{ totalactivites }})</mat-panel-title>
       </mat-expansion-panel-header>
 
-      @for (stand of stands | orderBy:'ordre':false; track $index) {
+      @for (stand of activites | orderBy:'ordre':false; track $index) {
 
       <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc"
         [style.backgroundColor]="evenement.couleurBloc">
