@@ -75,11 +75,10 @@
             <artifactId>google-api-services-gmail</artifactId>
             <version>v1-rev20231218-2.0.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.mailjet/mailjet-client -->
         <dependency>
-            <groupId>com.mailjet</groupId>
-            <artifactId>mailjet-client</artifactId>
-            <version>5.2.5</version>
+            <groupId>com.mailersend</groupId>
+            <artifactId>java-sdk</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
     </dependencies>

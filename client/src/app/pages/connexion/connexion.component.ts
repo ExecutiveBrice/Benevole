@@ -209,7 +209,7 @@ export class ConnexionComponent implements OnInit {
     this.benevole.email = this.benevole.email.toLowerCase();
     this.benevole.email = this.benevole.email.trimEnd();
     this.benevole.email = this.benevole.email.trimStart();
-    this.benevole = Object.assign(this.benevole, this.formulaire.value)
+    this.benevole = Object.assign(this.benevole, this.formulaireBenevole.value)
     this.benevoleService.add(this.benevole, this.idEvenement).subscribe({
       next: (benevole) => {
         this.benevole = benevole;

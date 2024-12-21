@@ -1,14 +1,13 @@
 
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BenevoleService, ExcelService } from '../../services';
 import { ConfigService, EvenementService, CroisementService, StandService, MailService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Croisement, Email, Evenement, Stand } from '../../models';
+import { Benevole, Croisement, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NgClass } from '@angular/common';
 
-import { FormArray, FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {  FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +20,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
-import { ImageCropperComponent } from 'ngx-image-cropper';
 
 import { MatSelectModule } from '@angular/material/select';
 @Component({
@@ -29,20 +27,20 @@ import { MatSelectModule } from '@angular/material/select';
   standalone: true,
   templateUrl: './gestionBenevoles.component.html',
   styleUrls: ['./gestionBenevoles.component.scss'],
-  imports: [NgClass,
+  imports: [
     FormsModule,
-    ImageCropperComponent,
     RouterModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
+    MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
     providers: [
       EvenementService,
       BenevoleService,
       CroisementService,
       StandService,
       MailService,
-      
+      ExcelService,
       ConfigService
     ],
 })

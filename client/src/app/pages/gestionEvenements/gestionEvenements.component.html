@@ -2,7 +2,7 @@
 @if (authorize) {
 <div class="row">
   <div class="col-sm-12">
-    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/creation/']">Créé un nouvel
+    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/evenements/creation/']">Créé un nouvel
       évenement</button>
   </div>
   @for (evenement of evenements | orderBy:'id':false; track $index) {

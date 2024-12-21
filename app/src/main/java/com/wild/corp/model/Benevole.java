@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -31,9 +34,11 @@ public class Benevole {
     @Column(name = "EMAIL", nullable = false)
     private String email;
 
+    @Column(name = "DATE_MAJ")
+    private LocalDateTime dateMaj;
+
     @ManyToMany
     @JsonIgnoreProperties({"benevoles"})
-
     private List<Croisement> croisements;
 
     @JsonIgnore

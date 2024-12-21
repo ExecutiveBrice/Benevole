@@ -42,7 +42,7 @@ public class Evenement {
     private String sitepersourl;
 
     @JsonIgnore
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "PASSWORD")
     private String password;
 
     @Column(name = "VALIDATION")
@@ -77,6 +77,10 @@ public class Evenement {
 
     @Column(name = "couleur_bloc")
     private String couleurBloc;
+
+    @Column(name = "title_font")
+    private String titleFont;
+
 
     @JsonIgnore
     @OneToMany(mappedBy="evenement", cascade = CascadeType.ALL, orphanRemoval = true)

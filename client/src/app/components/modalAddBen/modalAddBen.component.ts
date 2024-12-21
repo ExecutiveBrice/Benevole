@@ -75,8 +75,11 @@ console.log(this.data);
   }
 
   accept() {
+console.log(this.benevoleForm.valid);
 
     if (this.benevoleForm.valid) {
+      console.log("coucou");
+      
       this.dialogRef.close(this.benevoleForm.value);
     }
 

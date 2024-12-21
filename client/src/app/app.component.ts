@@ -29,6 +29,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 })
 export class AppComponent  implements OnInit{
 
+
   evenement?: Evenement;
   isValidAccessForEvent?: number
   logo?: string;
@@ -46,6 +47,8 @@ export class AppComponent  implements OnInit{
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
     this.transmissionService.dataStream.subscribe(data => {
+    console.log("transmissionService");
+    
       this.evenement = data
       this.elementRef.nativeElement.ownerDocument
       .body.style.backgroundColor = data.couleurFond;

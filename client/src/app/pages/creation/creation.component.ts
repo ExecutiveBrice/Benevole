@@ -4,26 +4,25 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement, Email } from '../../models';
 import QRCode from 'qrcode'
 import { DatePipe, NgClass } from '@angular/common';
-import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
+import { FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {provideNativeDateAdapter} from '@angular/material/core';
-import {MatIconModule} from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Params } from '../../models/params';
-
 
 @Component({
   selector: 'app-creation',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
-  imports: [NgClass,
-    DatePipe,ReactiveFormsModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule  ],
-   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfigService, provideNativeDateAdapter()],
+  imports: [NgClass, DatePipe, ReactiveFormsModule,
+    FormsModule, MatFormFieldModule, MatInputModule,
+    MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './creation.component.html',
   styleUrls: ['./creation.component.scss']
 })
@@ -41,19 +40,19 @@ export class CreationComponent implements OnInit {
   ok!: boolean;
   params!: Params
   error!: boolean
-hide: any;
-formulaire = this.formBuilder.group({
+  hide: any;
+  formulaire = this.formBuilder.group({
 
-  eventName: [this.evenement.eventName, [Validators.required]],
-  contactEmail: [this.evenement.contactEmail, [Validators.required, Validators.email]],
-  password : [this.evenement.password, Validators.required],
-  contactTel: [this.evenement.contactTel, []],
-  contact: [this.evenement.contact, []],
-  startDate: [this.evenement.startDate, []],
-  endDate : [this.evenement.endDate, []]
+    eventName: [this.evenement.eventName, [Validators.required]],
+    contactEmail: [this.evenement.contactEmail, [Validators.required, Validators.email]],
+    password: [this.evenement.password, Validators.required],
+    contactTel: [this.evenement.contactTel, []],
+    contact: [this.evenement.contact, []],
+    startDate: [this.evenement.startDate, []],
+    endDate: [this.evenement.endDate, []]
 
-  
-})
+
+  })
 
   constructor(
     public mailService: MailService,
@@ -61,14 +60,14 @@ formulaire = this.formBuilder.group({
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
     public sanitizer: DomSanitizer,
-    public formBuilder:FormBuilder) { 
-      console.log(this.formulaire)
-    }
+    public formBuilder: FormBuilder) {
+    console.log(this.formulaire)
+  }
 
 
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams')!);
-console.log(this.params)
+    console.log(this.params)
 
     this.new = true;
     this.ok = true;
@@ -91,7 +90,7 @@ console.log(this.params)
         this.ok = true
 
         var using_address = this.params.url + "/" + data.id
-        var managing_address = this.params.url  + "/gestion/" + data.id
+        var managing_address = this.params.url + "/gestion/" + data.id
 
         this.header = this.configService.completeTemplate(this.params.header, this.evenement.eventName, using_address, managing_address)
         this.using = this.configService.completeTemplate(this.params.using, this.evenement.eventName, using_address, managing_address)
@@ -105,19 +104,19 @@ console.log(this.params)
 
 
             let email = new Email()
-            email.to = this.evenement.contactEmail
+            //email.to = this.evenement.contactEmail
             email.subject = this.configService.completeTemplate(this.params.title, this.evenement.eventName, using_address, managing_address)
-    
+
             email.text = "Bonjour <br />";
             email.text = email.text + this.header;
             email.text = email.text + this.using;
             email.text = email.text + "<br><br><a href=\"" + using_address + "\"><img src=\"" + url + "\" /></a>";
-            email.text = email.text + "<br><br>"+this.managing;
+            email.text = email.text + "<br><br>" + this.managing;
             email.text = email.text + this.params['signature']
 
-    
-    
-    
+
+
+
             this.mailService.sendMail(email)
               .subscribe(res => {
                 console.log("email sent to " + this.evenement.contactEmail);
@@ -140,7 +139,7 @@ console.log(this.params)
 
 
     }
-        
+
   }
 
 

@@ -154,6 +154,8 @@ export class GestionStandsComponent implements OnInit {
         needtel: this.evenement.needtel
       },
     }).afterClosed().subscribe(benevole => {
+      console.log(benevole);
+      
       if (benevole.id == 0) {
 
         benevole.email = benevole.email.toLowerCase();

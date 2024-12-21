@@ -1,26 +1,6 @@
-
 @if (authorize && evenement) {
 
 <div #backGround class="row marge">
-  <div class="col-sm-12">
-
-
-    <mat-card appearance="raised">
-      <mat-grid-list cols="3" rowHeight="50px">
-        <mat-grid-tile [colspan]="3">
-
-          <strong>
-            {{benevoles.length}} bénévoles inscrits /
-            {{benevolesWithoutChoice.length}} bénévoles n'ont rien choisi /
-            {{benevolesToChange.length}} bénévoles à positionner
-          </strong>
-
-        </mat-grid-tile>
-
-      </mat-grid-list>
-    </mat-card>
-
-  </div>
 
 
   <div class="col-md-4">
@@ -61,13 +41,6 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card appearance="raised">
-      <a href="{{using_address}}">
-        {{using_address}}
-      </a>
-      <img mat-card-image src="{{qrcode}}" />
-
-    </mat-card>
 
   </div>
 
@@ -101,20 +74,33 @@
         @if (mail) {
         <div class="form-group col-sm-12">
 
-          <select [ngModel]="selectedDeviceObj" (ngModelChange)="getMailingList($event)" class="form-control">
-            <option [ngValue]="mailingList" *ngFor="let mailingList of mailingLists">{{mailingList.name}}
-            </option>
-          </select>
 
-          <input type="text" [(ngModel)]="emailInfo.subject" class="form-control">
-          <textarea rows="10" [(ngModel)]="emailInfo.text" class="form-control"></textarea>
+          <mat-form-field class="full-width">
+            <mat-label>Stand</mat-label>
+            <mat-select  [(ngModel)]="emailInfo.to">
+              @for (stand of emailStands; track stand) {
+              <mat-option [value]="stand.benevoles">{{ stand.nom }} ({{ stand.benevoles.length }})</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
 
-          <div class="checkbox">
-            <label><input type="checkbox" [(ngModel)]="theCheckbox">Rappel des
-              choix des inscrits</label>
+          <mat-form-field class="example-full-width">
+            <mat-label>Objet email</mat-label>
+            <input type="text"  [(ngModel)]="emailInfo.subject"  matInput>
+     
+          </mat-form-field>
+        
+         
+
+          <div class="NgxEditor__Wrapper">
+            <ngx-editor-menu [toolbar]="toolbar" [editor]="editor"> </ngx-editor-menu>
+            <ngx-editor [editor]="editor" [ngModel]="emailInfo.text" [disabled]="false"  [placeholder]="'Corps de l\'email...'"></ngx-editor>
           </div>
 
-          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail(emailInfo, evenement)">
+          <mat-checkbox class="checkboxn" [(ngModel)]="emailInfo.rappel">Rappel des
+            choix des bénévoles</mat-checkbox>
+  
+          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail(emailInfo)">
             Envoyer ce message à la liste choisi</button>
         </div>
         }
@@ -122,28 +108,7 @@
     </mat-card>
 
 
-    <mat-card appearance="raised">
-      <mat-card-content>
 
-
-
-
-        <button class="full-width" type="button" mat-stroked-button (click)="fileInput.click()">Modifier l'affiche de
-          l'évènement</button>
-        <input hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
-        @if (croppedImage.length > 5) {
-        <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadImage()">Enregistrer cette
-          image</button>
-        }
-
-        <image-cropper [imageChangedEvent]="imageChangedEvent" [output]="'base64'" [maintainAspectRatio]="false"
-          [resizeToWidth]="1280" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
-          (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-        </image-cropper>
-
-
-      </mat-card-content>
-    </mat-card>
 
   </div>
 
@@ -151,14 +116,15 @@
   <div class="col-md-4">
 
 
-    <mat-card appearance="raised">
 
-      @if (affiche) {
-      <img mat-card-image [src]="affiche" alt="Affiche">
-      }
+
+    <mat-card appearance="raised">
+      <a href="{{using_address}}">
+        {{using_address}}
+      </a>
+      <img mat-card-image src="{{qrcode}}" />
 
     </mat-card>
-
 
 
 

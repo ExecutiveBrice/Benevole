@@ -1,7 +1,7 @@
 <div [style.backgroundColor]="evenement?.couleurBandeau" class="d-flex">
 
   <div class="p-2 flex-fill align-self-start text-center ">
-    <div class="g1" [style.color]="evenement?.couleurFond">{{evenement?.eventName}}</div>
+    <div class="g1" [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">{{evenement?.eventName}}</div>
 
 
 

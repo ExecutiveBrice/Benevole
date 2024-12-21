@@ -29,4 +29,8 @@ export class Evenement {
   couleurTitre!: string;
   couleurBloc!: string;
 
+
+  titleFont!: string;
+
+  affiche!: string;
 }

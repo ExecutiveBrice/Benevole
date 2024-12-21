@@ -1,5 +1,6 @@
 export class Email {
-  to!:string;
+  to:number[]=[];
   subject!:string;
   text!:string;
+  rappel!:boolean;
 }

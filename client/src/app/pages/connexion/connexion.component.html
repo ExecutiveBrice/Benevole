@@ -1,5 +1,6 @@
 <div class="row marge">
-  <div class="col-md-6 col-lg-4">
+  
+  <div class="col-6 col-lg-4">
     @if (!userExist) {
     <mat-card appearance="raised">
 
@@ -370,11 +371,7 @@
 
 
 
-    <mat-card appearance="raised">
-      @if (affiche) {
-      <img mat-card-image [src]="affiche" alt="Affiche">
-      }
-    </mat-card>
+ 
       @if (getScreenWidth < 650) {
         <mat-card appearance="raised">
           <mat-card-header>

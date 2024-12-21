@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +59,9 @@ public class BenevoleService {
     public Benevole addToCroisement(Integer benevoleId, Integer croisementId, Boolean force) {
         Benevole benevole = findById(benevoleId);
         Croisement croisement = croisementService.findById(croisementId);
-
+        ZoneId z = ZoneId.of( "Europe/Paris" );
+        LocalDateTime now = LocalDateTime.now( z );
+        benevole.setDateMaj(now);
         if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
             throw new RuntimeException("existe déjà");
         } else {

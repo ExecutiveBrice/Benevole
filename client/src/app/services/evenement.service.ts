@@ -44,7 +44,6 @@ export class EvenementService {
     let params = new HttpParams().set('id', '' + id + '');
     return this.http.put<boolean>(this.apiUrl + '/opening', null, {params, responseType: 'json'});
   }
-  
 
   getLogo(id:number) {
     let params = new HttpParams().set('id', '' + id + '');

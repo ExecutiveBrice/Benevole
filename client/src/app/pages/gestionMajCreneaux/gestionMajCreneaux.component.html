@@ -2,35 +2,14 @@
 
 
 <div class="row marge">
+
+
+
+
   <div class="col-sm-12">
-    <mat-card appearance="raised">
-      <mat-grid-list cols="3" rowHeight="50px">
-        <mat-grid-tile [colspan]="2">
-
-          <strong>
-            {{creneaux.length}} créneaux
-          </strong>
-
-
-        </mat-grid-tile>
-        <mat-grid-tile>
-          <button class="full-width full-height" mat-flat-button type="button"
-            [routerLink]="['/',evenement.id,'gestion']">Retour</button>
-
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card>
-
-  </div>
-
-
-
-
-
-  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
     <mat-card class="padding-top" appearance="raised" [formGroup]="formulaireNewCreneau">
       <div class="row marge">
-        <div class="col-sm-8">
+        <div class="col-12 col-md-5">
           <mat-form-field class="full-width">
             <mat-label>Ordre</mat-label>
             <input type="text" matInput formControlName="ordre">
@@ -41,11 +20,8 @@
           </mat-form-field>
 
         </div>
-        <div class="col-4 marge-bas">
-          <button class="full-width full-height" mat-flat-button type="button"
-            (click)="ajout(formulaireNewCreneau)">Ajouter</button>
-        </div>
-        <div class="col-sm-12">
+
+        <div class="col-12 col-md-5">
           <mat-form-field class="full-width">
             <mat-label>Plage horaire</mat-label>
             <input type="text" matInput formControlName="plage">
@@ -55,17 +31,24 @@
             }
           </mat-form-field>
         </div>
+        <div class="col-12 col-md-2">
+          <button class="blue-icon" mat-fab type="button" (click)="ajout(formulaireNewCreneau)"><mat-icon>save</mat-icon>
+          </button>
+        </div>
+
+
+
       </div>
 
     </mat-card>
   </div>
   @for (creneau of creneaux | orderBy:'ordre':false; track $index) {
 
-  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
+  <div class="col-12 col-md-6 col-lg-4 col-xxl-3">
     <mat-card  class="padding-top" appearance="raised" [formGroup]="creneau.formulaire">
       <div class="row marge">
 
-        <div class="col-8">
+        <div class="col-6">
           <mat-form-field class="full-width">
             <mat-label>Ordre</mat-label>
             <input type="text" matInput formControlName="ordre" (blur)="update(creneau)">
@@ -75,10 +58,19 @@
             }
           </mat-form-field>
         </div>
-        <div class="col-4 marge-bas">
 
-          <button class="btn btn-danger full-width full-height " type="button" (click)="delete(creneau)">X</button>
+        <div class="col-3">
+          <button class="green-icon" mat-fab type="button" [disabled]="!creneau.formulaire.touched"
+            (click)="update(creneau.formulaire)"><mat-icon>save</mat-icon>
+          </button>
         </div>
+        <div class="col-3">
+
+          <button class="red-icon" mat-fab type="button"
+            (click)="delete(creneau)"><mat-icon>delete_forever</mat-icon></button>
+        </div>
+
+
         <div class="col-12">
           <mat-form-field class="full-width">
             <mat-label>Plage horaire</mat-label>

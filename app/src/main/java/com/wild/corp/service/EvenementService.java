@@ -59,6 +59,14 @@ public class EvenementService {
         firstCreneau.setPlage("Referent");
         creneauService.addCreneau(firstCreneau, evenement.getId());
 
+
+        evenement.setCouleurBandeau("#2d2d2d");
+        evenement.setCouleurBloc("#b2b2b2");
+        evenement.setCouleurFond("#c0c0c0");
+        evenement.setCouleurTitre("#808080");
+        evenement.setCouleurText("#ffffff");
+        evenement.setTitleFont("PermanentMarker");
+
     }
 
     String replaceText(String text, Evenement evenement) {
@@ -87,11 +95,11 @@ public class EvenementService {
 
         event.setCouleurFond(evenement.getCouleurFond());
         event.setCouleurBandeau(evenement.getCouleurBandeau());
-        event.setCouleurBandeau(evenement.getCouleurBandeau());
-
-
+        event.setCouleurText(evenement.getCouleurText());
         event.setCouleurTitre(evenement.getCouleurTitre());
         event.setCouleurBloc(evenement.getCouleurBloc());
+
+        event.setTitleFont(evenement.getTitleFont());
 
         return evenementRepository.save(event);
     }
@@ -140,23 +148,6 @@ public class EvenementService {
         return null;
     }
 
-    @Scheduled(cron = "0 0 1 * * ?")
-    public void reset() {
-        log.debug("reset");
-        Calendar caldendat = Calendar.getInstance();
-        caldendat.setTime(new Date());
-        caldendat.add(Calendar.HOUR, 24);
-        caldendat.set(Calendar.HOUR, 0);
-        caldendat.set(Calendar.MINUTE, 0);
-        caldendat.set(Calendar.MILLISECOND, 0);
 
-        for (Evenement event : findAll()) {
-            if (event.getEndDate().before(caldendat.getTime())) {
-                for (Benevole ben : benevoleService.findByEvenementId(event.getId())) {
-                    benevoleService.deleteById(ben.getId());
-                }
-            }
-        }
-    }
 
 }

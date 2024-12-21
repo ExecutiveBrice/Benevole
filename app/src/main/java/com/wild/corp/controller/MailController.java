@@ -1,8 +1,7 @@
 package com.wild.corp.controller;
 
 
-
-import com.wild.corp.model.Email;
+import com.wild.corp.model.Ressources.EmailRessource;
 import com.wild.corp.model.Stand;
 import com.wild.corp.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +18,9 @@ public class MailController {
     private EmailService emailService;
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Stand> send(@RequestBody Email mail) {
+    public ResponseEntity<Stand> send(@RequestBody EmailRessource email) {
 
-        emailService.sendSimpleMessage(mail);
+        emailService.sendGestionMessage(email);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

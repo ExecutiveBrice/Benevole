@@ -32,18 +32,19 @@ import { ToastrService } from 'ngx-toastr';
   standalone: true,
   templateUrl: './gestionMajStands.component.html',
   styleUrls: ['./gestionMajStands.component.scss'],
-  imports: [NgClass,
-    FormsModule,
-    ImageCropperComponent,
-    RouterModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
+  imports: [
+    NgClass, FormsModule, ImageCropperComponent,
+    RouterModule, MatStepperModule, MatSidenavModule,
+    MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatSelectModule,
- MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, OrderObjectByPipe, MatExpansionModule],
+    MatFormFieldModule, MatInputModule, MatGridListModule,
+    MatDatepickerModule, MatIconModule, MatButtonModule,
+    OrderByPipe, OrderObjectByPipe, MatExpansionModule],
   providers: [
     EvenementService,
     CroisementService,
     StandService,
-    
+
     CreneauService,
     ConfigService
   ]
@@ -93,7 +94,7 @@ export class GestionMajStandsComponent implements OnInit {
   ngOnInit() {
     this.choix = "";
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
+    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
       console.log("authorize");
       this.getEvenement(this.idEvenement);
@@ -101,7 +102,7 @@ export class GestionMajStandsComponent implements OnInit {
       this.getAllCreneaux();
     } else {
       console.log("not authorize");
-      this.router.navigate([ this.idEvenement+'/gestion/']);
+      this.router.navigate([this.idEvenement + '/gestion/']);
     }
   }
 
@@ -235,7 +236,7 @@ export class GestionMajStandsComponent implements OnInit {
           limite: [croisement.limite, [Validators.required]],
         })
         croisements.controls.push(croisementFormulaire);
-        this.toastr.success(croisement.creneau.plage  + " à bien été ajouté", 'Succès');
+        this.toastr.success(croisement.creneau.plage + " à bien été ajouté", 'Succès');
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)

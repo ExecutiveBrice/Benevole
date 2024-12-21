@@ -2,10 +2,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { TransmissionService, CroisementService, EvenementService, StandService, MailService, BenevoleService, FileService, ConfigService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Benevole, Email, Evenement } from '../../models';
+import { Benevole, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
+import { Editor, NgxEditorModule, Toolbar, toHTML } from 'ngx-editor';
 import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
 import { NgClass } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -26,17 +27,21 @@ import { Params } from '../../models/params';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { LocalStand } from '../../models/local/stand';
 
 
 @Component({
   selector: 'app-gestion',
   standalone: true,
-  imports: [NgClass,
+  imports: [
+    NgClass,
+    NgxEditorModule,
     FormsModule,
-    ImageCropperComponent,
     RouterModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule,
+    MatStepperModule, MatCheckboxModule, ReactiveFormsModule, MatCardModule,
+    MatSelectModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
   providers: [
     EvenementService,
@@ -55,46 +60,43 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 export class GestionComponent implements OnInit {
 
+
+  editor: Editor = new Editor();
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['blockquote'],
+    ['ordered_list', 'bullet_list'],
+    ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+    ['horizontal_rule', 'format_clear'],
+  ];
+
+
+
   authorize: boolean = false
   rappel!: boolean
-  password!: string
-  affiche!: string;
+
+  emailStands: LocalStand[] = []
   benevoles: Benevole[] = [];
-  benevolesWithChoice: Benevole[] = []
-  benevolesWithoutChoice: Benevole[] = [];
-  benevolesToChange: Benevole[] = [];
-  dateRappel!: string;
+
   mail!: boolean;
   sendingProgress!: boolean;
-  counter!: number;
-  totalCount!: number;
-  errorMailingList!: String[];
-  theCheckbox: any
+
   selectedDeviceObj: any
   evenement?: Evenement;
   params!: Params
   idEvenement!: number
   isValidAccessForEvent?: number
   emailInfo: Email = {
-    to: "",
+    to: [],
     subject: "",
-    text: "Bla bla"
+    text: "Bla bla",
+    rappel: false
   }
   qrcode!: string
   using_address!: string;
-  mailingList: Benevole[] = [];
-  mailingLists = [{
-    id: '1',
-    name: 'Tout les inscrits',
-  },
-  {
-    id: '2',
-    name: 'Les inscrits AVEC au moins un choix',
-  },
-  {
-    id: '3',
-    name: 'Les inscrits SANS choix',
-  }]
+
 
 
   dialog = inject(MatDialog);
@@ -118,7 +120,7 @@ export class GestionComponent implements OnInit {
   ngOnInit() {
     this.params = JSON.parse(localStorage.getItem('allParams')!);
 
-    this.rappel = false;
+
     this.mail = false;
 
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
@@ -144,7 +146,8 @@ export class GestionComponent implements OnInit {
     this.getParams();
     this.getEvenement(this.idEvenement);
     this.getBenevoles();
-    this.getAffiche();
+    this.getAllStands();
+
   }
 
   authorizeAccess(): void {
@@ -179,6 +182,30 @@ export class GestionComponent implements OnInit {
     });
   }
 
+
+  getAllStands(): void {
+
+    this.standService.getAll(this.idEvenement).subscribe({
+      next: (stands: Stand[]) => {
+        if (stands != null) {
+          stands.forEach(stand => {
+            const localStand: LocalStand = new LocalStand;
+            localStand.nom = stand.nom
+            localStand.benevoles = stand.croisements.flatMap(crois => crois.benevoles).flatMap(ben => ben.id)
+            this.emailStands.push(localStand)
+          })
+
+          console.log(this.emailStands);
+
+
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+        this.toastr.error(error.error, 'Erreur');
+      }
+    })
+  }
 
 
   getParams() {
@@ -222,46 +249,7 @@ export class GestionComponent implements OnInit {
 
   }
 
-  imageChangedEvent: any = '';
-  croppedImage: any = '';
 
-  fileChangeEvent(event: any): void {
-    this.imageChangedEvent = event;
-  }
-  imageCropped(event: ImageCroppedEvent) {
-    console.log(event)
-    this.croppedImage = event.base64;
-  }
-  imageLoaded() {
-    /* show cropper */
-  }
-  cropperReady() {
-    /* cropper ready */
-  }
-  loadImageFailed() {
-    /* show message */
-  }
-
-  uploadImage() {
-    const contentFile = this.croppedImage.replace("data:image/jpeg;base64,", "")
-    this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe(data => {
-      console.log(data)
-      this.croppedImage = '';
-      this.getAffiche()
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-  }
-
-  getAffiche() {
-    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
-      this.affiche = "data:image/jpeg;base64," + data
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-  }
 
 
   update(evenement: Evenement): void {
@@ -273,11 +261,7 @@ export class GestionComponent implements OnInit {
   }
 
 
-  updateDateRappel(evenement: Evenement) {
 
-    evenement.rappelDate = new Date()
-    this.update(evenement)
-  }
 
 
   updateBlocage(evenement: Evenement) {
@@ -291,38 +275,43 @@ export class GestionComponent implements OnInit {
       });
   }
 
-  getMailingList(option: { id: number; }): void {
-    if (option.id == 1) {
-      this.mailingList = this.benevoles
-    } else if (option.id == 2) {
-      this.mailingList = this.benevolesWithChoice
-    } else if (option.id == 3) {
-      this.mailingList = this.benevolesWithoutChoice
-    }
-  }
+
 
 
 
   getBenevoles(): void {
-    this.benevoleService.getByEvenementId(this.idEvenement).subscribe(benevoles => {
+    const benevolesWithChoice: LocalStand = new LocalStand;
+    benevolesWithChoice.nom = "Les bénévoles AVEC au moins un choix"
+    const benevolesWithoutChoice: LocalStand = new LocalStand;
+    benevolesWithoutChoice.nom = "Les bénévoles SANS choix"
+    const benevolesToChange: LocalStand = new LocalStand;
+    benevolesToChange.nom = "Les bénévoles à positionner"
+    const allBenevoles: LocalStand = new LocalStand;
+    allBenevoles.nom = "Tous les bénévoles"
 
+    this.benevoleService.getByEvenementId(this.idEvenement).subscribe(benevoles => {
       this.benevoles = benevoles;
       benevoles.forEach(benevole => {
+        allBenevoles.benevoles.push(benevole.id);
         if (benevole.croisements.length > 0) {
-          this.benevolesWithChoice.push(benevole);
+          benevolesWithChoice.benevoles.push(benevole.id);
         }
         if (benevole.croisements.length == 0) {
-          this.benevolesWithoutChoice.push(benevole);
+          benevolesWithoutChoice.benevoles.push(benevole.id);
         }
         if (benevole.croisements) {
           benevole.croisements.forEach(croisement => {
             if (croisement.stand.type == 1 || croisement.stand.type == 3) {
-              this.benevolesToChange.push(benevole);
+              benevolesToChange.benevoles.push(benevole.id);
             }
           });
         }
       });
 
+      this.emailStands.push(benevolesWithChoice)
+      this.emailStands.push(benevolesWithoutChoice)
+      this.emailStands.push(benevolesToChange)
+      this.emailStands.push(allBenevoles)
     },
       error => {
         console.log('😢 Oh no!', error);
@@ -331,46 +320,19 @@ export class GestionComponent implements OnInit {
 
 
 
-  envoiMail(email: Email, evenement: Evenement) {
-    this.mail = false;
-    this.errorMailingList = []
-    this.sendingProgress = true;
-    this.counter = 0;
-    this.totalCount = this.mailingList.length;
-    email.text = email.text.replace(/\n/g, "<br>");
-
-    this.mailingList.forEach(benevole => {
-      let emailCopy = JSON.parse(JSON.stringify(email))
-      emailCopy.to = benevole.email
-      if (this.rappel) {
-        emailCopy.text = emailCopy.text + "<br><br>N'oubliez pas que vous vous êtes inscrit en tant que bénévole pour:<br>";
-        benevole.croisements.sort((a, b) => (a.creneau.ordre > b.creneau.ordre) ? 1 : ((b.creneau.ordre > a.creneau.ordre) ? -1 : 0));
-        benevole.croisements.forEach(croisement => {
-          emailCopy.text = emailCopy.text + (croisement.stand.nom == "tous" ? "N'importe quel stand" : croisement.stand.nom) + " - " + croisement.creneau.plage + "<br>"
-        })
-
-      }
-
-      emailCopy.text = emailCopy.text + "<br />"
-      emailCopy.text = emailCopy.text + "Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />";
-      emailCopy.text = emailCopy.text + evenement.contact + " - " + evenement.contactEmail + "<br />"
-
-      this.mailService.sendMail(emailCopy)
+  envoiMail(email: Email) {
+    if (email.to.length > 0) {
+      this.mailService.sendMail(email)
         .subscribe(res => {
-          this.counter++
+          this.toastr.show("Les "+email.to.length+" emails sont bien partis", 'Bravo');
         }, err => {
-          this.errorMailingList.push(benevole.email)
+          this.toastr.error("Il y a eu un problème lors de l'envoi des mails", 'Erreur');
           console.log(err);
         });
-    })
-    this.rappel = false;
-    this.mailingList = [];
-    this.updateDateRappel(evenement)
-  }
+    }else{
+      this.toastr.error("Il faut choisir une mailing-liste avec au moins un bénévole", 'Erreur');
+    }
 
-
-  toggleVisibility(e: { target: { checked: boolean; }; }) {
-    this.rappel = e.target.checked;
   }
 
 

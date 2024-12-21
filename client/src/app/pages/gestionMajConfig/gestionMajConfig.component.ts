@@ -4,9 +4,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
-import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
-import { DatePipe, NgClass } from '@angular/common';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
 import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,21 +18,17 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
-import { OrderByPipe } from '../../services/sort.pipe';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-
-import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
-import 'moment/locale/fr';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ColorPickerModule } from 'ngx-color-picker';
-
-
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-gestionMajConfig',
   standalone: true,
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
+    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
     // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
     // to your app config. We provide it at the component level here, due to limitations
     // of our example generation script.
@@ -42,14 +37,12 @@ import { ColorPickerModule } from 'ngx-color-picker';
     FileService,
     ConfigService
   ],
-  imports: [NgClass,
-    DatePipe,
-    FormsModule,
-    ImageCropperComponent,
-    RouterModule,ColorPickerModule ,
+  imports: [FormsModule,
+    ImageCropperComponent, RouterModule, ColorPickerModule, MatSelectModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
+    MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule],
 
   templateUrl: './gestionMajConfig.component.html',
   styleUrls: ['./gestionMajConfig.component.scss']
@@ -61,12 +54,38 @@ export class GestionMajConfigComponent implements OnInit {
   evenement: Evenement = new Evenement();
   idEvenement!: number
   logo!: string;
+  affiche!: string;
 
+  fontList = [
+    'Agu',
+    'Arbutus',
+    'Borel',
+    'BrunoAce',
+    'Diplomata',
+    'DrSugiyama',
+    'Fascinate',
+    'FingerPaint',
+    'JotiOne',
+    'Kavoon',
+    'Lijeva',
+    'LondrinaShadow',
+    'LoveYaLikeASister',
+    'Miltonian',
+    'PermanentMarker',
+    'Plaster',
+    'ProtestGuerrilla',
+    'RubikGlitch',
+    'RubikMoonrocks',
+    'RubikWetPaint',
+    'SigmarOne',
+    'Smokum',
+    'SonsieOne',
+    'Spirax',
+    'TradeWinds'
+  ]
 
   readonly minDate = new Date();
   readonly maxDate = new Date(this.minDate.getFullYear() + 1, 11, 31);
-
-
 
   formulaireEvent = this.formBuilder.group({
 
@@ -88,11 +107,11 @@ export class GestionMajConfigComponent implements OnInit {
     couleurFond: new FormControl(this.evenement.couleurFond, [Validators.required]),
     couleurBandeau: new FormControl(this.evenement.couleurBandeau, [Validators.required]),
     couleurText: new FormControl(this.evenement.couleurText, [Validators.required]),
-    
+
     couleurTitre: new FormControl(this.evenement.couleurTitre, [Validators.required]),
     couleurBloc: new FormControl(this.evenement.couleurBloc, [Validators.required]),
+    titleFont: new FormControl(this.evenement.titleFont, [Validators.required]),
   })
-
 
   constructor(
     public route: ActivatedRoute,
@@ -103,27 +122,24 @@ export class GestionMajConfigComponent implements OnInit {
     public sanitizer: DomSanitizer,
     public configService: ConfigService,
     public formBuilder: FormBuilder) { }
-  
+
   ngOnInit() {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-
 
     this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
     if (this.authorize) {
       this.getEvenement(this.idEvenement);
       this.getLogo()
-    }else{
-       this.router.navigate([ this.idEvenement+'/gestion/']);
+      this.getAffiche();
+    } else {
+      this.router.navigate([this.idEvenement + '/gestion/']);
     }
   }
-
-
 
   getEvenement(idEvenement: number): void {
     this.evenementService.getById(idEvenement).subscribe(evenement => {
       this.evenement = evenement;
       this.transmissionService.dataTransmission(evenement);
-
 
       this.formulaireEvent.get("eventName")?.setValue(evenement.eventName);
       this.formulaireEvent.get("contact")?.setValue(evenement.contact);
@@ -144,9 +160,10 @@ export class GestionMajConfigComponent implements OnInit {
       this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);
       this.formulaireEvent.get("couleurBandeau")?.setValue(evenement.couleurBandeau);
       this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);
-      
+
       this.formulaireEvent.get("couleurTitre")?.setValue(evenement.couleurTitre);
       this.formulaireEvent.get("couleurBloc")?.setValue(evenement.couleurBloc);
+      this.formulaireEvent.get("titleFont")?.setValue(evenement.titleFont);
       console.log(this.formulaireEvent)
     },
       error => {
@@ -209,5 +226,44 @@ export class GestionMajConfigComponent implements OnInit {
       });
   }
 
+
+  afficheChangedEvent: any = '';
+  croppedAffiche: any = '';
+  afficheChangeEvent(event: any): void {
+    this.afficheChangedEvent = event;
+  }
+  afficheCropped(event: ImageCroppedEvent) {
+    console.log(event)
+    this.croppedAffiche = event.base64;
+  }
+
+
+  uploadAffiche() {
+    const contentFile = this.croppedImage.replace("data:image/jpeg;base64,", "")
+    this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe(data => {
+      console.log(data)
+      this.croppedImage = '';
+      this.getAffiche()
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+  getAffiche() {
+    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
+      this.affiche = "data:image/jpeg;base64," + data
+    },
+      error => {
+        console.log('😢 Oh no!', error);
+      });
+  }
+
+
+  forceUpdateEvenement() {
+    console.log('coucou');
+
+    this.transmissionService.dataTransmission(Object.assign(this.evenement, this.formulaireEvent.value));
+  }
 
 }

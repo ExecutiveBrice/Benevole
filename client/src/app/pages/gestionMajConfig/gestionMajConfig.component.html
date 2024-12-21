@@ -1,30 +1,30 @@
 @if (authorize && evenement != undefined) {
 
-  
+
 <div class="row marge">
   <div class="col-sm-12">
 
-<mat-card appearance="raised">
-  <mat-grid-list cols="3" rowHeight="50px">
-    <mat-grid-tile [colspan]="2">
+    <mat-card appearance="raised">
+      <mat-grid-list cols="3" rowHeight="50px">
+        <mat-grid-tile [colspan]="2">
 
-      <button class="full-width" mat-flat-button type="button" (click)="update()">Enregistrer les modifications</button>
+          <button class="full-width" mat-flat-button type="button" (click)="update()">Enregistrer les
+            modifications</button>
 
-    </mat-grid-tile>
-    <mat-grid-tile>
+        </mat-grid-tile>
+        <mat-grid-tile>
 
-      <button class="full-width" mat-flat-button type="button"
-        [routerLink]="['/',evenement.id,'gestion']">Retour</button>
+        
 
-    </mat-grid-tile>
-  </mat-grid-list>
-</mat-card>
-
-
-</div>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </mat-card>
 
 
-<div class="col-md-4">
+  </div>
+
+
+  <div class="col-md-4">
 
 
 
@@ -138,7 +138,7 @@
             }
 
           </mat-form-field>
-          
+
         </mat-card-content>
 
         <mat-card-content>
@@ -171,12 +171,10 @@
         </mat-card-content>
 
 
-
-
         <mat-card-content>
           <mat-form-field class="full-width">
             <mat-label>La couleur du fond</mat-label>
-            <input type="color" matInput formControlName="couleurFond">
+            <input type="color" matInput formControlName="couleurFond" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurFond')?.hasError('required')) {
             <mat-error>La couleur du fond est obligatoire</mat-error>
             }
@@ -186,7 +184,7 @@
         <mat-card-content>
           <mat-form-field class="full-width">
             <mat-label>La couleur du bandeau</mat-label>
-            <input type="color" matInput formControlName="couleurBandeau">
+            <input type="color" matInput formControlName="couleurBandeau" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurBandeau')?.hasError('required')) {
             <mat-error>La couleur du bandeau est obligatoire</mat-error>
             }
@@ -195,7 +193,7 @@
         <mat-card-content>
           <mat-form-field class="full-width">
             <mat-label>La couleur du texte du bandeau</mat-label>
-            <input type="color" matInput formControlName="couleurText">
+            <input type="color" matInput formControlName="couleurText" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurText')?.hasError('required')) {
             <mat-error>La couleur du texte du bandeau est obligatoire</mat-error>
             }
@@ -204,7 +202,7 @@
         <mat-card-content>
           <mat-form-field class="full-width">
             <mat-label>La couleur des titres</mat-label>
-            <input type="color" matInput formControlName="couleurTitre">
+            <input type="color" matInput formControlName="couleurTitre" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurTitre')?.hasError('required')) {
             <mat-error>La couleur des titres est obligatoire</mat-error>
             }
@@ -214,13 +212,24 @@
         <mat-card-content>
           <mat-form-field class="full-width">
             <mat-label>La couleur des blocs</mat-label>
-            <input type="color" matInput formControlName="couleurBloc">
+            <input type="color" matInput formControlName="couleurBloc" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurBloc')?.hasError('required')) {
             <mat-error>La couleur des blocs est obligatoire</mat-error>
             }
           </mat-form-field>
         </mat-card-content>
 
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>Besoin</mat-label>
+            <mat-select formControlName="titleFont" (selectionChange)="forceUpdateEvenement()">
+              @for (font of fontList; track font) {
+              <mat-option [value]="font">{{ font }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </mat-card-content>
       </form>
 
     </mat-card>
@@ -255,7 +264,30 @@
 
       </mat-card-content>
     </mat-card>
+    <mat-card appearance="raised">
+      <mat-card-content>
 
+        @if (affiche) {
+          <img mat-card-image [src]="affiche" alt="Affiche">
+          }
+
+
+        <button class="full-width" type="button" mat-stroked-button (click)="fileInput.click()">Modifier l'affiche de
+          l'évènement</button>
+        <input hidden (change)="afficheChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
+        @if (croppedAffiche.length > 5) {
+        <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadAffiche()">Enregistrer cette
+          image</button>
+        }
+
+        <image-cropper [imageChangedEvent]="afficheChangedEvent" [output]="'base64'" [maintainAspectRatio]="false"
+          [resizeToWidth]="1280" format="jpeg" (imageCropped)="afficheCropped($event)" (imageLoaded)="imageLoaded()"
+          (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+        </image-cropper>
+
+
+      </mat-card-content>
+    </mat-card>
 
 
   </div>

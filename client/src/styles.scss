@@ -1,5 +1,115 @@
 @import '@angular/material/prebuilt-themes/azure-blue.css';
 
+@font-face {
+  font-family: Agu;
+  src: url(app/assets/fonts/AguDisplay-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Arbutus;
+  src: url(app/assets/fonts/Arbutus-Regular.ttf) format('truetype');
+}
+
+
+@font-face {
+  font-family: Borel;
+  src: url(app/assets/fonts/Borel-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: BrunoAce;
+  src: url(app/assets/fonts/BrunoAceSC-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: Diplomata;
+  src: url(app/assets/fonts/DiplomataSC-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: DrSugiyama;
+  src: url(app/assets/fonts/DrSugiyama-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Fascinate;
+  src: url(app/assets/fonts/FascinateInline-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: FingerPaint;
+  src: url(app/assets/fonts/FingerPaint-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: JotiOne;
+  src: url(app/assets/fonts/JotiOne-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: Kavoon;
+  src: url(app/assets/fonts/Kavoon-Regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: Lijeva;
+  src: url(app/assets/fonts/Lijeva-VariableFont.ttf) format('truetype');
+}
+@font-face {
+  font-family: LondrinaShadow;
+  src: url(app/assets/fonts/LondrinaShadow-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: LoveYaLikeASister;
+  src: url(app/assets/fonts/LoveYaLikeASister-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Miltonian;
+  src: url(app/assets/fonts/Miltonian-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: PermanentMarker;
+  src: url(app/assets/fonts/PermanentMarker-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Plaster;
+  src: url(app/assets/fonts/Plaster-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: ProtestGuerrilla;
+  src: url(app/assets/fonts/ProtestGuerrilla-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: RubikGlitch;
+  src: url(app/assets/fonts/RubikGlitch-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: RubikMoonrocks;
+  src: url(app/assets/fonts/RubikMoonrocks-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: RubikWetPaint;
+  src: url(app/assets/fonts/RubikWetPaint-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: SigmarOne;
+  src: url(app/assets/fonts/SigmarOne-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Smokum;
+  src: url(app/assets/fonts/Smokum-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: SonsieOne;
+  src: url(app/assets/fonts/SonsieOne-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: Spirax;
+  src: url(app/assets/fonts/Spirax-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: TradeWinds;
+  src: url(app/assets/fonts/TradeWinds-Regular.ttf) format('truetype');
+}
+
+
+
 .mat-mdc-raised-button {
   color: black!important;
 }
@@ -104,33 +214,32 @@ mat-card-header {
   padding-top: 10px;
 }
 
-
-
-
 @media screen and (min-width: 950px) {
   .g1 {
     font-size: 4rem;
     align-self:center;
-    font-family: cursive !important;
   }
-
 }
 
 @media screen and (max-width: 950px) {
   .g1 {
     font-size: 3rem;
     align-self:center;
-    font-family: cursive !important;
   }
-
 }
 
 @media screen and (max-width: 650px) {
   .g1 {
     font-size: 1.5rem;
     align-self:center;
-    font-family: cursive !important;
+   
   }
-
 }
 
+.gAgu {
+  font-family: Agu !important;
+}
+
+.gFascinate {
+  font-family: Fascinate !important;
+}

@@ -15,19 +15,19 @@ import { ModalConnexionComponent } from '../../components/modalConnexion/modalCo
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-    selector: 'app-gestionEvenements',
-    standalone: true,
-    templateUrl: './gestionEvenements.component.html',
-    styleUrls: ['./gestionEvenements.component.scss'],
-    imports: [NgClass,
-        FormsModule,
-        DatePipe,
-        RouterModule, OrderByPipe],
-        providers: [
-          EvenementService,
-          
-          ConfigService
-        ],
+  selector: 'app-gestionEvenements',
+  standalone: true,
+  templateUrl: './gestionEvenements.component.html',
+  styleUrls: ['./gestionEvenements.component.scss'],
+  imports: [NgClass,
+    FormsModule,
+    DatePipe,
+    RouterModule, OrderByPipe],
+  providers: [
+    EvenementService,
+
+    ConfigService
+  ],
 })
 
 export class GestionEvenementsComponent implements OnInit {
@@ -52,12 +52,10 @@ export class GestionEvenementsComponent implements OnInit {
 
   ngOnInit() {
     this.evenements = [];
-
     localStorage.removeItem('isValidAccessForEvent');
-this.authorizeAccess()
-   
-
+    this.authorizeAccess()
   }
+
   authorizeAccess(): void {
     this.dialog.open(ModalConnexionComponent, {
       hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
@@ -69,10 +67,6 @@ this.authorizeAccess()
       if (result instanceof FormGroup) {
         this.evenementService.isAuthorize(0, result.get('passwood')?.value).subscribe({
           next: (data) => {
-
-
-            console.log(data);
-
             if (data) {
               this.authorize = data;
               localStorage.setItem('isValidAccessForEvent', JSON.stringify(0));
@@ -81,22 +75,17 @@ this.authorizeAccess()
               this.toastr.error("Mot de passe incorect", 'Erreur');
               this.authorizeAccess()
             }
-
-
-
-       
           },
           error: (error: HttpErrorResponse) => {
-           
+
           }
         })
       }
     });
   }
 
-
   goToGestion(evenement: Evenement) {
-    this.router.navigate([ evenement.id+'/gestion/']);
+    this.router.navigate([evenement.id + '/gestion/']);
   }
 
   choixEvenement(id: number) {
