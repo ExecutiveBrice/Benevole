@@ -19,28 +19,6 @@ public class EmailService {
     @Autowired
     BenevoleService benevoleService;
 
-
-    public void sendTestEmail() {
-        log.info("sendTestEmail");
-        MailerSend ms = new MailerSend();
-        ms.setToken(System.getenv("MAILSENDER_KEY"));
-        Email email = new Email();
-        //email.setInReplyTo("brice_morel@hotmail.com");
-        email.subject = "Hello test MailerSend!";
-        email.text = "This is a test email from the MailerSend Java SDK";
-
-        email.addRecipient("Recipient name", "brice_morel@hotmail.com");
-        email.setFrom("ALOD bénévoles", "benevole@bmoexperience.fr");
-
-        try {
-            MailerSendResponse response = ms.emails().send(email);
-            System.out.println(response.messageId);
-        } catch (MailerSendException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public String sendGestionMessage(EmailRessource email) {
 
         email.getTo().forEach(benevoleId -> {
@@ -61,7 +39,7 @@ public class EmailService {
             }
 
             corpsMessage.append("<br />");
-            corpsMessage.append("Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />");
+            corpsMessage.append("Il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />");
 
             corpsMessage.append(benevole.getEvenement().getContact());
             corpsMessage.append(" - ");
@@ -81,9 +59,8 @@ public class EmailService {
         Email email = new Email();
         email.subject = sujet;
         email.html = corps;
-        //email.setInReplyTo("brice_morel@hotmail.com");
         email.addRecipient(nom, adresseMail);
-        email.setFrom("ALOD bénévoles", "benevole@bmoexperience.fr");
+        email.setFrom("ALOD bénévoles", "benevole@"+System.getenv("DNS_NAME"));
 
         try {
             MailerSendResponse response = ms.emails().send(email);

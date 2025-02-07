@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, Renderer2, RendererStyleFlags2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-
 import { Evenement } from './models';
 import { EvenementService, FileService, TransmissionService } from './services';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 
@@ -13,6 +13,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet,
+    MatTabsModule,
     RouterModule,
     MatGridListModule,
     MatButtonModule,

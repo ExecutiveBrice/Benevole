@@ -4,32 +4,28 @@ import { TransmissionService, CroisementService, EvenementService, StandService,
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
 import QRCode from 'qrcode'
-import { Editor, NgxEditorModule, Toolbar, toHTML } from 'ngx-editor';
-import { ImageCropperComponent, ImageCroppedEvent, LoadedImage } from 'ngx-image-cropper';
+import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 import { NgClass } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModalConnexionComponent } from '../../components/modalConnexion/modalConnexion.component';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { OrderByPipe } from '../../services/sort.pipe';
 import { Params } from '../../models/params';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LocalStand } from '../../models/local/stand';
+import { ModalAccessGestionComponent } from '../../components/modalAccessGestion/modalAccessGestion.component';
 
 
 @Component({
@@ -151,7 +147,7 @@ export class GestionComponent implements OnInit {
   }
 
   authorizeAccess(): void {
-    this.dialog.open(ModalConnexionComponent, {
+    this.dialog.open(ModalAccessGestionComponent, {
       hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
       data: {
         title: 'Accès mode gestionnaire',
@@ -168,7 +164,7 @@ export class GestionComponent implements OnInit {
               this.loadPage()
             } else {
               this.router.navigate(['/' + this.idEvenement]);
-              this.toastr.error("Mot de passe incorect", 'Erreur');
+              this.toastr.error("Mot de passe incorrect", 'Erreur');
             }
           },
           error: (error: HttpErrorResponse) => {

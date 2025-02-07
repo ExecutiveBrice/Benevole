@@ -51,9 +51,9 @@
           </button>
         </div>
         <div class="col-3">
-
           <button class="red-icon" mat-fab type="button"
-            (click)="delete(stand)"><mat-icon>delete_forever</mat-icon></button>
+            (click)="delete(stand)"><mat-icon>delete_forever</mat-icon>
+          </button>
         </div>
 
         <div class="col-12">
@@ -107,7 +107,7 @@
                   <div class="row">
 
                     <div class="col-12">
-                      -{{croisement.get('creneau')?.value.plage}}
+                      -{{croisement.get('plage')?.value}}
                     </div>
                     <div class="col-5">
                       <mat-form-field class="full-width">

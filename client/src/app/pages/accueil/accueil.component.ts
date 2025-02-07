@@ -23,8 +23,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-accueil',
   standalone: true,
-  providers: [ 
-    
+  providers: [
+
   ],
   imports: [FormsModule,
     RouterModule,
@@ -36,29 +36,31 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./accueil.component.scss']
 })
 
-export class AccueilComponent implements OnInit{
+export class AccueilComponent implements OnInit {
 
- authorize: boolean = false;
+  authorize: boolean = false;
   evenements!: Evenement[];
   choix!: number;
   password!: string;
+
 
   constructor(
     public transmissionService: TransmissionService,
     public route: ActivatedRoute,
     public router: Router,
-        public fileService: FileService,
+    public fileService: FileService,
     public evenementService: EvenementService,
-) {
+  ) {
 
   }
 
-  
+
   ngOnInit() {
 
     this.getEvenement(0);
 
     this.getAllEvenements()
+
   }
 
 
@@ -84,15 +86,15 @@ export class AccueilComponent implements OnInit{
   }
 
 
-    getAffiche(evenement: Evenement) {
-      this.fileService.get(evenement.id, 'affiche.jpeg').subscribe({
-        next: (data) => {
-          evenement.affiche = "data:image/jpeg;base64," + data
-        },
-        error: (error: HttpErrorResponse) => {
-          console.log(error)
-        }
-  
-      })
-    }
+  getAffiche(evenement: Evenement) {
+    this.fileService.get(evenement.id, 'affiche.jpeg').subscribe({
+      next: (data) => {
+        evenement.affiche = "data:image/jpeg;base64," + data
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+      }
+
+    })
+  }
 }

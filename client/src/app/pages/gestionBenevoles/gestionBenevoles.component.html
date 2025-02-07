@@ -8,7 +8,7 @@
       <mat-grid-list cols="3" rowHeight="50px">
         <mat-grid-tile [colspan]="2">
 
-         {{benevoles.length}} bénévoles
+          {{benevoles.length}} bénévoles
 
         </mat-grid-tile>
         <mat-grid-tile>
@@ -30,72 +30,131 @@
       </mat-expansion-panel-header>
 
       @if (mep.expanded) {
+      <div class="row marge">
+
+        
+        
+
+        <div class="col-8">
 
       <mat-form-field class="full-width">
-        <mat-label>Email</mat-label>
-        <input type="email" matInput formControlName="email">
-        @if (benevole.formulaire.get('email')?.hasError('email')) {
-        <mat-error>Le format est incorecte</mat-error>
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="nom" placeholder="Ex: Connor">
+        @if (benevole.formulaire.get('nom')?.hasError('required')) {
+        <mat-error>Le nom est obligatoire</mat-error>
         }
-        @if (benevole.formulaire.get('email')?.hasError('required')) {
-        <mat-error>L'email est obligatoire</mat-error>
+        @if (benevole.formulaire.get('nom')?.hasError('minlength')) {
+        <mat-error>C'est un peu court comme nom!</mat-error>
         }
+        <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
       </mat-form-field>
 
-      @if (!benevole.formulaire.get('telephone')?.disabled) {
-      <mat-form-field class="full-width">
-        <mat-label>telephone</mat-label>
-        <input type="text" matInput formControlName="telephone">
+    </div>
 
-        @if (benevole.formulaire.get('telephone')?.hasError('required')) {
-        <mat-error>Le telephone est obligatoire</mat-error>
+    <div class="col-4">
+      <button class="green-icon" mat-fab type="button" [disabled]="!benevole.formulaire.touched"
+        (click)="update(benevole)"><mat-icon>save</mat-icon>
+      </button>
+    </div>
+
+    <div class="col-8">
+
+      <mat-form-field class="full-width">
+        <mat-label>Prenom</mat-label>
+        <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+        @if (benevole.formulaire.get('prenom')?.hasError('required')) {
+        <mat-error>Le prenom est obligatoire</mat-error>
         }
+        @if (benevole.formulaire.get('prenom')?.hasError('minlength')) {
+        <mat-error>C'est un peu court comme prenom!</mat-error>
+        }
+        <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
       </mat-form-field>
-      }
-      @for (benecroisement of benevole.croisements | orderBy:'stand.ordre':false; track $index) {
+    </div>
+
+    <div class="col-4">
+      <button class="red-icon" mat-fab type="button" (click)="delete(benevole)"><mat-icon>delete_forever</mat-icon>
+      </button>
+    </div>
 
 
-      <mat-form-field class="full-width">
-        <mat-label>{{benecroisement.stand.nom == "tous"?"N'importe quel stand":benecroisement.stand.nom}}</mat-label>
-        <select matNativeControl name="crois">
-          @for (stand of stands | orderBy:'ordre':false; track $index) {
-          <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
-            @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
-            <option [selected]="benecroisement.id == croisement.id"
-              (click)="choisir(benevole, benecroisement, croisement)">
-              {{croisement.creneau.plage}}
-              ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+
+        <div class="col-12">
+          <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email">
+            @if (benevole.formulaire.get('email')?.hasError('email')) {
+            <mat-error>Le format est incorrecte</mat-error>
             }
-
-
-          </optgroup>
-          }
-          <option matInput (click)="choisir(benevole, benecroisement, null)">
-            <font color="red"><b>Suppression</b></font>
-          </option>
-        </select>
-      </mat-form-field>
-
-      }
-
-      <mat-form-field class="full-width">
-        <mat-label>Nouveau</mat-label>
-        <select matNativeControl name="crois">
-          <option value="" selected></option>
-          @for (stand of stands | orderBy:'ordre':false; track $index) {
-          <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
-
-            @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
-
-            <option matInput (click)="choisir(benevole, null, croisement)"> {{croisement.creneau.plage}}
-              ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+            @if (benevole.formulaire.get('email')?.hasError('required')) {
+            <mat-error>L'email est obligatoire</mat-error>
             }
+          </mat-form-field>
+
+        </div>
 
 
-          </optgroup>
+        <div class="col-12">
+          @if (!benevole.formulaire.get('telephone')?.disabled) {
+          <mat-form-field class="full-width">
+            <mat-label>telephone</mat-label>
+            <input type="text" matInput formControlName="telephone">
+
+            @if (benevole.formulaire.get('telephone')?.hasError('required')) {
+            <mat-error>Le telephone est obligatoire</mat-error>
+            }
+          </mat-form-field>
           }
-        </select>
-      </mat-form-field>
+        </div>
+
+        <div class="col-12">
+          @for (benecroisement of benevole.croisements | orderBy:'stand.ordre':false; track $index) {
+
+
+          <mat-form-field class="full-width">
+            <mat-label>{{benecroisement.stand.nom == "tous"?"N'importe quel
+              stand":benecroisement.stand.nom}}</mat-label>
+            <select matNativeControl name="crois">
+              @for (stand of stands | orderBy:'ordre':false; track $index) {
+              <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
+                @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
+                <option [selected]="benecroisement.id == croisement.id"
+                  (click)="choisir(benevole, benecroisement, croisement)">
+                  {{croisement.creneau.plage}}
+                  ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+                }
+
+
+              </optgroup>
+              }
+              <option matInput (click)="choisir(benevole, benecroisement, null)">
+                <font color="red"><b>Suppression</b></font>
+              </option>
+            </select>
+          </mat-form-field>
+
+          }
+        </div>
+        <div class="col-12">
+          <mat-form-field class="full-width">
+            <mat-label>Nouveau</mat-label>
+            <select matNativeControl name="crois">
+              <option value="" selected></option>
+              @for (stand of stands | orderBy:'ordre':false; track $index) {
+              <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
+
+                @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
+
+                <option matInput (click)="choisir(benevole, null, croisement)"> {{croisement.creneau.plage}}
+                  ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+                }
+              </optgroup>
+              }
+            </select>
+          </mat-form-field>
+        </div>
+
+      </div>
       }
     </mat-expansion-panel>
   </div>

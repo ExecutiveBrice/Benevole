@@ -72,7 +72,7 @@ export class GestionMajCreneauxComponent implements OnInit {
       this.getEvenement(this.idEvenement);
       this.getAll()
     } else {
-      this.router.navigate([ this.idEvenement+'/gestion/']);
+      this.router.navigate([this.idEvenement + '/gestion/']);
     }
   }
 
@@ -90,6 +90,7 @@ export class GestionMajCreneauxComponent implements OnInit {
 
   formulaireNewCreneau = this.formBuilder.group(
     {
+
       ordre: new FormControl("", [Validators.required, Validators.minLength(2)]),
       plage: new FormControl("", [Validators.required, Validators.minLength(2)]),
     }
@@ -101,6 +102,7 @@ export class GestionMajCreneauxComponent implements OnInit {
       creneaux.forEach(creneau => {
 
         let formulaire = this.formBuilder.group({
+          id: new FormControl(creneau.id, [Validators.required, Validators.minLength(2)]),
           ordre: new FormControl(creneau.ordre, [Validators.required, Validators.minLength(2)]),
           plage: new FormControl(creneau.plage, [Validators.required, Validators.minLength(2)]),
         })
@@ -115,30 +117,30 @@ export class GestionMajCreneauxComponent implements OnInit {
   }
 
 
-  update(creneau: Creneau): void {
+  update(formulaire: FormGroup): void {
 
-if(creneau.formulaire.valid){
+    if (formulaire.valid) {
 
-    this.creneauService.update(creneau).subscribe(data => {
-      this.getAll();
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-    }else{
+      this.creneauService.update(formulaire.getRawValue()).subscribe(data => {
+        this.getAll();
+      },
+        error => {
+          console.log('😢 Oh no!', error);
+        });
+    } else {
       console.log("formulaire invalide")
     }
   }
 
-  ajout(forumaire: FormGroup): void {
-/*
-    this.creneauService.ajout(creneau, this.idEvenement).subscribe(data => {
+  ajout(formulaire: FormGroup): void {
+    if (formulaire.valid) {
+    this.creneauService.ajout(formulaire.getRawValue(), this.idEvenement).subscribe(data => {
       this.getAll();
     },
       error => {
         console.log('😢 Oh no!', error);
       });
-      */
+    }
   }
 
 

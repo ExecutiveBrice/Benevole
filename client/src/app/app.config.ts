@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
       provideToastr({
         enableHtml: true,
         progressAnimation:'increasing',
-        timeOut: 10000,
+        timeOut: 2000,
         closeButton:true,
         tapToDismiss:true,
         progressBar: true,

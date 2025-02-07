@@ -14,13 +14,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-modalConnexion',
+  selector: 'app-modalAccessGestion',
   standalone: true,
   imports: [FormsModule,ReactiveFormsModule,MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatInputModule, MatFormFieldModule,MatIconModule],
-  templateUrl: './modalConnexion.component.html',
-  styleUrl: './modalConnexion.component.scss'
+  templateUrl: './modalAccessGestion.component.html',
+  styleUrl: './modalAccessGestion.component.scss'
 })
-export class ModalConnexionComponent {
+export class ModalAccessGestionComponent {
   data = inject(MAT_DIALOG_DATA);
   passwordVisible:boolean=false
 
@@ -30,7 +30,7 @@ export class ModalConnexionComponent {
   })
 
 
-  constructor(public dialogRef: MatDialogRef<ModalConnexionComponent>,
+  constructor(public dialogRef: MatDialogRef<ModalAccessGestionComponent>,
     
     public formBuilder: FormBuilder
   ){

@@ -32,7 +32,7 @@
           <mat-label>Email</mat-label>
           <input type="email" matInput formControlName="contactEmail" placeholder="Ex. pat@example.com">
           @if (formulaire.get('contactEmail')?.hasError('contactEmail')) {
-          <mat-error>Le format est incorecte</mat-error>
+          <mat-error>Le format est incorrecte</mat-error>
           }
           @if (formulaire.get('contactEmail')?.hasError('required')) {
           <mat-error>L'email est obligatoire</mat-error>

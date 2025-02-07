@@ -138,6 +138,7 @@ export class GestionMajStandsComponent implements OnInit {
       next: (stands: Stand[]) => {
         if (stands != null) {
           this.stands = stands
+console.log(stands);
 
           stands.forEach(stand => {
 
@@ -164,9 +165,10 @@ export class GestionMajStandsComponent implements OnInit {
       stand.croisements.forEach(croisement => {
         const croisementFormulaire: FormGroup = this.fb.group({
           id: [croisement.id, []],
-          creneau: [croisement.creneau, [Validators.required]],
+          plage: [croisement.creneau.plage, [Validators.required]],
           besoin: [croisement.besoin, [Validators.required]],
           limite: [croisement.limite, [Validators.required]],
+
         })
         croisementsFormulaire.push(croisementFormulaire)
       });
@@ -197,7 +199,7 @@ export class GestionMajStandsComponent implements OnInit {
     console.log(standForm)
     if (standForm.valid) {
 
-      this.standService.update(Object.assign(this.stands.find(stand => stand.id == standForm.get('id')?.value)!, standForm.getRawValue())).subscribe({
+      this.standService.update(standForm.getRawValue()).subscribe({
         next: (stand: Stand) => {
           console.log(stand)
           this.toastr.success(stand.nom + " à bien été mis à jour", 'Succès');

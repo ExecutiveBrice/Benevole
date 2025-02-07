@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ConnexionComponent, CreationComponent, GestionBenevolesComponent, GestionComponent, GestionEvenementsComponent, GestionMajConfigComponent, GestionMajCreneauxComponent, GestionMajStandsComponent, GestionStandsComponent } from './pages';
+import { EvenementComponent, CreationComponent, GestionBenevolesComponent, GestionComponent, GestionEvenementsComponent, GestionMajConfigComponent, GestionMajCreneauxComponent, GestionMajStandsComponent, GestionStandsComponent } from './pages';
 import { AccueilComponent } from './pages/accueil/accueil.component';
 
 export const routes: Routes = [
@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: ':id/gestion/stands', component: GestionStandsComponent},
   { path: ':id/gestion/benevoles', component: GestionBenevolesComponent},
   { path: 'evenements/management', component: GestionEvenementsComponent},
-  { path: ':id', component: ConnexionComponent},
+  { path: ':id', component: EvenementComponent},
   { path: '', component: AccueilComponent},
   { path: '**', redirectTo: ''}
 ];

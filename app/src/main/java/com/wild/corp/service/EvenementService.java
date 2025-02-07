@@ -2,7 +2,6 @@ package com.wild.corp.service;
 
 
 import com.wild.corp.configuration.Constante;
-import com.wild.corp.model.Benevole;
 import com.wild.corp.model.Creneau;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.model.Stand;
@@ -10,12 +9,9 @@ import com.wild.corp.repositories.EvenementRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -62,6 +58,7 @@ public class EvenementService {
 
         evenement.setCouleurBandeau("#2d2d2d");
         evenement.setCouleurBloc("#b2b2b2");
+        evenement.setCouleurCard("#b2b2b2");
         evenement.setCouleurFond("#c0c0c0");
         evenement.setCouleurTitre("#808080");
         evenement.setCouleurText("#ffffff");
@@ -98,7 +95,7 @@ public class EvenementService {
         event.setCouleurText(evenement.getCouleurText());
         event.setCouleurTitre(evenement.getCouleurTitre());
         event.setCouleurBloc(evenement.getCouleurBloc());
-
+        event.setCouleurCard(evenement.getCouleurCard());
         event.setTitleFont(evenement.getTitleFont());
 
         return evenementRepository.save(event);

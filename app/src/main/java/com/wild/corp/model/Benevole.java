@@ -37,6 +37,9 @@ public class Benevole {
     @Column(name = "DATE_MAJ")
     private LocalDateTime dateMaj;
 
+    @Column(name = "ADVISE_SENT")
+    private Boolean adviseSent;
+
     @ManyToMany
     @JsonIgnoreProperties({"benevoles"})
     private List<Croisement> croisements;

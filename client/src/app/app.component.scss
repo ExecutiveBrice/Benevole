@@ -5,18 +5,29 @@
 
 .text-center{
     display: flex;
+    font-size: larger;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+}
+
+
+.text-center-large{
+    display: flex;
     justify-content: center;
     align-items: center;
     height: 110px;
 }
-
-
 
 img{
     margin-top: 5px;
     border-radius: 5px;
     width: 150px;
     max-width: 150px;
+}
+.small{
+    width: 70px;
+    max-width: 70px;
 }
 .align-right{
     text-align: end;
@@ -32,4 +43,24 @@ mat-icon {
     cursor: pointer;
 
   }
+  .large{ 
 
+    mat-icon {
+        font-size: 50px;
+        height: 50px;
+        width: 50px;
+        cursor: pointer;
+    
+      }
+  }
+  .larger{ 
+
+    mat-icon {
+        margin-top: 10px;
+        font-size: 60px;
+        height: 60px;
+        width: 60px;
+        cursor: pointer;
+    
+      }
+  }

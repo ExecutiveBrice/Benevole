@@ -211,10 +211,20 @@
 
         <mat-card-content>
           <mat-form-field class="full-width">
-            <mat-label>La couleur des blocs</mat-label>
+            <mat-label>La couleur des Bloques</mat-label>
+            <input type="color" matInput formControlName="couleurCard" (change)="forceUpdateEvenement()">
+            @if (formulaireEvent.get('couleurCard')?.hasError('required')) {
+            <mat-error>La couleur des Bloques est obligatoire</mat-error>
+            }
+          </mat-form-field>
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-form-field class="full-width">
+            <mat-label>La couleur des menus de stands</mat-label>
             <input type="color" matInput formControlName="couleurBloc" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurBloc')?.hasError('required')) {
-            <mat-error>La couleur des blocs est obligatoire</mat-error>
+            <mat-error>La couleur des des menus de stands est obligatoire</mat-error>
             }
           </mat-form-field>
         </mat-card-content>
@@ -272,9 +282,9 @@
           }
 
 
-        <button class="full-width" type="button" mat-stroked-button (click)="fileInput.click()">Modifier l'affiche de
+        <button class="full-width" type="button" mat-stroked-button (click)="afficheInput.click()">Modifier l'affiche de
           l'évènement</button>
-        <input hidden (change)="afficheChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
+        <input hidden (change)="afficheChangeEvent($event)" #afficheInput type="file" id="affiche" accept="image/*">
         @if (croppedAffiche.length > 5) {
         <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadAffiche()">Enregistrer cette
           image</button>

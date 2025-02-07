@@ -1,5 +1,6 @@
 package com.wild.corp.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/files")
@@ -47,7 +49,13 @@ public class FileUploadController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> uploadFile(@RequestParam("evenementId") String evenementId,@RequestParam("fileName") String fileName) throws IOException {
         Path path =this.imageStorageDir.resolve(evenementId+"/"+fileName);
-        String imageEncoded = Base64.getEncoder().encodeToString(Files.newInputStream(path).readAllBytes());
+        String imageEncoded = "";
+        try {
+            imageEncoded = Base64.getEncoder().encodeToString(Files.newInputStream(path).readAllBytes());    
+        }catch (Exception e){
+            log.warn(e.getMessage());
+        }
+        
 
         return new ResponseEntity<>(imageEncoded, HttpStatus.OK);
     }

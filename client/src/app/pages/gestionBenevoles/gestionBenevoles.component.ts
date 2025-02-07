@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { BenevoleService, ExcelService } from '../../services';
 import { ConfigService, EvenementService, CroisementService, StandService, MailService, TransmissionService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -7,7 +7,7 @@ import { Benevole, Croisement, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import {  FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {  FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -22,6 +22,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 
 import { MatSelectModule } from '@angular/material/select';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalComponent } from '../../components/modal/modal.component';
 @Component({
   selector: 'app-gestionBenevoles',
   standalone: true,
@@ -56,7 +60,7 @@ export class GestionBenevolesComponent implements OnInit {
   stands!: Stand[];
   benevoles: Benevole[] = [];
 
-
+  nouveau!:Croisement;
 
   constructor(
     public route: ActivatedRoute,
@@ -70,6 +74,7 @@ export class GestionBenevolesComponent implements OnInit {
     public standService: StandService,
     public mailService: MailService,
     public sanitizer: DomSanitizer,
+        private toastr: ToastrService,
     public formBuilder: FormBuilder) { }
 
 
@@ -151,46 +156,64 @@ export class GestionBenevolesComponent implements OnInit {
   }
 
   choisir(benevole: Benevole, benecroisement: Croisement | null, croisement: Croisement | null): void {
+    console.log(benecroisement);
+    console.log(croisement);
+    
     if (benecroisement != null) {
-      if (benecroisement.id) {
-        for (let index = 0; index < benevole.croisements.length; index++) {
-          if (benecroisement.id == benevole.croisements[index].id) {
-            benevole.croisements.splice(index, 1);
-            break;
-          }
+
+      this.retraitCroisement(benevole, benecroisement);
+    }
+
+    if (croisement != null) {
+      this.ajoutCroisement(benevole, croisement);
+    }
+
+  }
+
+  ajoutCroisement(benevole: Benevole,croisement: Croisement) {
+      this.benevoleService.addToCroisement(benevole!.id, croisement.id, true).subscribe({
+        next: (ben) => {
+          benevole.croisements.push(croisement)
+        },
+        error: (error: HttpErrorResponse) => {
+          console.log(error)
+          this.toastr.error(error.message, 'Erreur');
         }
+      })
+  }
+
+  retraitCroisement(benevole: Benevole,croisement: Croisement) {
+    this.benevoleService.removeToCroisement(benevole!.id, croisement.id).subscribe({
+      next: (ben) => {
+        benevole.croisements.filter(crois => crois.id != croisement.id)
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+        this.toastr.error(error.message, 'Erreur');
+      }
+    })
+  }
+
+  
+    update(benevole: Benevole): void {
+      console.log(benevole)
+      if (benevole.formulaire.valid) {
+  
+        this.benevoleService.update(Object.assign(benevole, benevole.formulaire.getRawValue())).subscribe({
+          next: (benevoleUpdated: Benevole) => {
+            console.log(benevoleUpdated)
+            this.toastr.success(benevoleUpdated.nom + " à bien été mis à jour", 'Succès');
+            benevole.formulaire.markAsPristine()
+            benevole.formulaire.markAsUntouched()
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error)
+            this.toastr.error(error.error, 'Erreur');
+          }
+        })
       }
     }
-    if (benevole.croisements == null) {
-      benevole.croisements = []
-    }
-    if (croisement != null) {
-      benevole.croisements.push(croisement);
-    }
-
-    this.addCroisements(benevole);
-  }
-
-
-  addCroisements(benevole: Benevole): void {
-    /*
-        this.benevoleService.addCroisements(benevole.id, croisementsList).subscribe(data => {
-        },
-          error => {
-            console.log('😢 Oh no!', error);
-          });
-    */
-  }
-
-  modify(benevole: Benevole) {
-    this.benevoleService.update(benevole).subscribe(data => {
-      console.log(data)
-    },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
-  }
-
+  
 
 
   async exportAsXLSX() {
@@ -200,11 +223,35 @@ export class GestionBenevolesComponent implements OnInit {
 
 
   delete(benevole: Benevole) {
+    console.log(benevole);
+    
+   this.dialog.open(ModalComponent, {
+      data: {
+        title: 'Suppression',
+        question: 'Souhaitez vous supprimer ce bénévole : ' + benevole.formulaire.get('prenom')?.value +' '+ benevole.formulaire.get('nom')?.value+' et libérer ses créneaux ?',
+      },
+    }).afterClosed().subscribe(result => {
+      if (result !== undefined && result == 'accept') {
 
+        this.benevoleService.deleteById(benevole.id).subscribe({
+          next: (data) => {
+       this.benevoles = this.benevoles.filter(ben => ben.id != benevole.id)
+            this.toastr.success(benevole.formulaire.get('prénom')?.value + " à bien été retiré de l'application", 'Succès');
+          },
+          error: (error: HttpErrorResponse) => {
+            console.log(error)
+            if (error.status == 409) {
+              this.toastr.error("Il reste des bénévoles dans ce stand. Veuillez les déplacer au préalable", 'Erreur');
+            } else {
+              this.toastr.error(error.message, 'Erreur');
+            }
 
-
-
-
-
+          }
+        })
+      }
+    });
   }
+
+
+  dialog = inject(MatDialog);
 }

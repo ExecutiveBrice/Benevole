@@ -1,32 +1,49 @@
-<div [style.backgroundColor]="evenement?.couleurBandeau" class="d-flex">
-
-  <div class="p-2 flex-fill align-self-start text-center ">
-    <div class="g1" [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">{{evenement?.eventName}}</div>
-
-
-
-</div>
-
-
-<div class="d-flex">
-  <a  href="{{evenement?.sitepersourl}}">
-    <img [src]="logo">
-  </a>
-  <div class=" flex-column">
-
-   
-    <div class="p-2 align-right">
-      <mat-icon [style.color]="evenement?.couleurFond" [routerLink]="['/',evenement?.id,'gestion']"
-        fontIcon="settings"></mat-icon>
+@if (getScreenWidth<500) {
+  <div [style.backgroundColor]="evenement?.couleurBandeau" class="d-flex">
+    <div class="p-2 flex-fill align-self-start text-center ">
+      <div class="g1" [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">
+        {{evenement?.eventName}}</div>
     </div>
-    <div class="p-2 align-right">
-      <a href="https://alod.fr/tuto-benevoles/" target="_blank">
-        <mat-icon [style.color]="evenement?.couleurFond" fontIcon="help"></mat-icon>
-      </a>
+    <div class="d-flex">
+      <div class=" flex-column">
+        <div class="align-right">
+          <a href="{{evenement?.sitepersourl}}">
+            <img class="small" [src]="logo">
+          </a>
+        </div>
+        <div class="align-right">
+          <mat-icon [style.color]="evenement?.couleurFond" [routerLink]="['/',evenement?.id,'gestion']"
+            fontIcon="settings"></mat-icon>
+          <a href="https://alod.fr/tuto-benevoles/" target="_blank">
+            <mat-icon [style.color]="evenement?.couleurFond" fontIcon="help"></mat-icon>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
+  }@else {
+  <div [style.backgroundColor]="evenement?.couleurBandeau" class="d-flex">
+    <div class="p-2 flex-fill align-self-start text-center-large ">
+      <div class="g1" [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">
+        {{evenement?.eventName}}</div>
+    </div>
+    <div class="d-flex">
+      <a href="{{evenement?.sitepersourl}}">
+        <img [src]="logo">
+      </a>
+      <div class=" flex-column">
+        <div class="align-right large">
+          <mat-icon [style.color]="evenement?.couleurFond" [routerLink]="['/',evenement?.id,'gestion']"
+            fontIcon="settings"></mat-icon>
+        </div>
+        <div class="align-right large">
+          <a href="https://alod.fr/tuto-benevoles/" target="_blank">
+            <mat-icon [style.color]="evenement?.couleurFond" fontIcon="help"></mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  <router-outlet />
 
-</div>
-
-</div>
-<router-outlet />

@@ -126,20 +126,15 @@ mat-card {
   background-color: rgb(176, 185, 231);
 
 }
-.mat-expansion-panel-header.mat-expanded {
-
-  margin-bottom: 10px;
+.mat-expansion-panel-header.mat-expanded{
+  height: var(--mat-expansion-header-collapsed-state-height) !important;
 }
 
 .toast-custom-rigth {
-  top: 150px;
-  right: 12px;
+  top: 350px;
+  left: 12px;
 }
 
-.mat-expansion-panel-header.mat-expanded:focus,
-.mat-expansion-panel-header:hover {
-  background-color: rgb(183, 201, 242) !important;
-}
 
 .mat-mdc-chip-disabled {
   background-color: rgb(200, 200, 200) !important;
@@ -159,7 +154,7 @@ mat-card {
 .mat-expansion-panel-body{
   padding-top: 0px !important;
 padding-right: 5px!important;
-padding-bottom: 16px!important;
+padding-bottom: 5px!important;
 padding-left: 5px!important;
 }
 
@@ -171,7 +166,7 @@ padding-left: 5px!important;
 .mdc-flat-button,
 .mdc-icon-button,
 .mdc-stroked-button {
-  border-radius: 5px !important;
+  border-radius: 3px !important;
 }
 
 .mat-mdc-chip-option {
@@ -190,12 +185,12 @@ mat-card-header {
   display: block !important;
 }
 
+.mat-mdc-tab-body-wrapper{
+  height: 100%;
+padding: 10px;
+}
 .warning {
   background-color: rgb(235, 157, 61) !important;
-}
-
-.red {
-  background-color: rgb(226, 114, 100) !important;
 }
 
 .full-width {
@@ -243,3 +238,4 @@ mat-card-header {
 .gFascinate {
   font-family: Fascinate !important;
 }
+

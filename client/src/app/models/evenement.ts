@@ -28,7 +28,7 @@ export class Evenement {
   couleurText!: string;
   couleurTitre!: string;
   couleurBloc!: string;
-
+  couleurCard!: string;
 
   titleFont!: string;
 

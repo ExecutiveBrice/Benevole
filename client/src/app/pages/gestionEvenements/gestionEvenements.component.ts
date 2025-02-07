@@ -8,11 +8,10 @@ import { Subscription } from 'rxjs';
 import { DatePipe, NgClass } from '@angular/common';
 import { FormGroup, FormsModule } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
-import { Params } from '../../models/params';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { ModalConnexionComponent } from '../../components/modalConnexion/modalConnexion.component';
 import { ToastrService } from 'ngx-toastr';
+import { ModalAccessGestionComponent } from '../../components/modalAccessGestion/modalAccessGestion.component';
 
 @Component({
   selector: 'app-gestionEvenements',
@@ -57,7 +56,7 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   authorizeAccess(): void {
-    this.dialog.open(ModalConnexionComponent, {
+    this.dialog.open(ModalAccessGestionComponent, {
       hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
       data: {
         title: 'Accès mode gestionnaire',
@@ -72,7 +71,7 @@ export class GestionEvenementsComponent implements OnInit {
               localStorage.setItem('isValidAccessForEvent', JSON.stringify(0));
               this.getAllEvenements();
             } else {
-              this.toastr.error("Mot de passe incorect", 'Erreur');
+              this.toastr.error("Mot de passe incorrect", 'Erreur');
               this.authorizeAccess()
             }
           },

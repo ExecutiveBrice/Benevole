@@ -46,7 +46,7 @@
       <mat-label>Email</mat-label>
       <input type="email" matInput formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
       @if (benevoleForm.get('email')?.hasError('email')) {
-      <mat-error>Le format est incorecte</mat-error>
+      <mat-error>Le format est incorrecte</mat-error>
       }
       @if (benevoleForm.get('email')?.hasError('required')) {
       <mat-error>L'email est obligatoire</mat-error>

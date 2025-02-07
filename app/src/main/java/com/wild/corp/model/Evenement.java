@@ -75,6 +75,9 @@ public class Evenement {
     @Column(name = "couleur_titre")
     private String couleurTitre;
 
+    @Column(name = "couleur_card")
+    private String couleurCard;
+
     @Column(name = "couleur_bloc")
     private String couleurBloc;
 

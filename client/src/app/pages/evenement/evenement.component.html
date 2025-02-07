@@ -1,0 +1,66 @@
+@if (getScreenWidth>500) {
+<div class="row marge small">
+  <div class="col-4">
+    @if (evenement) {
+    <app-connexion 
+    [benevole]="benevole"
+    [evenement]="evenement"
+    >
+    </app-connexion>
+    }
+  </div>
+  <div class="col-4">
+    @if (evenement) {
+    <app-planning [benevole]="benevole" [evenement]="evenement">
+    </app-planning>
+    }
+  </div>
+  <div class="col-4">
+    @if (evenement) {
+    <app-info [evenement]="evenement">
+    </app-info>
+    }
+  </div>
+</div>
+}
+@else {
+<mat-tab-group headerPosition="below" class="footer" [selectedIndex]="1">
+  <mat-tab>
+    <ng-template mat-tab-label>
+
+      <mat-icon [ngClass]="{'pulse':clignotage}" fontIcon="attribution"></mat-icon>
+    </ng-template>
+    @if (evenement) {
+      <app-connexion 
+      [benevole]="benevole"
+      [evenement]="evenement"
+      (actionEmitter)="isBenevoleExiste($event)"
+      >
+      </app-connexion>
+    }
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon fontIcon="calendar_month"></mat-icon>
+    </ng-template>
+    @if (evenement) {
+    <app-planning
+    [benevole]="benevole" 
+    [evenement]="evenement"
+    (actionEmitter)="isBenevoleExiste($event)"
+    >
+    </app-planning>
+    }
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon fontIcon="info"></mat-icon>
+    </ng-template>
+    @if (evenement) {
+    <app-info [evenement]="evenement">
+
+    </app-info>
+    }
+  </mat-tab>
+</mat-tab-group>
+}

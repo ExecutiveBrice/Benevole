@@ -2,6 +2,7 @@ import { Creneau } from "./creneau";
 import { Stand } from "./stand";
 import { Benevole } from "./benevole";
 import { Evenement } from './evenement';
+import { FormGroup } from "@angular/forms";
 
 export class Croisement {
   id!:number;
@@ -12,6 +13,6 @@ export class Croisement {
   besoin!:boolean;
   limite!:number;
   evenement!:Evenement;
-
+  formulaire!:FormGroup;
 
 }

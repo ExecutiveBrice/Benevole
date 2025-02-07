@@ -57,7 +57,7 @@ export class BenevoleService {
     lBenevole.telephone = benevole.telephone
     lBenevole.nom = benevole.nom 
     lBenevole.prenom = benevole.prenom
-    return this.http.put(this.apiUrl + '/', lBenevole, { responseType: 'json' });
+    return this.http.put<Benevole>(this.apiUrl + '/', lBenevole, { responseType: 'json' });
   }
 
   removeToCroisement(benevoleId: number, croisementId: number) {

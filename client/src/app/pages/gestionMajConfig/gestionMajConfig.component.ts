@@ -109,7 +109,10 @@ export class GestionMajConfigComponent implements OnInit {
     couleurText: new FormControl(this.evenement.couleurText, [Validators.required]),
 
     couleurTitre: new FormControl(this.evenement.couleurTitre, [Validators.required]),
+    couleurCard: new FormControl(this.evenement.couleurCard, [Validators.required]),
     couleurBloc: new FormControl(this.evenement.couleurBloc, [Validators.required]),
+  
+
     titleFont: new FormControl(this.evenement.titleFont, [Validators.required]),
   })
 
@@ -160,7 +163,7 @@ export class GestionMajConfigComponent implements OnInit {
       this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);
       this.formulaireEvent.get("couleurBandeau")?.setValue(evenement.couleurBandeau);
       this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);
-
+      this.formulaireEvent.get("couleurCard")?.setValue(evenement.couleurCard);
       this.formulaireEvent.get("couleurTitre")?.setValue(evenement.couleurTitre);
       this.formulaireEvent.get("couleurBloc")?.setValue(evenement.couleurBloc);
       this.formulaireEvent.get("titleFont")?.setValue(evenement.titleFont);
@@ -239,7 +242,7 @@ export class GestionMajConfigComponent implements OnInit {
 
 
   uploadAffiche() {
-    const contentFile = this.croppedImage.replace("data:image/jpeg;base64,", "")
+    const contentFile = this.croppedAffiche.replace("data:image/jpeg;base64,", "")
     this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe(data => {
       console.log(data)
       this.croppedImage = '';
