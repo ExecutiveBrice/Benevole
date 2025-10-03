@@ -74,12 +74,6 @@
             <artifactId>google-oauth-client-jetty</artifactId>
             <version>1.35.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-gmail -->
-        <dependency>
-            <groupId>com.google.apis</groupId>
-            <artifactId>google-api-services-gmail</artifactId>
-            <version>v1-rev20231218-2.0.0</version>
-        </dependency>
         <dependency>
             <groupId>com.mailersend</groupId>
             <artifactId>java-sdk</artifactId>
