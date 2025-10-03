@@ -1,12 +1,7 @@
 package com.wild.corp.service;
 
 
-import brevoApi.*;
-import brevoModel.*;
-import com.mailersend.sdk.MailerSend;
-import com.mailersend.sdk.MailerSendResponse;
-import com.mailersend.sdk.emails.Email;
-import com.mailersend.sdk.exceptions.MailerSendException;
+
 import com.wild.corp.model.Benevole;
 import com.wild.corp.model.Ressources.EmailRessource;
 import jakarta.mail.*;
@@ -16,21 +11,11 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Properties;
 
-
-import brevo.ApiClient;
-import brevo.Configuration;
-import brevo.auth.ApiKeyAuth;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.List;
 
 
 @Component
@@ -69,30 +54,10 @@ public class EmailService {
             corpsMessage.append("<br />");
             corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "'>https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "</a>");
             corpsMessage.append("<br />");
-            //sendSimpleMessage(benevole.getPrenom() + " " + benevole.getNom(), benevole.getEmail(), email.getSubject(), corpsMessage.toString(), null);
+            sendSimpleMessage(benevole.getPrenom() + " " + benevole.getNom(), benevole.getEmail(), email.getSubject(), corpsMessage.toString(), benevole.getEvenement().getCopie()?benevole.getEvenement().getContactEmail():"");
         });
         return "ok";
     }
-
-//
-//    public void sendSimpleMessage2(String nom, String adresseMail, String sujet, String corps) {
-//
-//        MailerSend ms = new MailerSend();
-//        ms.setToken(System.getenv("MAILSENDER_KEY"));
-//        Email email = new Email();
-//        email.subject = sujet;
-//        email.html = corps;
-//        email.addRecipient(nom, adresseMail);
-//        email.setFrom("ALOD bénévoles", "benevole@" + System.getenv("DNS_NAME"));
-//
-//        try {
-//            MailerSendResponse response = ms.emails().send(email);
-//            System.out.println(response.messageId);
-//        } catch (MailerSendException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 
 
     public void sendSimpleMessage(String nom, String adresseMail, String sujet, String corps, String copieEmail) {
