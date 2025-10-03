@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.github.paulcwarren</groupId>
             <artifactId>spring-content-commons</artifactId>
-            <version>3.0.9</version>
+            <version>3.0.17</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.google.api-client/google-api-client -->
         <dependency>
