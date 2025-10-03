@@ -54,7 +54,7 @@ services:
       - "traefik.http.routers.app_benevole.tls.certresolver=myresolver"
 
   db_benevole:
-    image: postgres:14.1-alpine
+    image: postgres:18.0-alpine
     container_name: db_benevole
     environment:
       - POSTGRES_USER=${DB_USER}
