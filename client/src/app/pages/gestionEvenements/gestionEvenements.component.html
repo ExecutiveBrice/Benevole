@@ -58,15 +58,7 @@
             (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate">
         </div>
       </div>
-      <div class="col-sm-4">
-        <div class="input-group mb-3 ">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Rappel</span>
-          </div>
-          <input type="date" [ngModel]="evenement.rappelDate | date:'yyyy-MM-dd'"
-            (ngModelChange)="evenement.rappelDate = $event" class="form-control" id="rappelDate">
-        </div>
-      </div>
+
 
       <div class="col-sm-4">
         <div class="input-group mb-3 ">

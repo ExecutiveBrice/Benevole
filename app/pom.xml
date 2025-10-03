@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.brevo</groupId>
+            <artifactId>brevo</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
@@ -80,7 +85,16 @@
             <artifactId>java-sdk</artifactId>
             <version>1.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.7.0</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>benevoles</finalName>
@@ -94,6 +108,37 @@
                     <layout>JAR</layout>
                 </configuration>
             </plugin>
+
+
+<!--            <plugin>-->
+<!--            <groupId>org.openapitools</groupId>-->
+<!--            <artifactId>openapi-generator-maven-plugin</artifactId>-->
+<!--            <version>7.8.0</version>-->
+<!--            <executions>-->
+<!--                <execution>-->
+<!--                    <goals>-->
+<!--                        <goal>generate</goal>-->
+<!--                    </goals>-->
+<!--                    <configuration>-->
+<!--                        <inputSpec>-->
+<!--                            ${project.basedir}/src/main/resources/brevo.yaml-->
+<!--                        </inputSpec>-->
+<!--                        <generatorName>spring</generatorName>-->
+<!--                        <apiPackage>com.wild.corp.client.brevo.api</apiPackage>-->
+<!--                        <modelPackage>com.wild.corp.client.brevo.model</modelPackage>-->
+<!--                        <supportingFilesToGenerate>-->
+<!--                            ApiUtil.java-->
+<!--                        </supportingFilesToGenerate>-->
+<!--                        <configOptions>-->
+<!--                            <delegatePattern>true</delegatePattern>-->
+<!--                            <useJakartaEe>true</useJakartaEe>-->
+<!--                        </configOptions>-->
+<!--                    </configuration>-->
+<!--                </execution>-->
+<!--            </executions>-->
+<!--        </plugin>-->
+
+
         </plugins>
 
 

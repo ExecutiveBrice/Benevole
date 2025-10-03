@@ -87,20 +87,20 @@
           <mat-form-field class="example-full-width">
             <mat-label>Objet email</mat-label>
             <input type="text"  [(ngModel)]="emailInfo.subject"  matInput>
-     
+
           </mat-form-field>
-        
-         
+
+
 
           <div class="NgxEditor__Wrapper">
             <ngx-editor-menu [toolbar]="toolbar" [editor]="editor"> </ngx-editor-menu>
-            <ngx-editor [editor]="editor" [ngModel]="emailInfo.text" [disabled]="false"  [placeholder]="'Corps de l\'email...'"></ngx-editor>
+            <ngx-editor [editor]="editor" [(ngModel)]="emailInfo.text" [disabled]="false"  [placeholder]="'Corps de l\'email...'"></ngx-editor>
           </div>
 
           <mat-checkbox class="checkboxn" [(ngModel)]="emailInfo.rappel">Rappel des
             choix des bénévoles</mat-checkbox>
-  
-          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail(emailInfo)">
+
+          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail()">
             Envoyer ce message à la liste choisi</button>
         </div>
         }

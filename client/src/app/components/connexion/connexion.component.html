@@ -1,3 +1,5 @@
+
+
 @if (!userExist) {
 <mat-card appearance="raised">
 
@@ -137,38 +139,40 @@
 </mat-card>
 }
 
+@if (evenement.afficherMessageAccueil) {
+  <mat-card appearance="raised">
+    <mat-card-header>
+      <mat-card-title> <strong>Informations :</strong></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div [innerHtml]="evenement.messageAccueil"></div>
+    </mat-card-content>
+  </mat-card>
+}
+
 <mat-card appearance="raised">
   <mat-card-header>
     <mat-card-title> <strong>Informations :</strong></mat-card-title>
 
   </mat-card-header>
-
-
-  <mat-card-content >
-    <div [innerHtml]=attentionMessage></div>
-
-  </mat-card-content>
-
   <mat-card-content>
     <div class="row">
-
-
-      <div class="col-lg-12">
+      <div class="col-12">
         <b>Organisateur</b>
       </div>
 
 
-      <div class="col-lg-4">
+      <div class="col-12">
         {{evenement.contact}}
       </div>
 
 
-      <div class="col-lg-4">
+      <div class="col-12">
         {{evenement.contactEmail}}
       </div>
 
 
-      <div class="col-lg-4">
+      <div class="col-12">
         {{evenement.contactTel}}
       </div>
 

@@ -1,28 +1,13 @@
 <div class="row marge">
 @for (evenement of evenements | orderBy:'id':false; track $index) {
-
-    
-
     <div class="col-6 col-md-4 col-lg-2">
-  
       <mat-card appearance="raised" [routerLink]="['/',evenement?.id]">
-
-  
             <button class="full-width" mat-flat-button type="button" >
                 {{evenement.eventName}}</button>
-  
-        
-          
             @if (evenement.affiche) {
                 <img mat-card-image [src]="evenement.affiche" alt="Affiche">
                 }
-
       </mat-card>
-  
-  
     </div>
-
-
-
 }
 </div>

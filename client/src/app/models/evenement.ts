@@ -11,17 +11,22 @@ export class Evenement {
 
   sitepersourl!: string;
 
-  message!: string;
-  afficherMessage!: boolean;
+  messageAccueil!: string;
+  afficherMessageAccueil!: boolean;
+  messagePlanning!: string;
+  afficherMessagePlanning!: boolean;
+  messageInfo!: string;
+  afficherMessageInfo!: boolean;
 
-  rappelDate!: Date;
+  afficherBenevoles!: boolean;
+
   validation!: string;
   retour!: string;
   signature!: string;
   rappel!: string;
   lock!: boolean;
   needtel!: boolean;
-
+  copie!: boolean;
 
   couleurFond!: string;
   couleurBandeau!: string;

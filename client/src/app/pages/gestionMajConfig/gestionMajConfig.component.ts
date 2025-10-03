@@ -23,6 +23,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { MatSelectModule } from '@angular/material/select';
+import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 
 @Component({
   selector: 'app-gestionMajConfig',
@@ -42,7 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
-    MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule],
+    MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule, NgxEditorModule],
 
   templateUrl: './gestionMajConfig.component.html',
   styleUrls: ['./gestionMajConfig.component.scss']
@@ -55,6 +56,24 @@ export class GestionMajConfigComponent implements OnInit {
   idEvenement!: number
   logo!: string;
   affiche!: string;
+
+  editorValidation: Editor = new Editor();
+
+  editorSignature: Editor = new Editor();
+  editorMessageAccueil: Editor = new Editor();
+  editorMessagePlanning: Editor = new Editor();
+  editorMessageInfo: Editor = new Editor();
+
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['blockquote'],
+    ['ordered_list', 'bullet_list'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+    ['horizontal_rule', 'format_clear'],
+  ];
+
+
 
   fontList = [
     'Agu',
@@ -100,9 +119,16 @@ export class GestionMajConfigComponent implements OnInit {
     retour: new FormControl(this.evenement.retour, [Validators.required, Validators.minLength(2)]),
     signature: new FormControl(this.evenement.signature, [Validators.required, Validators.minLength(2)]),
     rappel: new FormControl(this.evenement.rappel, [Validators.required, Validators.minLength(2)]),
-    afficherMessage: new FormControl(this.evenement.afficherMessage, [Validators.required]),
-    message: new FormControl(this.evenement.message, []),
+    afficherMessageAccueil: new FormControl(this.evenement.afficherMessageAccueil, [Validators.required]),
+    messageAccueil: new FormControl(this.evenement.messageAccueil, []),
+
+    afficherMessageInfo: new FormControl(this.evenement.afficherMessageInfo, [Validators.required]),
+    messageInfo: new FormControl(this.evenement.messageInfo, []),
+    afficherMessagePlanning: new FormControl(this.evenement.afficherMessagePlanning, [Validators.required]),
+    messagePlanning: new FormControl(this.evenement.messagePlanning, []),
+    afficherBenevoles: new FormControl(this.evenement.afficherBenevoles, [Validators.required]),
     needtel: new FormControl(this.evenement.needtel, [Validators.required]),
+    copie: new FormControl(this.evenement.copie, [Validators.required]),
 
     couleurFond: new FormControl(this.evenement.couleurFond, [Validators.required]),
     couleurBandeau: new FormControl(this.evenement.couleurBandeau, [Validators.required]),
@@ -111,7 +137,7 @@ export class GestionMajConfigComponent implements OnInit {
     couleurTitre: new FormControl(this.evenement.couleurTitre, [Validators.required]),
     couleurCard: new FormControl(this.evenement.couleurCard, [Validators.required]),
     couleurBloc: new FormControl(this.evenement.couleurBloc, [Validators.required]),
-  
+
 
     titleFont: new FormControl(this.evenement.titleFont, [Validators.required]),
   })
@@ -156,10 +182,15 @@ export class GestionMajConfigComponent implements OnInit {
       this.formulaireEvent.get("retour")?.setValue(evenement.retour);
       this.formulaireEvent.get("signature")?.setValue(evenement.signature);
       this.formulaireEvent.get("rappel")?.setValue(evenement.rappel);
-      this.formulaireEvent.get("afficherMessage")?.setValue(evenement.afficherMessage);
-      this.formulaireEvent.get("message")?.setValue(evenement.message);
+      this.formulaireEvent.get("afficherMessageAccueil")?.setValue(evenement.afficherMessageAccueil);
+      this.formulaireEvent.get("messageAccueil")?.setValue(evenement.messageAccueil);
+        this.formulaireEvent.get("afficherMessageInfo")?.setValue(evenement.afficherMessageInfo);
+        this.formulaireEvent.get("messageInfo")?.setValue(evenement.messageInfo);
+        this.formulaireEvent.get("afficherMessagePlanning")?.setValue(evenement.afficherMessagePlanning);
+        this.formulaireEvent.get("messagePlanning")?.setValue(evenement.messagePlanning);
       this.formulaireEvent.get("needtel")?.setValue(evenement.needtel);
-
+      this.formulaireEvent.get("copie")?.setValue(evenement.copie);
+        this.formulaireEvent.get("afficherBenevoles")?.setValue(evenement.afficherBenevoles);
       this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);
       this.formulaireEvent.get("couleurBandeau")?.setValue(evenement.couleurBandeau);
       this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);

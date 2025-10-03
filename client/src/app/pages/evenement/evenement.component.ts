@@ -98,7 +98,9 @@ export class EvenementComponent implements OnInit {
   getEvenement(idEvenement: number): void {
     this.evenementService.getById(idEvenement).subscribe({
       next: (data) => {
+       
         this.evenement = data;
+        document.getElementsByTagName('html')[0].style.setProperty('--background-color', this.evenement!.couleurFond);
         this.transmissionService.dataTransmission(data);
 
       },

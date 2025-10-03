@@ -4,10 +4,7 @@ import { CroisementService, StandService, CreneauService, EvenementService, Tran
 import { DomSanitizer } from '@angular/platform-browser';
 import { Croisement, Stand, Creneau, Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { NgClass } from '@angular/common';
-
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { OrderByPipe } from "../../services/sort.pipe";
 import { OrderObjectByPipe } from "../../services/sortObject.pipe";
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +18,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
-import { ImageCropperComponent } from 'ngx-image-cropper';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -33,13 +29,12 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './gestionMajStands.component.html',
   styleUrls: ['./gestionMajStands.component.scss'],
   imports: [
-    NgClass, FormsModule, ImageCropperComponent,
-    RouterModule, MatStepperModule, MatSidenavModule,
+    FormsModule, RouterModule, MatStepperModule, MatSidenavModule,
     MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatSelectModule,
     MatFormFieldModule, MatInputModule, MatGridListModule,
     MatDatepickerModule, MatIconModule, MatButtonModule,
-    OrderByPipe, OrderObjectByPipe, MatExpansionModule],
+    OrderObjectByPipe, MatExpansionModule],
   providers: [
     EvenementService,
     CroisementService,

@@ -25,9 +25,6 @@ mat-card-content {
   padding: 16px 16px 0 16px;
 }
 
-mat-tab-group {
-  height: 90%;
-}
 
 .footer {
   width: 100%;
@@ -39,9 +36,17 @@ mat-tab-group {
 }
 
 
+:root{
+  --background-color: white;
+}
 
-
-
+.mat-mdc-tab-header {
+  background-color: var(--background-color);
+  top: 0;
+  z-index: 1000; 
+  position: sticky!important;
+  position: -webkit-sticky; /* macOS/iOS Safari */    
+}
 
 
 @-webkit-keyframes pulse {
@@ -53,7 +58,7 @@ mat-tab-group {
 
   100% {
     border-radius: 20px;
-    background-color: rgb(164, 140, 140, 0);
+    background-color: rgb(255, 255, 255);
   }
 }
 
@@ -65,7 +70,7 @@ mat-tab-group {
 
   100% {
     border-radius: 20px;
-    background-color: rgb(164, 140, 140, 0);
+    background-color: rgb(255, 255, 255);
   }
 }
 

@@ -64,7 +64,7 @@ public class SchedulerService {
             corpsMessage.append("Bonjour,<br />").append(benevole.getEvenement().getValidation()).append("<br />");
             corpsMessage.append("<br />");
 
-            benevole.getCroisements().forEach(croisement -> {
+            benevole.getCroisements().stream().filter(croisement -> croisement.getStand().getType()!=4).forEach(croisement -> {
                 String nomStand = "tous".equals(croisement.getStand().getNom()) ? "N'importe quel stand" : croisement.getStand().getNom();
                 corpsMessage.append(nomStand);
                 corpsMessage.append("-");
@@ -73,12 +73,19 @@ public class SchedulerService {
             });
             corpsMessage.append("<br />");
             corpsMessage.append(benevole.getEvenement().getSignature());
-            corpsMessage.append("Comme précisé dans l'adresse mail, il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement :<br />");
+            corpsMessage.append("<br />");
+            corpsMessage.append("Ceci est un mail automatique, veuillez utiliser le contact de cet évènement :");
+            corpsMessage.append("<br />");
             corpsMessage.append(benevole.getEvenement().getContact());
             corpsMessage.append("-");
             corpsMessage.append(benevole.getEvenement().getContactEmail());
             corpsMessage.append("<br />");
-            emailService.sendSimpleMessage(benevole.getPrenom(), benevole.getEmail(), subject, corpsMessage.toString());
+            corpsMessage.append("<br />");
+            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www."+System.getenv("DNS_NAME")+"/benevoles/#/"+benevole.getEvenement().getId()+"'>https://www."+System.getenv("DNS_NAME")+"/benevoles/#/"+benevole.getEvenement().getId()+"</a>");
+            corpsMessage.append("<br />");
+
+
+           // emailService.sendSimpleMessage(benevole.getPrenom(), benevole.getEmail(), subject, corpsMessage.toString(), benevole.getEvenement().getCopie()?benevole.getEvenement().getContactEmail():null);
 
         });
     }

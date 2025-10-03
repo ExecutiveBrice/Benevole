@@ -81,12 +81,20 @@ public class EvenementService {
         event.setContact(evenement.getContact());
         event.setContactEmail(evenement.getContactEmail());
 
-        event.setAfficherMessage(evenement.isAfficherMessage());
-        event.setMessage(evenement.getMessage());
+        event.setAfficherMessageAccueil(evenement.isAfficherMessageAccueil());
+        event.setMessageAccueil(evenement.getMessageAccueil());
+        event.setAfficherMessageInfo(evenement.isAfficherMessageInfo());
+        event.setMessageInfo(evenement.getMessageInfo());
+        event.setAfficherMessagePlanning(evenement.isAfficherMessagePlanning());
+        event.setMessagePlanning(evenement.getMessagePlanning());
+
+        event.setAfficherBenevoles(evenement.isAfficherBenevoles());
 
         event.setSignature(evenement.getSignature());
         event.setValidation(evenement.getValidation());
         event.setLock(evenement.isLock());
+
+        event.setCopie(evenement.getCopie());
         event.setNeedtel(evenement.getNeedtel());
         event.setSitepersourl(evenement.getSitepersourl());
 

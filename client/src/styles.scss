@@ -112,6 +112,7 @@
 
 .mat-mdc-raised-button {
   color: black!important;
+  padding: 0px !important;
 }
 mat-card {
   margin-bottom: 10px;
@@ -126,9 +127,7 @@ mat-card {
   background-color: rgb(176, 185, 231);
 
 }
-.mat-expansion-panel-header.mat-expanded{
-  height: var(--mat-expansion-header-collapsed-state-height) !important;
-}
+
 
 .toast-custom-rigth {
   top: 350px;
@@ -213,6 +212,9 @@ padding: 10px;
   .g1 {
     font-size: 4rem;
     align-self:center;
+    padding: 50px 0 0 0 ;
+    line-height: 100%;
+  
   }
 }
 
@@ -220,6 +222,9 @@ padding: 10px;
   .g1 {
     font-size: 3rem;
     align-self:center;
+    padding: 50px 0 0 0;
+    line-height: 100%;
+  
   }
 }
 
@@ -227,6 +232,9 @@ padding: 10px;
   .g1 {
     font-size: 1.5rem;
     align-self:center;
+    padding: 50px 0 0 0;
+    line-height: 100%;
+  
    
   }
 }

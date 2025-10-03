@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { Croisement, Stand } from '../models';
+import {Benevole, Croisement, Stand} from '../models';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -10,6 +10,32 @@ const EXCEL_EXTENSION = '.xlsx';
 export class ExcelService {
 
   constructor() { }
+  public multiExportAsExcelBenevoles(benevoles: Benevole[], excelFileName: string): void {
+    /* generate workbook and add the worksheet */
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+
+    var worksheet = XLSX.utils.aoa_to_sheet([
+    ]);
+
+    let line = 0;
+
+    benevoles.forEach(benevole => {
+
+      XLSX.utils.sheet_add_aoa(worksheet, [
+        [benevole.nom,
+        benevole.prenom,
+        benevole.email,
+       benevole.telephone
+      ]], { origin: line });
+      line++;
+
+    });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "benevoles");
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, excelFileName);
+  }
 
   public multiExportAsExcelFile(stands: Stand[], excelFileName: string): void {
     /* generate workbook and add the worksheet */

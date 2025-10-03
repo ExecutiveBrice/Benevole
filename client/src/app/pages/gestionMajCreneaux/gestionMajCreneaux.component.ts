@@ -91,7 +91,7 @@ export class GestionMajCreneauxComponent implements OnInit {
   formulaireNewCreneau = this.formBuilder.group(
     {
 
-      ordre: new FormControl("", [Validators.required, Validators.minLength(2)]),
+      ordre: new FormControl("", [Validators.required, Validators.minLength(1)]),
       plage: new FormControl("", [Validators.required, Validators.minLength(2)]),
     }
   )
@@ -103,7 +103,7 @@ export class GestionMajCreneauxComponent implements OnInit {
 
         let formulaire = this.formBuilder.group({
           id: new FormControl(creneau.id, [Validators.required, Validators.minLength(2)]),
-          ordre: new FormControl(creneau.ordre, [Validators.required, Validators.minLength(2)]),
+          ordre: new FormControl(creneau.ordre, [Validators.required, Validators.minLength(1)]),
           plage: new FormControl(creneau.plage, [Validators.required, Validators.minLength(2)]),
         })
 

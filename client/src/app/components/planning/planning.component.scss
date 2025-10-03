@@ -1,7 +1,10 @@
 .selection {
   margin-top: 5px;
-
+height: 100%;
   width: 100%;
+}
+.selectionCol {
+  margin-bottom: 5px;
 }
 .selected{
   background-color:  rgb(207, 241, 192)!important;
@@ -10,7 +13,19 @@
   background-color:rgb(204, 204, 204)!important;
 }
 
+::ng-deep mat-expansion-panel-header .mat-content {
+  height: 100% !important;
+}
 
 mat-card-title {
   padding: 10px;
+}
+
+.mat-expansion-panel-header-title{
+  margin-right: 1px!important;
+}
+
+mat-expansion-panel-header{
+  height: 100px !important;
+  padding: 0 10px;
 }

@@ -29,12 +29,10 @@ public class Stand {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @ToString.Exclude
     private Evenement evenement;
 
     @OneToMany(mappedBy="stand", orphanRemoval=true, fetch = FetchType.EAGER)
     @JsonIgnoreProperties({"stand"})
-    @ToString.Exclude
     private List<Croisement> croisements;
 
 

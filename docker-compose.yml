@@ -28,9 +28,10 @@ services:
     depends_on:
       - db_benevole
     volumes:
-      - /home/ubuntu/benevole/:/home/ubuntu/benevole/
+      - /home/ubuntu/benevole/img/:/home/ubuntu/benevole/
     environment:
       - DNS_NAME=${DNS_NAME}
+      - PASSWORD_OVHMAIL=${PASSWORD_OVHMAIL}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
@@ -56,7 +57,7 @@ services:
       - "traefik.http.routers.app_benevole.tls.certresolver=myresolver"
 
   db_benevole:
-    image: postgres:14.1-alpine
+    image: postgres:17.6-alpine
     container_name: db_benevole
     environment:
       - POSTGRES_USER=${DB_USER}

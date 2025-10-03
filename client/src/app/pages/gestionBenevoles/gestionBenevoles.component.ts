@@ -158,7 +158,7 @@ export class GestionBenevolesComponent implements OnInit {
   choisir(benevole: Benevole, benecroisement: Croisement | null, croisement: Croisement | null): void {
     console.log(benecroisement);
     console.log(croisement);
-    
+
     if (benecroisement != null) {
 
       this.retraitCroisement(benevole, benecroisement);
@@ -194,11 +194,11 @@ export class GestionBenevolesComponent implements OnInit {
     })
   }
 
-  
+
     update(benevole: Benevole): void {
       console.log(benevole)
       if (benevole.formulaire.valid) {
-  
+
         this.benevoleService.update(Object.assign(benevole, benevole.formulaire.getRawValue())).subscribe({
           next: (benevoleUpdated: Benevole) => {
             console.log(benevoleUpdated)
@@ -213,18 +213,18 @@ export class GestionBenevolesComponent implements OnInit {
         })
       }
     }
-  
+
 
 
   async exportAsXLSX() {
-    //this.excelService.multiExportAsExcelFile(this.benevoles, 'Benevoles');
+    this.excelService.multiExportAsExcelBenevoles(this.benevoles, 'Benevoles');
   }
 
 
 
   delete(benevole: Benevole) {
     console.log(benevole);
-    
+
    this.dialog.open(ModalComponent, {
       data: {
         title: 'Suppression',

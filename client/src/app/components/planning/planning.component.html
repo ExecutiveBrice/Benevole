@@ -1,163 +1,213 @@
-@if (evenement.afficherMessage) {
-<mat-card appearance="raised">
-  <mat-card-header>
-    <mat-card-title> <strong>Informations :</strong></mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <div [innerHtml]="evenement.message"></div>
-  </mat-card-content>
-</mat-card>
+@if (evenement.afficherMessagePlanning) {
+  <mat-card appearance="raised">
+    <mat-card-header>
+      <mat-card-title><strong>Informations :</strong></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div [innerHtml]="evenement.messagePlanning"></div>
+    </mat-card-content>
+  </mat-card>
 }
 @if (preparatifs.length > 0) {
 
-<mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-  <mat-card-header>
-    <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
-      préparatifs</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
+    <mat-card-header>
+      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+        préparatifs
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
 
 
+      @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
 
-    @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
+        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
+          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+            <mat-panel-title [style]="'font-family: '+evenement?.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+              /{{ stand.placeTotal }})
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-    <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
-      <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-        <mat-panel-title [style]="'font-family: '+evenement?.titleFont" >{{stand.nom}} ({{stand.placeOccupe}}/{{stand.placeTotal}})</mat-panel-title>
-      </mat-expansion-panel-header>
+          <div class="row">
+            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+              <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
+                <button mat-raised-button class="selection"
+                        [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
+                        (click)="choisir(croisement)">
 
-      <div class="row">
-        @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
-        <div class="col-6 col-lg-4 col-xxl-4">
-          <button mat-raised-button class="selection" [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}" (click)="choisir(croisement)">
+                  <span>{{ croisement.creneau.plage }}</span><br>
+                  <span>({{ croisement.benevoles.length + '\/' + croisement.limite }})</span>
+                  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
+                    @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
+                      {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                    }
+                  }
+                </button>
+              </div>
+            }
+          </div>
 
-            {{croisement.creneau.plage}} ({{ croisement.benevoles.length+'\/'+croisement.limite}})
-          </button>
-        </div>
-        }
-      </div>
-
-    </mat-expansion-panel>
-    }
-  </mat-card-content>
-</mat-card>
+        </mat-expansion-panel>
+      }
+    </mat-card-content>
+  </mat-card>
 }
 
 @if (stands && stands.length > 0) {
 
-<mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-  <mat-card-header>
-    <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
-      stands</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
+    <mat-card-header>
+      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+        stands
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
 
 
-    @for (stand of activites | orderBy:'ordre':false; track $index) {
+      @for (stand of activites | orderBy:'ordre':false; track $index) {
 
-      <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
-        <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-          <mat-panel-title [style]="'font-family: '+evenement?.titleFont" >{{stand.nom}} ({{stand.placeOccupe}}/{{stand.placeTotal}})</mat-panel-title>
-        </mat-expansion-panel-header>
-  
-        <div class="row">
-          @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
-          <div class="col-6 col-lg-4 col-xxl-4">
-            <button mat-raised-button class="selection" [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite,'selected':croisement.selected}" (click)="choisir(croisement)">
+        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
+          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+            <mat-panel-title [style]="'font-family: '+evenement?.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+              /{{ stand.placeTotal }})
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-              {{croisement.creneau.plage}} ({{ croisement.benevoles.length+'\/'+croisement.limite}})
-            </button>
+          <div class="row">
+            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+              <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
+                <button mat-raised-button class="selection"
+                        [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite,'selected':croisement.selected}"
+                        (click)="choisir(croisement)">
+
+                  <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
+                  )</span>
+                  <br>
+                  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
+                    @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
+                      {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                    }
+                  }
+                </button>
+              </div>
+            }
           </div>
-          }
-        </div>
-  
-      </mat-expansion-panel>
-    }
-  </mat-card-content>
-</mat-card>
+
+        </mat-expansion-panel>
+      }
+    </mat-card-content>
+  </mat-card>
 }
 
 
 @if (sansChoix.length > 0) {
-<mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-  <mat-card-header>
-    <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
-      dispos</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
+    <mat-card-header>
+      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+        dispos
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
 
-    <div class="row">
-      @for (croisement of sansChoix | orderBy:'creneau.ordre':false; track $index) {
-      <div class="col-6 col-lg-4 col-xxl-4">
-        <button mat-raised-button class="selection" [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}" (click)="choisir(croisement)">
+      <div class="row">
+        @for (croisement of sansChoix | orderBy:'creneau.ordre':false; track $index) {
+          <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
+            <button mat-raised-button class="selection"
+                    [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
+                    (click)="choisir(croisement)">
 
-          {{croisement.creneau.plage}} ({{ croisement.benevoles.length+'\/'+croisement.limite}})
-        </button>
+              <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
+              )</span>
+              @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
+                @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
+                  {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                }
+              }
+            </button>
+          </div>
+        }
       </div>
-      }
-    </div>
 
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
 }
 
 @if (besoins.length > 0) {
-<mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-  <mat-card-header>
-    <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
-      besoins</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
+    <mat-card-header>
+      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+        besoins
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
 
 
-    <div class="row">
-      @for (croisement of besoins | orderBy:'creneau.ordre':false; track $index) {
-      <div class="col-6 col-lg-4 col-xxl-4">
-        <button mat-raised-button class="selection" [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}" (click)="choisir(croisement)">
+      <div class="row">
+        @for (croisement of besoins | orderBy:'creneau.ordre':false; track $index) {
+          <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
+            <button mat-raised-button class="selection"
+                    [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
+                    (click)="choisir(croisement)">
 
-          {{croisement.creneau.plage}} ({{ croisement.benevoles.length+'\/'+croisement.limite}})
-        </button>
+              <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
+              )</span>
+              @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
+                @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
+                  {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                }
+              }
+            </button>
+          </div>
+        }
       </div>
-      }
-    </div>
 
 
-
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
 }
 
 
 @if (postparatifs.length > 0) {
-<mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-  <mat-card-header>
-    <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
-      postparatifs</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
+    <mat-card-header>
+      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+        postparatifs
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
 
 
+      @for (stand of postparatifs | orderBy:'ordre':false; track $index) {
 
-    @for (stand of postparatifs | orderBy:'ordre':false; track $index) {
+        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
+          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
+            <mat-panel-title [style]="'font-family: '+evenement?.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+              /{{ stand.placeTotal }})
+            </mat-panel-title>
+          </mat-expansion-panel-header>
 
-      <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
-        <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-          <mat-panel-title [style]="'font-family: '+evenement?.titleFont" >{{stand.nom}} ({{stand.placeOccupe}}/{{stand.placeTotal}})</mat-panel-title>
-        </mat-expansion-panel-header>
-  
-        <div class="row">
-          @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
-          <div class="col-6 col-lg-4 col-xxl-4">
-            <button mat-raised-button class="selection" [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}" (click)="choisir(croisement)">
+          <div class="row">
+            @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
+              <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
+                <button mat-raised-button class="selection"
+                        [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
+                        (click)="choisir(croisement)">
 
-              {{croisement.creneau.plage}} ({{ croisement.benevoles.length+'\/'+croisement.limite}})
-            </button>
+                  <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
+                  )</span>
+                  <br>
+                  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
+                    @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
+                      {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                    }
+                  }
+                </button>
+              </div>
+            }
           </div>
-          }
-        </div>
-  
-      </mat-expansion-panel>
-    }
-  </mat-card-content>
-</mat-card>
+
+        </mat-expansion-panel>
+      }
+    </mat-card-content>
+  </mat-card>
 }

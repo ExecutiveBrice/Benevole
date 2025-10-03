@@ -14,7 +14,7 @@
         </mat-grid-tile>
         <mat-grid-tile>
 
-        
+
 
         </mat-grid-tile>
       </mat-grid-list>
@@ -117,6 +117,56 @@
           </mat-slide-toggle>
 
         </mat-card-content>
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="copie">
+           Souhaiez vous une copie des mails de confirmation ?
+          </mat-slide-toggle>
+
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="afficherBenevoles">
+            Affichage du prenom des bénévoles déjà inscrits sur les boutons de selection?
+          </mat-slide-toggle>
+
+        </mat-card-content>
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="afficherMessageAccueil">
+            Afficher le message ci dessous dans la page d'accueil ?
+          </mat-slide-toggle>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-label>Message d'accueil</mat-label>
+          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageAccueil"> </ngx-editor-menu>
+          <ngx-editor [editor]="editorMessageAccueil" formControlName="messageAccueil" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
+        </mat-card-content>
+
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="afficherMessagePlanning">
+            Afficher le message ci dessous dans le planning?
+          </mat-slide-toggle>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-label>Message du planning</mat-label>
+          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessagePlanning"> </ngx-editor-menu>
+          <ngx-editor [editor]="editorMessagePlanning" formControlName="messagePlanning" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
+        </mat-card-content>
+
+
+
+        <mat-card-content>
+          <mat-slide-toggle formControlName="afficherMessageInfo">
+            Afficher le message ci dessous dans la page d'info?
+          </mat-slide-toggle>
+        </mat-card-content>
+        <mat-card-content>
+          <mat-label>Message d'accueil</mat-label>
+          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageInfo"> </ngx-editor-menu>
+          <ngx-editor [editor]="editorMessageInfo" formControlName="messageInfo" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
+        </mat-card-content>
       </form>
 
     </mat-card>
@@ -129,46 +179,24 @@
     <mat-card appearance="raised">
       <form [formGroup]="formulaireEvent">
         <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Contenu de l'email de validation</mat-label>
-            <textarea matInput rows="5" formControlName="validation"></textarea>
+          <mat-label>Contenu de l'email de validation</mat-label>
+          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorValidation"> </ngx-editor-menu>
+          <ngx-editor [editor]="editorValidation" formControlName="validation" [disabled]="false"  [placeholder]="'Contenu'"></ngx-editor>
 
-            @if (formulaireEvent.get('validation')?.hasError('required')) {
-            <mat-error>Le contenu de l'email de validation est obligatoire</mat-error>
-            }
 
-          </mat-form-field>
 
         </mat-card-content>
 
         <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Signature automatique des emails de l'application</mat-label>
-            <textarea matInput rows="5" formControlName="signature"></textarea>
 
-            @if (formulaireEvent.get('signature')?.hasError('required')) {
-            <mat-error>La signature est obligatoire</mat-error>
-            }
+          <mat-label>Signature automatique des emails de l'application</mat-label>
+          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorSignature"> </ngx-editor-menu>
+          <ngx-editor [editor]="editorSignature" formControlName="signature" [disabled]="false"  [placeholder]="'Une signature dans les mails de validation'"></ngx-editor>
 
-          </mat-form-field>
+
         </mat-card-content>
 
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="afficherMessage">
-            Afficher le message d'accueil ci dessous?
-          </mat-slide-toggle>
-
-        </mat-card-content>
-
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Message d'accueil</mat-label>
-            <textarea matInput rows="5" formControlName="message"></textarea>
-
-
-          </mat-form-field>
-        </mat-card-content>
 
 
         <mat-card-content>

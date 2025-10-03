@@ -316,16 +316,16 @@ export class GestionComponent implements OnInit {
 
 
 
-  envoiMail(email: Email) {
-    if (email.to.length > 0) {
-      this.mailService.sendMail(email)
+  envoiMail() {
+    if (this.emailInfo.to.length > 0) {
+      this.mailService.sendMail(this.emailInfo)
         .subscribe(res => {
-          this.toastr.show("Les "+email.to.length+" emails sont bien partis", 'Bravo');
+          this.toastr.show("Les " + this.emailInfo.to.length + " emails sont bien partis", 'Bravo');
         }, err => {
           this.toastr.error("Il y a eu un problème lors de l'envoi des mails", 'Erreur');
           console.log(err);
         });
-    }else{
+    } else {
       this.toastr.error("Il faut choisir une mailing-liste avec au moins un bénévole", 'Erreur');
     }
 
