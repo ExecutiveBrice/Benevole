@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.mailersend</groupId>
             <artifactId>java-sdk</artifactId>
-            <version>1.0.1</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
