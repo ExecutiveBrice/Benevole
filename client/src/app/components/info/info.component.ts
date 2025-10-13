@@ -15,14 +15,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-info',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, OrderByPipe, MatIconModule],
+  imports: [MatButtonModule, MatCardModule, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './info.component.html',
   styleUrl: './info.component.scss'
 })
 export class InfoComponent implements OnInit {
 
   @Input() evenement!: Evenement;
-  
+
   affiche!: string;
   constructor(
     public fileService: FileService
@@ -33,7 +33,7 @@ export class InfoComponent implements OnInit {
     this.getAffiche()
   }
 
- 
+
 
   getAffiche() {
     this.fileService.get(this.evenement.id, 'affiche.jpeg').subscribe({

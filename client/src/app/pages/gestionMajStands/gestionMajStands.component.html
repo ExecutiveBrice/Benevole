@@ -93,9 +93,7 @@
                 <mat-form-field>
                   <mat-label>Ajouter un creneau</mat-label>
                   <mat-select (selectionChange)="addCreneauToStand($event, stand)">
-                    <mat-option></mat-option>
-
-                    @for (creneau of creneaux; track creneau) {
+                    @for (creneau of creneaux | listFilter:'plage':getCreneauxStand(stand); track creneau) {
                     <mat-option [value]="creneau">{{ creneau.plage }}</mat-option>
                     }
                   </mat-select>

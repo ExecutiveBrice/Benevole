@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Benevole } from '../models';
 import { environment } from '../../environments/environment';
+import {Observable} from "rxjs";
 
 @Injectable()
 export class BenevoleService {
@@ -40,7 +41,7 @@ export class BenevoleService {
     return this.http.delete<void>(this.apiUrl + '/deleteById', { params, responseType: 'json' });
   }
 
-  getByMail(email: String, eventId: number) {
+  getByMail(email: String, eventId: number): Observable<Benevole> {
     let params = new HttpParams().set('email', '' + email + '').set('eventId', '' + eventId + '');
     return this.http.get<Benevole>(this.apiUrl + '/byMail', { params, responseType: 'json' });
   }
@@ -55,7 +56,7 @@ export class BenevoleService {
     lBenevole.id = benevole.id
     lBenevole.email = benevole.email
     lBenevole.telephone = benevole.telephone
-    lBenevole.nom = benevole.nom 
+    lBenevole.nom = benevole.nom
     lBenevole.prenom = benevole.prenom
     return this.http.put<Benevole>(this.apiUrl + '/', lBenevole, { responseType: 'json' });
   }

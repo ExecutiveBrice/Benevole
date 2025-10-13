@@ -112,17 +112,27 @@
 
 
         <mat-card-content>
+          <mat-slide-toggle formControlName="basique" (change)="updateConnexionParams()">
+            Connexion simplifiée (uniquement un prénom) ?
+          </mat-slide-toggle>
+        </mat-card-content>
+        @if (!formulaireEvent.get('basique')?.value){
+
+        <mat-card-content>
           <mat-slide-toggle formControlName="needtel">
             Besoin du téléphone des bénévoles?
           </mat-slide-toggle>
-
         </mat-card-content>
-
+        <mat-card-content>
+          <mat-slide-toggle formControlName="notification">
+            Les bénévoles recoivent un mail de confirmation ?
+          </mat-slide-toggle>
+        </mat-card-content>
+        }
         <mat-card-content>
           <mat-slide-toggle formControlName="copie">
            Souhaiez vous une copie des mails de confirmation ?
           </mat-slide-toggle>
-
         </mat-card-content>
 
         <mat-card-content>

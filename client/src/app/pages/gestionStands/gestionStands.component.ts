@@ -36,9 +36,7 @@ import { AsyncPipe } from '@angular/common';
   standalone: true,
   templateUrl: './gestionStands.component.html',
   styleUrls: ['./gestionStands.component.scss'],
-  imports: [NgClass,
-    DatePipe, AsyncPipe,
-    ImageCropperComponent,
+  imports: [
     RouterModule, MatAutocompleteModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
@@ -91,13 +89,16 @@ export class GestionStandsComponent implements OnInit {
   }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
+    this.evenementService.getById(idEvenement).subscribe({
+      next: (data) => {
       this.evenement = data;
       this.transmissionService.dataTransmission(data);
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
   benevoles!: Benevole[]
@@ -155,7 +156,7 @@ export class GestionStandsComponent implements OnInit {
       },
     }).afterClosed().subscribe(benevole => {
       console.log(benevole);
-      
+
       if (benevole.id == 0) {
 
         benevole.email = benevole.email.toLowerCase();
@@ -170,11 +171,11 @@ export class GestionStandsComponent implements OnInit {
           },
             error: (error: HttpErrorResponse) => {
               console.log(error)
-   
+
                 this.toastr.error(error.message, 'Erreur');
-              
+
             }
-         
+
         })
 
       } else {
@@ -186,7 +187,7 @@ export class GestionStandsComponent implements OnInit {
 
 
 updateCroisement(croisement: Croisement,benevole :Benevole, stand: Stand) {
-  
+
   this.benevoleService.addToCroisement(benevole.id, croisement.id, true).subscribe({
     next: (data) => {
       console.log(data);

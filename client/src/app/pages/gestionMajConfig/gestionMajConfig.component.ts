@@ -1,35 +1,37 @@
-import { Component, OnInit } from '@angular/core';
-import { TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Evenement } from '../../models';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import { ImageCropperComponent, ImageCroppedEvent } from 'ngx-image-cropper';
-import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { ColorPickerModule } from 'ngx-color-picker';
-import { MatSelectModule } from '@angular/material/select';
-import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
+import {Component, OnInit} from '@angular/core';
+import {TransmissionService, EvenementService, FileService, ConfigService} from '../../services';
+import {DomSanitizer} from '@angular/platform-browser';
+import {Evenement} from '../../models';
+import {Router, ActivatedRoute, RouterModule} from '@angular/router';
+import {Subscription} from 'rxjs';
+import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+import {ImageCropperComponent, ImageCroppedEvent} from 'ngx-image-cropper';
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {ColorPickerModule} from 'ngx-color-picker';
+import {MatSelectModule} from '@angular/material/select';
+import {Editor, NgxEditorModule, Toolbar} from 'ngx-editor';
+import {ToastrService} from "ngx-toastr";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-gestionMajConfig',
   standalone: true,
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+    {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
     // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
     // to your app config. We provide it at the component level here, due to limitations
     // of our example generation script.
@@ -72,7 +74,6 @@ export class GestionMajConfigComponent implements OnInit {
     ['align_left', 'align_center', 'align_right', 'align_justify'],
     ['horizontal_rule', 'format_clear'],
   ];
-
 
 
   fontList = [
@@ -128,6 +129,8 @@ export class GestionMajConfigComponent implements OnInit {
     messagePlanning: new FormControl(this.evenement.messagePlanning, []),
     afficherBenevoles: new FormControl(this.evenement.afficherBenevoles, [Validators.required]),
     needtel: new FormControl(this.evenement.needtel, [Validators.required]),
+    basique: new FormControl(this.evenement.basique, [Validators.required]),
+    notification: new FormControl(this.evenement.notification, [Validators.required]),
     copie: new FormControl(this.evenement.copie, [Validators.required]),
 
     couleurFond: new FormControl(this.evenement.couleurFond, [Validators.required]),
@@ -148,9 +151,9 @@ export class GestionMajConfigComponent implements OnInit {
     public transmissionService: TransmissionService,
     public evenementService: EvenementService,
     public fileService: FileService,
-    public sanitizer: DomSanitizer,
-    public configService: ConfigService,
-    public formBuilder: FormBuilder) { }
+    private toastr: ToastrService,
+    public formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
@@ -163,58 +166,77 @@ export class GestionMajConfigComponent implements OnInit {
     } else {
       this.router.navigate([this.idEvenement + '/gestion/']);
     }
+
+
+  }
+
+
+  updateConnexionParams() {
+    if (this.formulaireEvent.get('basique')?.value) {
+      this.formulaireEvent.get('notification')?.setValue(false);
+      this.formulaireEvent.get('needtel')?.setValue(false);
+    }
   }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(evenement => {
-      this.evenement = evenement;
-      this.transmissionService.dataTransmission(evenement);
+    this.evenementService.getById(idEvenement).subscribe({
+      next: (evenement) => {
+        this.evenement = evenement;
+        this.transmissionService.dataTransmission(evenement);
 
-      this.formulaireEvent.get("eventName")?.setValue(evenement.eventName);
-      this.formulaireEvent.get("contact")?.setValue(evenement.contact);
+        this.formulaireEvent.get("eventName")?.setValue(evenement.eventName);
+        this.formulaireEvent.get("contact")?.setValue(evenement.contact);
 
-      this.formulaireEvent.get("contactTel")?.setValue(evenement.contactTel);
-      this.formulaireEvent.get("contactEmail")?.setValue(evenement.contactEmail);
-      this.formulaireEvent.get("endDate")?.setValue(evenement.endDate);
-      this.formulaireEvent.get("sitepersourl")?.setValue(evenement.sitepersourl);
+        this.formulaireEvent.get("contactTel")?.setValue(evenement.contactTel);
+        this.formulaireEvent.get("contactEmail")?.setValue(evenement.contactEmail);
+        this.formulaireEvent.get("endDate")?.setValue(evenement.endDate);
+        this.formulaireEvent.get("sitepersourl")?.setValue(evenement.sitepersourl);
 
-      this.formulaireEvent.get("validation")?.setValue(evenement.validation);
-      this.formulaireEvent.get("retour")?.setValue(evenement.retour);
-      this.formulaireEvent.get("signature")?.setValue(evenement.signature);
-      this.formulaireEvent.get("rappel")?.setValue(evenement.rappel);
-      this.formulaireEvent.get("afficherMessageAccueil")?.setValue(evenement.afficherMessageAccueil);
-      this.formulaireEvent.get("messageAccueil")?.setValue(evenement.messageAccueil);
+        this.formulaireEvent.get("validation")?.setValue(evenement.validation);
+        this.formulaireEvent.get("retour")?.setValue(evenement.retour);
+        this.formulaireEvent.get("signature")?.setValue(evenement.signature);
+        this.formulaireEvent.get("rappel")?.setValue(evenement.rappel);
+        this.formulaireEvent.get("afficherMessageAccueil")?.setValue(evenement.afficherMessageAccueil);
+        this.formulaireEvent.get("messageAccueil")?.setValue(evenement.messageAccueil);
         this.formulaireEvent.get("afficherMessageInfo")?.setValue(evenement.afficherMessageInfo);
         this.formulaireEvent.get("messageInfo")?.setValue(evenement.messageInfo);
         this.formulaireEvent.get("afficherMessagePlanning")?.setValue(evenement.afficherMessagePlanning);
         this.formulaireEvent.get("messagePlanning")?.setValue(evenement.messagePlanning);
-      this.formulaireEvent.get("needtel")?.setValue(evenement.needtel);
-      this.formulaireEvent.get("copie")?.setValue(evenement.copie);
+        this.formulaireEvent.get("needtel")?.setValue(evenement.needtel);
+        this.formulaireEvent.get("copie")?.setValue(evenement.copie);
+        this.formulaireEvent.get("notification")?.setValue(evenement.notification);
+        this.formulaireEvent.get("basique")?.setValue(evenement.basique);
         this.formulaireEvent.get("afficherBenevoles")?.setValue(evenement.afficherBenevoles);
-      this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);
-      this.formulaireEvent.get("couleurBandeau")?.setValue(evenement.couleurBandeau);
-      this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);
-      this.formulaireEvent.get("couleurCard")?.setValue(evenement.couleurCard);
-      this.formulaireEvent.get("couleurTitre")?.setValue(evenement.couleurTitre);
-      this.formulaireEvent.get("couleurBloc")?.setValue(evenement.couleurBloc);
-      this.formulaireEvent.get("titleFont")?.setValue(evenement.titleFont);
-      console.log(this.formulaireEvent)
-    },
-      error => {
+        this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);
+        this.formulaireEvent.get("couleurBandeau")?.setValue(evenement.couleurBandeau);
+        this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);
+        this.formulaireEvent.get("couleurCard")?.setValue(evenement.couleurCard);
+        this.formulaireEvent.get("couleurTitre")?.setValue(evenement.couleurTitre);
+        this.formulaireEvent.get("couleurBloc")?.setValue(evenement.couleurBloc);
+        this.formulaireEvent.get("titleFont")?.setValue(evenement.titleFont);
+        console.log(this.formulaireEvent)
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+      }
+    });
   }
 
   update(): void {
 
     let evenement = Object.assign(this.evenement, this.formulaireEvent.value)
 
-    this.evenementService.update(evenement).subscribe(data => {
-      this.evenement = data;
-    },
-      error => {
+    this.evenementService.update(evenement).subscribe({
+      next: (data) => {
+        this.evenement = data;
+        this.toastr.success("l'évènement " + data.eventName + " à bien été mis à jour", 'Succès');
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
+
   }
 
   imageChangedEvent: any = '';
@@ -223,16 +245,20 @@ export class GestionMajConfigComponent implements OnInit {
   fileChangeEvent(event: any): void {
     this.imageChangedEvent = event;
   }
+
   imageCropped(event: ImageCroppedEvent) {
     console.log(event)
     this.croppedImage = event.base64;
   }
+
   imageLoaded() {
     /* show cropper */
   }
+
   cropperReady() {
     /* cropper ready */
   }
+
   loadImageFailed() {
     /* show message */
   }
@@ -240,32 +266,40 @@ export class GestionMajConfigComponent implements OnInit {
 
   uploadImage() {
     const contentFile = this.croppedImage.replace("data:image/jpeg;base64,", "")
-    this.fileService.update(this.idEvenement, 'logo.jpeg', contentFile).subscribe(data => {
-      console.log(data)
-      this.imageChangedEvent = undefined
-      this.croppedImage = '';
-      this.getLogo()
-    },
-      error => {
+    this.fileService.update(this.idEvenement, 'logo.jpeg', contentFile).subscribe({
+      next: (data) => {
+        console.log(data)
+        this.imageChangedEvent = undefined
+        this.croppedImage = '';
+        this.getLogo()
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
   getLogo() {
-    this.fileService.get(this.idEvenement, 'logo.jpeg').subscribe(data => {
-      this.logo = "data:image/jpeg;base64," + data
-    },
-      error => {
+    this.fileService.get(this.idEvenement, 'logo.jpeg').subscribe({
+      next: (data) => {
+        this.logo = "data:image/jpeg;base64," + data
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 
   afficheChangedEvent: any = '';
   croppedAffiche: any = '';
+
   afficheChangeEvent(event: any): void {
     this.afficheChangedEvent = event;
   }
+
   afficheCropped(event: ImageCroppedEvent) {
     console.log(event)
     this.croppedAffiche = event.base64;
@@ -274,23 +308,29 @@ export class GestionMajConfigComponent implements OnInit {
 
   uploadAffiche() {
     const contentFile = this.croppedAffiche.replace("data:image/jpeg;base64,", "")
-    this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe(data => {
-      console.log(data)
-      this.croppedImage = '';
-      this.getAffiche()
-    },
-      error => {
+    this.fileService.update(this.idEvenement, 'affiche.jpeg', contentFile).subscribe({
+      next: (data) => {
+        console.log(data)
+        this.croppedImage = '';
+        this.getAffiche()
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
   getAffiche() {
-    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe(data => {
-      this.affiche = "data:image/jpeg;base64," + data
-    },
-      error => {
+    this.fileService.get(this.idEvenement, 'affiche.jpeg').subscribe({
+      next: (data) => {
+        this.affiche = "data:image/jpeg;base64," + data
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 

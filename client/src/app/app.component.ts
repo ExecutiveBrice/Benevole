@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, Renderer2, RendererStyleFlags2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import { Evenement } from './models';
@@ -6,6 +6,8 @@ import { EvenementService, FileService, TransmissionService } from './services';
 import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
+import {HttpErrorResponse} from "@angular/common/http";
+import {ToastrService} from "ngx-toastr";
 
 
 
@@ -41,6 +43,7 @@ export class AppComponent  implements OnInit{
     public evenementService: EvenementService,
     public router: Router,
     public fileService: FileService,
+    private toastr: ToastrService,
     public route: ActivatedRoute,private elementRef: ElementRef) {}
 
 
@@ -49,7 +52,7 @@ export class AppComponent  implements OnInit{
     this.getScreenHeight = window.innerHeight;
     this.transmissionService.dataStream.subscribe(data => {
     console.log("transmissionService");
-    
+
       this.evenement = data
       this.elementRef.nativeElement.ownerDocument
       .body.style.backgroundColor = data.couleurFond;
@@ -59,16 +62,19 @@ export class AppComponent  implements OnInit{
   }
 
   getLogo() {
-    this.fileService.get(this.evenement!.id, 'logo.jpeg').subscribe(data => {
+    this.fileService.get(this.evenement!.id, 'logo.jpeg').subscribe({
+      next: (data) => {
       this.logo = "data:image/jpeg;base64," + data
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 
-  
+
   public getScreenWidth: any;
   public getScreenHeight: any;
 

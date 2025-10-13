@@ -1,27 +1,34 @@
-
-import { Component, inject, OnInit } from '@angular/core';
-import { CroisementService, StandService, CreneauService, EvenementService, TransmissionService, ConfigService } from '../../services';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Croisement, Stand, Creneau, Evenement } from '../../models';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { OrderObjectByPipe } from "../../services/sortObject.pipe";
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatStepperModule } from '@angular/material/stepper';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalComponent } from '../../components/modal/modal.component';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ToastrService } from 'ngx-toastr';
+import {Component, inject, OnInit} from '@angular/core';
+import {
+  CroisementService,
+  StandService,
+  CreneauService,
+  EvenementService,
+  TransmissionService,
+  ConfigService
+} from '../../services';
+import {DomSanitizer} from '@angular/platform-browser';
+import {Croisement, Stand, Creneau, Evenement} from '../../models';
+import {Router, ActivatedRoute, RouterModule} from '@angular/router';
+import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {OrderObjectByPipe} from "../../services/sortObject.pipe";
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatChipsModule} from '@angular/material/chips';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatGridListModule} from '@angular/material/grid-list';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectChange, MatSelectModule} from '@angular/material/select';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatDialog} from '@angular/material/dialog';
+import {ModalComponent} from '../../components/modal/modal.component';
+import {HttpErrorResponse} from '@angular/common/http';
+import {ToastrService} from 'ngx-toastr';
+import {ListFilterPipe} from "../../services/simpleFilter.pipe";
 
 @Component({
   selector: 'app-gestionMajStands',
@@ -34,7 +41,7 @@ import { ToastrService } from 'ngx-toastr';
     ReactiveFormsModule, MatCardModule, MatSelectModule,
     MatFormFieldModule, MatInputModule, MatGridListModule,
     MatDatepickerModule, MatIconModule, MatButtonModule,
-    OrderObjectByPipe, MatExpansionModule],
+    OrderObjectByPipe, MatExpansionModule, ListFilterPipe],
   providers: [
     EvenementService,
     CroisementService,
@@ -49,11 +56,8 @@ export class GestionMajStandsComponent implements OnInit {
   authorize: boolean = false;
   stands!: Stand[];
   creneaux: Creneau[] = [];
-  newStand: Stand = new Stand();
   choix!: string;
-  ajouterCroisement: number = 0;
   evenement: Evenement = new Evenement();
-  modifTypeStand: number = 0;
   idEvenement!: number
 
   constructor(
@@ -65,7 +69,6 @@ export class GestionMajStandsComponent implements OnInit {
     private toastr: ToastrService,
     public transmissionService: TransmissionService,
     public standService: StandService,
-    public sanitizer: DomSanitizer,
     public fb: FormBuilder) {
 
   }
@@ -78,13 +81,17 @@ export class GestionMajStandsComponent implements OnInit {
   standsFormulaire: FormArray = this.fb.array([])
 
 
-
-
-
   getCroisement(stand: FormGroup) {
     return <FormArray<FormGroup>>stand.get('croisements');
   }
 
+  getCreneauxStand(stand: FormGroup):string[] {
+    let creneaux: string[] = [];
+   this.getCroisement(stand).controls.forEach(croisement => {
+     creneaux.push(croisement.get('plage')?.value)
+   })
+    return creneaux;
+  }
 
   ngOnInit() {
     this.choix = "";
@@ -102,50 +109,30 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
-      this.evenement = data;
-      console.log(data)
-      this.transmissionService.dataTransmission(data);
-    },
-      error => {
+    this.evenementService.getById(idEvenement).subscribe({
+      next: (data) => {
+        this.evenement = data;
+        console.log(data)
+        this.transmissionService.dataTransmission(data);
+      },
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
-
-  existInCroisements(croisements: Croisement[], id: number): Croisement | null {
-
-    var croi = null;
-    if (croisements != null && croisements.length > 0) {
-      croisements.forEach(croisement => {
-        if (croisement.creneau.id == id) {
-          croi = croisement;
-        }
-      });
-    }
-    return croi;
-  }
-
-
 
   getAllStands(): void {
-
     this.standService.getAll(this.idEvenement).subscribe({
       next: (stands: Stand[]) => {
         if (stands != null) {
           this.stands = stands
-console.log(stands);
-
           stands.forEach(stand => {
-
             this.standsFormulaire.push(this.fillForm(stand));
           });
-
         } else {
           this.stands = []
         }
-
-        console.log(this.standsFormulaire)
-
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
@@ -163,7 +150,8 @@ console.log(stands);
           plage: [croisement.creneau.plage, [Validators.required]],
           besoin: [croisement.besoin, [Validators.required]],
           limite: [croisement.limite, [Validators.required]],
-
+          benevoles: [null, []],
+          creneau: [null, []],
         })
         croisementsFormulaire.push(croisementFormulaire)
       });
@@ -191,12 +179,10 @@ console.log(stands);
   }
 
   update(standForm: FormGroup): void {
-    console.log(standForm)
     if (standForm.valid) {
 
       this.standService.update(standForm.getRawValue()).subscribe({
         next: (stand: Stand) => {
-          console.log(stand)
           this.toastr.success(stand.nom + " à bien été mis à jour", 'Succès');
           standForm.markAsPristine()
           standForm.markAsUntouched()
@@ -210,33 +196,31 @@ console.log(stands);
   }
 
 
-
-
   addCreneauToStand(creneauSelected: MatSelectChange, standForm: FormGroup): void {
-    console.log(creneauSelected)
-    let croisement = new Croisement()
-    croisement.stand = new Stand();
-    croisement.stand.id = standForm.get('id')?.value
-    croisement.creneau = creneauSelected.value;
-    croisement.besoin = false;
-    croisement.limite = 0;
+    let croisementTemp = new Croisement()
+    croisementTemp.stand = new Stand();
+    croisementTemp.stand.id = standForm.get('id')?.value
+    croisementTemp.creneau = creneauSelected.value;
+    croisementTemp.besoin = false;
+    croisementTemp.limite = 0;
 
     const croisements = standForm.get('croisements') as FormArray
 
-    this.croisementService.ajout(croisement).subscribe({
+    this.croisementService.ajout(croisementTemp).subscribe({
       next: (croisement: Croisement) => {
 
         const croisementFormulaire: FormGroup = this.fb.group({
           id: [croisement.id, []],
-          creneau: [croisement.creneau, [Validators.required]],
+          plage: [croisement.creneau.plage, [Validators.required]],
           besoin: [croisement.besoin, [Validators.required]],
           limite: [croisement.limite, [Validators.required]],
+          benevoles: [null, []],
+          creneau: [null, []],
         })
-        croisements.controls.push(croisementFormulaire);
+        croisements.push(croisementFormulaire);
         this.toastr.success(croisement.creneau.plage + " à bien été ajouté", 'Succès');
       },
       error: (error: HttpErrorResponse) => {
-        console.log(error)
         if (error.status == 409) {
           this.toastr.error("Il reste des bénévoles dans ce créneaux. Veuillez les déplacer au préalable", 'Erreur');
         } else {
@@ -248,8 +232,6 @@ console.log(stands);
   }
 
 
-
-
   ajout(standForm: FormGroup): void {
 
     if (standForm.valid) {
@@ -257,10 +239,10 @@ console.log(stands);
       Object.assign(newStand, standForm.getRawValue())
       newStand.type = 2
       this.standService.ajout(newStand, this.idEvenement).subscribe(stand => {
-        this.standsFormulaire.push(this.fillForm(stand));
-        this.standsFormulaire.controls.sort((a, b) => Number(a.get('ordre')?.value) - Number(b.get('ordre')?.value))
-        console.log(this.standsFormulaire)
-      },
+          this.standsFormulaire.push(this.fillForm(stand));
+          this.standsFormulaire.controls.sort((a, b) => Number(a.get('ordre')?.value) - Number(b.get('ordre')?.value))
+          console.log(this.standsFormulaire)
+        },
         error => {
           console.log('😢 Oh no!', error);
         });
@@ -308,7 +290,7 @@ console.log(stands);
     this.dialog.open(ModalComponent, {
       data: {
         title: 'Suppression',
-        question: 'Souhaitez vous supprimer ce créneau : ' + croisementForm.get('creneau')?.value.plage,
+        question: 'Souhaitez vous supprimer ce créneau : ' + croisementForm.get('plage')?.value,
       },
     }).afterClosed().subscribe(result => {
       if (result !== undefined && result == 'accept') {

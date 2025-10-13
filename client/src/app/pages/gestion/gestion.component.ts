@@ -38,7 +38,7 @@ import { ModalAccessGestionComponent } from '../../components/modalAccessGestion
     RouterModule,
     MatStepperModule, MatCheckboxModule, ReactiveFormsModule, MatCardModule,
     MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule],
   providers: [
     EvenementService,
     BenevoleService,
@@ -221,13 +221,16 @@ export class GestionComponent implements OnInit {
   }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
+    this.evenementService.getById(idEvenement).subscribe({
+      next: (data) => {
       this.evenement = data;
       this.transmissionService.dataTransmission(data);
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 
@@ -249,11 +252,14 @@ export class GestionComponent implements OnInit {
 
 
   update(evenement: Evenement): void {
-    this.evenementService.update(evenement).subscribe(data => {
+    this.evenementService.update(evenement).subscribe({
+      next: (data) => {
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 
@@ -263,12 +269,15 @@ export class GestionComponent implements OnInit {
   updateBlocage(evenement: Evenement) {
 
     evenement.lock = !evenement.lock
-    this.evenementService.opening(this.idEvenement).subscribe(data => {
+    this.evenementService.opening(this.idEvenement).subscribe({
+      next: (data) => {
       evenement.lock = data
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 

@@ -17,6 +17,7 @@ import { OrderByPipe } from '../../services/sort.pipe';
 import { Evenement } from '../../models';
 import { EvenementService, FileService, TransmissionService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
+import {ToastrService} from "ngx-toastr";
 
 
 
@@ -49,6 +50,7 @@ export class AccueilComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public fileService: FileService,
+    private toastr: ToastrService,
     public evenementService: EvenementService,
   ) {
 
@@ -65,23 +67,29 @@ export class AccueilComponent implements OnInit {
 
 
   getAllEvenements(): void {
-    this.evenementService.getAll().subscribe(data => {
+    this.evenementService.getAll().subscribe({
+      next: (data) => {
       this.evenements = data.filter(evenemet => evenemet.id != 0)
       console.log(data);
       this.evenements.forEach(evenement => this.getAffiche(evenement))
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
+    this.evenementService.getById(idEvenement).subscribe({
+        next: (data) => {
 
       this.transmissionService.dataTransmission(data);
     },
-      error => {
-        console.log('😢 Oh no!', error);
+        error: (error: HttpErrorResponse) => {
+          console.log('😢 Oh no!', error);
+          this.toastr.error(error.message, 'Erreur');
+        }
       });
   }
 

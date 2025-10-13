@@ -39,7 +39,7 @@
                   <span>({{ croisement.benevoles.length + '\/' + croisement.limite }})</span>
                   @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
                     @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                      {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                      {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
                     }
                   }
                 </button>
@@ -85,7 +85,7 @@
                   <br>
                   @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
                     @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                      {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                      {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
                     }
                   }
                 </button>
@@ -120,7 +120,7 @@
               )</span>
               @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
                 @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                  {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                  {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
                 }
               }
             </button>
@@ -153,7 +153,7 @@
               )</span>
               @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
                 @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                  {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                  {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
                 }
               }
             </button>
@@ -198,7 +198,7 @@
                   <br>
                   @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
                     @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                      {{ benevole.prenom }} {{ benevole.nom.charAt(0).toUpperCase() }}.<br>
+                      {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
                     }
                   }
                 </button>

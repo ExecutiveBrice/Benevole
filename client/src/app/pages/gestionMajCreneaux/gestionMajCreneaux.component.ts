@@ -21,6 +21,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ImageCropperComponent } from 'ngx-image-cropper';
+import {HttpErrorResponse} from "@angular/common/http";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -28,9 +30,8 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
   standalone: true,
   templateUrl: './gestionMajCreneaux.component.html',
   styleUrls: ['./gestionMajCreneaux.component.scss'],
-  imports: [NgClass,
+  imports: [
     FormsModule,
-    ImageCropperComponent,
     RouterModule,
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatSelectModule,
@@ -58,7 +59,7 @@ export class GestionMajCreneauxComponent implements OnInit {
     public transmissionService: TransmissionService,
     public router: Router,
     public creneauService: CreneauService,
-    public sanitizer: DomSanitizer,
+    private toastr: ToastrService,
     public formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -77,14 +78,17 @@ export class GestionMajCreneauxComponent implements OnInit {
   }
 
   getEvenement(idEvenement: number): void {
-    this.evenementService.getById(idEvenement).subscribe(data => {
+    this.evenementService.getById(idEvenement).subscribe({
+      next: (data) => {
       console.log(data)
       this.evenement = data;
       this.transmissionService.dataTransmission(data);
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
 
@@ -96,10 +100,11 @@ export class GestionMajCreneauxComponent implements OnInit {
     }
   )
   getAll(): void {
-    this.creneauService.getAll(this.idEvenement).subscribe(creneaux => {
-      this.creneaux = creneaux;
+    this.creneauService.getAll(this.idEvenement).subscribe({
+      next: (data) => {
+      this.creneaux = data;
       console.log(this.creneaux)
-      creneaux.forEach(creneau => {
+        data.forEach(creneau => {
 
         let formulaire = this.formBuilder.group({
           id: new FormControl(creneau.id, [Validators.required, Validators.minLength(2)]),
@@ -111,9 +116,11 @@ export class GestionMajCreneauxComponent implements OnInit {
 
       })
     },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
+      error: (error: HttpErrorResponse) => {
+      console.log('😢 Oh no!', error);
+      this.toastr.error(error.message, 'Erreur');
+    }
+  });
   }
 
 
@@ -121,12 +128,15 @@ export class GestionMajCreneauxComponent implements OnInit {
 
     if (formulaire.valid) {
 
-      this.creneauService.update(formulaire.getRawValue()).subscribe(data => {
+      this.creneauService.update(formulaire.getRawValue()).subscribe({
+      next: (data) => {
         this.getAll();
       },
-        error => {
+        error: (error: HttpErrorResponse) => {
           console.log('😢 Oh no!', error);
-        });
+          this.toastr.error(error.message, 'Erreur');
+        }
+      });
     } else {
       console.log("formulaire invalide")
     }
@@ -134,23 +144,29 @@ export class GestionMajCreneauxComponent implements OnInit {
 
   ajout(formulaire: FormGroup): void {
     if (formulaire.valid) {
-    this.creneauService.ajout(formulaire.getRawValue(), this.idEvenement).subscribe(data => {
+    this.creneauService.ajout(formulaire.getRawValue(), this.idEvenement).subscribe({
+      next: (data) => {
       this.getAll();
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
     }
   }
 
 
 
   delete(creneau: Creneau): void {
-    this.creneauService.delete(creneau).subscribe(data => {
+    this.creneauService.delete(creneau).subscribe({
+      next: (data) => {
       this.getAll();
     },
-      error => {
-        console.log('😢 Oh no!', error);
-      });
+    error: (error: HttpErrorResponse) => {
+      console.log('😢 Oh no!', error);
+      this.toastr.error(error.message, 'Erreur');
+    }
+  });
   }
 }

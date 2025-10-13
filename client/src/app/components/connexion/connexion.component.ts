@@ -21,9 +21,6 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class ConnexionComponent implements OnInit {
 
-attentionMessage = "L'application utilise l'adresse <i>benevole@alod.fr</i><br>Ce sont des e-mails automatiques et sont tres souvent placés dans votre dossier SPAM<br>Il ne sert à rien d'y répondre, veuillez utiliser le contact de cet évènement:<br><br>";
-
-
   @Input() evenement!: Evenement;
   @Input() benevole: Benevole | undefined = undefined;
   @Output() actionEmitter: EventEmitter<boolean> = new EventEmitter;
@@ -38,6 +35,11 @@ attentionMessage = "L'application utilise l'adresse <i>benevole@alod.fr</i><br>C
       this.formulaireBenevole.get('telephone')?.enable()
     }else{
     this.formulaireBenevole.get('telephone')?.disable()
+    }
+    if(!this.evenement.basique){
+      this.formulaireBenevole.get('nom')?.enable()
+    }else{
+      this.formulaireBenevole.get('nom')?.disable()
     }
     this.transmissionService.benevoleStream.subscribe(benevole => {
       this.benevole = benevole;
@@ -94,8 +96,42 @@ attentionMessage = "L'application utilise l'adresse <i>benevole@alod.fr</i><br>C
   }
 
 
+  connexionBasique(){
+    let email = this.formulaireBenevole.get('prenom')?.value?.toLowerCase().trimEnd().trimStart().normalize("NFD").replace(/[\u0300-\u036f]/g, "") + "@nomail.com";
+    this.formulaireBenevole.get("email")?.setValue(email);
+    this.formulaireBenevole.get("nom")?.setValue("");
+
+
+    this.benevoleService.getByMail(email, this.evenement?.id).subscribe({
+      next: (benevole) => {
+        console.log(benevole)
+        if (benevole == null) {
+          this.addBenevole()
+
+        } else {
+          this.benevole = benevole;
+          this.userExist = true
+          this.formulaireBenevole.get("nom")?.setValue(benevole.nom);
+          this.formulaireBenevole.get("prenom")?.setValue(benevole.prenom);
+          this.transmissionService.benevoleTransmission(benevole);
+          this.actionEmitter.emit(false);
+        }
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log(error)
+
+        this.toastr.error(error.message, 'Erreur');
+
+      }
+
+    })
+
+
+  }
+
 
   addBenevole(): void {
+    console.log(this.formulaireBenevole)
     if (this.formulaireBenevole.valid) {
       this.benevole = this.formulaireBenevole.value as Benevole;
       this.benevole.email = this.benevole.email.toLowerCase();

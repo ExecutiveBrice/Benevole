@@ -2,14 +2,13 @@
 
 @if (!userExist) {
 <mat-card appearance="raised">
-
+  @if (!evenement.basique) {
   @if (!inconnu) {
   <mat-card-header>
     <mat-card-title> <strong>Connectez vous :</strong></mat-card-title>
   </mat-card-header>
 
   <form [formGroup]="formulaire">
-
     <mat-card-content>
       <mat-form-field class="full-width">
         <mat-label>Email</mat-label>
@@ -104,7 +103,28 @@
     </mat-card-content>
   </form>
   }
+  } @else {
+    <form [formGroup]="formulaireBenevole">
+      <mat-card-content>
+        <mat-form-field class="full-width">
+          <mat-label>Prenom</mat-label>
+          <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+          @if (formulaireBenevole.get('prenom')?.hasError('required')) {
+            <mat-error>Les organisateurs en auront besoin !</mat-error>
+          }
+          @if (formulaireBenevole.get('prenom')?.hasError('minlength')) {
+            <mat-error>C'est un peu court comme prenom!</mat-error>
+          }
+          <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
+        </mat-form-field>
+      </mat-card-content>
 
+
+      <mat-card-content>
+        <button class="full-width" mat-stroked-button type="submit" (click)="connexionBasique()">Entrer</button>
+      </mat-card-content>
+    </form>
+  }
 
 
 </mat-card>

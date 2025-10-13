@@ -29,7 +29,6 @@ public class Croisement {
 
     @ManyToMany(mappedBy="croisements")
     @JsonIgnoreProperties({"croisements", "evenement", "telephone", "email"})
-    @ToString.Exclude
     private List<Benevole> benevoles;
 
     @ManyToOne

@@ -5,7 +5,6 @@ export class Evenement {
   eventName!: string;
   contactEmail!: string;
   contactTel!: string;
-  startDate!: Date;
   endDate!: Date;
   password!: string;
 
@@ -26,8 +25,9 @@ export class Evenement {
   rappel!: string;
   lock!: boolean;
   needtel!: boolean;
+  basique!: boolean;
   copie!: boolean;
-
+  notification!: boolean;
   couleurFond!: string;
   couleurBandeau!: string;
   couleurText!: string;

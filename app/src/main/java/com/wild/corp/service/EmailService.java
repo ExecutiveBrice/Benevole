@@ -10,6 +10,7 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
@@ -54,13 +55,13 @@ public class EmailService {
             corpsMessage.append("<br />");
             corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "'>https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "</a>");
             corpsMessage.append("<br />");
-            sendSimpleMessage(benevole.getPrenom() + " " + benevole.getNom(), benevole.getEmail(), email.getSubject(), corpsMessage.toString(), benevole.getEvenement().getCopie()?benevole.getEvenement().getContactEmail():"");
+            sendSimpleMessage(benevole.getEvenement().getNotification()?benevole.getEmail():"", email.getSubject(), corpsMessage.toString(), benevole.getEvenement().getCopie()?benevole.getEvenement().getContactEmail():"");
         });
         return "ok";
     }
 
 
-    public void sendSimpleMessage(String nom, String adresseMail, String sujet, String corps, String copieEmail) {
+    public void sendSimpleMessage(String adresseMail, String sujet, String corps, String copieEmail) {
         Properties prop = new Properties();
         prop.put("mail.debug", "false");
         prop.put("mail.smtp.auth", "true");
@@ -84,9 +85,10 @@ public class EmailService {
         MimeMessage message = new MimeMessage(session);
         try {
             message.setFrom(new InternetAddress(fromEmail));
-            message.setRecipients(
-                    Message.RecipientType.TO, InternetAddress.parse(adresseMail));
-            if(copieEmail != null) {
+            if(StringUtils.isEmpty(adresseMail)) {
+                message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(adresseMail));
+            }
+            if(StringUtils.isEmpty(copieEmail)) {
                 message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(copieEmail));
             }
             message.setSubject(sujet);

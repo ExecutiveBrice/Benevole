@@ -54,9 +54,14 @@ public class Evenement {
 
     private boolean afficherBenevoles;
 
+
+    private Boolean basique;
+
     private Boolean needtel;
 
     private Boolean copie;
+
+    private Boolean notification;
 
     private boolean lock;
 

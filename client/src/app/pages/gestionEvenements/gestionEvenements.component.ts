@@ -18,7 +18,7 @@ import { ModalAccessGestionComponent } from '../../components/modalAccessGestion
   standalone: true,
   templateUrl: './gestionEvenements.component.html',
   styleUrls: ['./gestionEvenements.component.scss'],
-  imports: [NgClass,
+  imports: [
     FormsModule,
     DatePipe,
     RouterModule, OrderByPipe],
@@ -96,29 +96,38 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   update(evenement: Evenement): void {
-    this.evenementService.update(evenement).subscribe(data => {
+    this.evenementService.update(evenement).subscribe({
+      next: (data) => {
       this.getAllEvenements()
     },
-      error => {
+      error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-      });
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
   delete(evenement: Evenement): void {
-    this.evenementService.delete(evenement).subscribe(data => {
+    this.evenementService.delete(evenement).subscribe({
+      next: (data) => {
       this.getAllEvenements()
     },
-      error => {
-        console.log('😢 Oh no!', error);
+        error: (error: HttpErrorResponse) => {
+          console.log('😢 Oh no!', error);
+          this.toastr.error(error.message, 'Erreur');
+        }
       });
   }
 
   getAllEvenements(): void {
-    this.evenementService.getAll().subscribe(data => {
+    this.evenementService.getAll().subscribe({
+      next: (data) => {
       this.evenements = data
     },
-      error => {
-        console.log('😢 Oh no!', error);
+        error: (error: HttpErrorResponse) => {
+          console.log('😢 Oh no!', error);
+          this.toastr.error(error.message, 'Erreur');
+        }
       });
   }
 

@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM alpine/java:21
 # copy the packaged jar file into our docker image
 COPY ./benevoles.jar /benevoles.jar
 COPY ./application.yml /resources/application.yml

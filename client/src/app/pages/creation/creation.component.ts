@@ -14,12 +14,14 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Params } from '../../models/params';
+import {HttpErrorResponse} from "@angular/common/http";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-creation',
   standalone: true,
   providers: [ConfigService, provideNativeDateAdapter()],
-  imports: [NgClass, DatePipe, ReactiveFormsModule,
+  imports: [ReactiveFormsModule,
     FormsModule, MatFormFieldModule, MatInputModule,
     MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,10 +50,7 @@ export class CreationComponent implements OnInit {
     password: [this.evenement.password, Validators.required],
     contactTel: [this.evenement.contactTel, []],
     contact: [this.evenement.contact, []],
-    startDate: [this.evenement.startDate, []],
     endDate: [this.evenement.endDate, []]
-
-
   })
 
   constructor(
@@ -59,7 +58,7 @@ export class CreationComponent implements OnInit {
     public configService: ConfigService,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
-    public sanitizer: DomSanitizer,
+    private toastr: ToastrService,
     public formBuilder: FormBuilder) {
     console.log(this.formulaire)
   }
@@ -84,7 +83,8 @@ export class CreationComponent implements OnInit {
 
 
 
-      this.evenementService.ajout(Object.assign(this.evenement, this.formulaire.value)).subscribe(data => {
+      this.evenementService.ajout(Object.assign(this.evenement, this.formulaire.value)).subscribe({
+        next: (data) => {
 
         this.new = false
         this.ok = true
@@ -133,9 +133,11 @@ export class CreationComponent implements OnInit {
 
 
       },
-        error => {
+        error: (error: HttpErrorResponse) => {
           console.log('😢 Oh no!', error);
-        });
+          this.toastr.error(error.message, 'Erreur');
+        }
+      });
 
 
     }

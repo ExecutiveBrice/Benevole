@@ -94,7 +94,9 @@ public class EvenementService {
         event.setValidation(evenement.getValidation());
         event.setLock(evenement.isLock());
 
+        event.setBasique(evenement.getBasique());
         event.setCopie(evenement.getCopie());
+        event.setNotification(evenement.getNotification());
         event.setNeedtel(evenement.getNeedtel());
         event.setSitepersourl(evenement.getSitepersourl());
 
