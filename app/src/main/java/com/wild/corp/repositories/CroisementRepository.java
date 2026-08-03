@@ -15,8 +15,6 @@ public interface CroisementRepository extends JpaRepository<Croisement, Integer>
 
     List<Croisement> findAll();
 
-    List<Croisement> findAllById(Integer croisementId);
-
     List<Croisement> findByStandEvenementId(Integer evenementId);
 
     List<Croisement> findByStandId(Integer standId);

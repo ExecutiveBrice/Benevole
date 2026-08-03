@@ -7,28 +7,31 @@ import com.wild.corp.model.Evenement;
 import com.wild.corp.repositories.BenevoleRepository;
 import com.wild.corp.repositories.EvenementRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service("BenevoleService")
 @Transactional
 public class BenevoleService {
 
-    @Autowired
-    private BenevoleRepository benevoleRepository;
+    private final BenevoleRepository benevoleRepository;
 
-    @Autowired
-    private CroisementService croisementService;
+    private final CroisementService croisementService;
 
-    @Autowired
-    private EvenementRepository evenementRepository;
+    private final EvenementRepository evenementRepository;
+
+    public BenevoleService(BenevoleRepository benevoleRepository,
+                           CroisementService croisementService,
+                           EvenementRepository evenementRepository) {
+        this.benevoleRepository = benevoleRepository;
+        this.croisementService = croisementService;
+        this.evenementRepository = evenementRepository;
+    }
 
     public void persist(Benevole benevole) {
         benevoleRepository.save(benevole);
@@ -39,7 +42,8 @@ public class BenevoleService {
         if(findByEmail(benevole.getEmail(), evenementId) != null){
             throw new RuntimeException("existe déjà");
         }
-        Evenement evenement = evenementRepository.findById(evenementId).get();
+        Evenement evenement = evenementRepository.findById(evenementId)
+                .orElseThrow(() -> new IllegalArgumentException("Événement introuvable : " + evenementId));
         benevole.setEvenement(evenement);
         persist(benevole);
     }
@@ -67,7 +71,7 @@ public class BenevoleService {
         if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
             throw new RuntimeException("existe déjà");
         } else {
-            if (croisement.getBenevoles().size() < croisement.getLimite() || force) {
+            if (croisement.getBenevoles().size() < croisement.getLimite() || Boolean.TRUE.equals(force)) {
                 benevole.getCroisements().add(croisement);
             }else{
                 throw new RuntimeException("pas de place");
@@ -104,13 +108,7 @@ public class BenevoleService {
     }
 
     public Benevole findById(Integer benevoleId) {
-        Optional<Benevole> benevoleOpt = benevoleRepository.findById(benevoleId);
-        if (benevoleOpt.isPresent()){
-            return benevoleOpt.get();
-        }else {
-            return null;
-        }
-
+        return benevoleRepository.findById(benevoleId).orElse(null);
     }
 
     public void deleteById(Integer benevoleId) {
@@ -122,7 +120,6 @@ public class BenevoleService {
     }
 
     public List<Benevole> findByEvenementId(Integer evenementId) {
-        List<Benevole> benevoles = benevoleRepository.findByEvenementId(evenementId);
-        return benevoles;
+        return benevoleRepository.findByEvenementId(evenementId);
     }
 }
