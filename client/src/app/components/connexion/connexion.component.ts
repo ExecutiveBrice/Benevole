@@ -1,15 +1,16 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { Benevole, Croisement, Evenement } from '../../models';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { BenevoleService, TransmissionService } from '../../services';
-import { ToastrService } from 'ngx-toastr';
-import { HttpErrorResponse } from '@angular/common/http';
-import { OrderByPipe } from "../../services/sort.pipe";
-import { MatIconModule } from '@angular/material/icon';
+import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {Benevole, Croisement, Evenement} from '../../models';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {BenevoleService, TransmissionService} from '../../services';
+import {ToastrService} from 'ngx-toastr';
+import {HttpErrorResponse} from '@angular/common/http';
+import {OrderByPipe} from "../../services/sort.pipe";
+import {MatIconModule} from '@angular/material/icon';
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -24,28 +25,41 @@ export class ConnexionComponent implements OnInit {
   @Input() evenement!: Evenement;
   @Input() benevole: Benevole | undefined = undefined;
   @Output() actionEmitter: EventEmitter<boolean> = new EventEmitter;
+
+  benevoleEmail!:string;
   constructor(
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
+    private router: Router,
     private toastr: ToastrService,
-    public formBuilder: FormBuilder,) { }
+    public formBuilder: FormBuilder,) {
+  }
 
   ngOnInit(): void {
-    if(this.evenement.needtel){
+    if (this.evenement.needtel) {
       this.formulaireBenevole.get('telephone')?.enable()
-    }else{
-    this.formulaireBenevole.get('telephone')?.disable()
+    } else {
+      this.formulaireBenevole.get('telephone')?.disable()
     }
-    if(!this.evenement.basique){
+    if (!this.evenement.basique) {
       this.formulaireBenevole.get('nom')?.enable()
-    }else{
+    } else {
       this.formulaireBenevole.get('nom')?.disable()
     }
     this.transmissionService.benevoleStream.subscribe(benevole => {
       this.benevole = benevole;
     });
-  }
 
+    this.benevoleEmail = JSON.parse(localStorage.getItem('benevoleEmail')!);
+    if (this.benevoleEmail != null) {
+      this.formulaire.get('email')?.setValue( this.benevoleEmail)
+      this.find();
+    }
+  }
+  exit(){
+    localStorage.removeItem('benevoleEmail');
+    this.router.navigate(['/']);
+  }
   formulaire = this.formBuilder.group({
     email: new FormControl(this.benevole?.email, [Validators.required, Validators.email])
   })
@@ -59,6 +73,7 @@ export class ConnexionComponent implements OnInit {
 
   userExist: boolean = false;
   inconnu: boolean = false;
+
   find(): void {
 
     if (this.formulaire.valid) {
@@ -96,7 +111,7 @@ export class ConnexionComponent implements OnInit {
   }
 
 
-  connexionBasique(){
+  connexionBasique() {
     let email = this.formulaireBenevole.get('prenom')?.value?.toLowerCase().trimEnd().trimStart().normalize("NFD").replace(/[\u0300-\u036f]/g, "") + "@nomail.com";
     this.formulaireBenevole.get("email")?.setValue(email);
     this.formulaireBenevole.get("nom")?.setValue("");
@@ -172,7 +187,6 @@ export class ConnexionComponent implements OnInit {
       })
     }
   }
-
 
 
 }

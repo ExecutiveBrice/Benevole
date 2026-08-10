@@ -1,8 +1,10 @@
 package com.wild.corp.controller;
 
 
+import com.wild.corp.model.Ressources.StandRessource;
 import com.wild.corp.model.Stand;
 import com.wild.corp.service.StandService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/stand")
@@ -45,10 +48,18 @@ public class StandController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Stand> update(@RequestBody Stand stand) {
+    public ResponseEntity<Stand> update(@RequestBody StandRessource stand) {
+        log.info("getId "+stand.getId());
+log.info("getNom "+stand.getNom());
+        log.info("getSoustitre "+stand.getSoustitre());
 
-        standService.update(stand);
-        return new ResponseEntity<>(stand, HttpStatus.OK);
+        log.info("getType "+stand.getType());
+        log.info("getOrdre "+stand.getOrdre());
+        log.info("getCroisements "+stand.getCroisements().size());
+
+
+
+        return new ResponseEntity<>(standService.update(stand), HttpStatus.OK);
     }
 
 

@@ -27,6 +27,9 @@ public class Stand {
     @Column(name = "TYPE")
     private Integer type;
 
+    @Column(name = "soustitre")
+    private String soustitre;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Evenement evenement;

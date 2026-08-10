@@ -3,9 +3,12 @@ package com.wild.corp.service;
 
 import com.wild.corp.model.Croisement;
 import com.wild.corp.model.Evenement;
+import com.wild.corp.model.Ressources.CroisementRessource;
+import com.wild.corp.model.Ressources.StandRessource;
 import com.wild.corp.model.Stand;
 import com.wild.corp.repositories.EvenementRepository;
 import com.wild.corp.repositories.StandRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service("StandService")
 @Transactional
 public class StandService {
@@ -54,19 +58,21 @@ public class StandService {
         return standRepository.getOne(childId);
     }
 
-    public void update(Stand stand) {
+    public Stand update(StandRessource stand) {
+        log.info("update {}", stand.getNom());
         Stand realStand = findById(stand.getId());
 
         realStand.setNom(stand.getNom());
+        realStand.setSoustitre(stand.getSoustitre());
         realStand.setOrdre(stand.getOrdre());
         realStand.setType(stand.getType());
 
         realStand.getCroisements().forEach(croisement -> {
-            Croisement croisementFront = stand.getCroisements().stream().filter(croisement1 -> croisement1.getId().equals(croisement.getId())).findFirst().get();
+            CroisementRessource croisementFront = stand.getCroisements().stream().filter(croisement1 -> croisement1.getId().equals(croisement.getId())).findFirst().get();
             croisement.setLimite(croisementFront.getLimite());
             croisement.setBesoin(croisementFront.getBesoin());
         });
-        standRepository.save(realStand);
+        return standRepository.save(realStand);
     }
 
     public List<Stand> findByEvenementId(Integer evenementId) {

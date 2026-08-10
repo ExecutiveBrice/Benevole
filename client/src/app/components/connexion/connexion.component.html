@@ -73,7 +73,7 @@
 
       <mat-form-field class="full-width">
         <mat-label>Prenom</mat-label>
-        <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+        <input matInput formControlName="prenom" placeholder="Ex: Célia">
         @if (formulaireBenevole.get('prenom')?.hasError('required')) {
         <mat-error>Les organisateurs en auront besoin !</mat-error>
         }
@@ -133,7 +133,8 @@
 @if (userExist) {
 <mat-card appearance="raised">
   <mat-card-header>
-    <mat-card-title>Bonjour {{ formulaireBenevole.value.prenom }}</mat-card-title>
+    <mat-card-title>Bonjour {{ formulaireBenevole.value.prenom }}   <mat-icon (click)="exit()" class="red-icon" >exit_to_app</mat-icon></mat-card-title>
+
   </mat-card-header>
 
   @if(benevole && benevole.croisements != undefined && benevole.croisements.length == 0){

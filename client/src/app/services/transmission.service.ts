@@ -26,6 +26,7 @@ export class TransmissionService {
 
   // Service message commands
   benevoleTransmission(benevole: Benevole) {
+    localStorage.setItem('benevoleEmail', JSON.stringify(benevole.email));
     this.benevoleSource.next(benevole);
   }
 

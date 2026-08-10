@@ -102,29 +102,6 @@ export class CreationComponent implements OnInit {
           .then(url => {
             this.qrcode = url
 
-
-            let email = new Email()
-            //email.to = this.evenement.contactEmail
-            email.subject = this.configService.completeTemplate(this.params.title, this.evenement.eventName, using_address, managing_address)
-
-            email.text = "Bonjour <br />";
-            email.text = email.text + this.header;
-            email.text = email.text + this.using;
-            email.text = email.text + "<br><br><a href=\"" + using_address + "\"><img src=\"" + url + "\" /></a>";
-            email.text = email.text + "<br><br>" + this.managing;
-            email.text = email.text + this.params['signature']
-
-
-
-
-            this.mailService.sendMail(email)
-              .subscribe(res => {
-                console.log("email sent to " + this.evenement.contactEmail);
-              }, err => {
-                console.log(err);
-              });
-
-
           })
           .catch(err => {
             console.error(err)

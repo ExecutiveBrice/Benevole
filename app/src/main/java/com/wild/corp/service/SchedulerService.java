@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -53,7 +54,7 @@ public class SchedulerService {
     public void adviseBenevoles() {
 
         List<Benevole> benevoles = benevoleService.findBenevolesToAdvise();
-        log.info("findBenevolesToAdvise " + benevoles.size());
+        log.debug("findBenevolesToAdvise " + benevoles.size());
         benevoles.forEach(benevole -> {
             benevole.setAdviseSent(true);
             log.info("send confirmation Email to " + benevole.getPrenom() + " " + benevole.getNom());
@@ -85,7 +86,16 @@ public class SchedulerService {
             corpsMessage.append("<br />");
 
 
-           // emailService.sendSimpleMessage(benevole.getPrenom(), benevole.getEmail(), subject, corpsMessage.toString(), benevole.getEvenement().getCopie()?benevole.getEvenement().getContactEmail():null);
+            List<String> destinataires = new ArrayList<>();
+            if(benevole.getEvenement().getNotification()){
+                destinataires.add(benevole.getEmail());
+            }
+
+            if(benevole.getEvenement().getCopie()){
+                destinataires.add(benevole.getEvenement().getContactEmail());
+            }
+
+            emailService.singleMessage(destinataires, corpsMessage.toString(), subject, benevole.getPrenom(), benevole.getNom());
 
         });
     }

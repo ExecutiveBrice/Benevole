@@ -76,6 +76,7 @@ export class GestionMajStandsComponent implements OnInit {
   formulaireNewStand = this.fb.group({
     ordre: ["", [Validators.required, Validators.minLength(1)]],
     nom: ["", [Validators.required, Validators.minLength(2)]],
+    soustitre: ["", []],
   });
 
   standsFormulaire: FormArray = this.fb.array([])
@@ -160,6 +161,7 @@ export class GestionMajStandsComponent implements OnInit {
       id: [stand.id, []],
       ordre: [stand.ordre, [Validators.required, Validators.minLength(1)]],
       nom: [stand.nom, [Validators.required, Validators.minLength(2)]],
+      soustitre: [stand.soustitre, []],
       type: [stand.type, [Validators.required]],
       croisements: croisementsFormulaire
     });
@@ -217,6 +219,7 @@ export class GestionMajStandsComponent implements OnInit {
           benevoles: [null, []],
           creneau: [null, []],
         })
+
         croisements.push(croisementFormulaire);
         this.toastr.success(croisement.creneau.plage + " à bien été ajouté", 'Succès');
       },

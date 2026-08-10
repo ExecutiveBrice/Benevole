@@ -99,7 +99,7 @@ public class BenevoleService {
     public List<Benevole> findBenevolesToAdvise() {
         ZoneId z = ZoneId.of( "Europe/Paris" );
         LocalDateTime now = LocalDateTime.now(z);
-        log.info(now.minusMinutes(5).toString());
+        log.debug(now.minusMinutes(5).toString());
         return benevoleRepository.findBenevolesToAdvise(now.minusMinutes(5));
     }
 

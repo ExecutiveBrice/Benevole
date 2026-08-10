@@ -2,6 +2,11 @@ package com.wild.corp.service;
 
 
 
+import brevo.ApiClient;
+import brevo.Configuration;
+import brevo.auth.ApiKeyAuth;
+import brevoApi.TransactionalEmailsApi;
+import brevoModel.*;
 import com.wild.corp.model.Benevole;
 import com.wild.corp.model.Ressources.EmailRessource;
 import jakarta.mail.*;
@@ -15,6 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 
@@ -55,55 +64,71 @@ public class EmailService {
             corpsMessage.append("<br />");
             corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "'>https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "</a>");
             corpsMessage.append("<br />");
-            sendSimpleMessage(benevole.getEvenement().getNotification()?benevole.getEmail():"", email.getSubject(), corpsMessage.toString(), benevole.getEvenement().getCopie()?benevole.getEvenement().getContactEmail():"");
+
+            List<String> destinataires = new ArrayList<>();
+            if(benevole.getEvenement().getNotification()){
+                destinataires.add(benevole.getEmail());
+            }
+
+            if(benevole.getEvenement().getCopie()){
+                destinataires.add(benevole.getEvenement().getContactEmail());
+            }
+
+            singleMessage(destinataires, corpsMessage.toString(), email.getSubject(), benevole.getPrenom(), benevole.getNom());
         });
         return "ok";
     }
+    public void singleMessage(List<String> destinataires, String text, String sujet, String prenom, String nom) {
 
-
-    public void sendSimpleMessage(String adresseMail, String sujet, String corps, String copieEmail) {
         Properties prop = new Properties();
         prop.put("mail.debug", "false");
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.ssl.protocols", "TLSv1.2");
-        prop.put("mail.smtp.host", "ssl0.ovh.net");
+        prop.put("mail.smtp.host", "smtp-relay.brevo.com");
         prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.ssl.trust", "ssl0.ovh.net");
+        prop.put("mail.smtp.ssl.trust", "smtp-relay.brevo.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.socketFactory.port", "587");
         prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
-        String fromEmail = "benevole@alod.fr";
 
-        Session session = Session.getInstance(prop, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(fromEmail, System.getenv("PASSWORD_OVHMAIL"));
-            }
-        });
+        ApiClient defaultClient = Configuration.getDefaultApiClient();
+        // Configure API key authorization: api-key
+        ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
+        apiKey.setApiKey(System.getenv("BREVO_APIKEY_PRIVATE"));
 
-        MimeMessage message = new MimeMessage(session);
         try {
-            message.setFrom(new InternetAddress(fromEmail));
-            if(StringUtils.isEmpty(adresseMail)) {
-                message.addRecipients(Message.RecipientType.TO, InternetAddress.parse(adresseMail));
-            }
-            if(StringUtils.isEmpty(copieEmail)) {
-                message.addRecipients(Message.RecipientType.CC, InternetAddress.parse(copieEmail));
-            }
-            message.setSubject(sujet);
+            log.info("Send singlemessage to {}",destinataires );
 
-            MimeBodyPart mimeBodyPart = new MimeBodyPart();
-            mimeBodyPart.setContent(corps, "text/html; charset=utf-8");
+            TransactionalEmailsApi api = new TransactionalEmailsApi();
+            SendSmtpEmailSender sender = new SendSmtpEmailSender();
+            sender.setEmail("adhesion@alod.fr");
+            sender.setName("ALOD");
+            List<SendSmtpEmailTo> toList = new ArrayList<>();
+            destinataires.forEach(destinataire -> {
+                SendSmtpEmailTo to = new SendSmtpEmailTo();
+                to.setEmail(destinataire);
+                toList.add(to);
+            });
 
-            Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(mimeBodyPart);
-            message.setContent(multipart);
-            Transport.send(message);
-        } catch (MessagingException e) {
-            log.error("error sending message "+message);
+            SendSmtpEmailReplyTo replyTo = new SendSmtpEmailReplyTo();
+            replyTo.setEmail("adhesion@alod.fr");
+            replyTo.setName("ALOD");
+
+            SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.setSender(sender);
+            sendSmtpEmail.setTo(toList);
+
+            sendSmtpEmail.setHtmlContent(text);
+
+            sendSmtpEmail.setSubject(sujet);
+            sendSmtpEmail.setReplyTo(replyTo);
+
+            CreateSmtpEmail response = api.sendTransacEmail(sendSmtpEmail);
+            log.info(response.toString());
+        } catch (Exception e) {
+            log.warn("Exception occurred:- " + e.getMessage());
         }
+
     }
-
-
 }

@@ -8,6 +8,7 @@ import { Evenement } from './evenement';
 export class Stand {
   id!:number;
   nom!: string;
+  soustitre!: string;
   ordre!:number;
   type!:number;
   placeOccupe!:number;
