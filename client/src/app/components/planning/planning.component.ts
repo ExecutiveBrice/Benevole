@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -31,7 +31,8 @@ export class PlanningComponent implements OnInit {
     public transmissionService: TransmissionService,
     public standService: StandService,
     private toastr: ToastService,
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -111,6 +112,7 @@ export class PlanningComponent implements OnInit {
       this.checkCroisements(this.besoins)
       this.checkCroisements(this.sansChoix)
       this.updateSum()
+      this.changeDetectorRef.detectChanges();
     } else {
       console.log("pas de benevole avec cette email")
     }
@@ -188,6 +190,7 @@ export class PlanningComponent implements OnInit {
           }
         })
         this.updateSum()
+        this.changeDetectorRef.detectChanges();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
@@ -271,4 +274,3 @@ export class PlanningComponent implements OnInit {
   }
 
 }
-

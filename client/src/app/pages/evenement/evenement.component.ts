@@ -1,5 +1,5 @@
 
-import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 import { BenevoleService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -58,6 +58,7 @@ export class EvenementComponent implements OnInit {
     public transmissionService: TransmissionService,
   
     public sanitizer: DomSanitizer,
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   showError() {
@@ -71,23 +72,19 @@ export class EvenementComponent implements OnInit {
 
   ngOnInit() {
 
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
 
-    this.evenementService.isOpen(this.idEvenement).subscribe({
-      next: (data) => {
-        this.getEvenement(this.idEvenement);
-
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error)
-
-        this.toastr.error(error.message, 'Erreur');
-
-      }
-    })
+    this.route.paramMap.subscribe(params => {
+      this.idEvenement = Number(params.get('id'));
+      this.evenementService.isOpen(this.idEvenement).subscribe({
+        next: () => this.getEvenement(this.idEvenement),
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          this.toastr.error(error.message, 'Erreur');
+        }
+      });
+    });
 
 
 
@@ -102,6 +99,7 @@ export class EvenementComponent implements OnInit {
         this.evenement = data;
         document.getElementsByTagName('html')[0].style.setProperty('--background-color', this.evenement!.couleurFond);
         this.transmissionService.dataTransmission(data);
+        this.changeDetectorRef.detectChanges();
 
       },
       error: (error: HttpErrorResponse) => {

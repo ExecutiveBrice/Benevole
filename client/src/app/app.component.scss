@@ -1,47 +1,130 @@
-.navbar{
-    background-color: #343a40;
-    color: aliceblue;
+.app-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1030;
+  min-height: 72px;
+  box-shadow: 0 .35rem .8rem rgb(0 0 0 / 28%);
 }
 
-.text-center{
-    display: flex;
-    font-size: larger;
-    justify-content: center;
-    align-items: center;
-    height: 80px;
+.app-content {
+  position: fixed;
+  inset: 72px 0 68px;
+  z-index: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
-.text-center-large{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 110px;
+.navbar-brand {
+  max-width: min(100%, 42rem);
+  margin-right: 1rem;
 }
 
-img{
-    margin-top: 5px;
-    border-radius: 5px;
-    width: 150px;
-    max-width: 150px;
-}
-.small{
-    width: 70px;
-    max-width: 70px;
-}
-.align-right{
-    text-align: end;
+.event-logo {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  border-radius: .375rem;
 }
 
-.align-center{
-    text-align: center;
+.event-logo-link {
+  margin-right: .5rem;
 }
-mat-icon {
-    font-size: 30px;
-        height: 30px;
-        width: 30px;
-    cursor: pointer;
 
+.event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+}
+
+.event-selector {
+  width: 100%;
+  max-width: 20rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-menu {
+  width: min(22rem, calc(100vw - 2rem));
+  max-height: min(28rem, calc(100vh - 7rem));
+  overflow-y: auto;
+  z-index: 1050;
+}
+
+.event-option {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  min-height: 62px;
+  white-space: normal;
+}
+
+.poster-thumbnail,
+.poster-placeholder {
+  width: 40px;
+  height: 52px;
+  flex: 0 0 40px;
+  border-radius: .25rem;
+}
+
+.poster-thumbnail {
+  object-fit: cover;
+}
+
+.poster-placeholder {
+  display: grid;
+  place-items: center;
+  background: var(--bs-secondary-bg);
+  color: var(--bs-secondary-color);
+  font-size: .65rem;
+  text-align: center;
+}
+
+.app-footer {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 1040;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: .5rem;
+  min-height: 68px;
+  padding: .75rem 1rem;
+  box-shadow: 0 -.35rem .8rem rgb(0 0 0 / 28%);
+}
+
+.footer-action {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-footer > .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+}
+
+.app-footer mat-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 575.98px) {
+  .app-footer {
+    gap: .35rem;
+    padding: .625rem;
   }
+
+  .event-selector {
+    font-size: .875rem;
+  }
+}
 
 .toast-container {
   z-index: 1100;
