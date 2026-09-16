@@ -7,7 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import {HttpErrorResponse} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from './services';
+import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
 
 
 
@@ -19,7 +20,9 @@ import {ToastrService} from "ngx-toastr";
     RouterModule,
     MatGridListModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    NgbToast,
+    NgbToastHeader
   ],
   providers: [
     TransmissionService,
@@ -43,7 +46,7 @@ export class AppComponent  implements OnInit{
     public evenementService: EvenementService,
     public router: Router,
     public fileService: FileService,
-    private toastr: ToastrService,
+    public toastService: ToastService,
     public route: ActivatedRoute,private elementRef: ElementRef) {}
 
 
@@ -68,7 +71,7 @@ export class AppComponent  implements OnInit{
     },
       error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-        this.toastr.error(error.message, 'Erreur');
+        this.toastService.error(error.message, 'Erreur');
       }
     });
   }
@@ -80,11 +83,9 @@ export class AppComponent  implements OnInit{
 
 
 @HostListener('window:resize', ['$event'])
-onWindowResize() {
+onWindowResize(_event: Event) {
   this.getScreenWidth = window.innerWidth;
   this.getScreenHeight = window.innerHeight;
 }
 
 }
-
-

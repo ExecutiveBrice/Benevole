@@ -49,3 +49,13 @@
 }
 <router-outlet/>
 
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  @for (toast of toastService.toasts; track toast.id) {
+    <ngb-toast [class]="'text-bg-' + toast.type" [autohide]="true" [delay]="2000" (hidden)="toastService.remove(toast)">
+      <ng-template ngbToastHeader>
+        <strong class="me-auto">{{ toast.title }}</strong>
+      </ng-template>
+      <span [innerHTML]="toast.message"></span>
+    </ngb-toast>
+  }
+</div>

@@ -6,7 +6,7 @@ import {Benevole, Croisement, Evenement} from '../../models';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {BenevoleService, TransmissionService} from '../../services';
-import {ToastrService} from 'ngx-toastr';
+import { ToastService } from '../../services';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrderByPipe} from "../../services/sort.pipe";
 import {MatIconModule} from '@angular/material/icon';
@@ -31,7 +31,7 @@ export class ConnexionComponent implements OnInit {
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
     private router: Router,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder,) {
   }
 

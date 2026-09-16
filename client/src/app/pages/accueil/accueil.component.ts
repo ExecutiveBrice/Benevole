@@ -17,7 +17,7 @@ import { OrderByPipe } from '../../services/sort.pipe';
 import { Evenement } from '../../models';
 import { EvenementService, FileService, TransmissionService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 
 
 
@@ -50,7 +50,7 @@ export class AccueilComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public fileService: FileService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public evenementService: EvenementService,
   ) {
 

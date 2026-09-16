@@ -9,3 +9,4 @@ export * from './evenement.service';
 export * from './transmission.service';
 export * from './config.service';
 export * from './file.service';
+export * from './toast.service';

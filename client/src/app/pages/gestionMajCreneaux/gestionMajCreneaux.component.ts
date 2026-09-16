@@ -22,7 +22,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import {HttpErrorResponse} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 
 
 @Component({
@@ -59,7 +59,7 @@ export class GestionMajCreneauxComponent implements OnInit {
     public transmissionService: TransmissionService,
     public router: Router,
     public creneauService: CreneauService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder) { }
 
   ngOnInit() {

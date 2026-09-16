@@ -6,7 +6,7 @@ import { Benevole, Croisement, Evenement, Stand } from '../../models';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BenevoleService, StandService, TransmissionService } from '../../services';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { OrderByPipe } from "../../services/sort.pipe";
@@ -30,7 +30,7 @@ export class PlanningComponent implements OnInit {
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
     public standService: StandService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder
   ) { }
 
@@ -271,5 +271,4 @@ export class PlanningComponent implements OnInit {
   }
 
 }
-
 

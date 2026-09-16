@@ -41,9 +41,9 @@ public class BenevoleController {
             return new ResponseEntity<>(benevole,HttpStatus.OK);
         } catch (RuntimeException e) {
             if(e.getMessage().equals("existe déjà")){
-                return new ResponseEntity(null, HttpStatus.CONFLICT);
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
             } else{
-                return new ResponseEntity(null, HttpStatus.NOT_ACCEPTABLE);
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
 
         }

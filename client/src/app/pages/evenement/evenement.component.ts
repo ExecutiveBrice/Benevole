@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnexionComponent } from "../../components/connexion/connexion.component";
@@ -50,7 +50,7 @@ export class EvenementComponent implements OnInit {
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
     public route: ActivatedRoute,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public router: Router,
     public croisementService: CroisementService,
     public standService: StandService,
@@ -135,9 +135,8 @@ export class EvenementComponent implements OnInit {
   public getScreenWidth: any;
   public getScreenHeight: any;
   @HostListener('window:resize', ['$event'])
-  onWindowResize() {
+  onWindowResize(_event: Event) {
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
   }
 }
-
