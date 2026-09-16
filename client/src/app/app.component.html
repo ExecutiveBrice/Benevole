@@ -47,7 +47,10 @@
       <span>Paramétrage</span>
     </a>
   } @else {
-    <span class="footer-action"></span>
+    <a class="btn btn-outline-light footer-action" [routerLink]="['/evenements/management']" [queryParams]="{ connexion: '1' }">
+      <mat-icon aria-hidden="true">settings</mat-icon>
+      <span>Paramétrage</span>
+    </a>
   }
 
   <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener">

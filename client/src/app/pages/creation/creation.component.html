@@ -82,7 +82,7 @@
 
 
       <mat-grid-tile [colspan]="3">
-        <button class="full-width" mat-flat-button (click)="create()">Je valide la création de mon
+        <button class="full-width" mat-flat-button (click)="create()" [disabled]="formulaire.invalid || !params">Je valide la création de mon
           évenement</button>
       </mat-grid-tile>
 

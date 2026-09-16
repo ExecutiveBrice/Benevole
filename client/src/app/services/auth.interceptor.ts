@@ -8,7 +8,7 @@ export const basicAuthenticationInterceptor: HttpInterceptorFn = (request, next)
   const authorization = inject(AuthService).authorizationHeader();
   const isApiRequest = request.url.startsWith(environment.url);
   const requiresAuthentication = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
-    || request.url === `${environment.url}administrateurs/moi`
+    || request.url.startsWith(`${environment.url}administrateurs`)
     || request.url === `${environment.url}config/getProps`;
 
   if (!authorization || !isApiRequest || !requiresAuthentication) {

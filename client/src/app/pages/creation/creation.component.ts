@@ -48,6 +48,7 @@ export class CreationComponent implements OnInit {
     contactEmail: [this.evenement.contactEmail, [Validators.required, Validators.email]],
     contactTel: [this.evenement.contactTel, []],
     contact: [this.evenement.contact, []],
+    startDate: [this.evenement.startDate, []],
     endDate: [this.evenement.endDate, []]
   })
 
@@ -63,11 +64,17 @@ export class CreationComponent implements OnInit {
 
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams')!);
-    console.log(this.params)
-
     this.new = true;
     this.ok = true;
+    this.configService.getParams().subscribe({
+      next: params => this.params = params,
+      error: () => {
+        const paramsSauvegardes = localStorage.getItem('allParams');
+        if (paramsSauvegardes) {
+          this.params = JSON.parse(paramsSauvegardes);
+        }
+      }
+    });
   }
 
 
@@ -75,9 +82,7 @@ export class CreationComponent implements OnInit {
   create(): void {
     console.log(this.formulaire)
 
-
-
-    if (this.formulaire.valid) {
+    if (this.formulaire.valid && this.params) {
 
 
 

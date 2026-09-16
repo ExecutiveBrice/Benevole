@@ -6,10 +6,11 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
-/** Corps d'entrée dédié pour éviter d'exposer le hash du mot de passe. */
-public record AdministrateurCreationRessource(
+/** Modification d'un compte sans jamais exposer son mot de passe courant. */
+public record AdministrateurMiseAJourRessource(
         @NotBlank @Email @Size(max = 254) String username,
-        @NotBlank @Size(min = 12, max = 128) String password,
+        @Size(min = 12, max = 128) String password,
+        boolean enabled,
         boolean global,
         Set<Integer> evenementIds
 ) {

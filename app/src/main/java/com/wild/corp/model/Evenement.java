@@ -31,6 +31,8 @@ public class Evenement {
 
     private String eventName;
 
+    private Date startDate;
+
     private Date endDate;
 
     private String sitepersourl;

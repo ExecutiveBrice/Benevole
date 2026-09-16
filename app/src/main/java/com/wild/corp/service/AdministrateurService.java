@@ -4,6 +4,7 @@ import com.wild.corp.model.Administrateur;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.model.PasswordResetToken;
 import com.wild.corp.model.Ressources.AdministrateurCreationRessource;
+import com.wild.corp.model.Ressources.AdministrateurMiseAJourRessource;
 import com.wild.corp.model.Ressources.AdministrateurRessource;
 import com.wild.corp.model.Ressources.DemandeReinitialisationMotDePasseRessource;
 import com.wild.corp.model.Ressources.ReinitialisationMotDePasseRessource;
@@ -71,25 +72,49 @@ public class AdministrateurService implements UserDetailsService {
                 .build();
     }
 
-    public AdministrateurRessource creer(String createurUsername, AdministrateurCreationRessource request) {
+    public AdministrateurRessource creer(AdministrateurCreationRessource request) {
         String username = request.username().trim().toLowerCase();
         if (administrateurRepository.findByUsernameIgnoreCase(username).isPresent()) {
             throw new IllegalArgumentException("Cet identifiant est déjà utilisé");
         }
 
-        if (request.evenementIds() != null) {
-            request.evenementIds().forEach(evenementId -> verifierAccesEvenement(createurUsername, evenementId));
-        }
-
         Administrateur administrateur = new Administrateur();
         administrateur.setUsername(username);
         administrateur.setPasswordHash(passwordEncoder.encode(request.password()));
-        administrateur.setEvenements(eventsFor(request.evenementIds()));
+        administrateur.setEnabled(true);
+        administrateur.setEvenements(request.global() ? new HashSet<>() : eventsFor(request.evenementIds()));
+        return toRessource(administrateurRepository.save(administrateur));
+    }
+
+    public AdministrateurRessource mettreAJour(Integer id, AdministrateurMiseAJourRessource request) {
+        Administrateur administrateur = administrateurRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Administrateur introuvable"));
+        String username = request.username().trim().toLowerCase();
+        administrateurRepository.findByUsernameIgnoreCase(username)
+                .filter(existant -> !existant.getId().equals(id))
+                .ifPresent(existant -> { throw new IllegalArgumentException("Cet identifiant est déjà utilisé"); });
+
+        boolean retireDernierAdministrateurGlobal = administrateur.isEnabled() && estGlobal(administrateur)
+                && (!request.enabled() || !request.global());
+        if (retireDernierAdministrateurGlobal && nombreAdministrateursGlobauxActifs() <= 1) {
+            throw new IllegalArgumentException("Il doit rester au moins un administrateur global actif");
+        }
+
+        administrateur.setUsername(username);
+        administrateur.setEnabled(request.enabled());
+        if (request.password() != null && !request.password().isBlank()) {
+            administrateur.setPasswordHash(passwordEncoder.encode(request.password()));
+        }
+        administrateur.setEvenements(request.global() ? new HashSet<>() : eventsFor(request.evenementIds()));
         return toRessource(administrateurRepository.save(administrateur));
     }
 
     public AdministrateurRessource moi(String username) {
         return toRessource(getByUsername(username));
+    }
+
+    public List<AdministrateurRessource> lister() {
+        return administrateurRepository.findAll().stream().map(this::toRessource).toList();
     }
 
     /** Réponse identique qu'un compte existe ou non pour ne pas révéler les adresses enregistrées. */
@@ -117,16 +142,35 @@ public class AdministrateurService implements UserDetailsService {
     /** Associe automatiquement un événement à l'administrateur qui le crée. */
     public void associerEvenement(String username, Integer evenementId) {
         Administrateur administrateur = getByUsername(username);
+        // Un compte global est matérialisé par l'absence d'évènement associé.
+        // Il conserve ce rôle lorsqu'il crée un nouvel évènement.
+        if (estGlobal(administrateur)) {
+            return;
+        }
         Evenement evenement = evenementRepository.findById(evenementId)
                 .orElseThrow(() -> new IllegalArgumentException("Événement introuvable"));
         administrateur.getEvenements().add(evenement);
     }
 
     public void verifierAccesEvenement(String username, Integer evenementId) {
+        if (estGlobal(getByUsername(username))) {
+            return;
+        }
         boolean autorise = administrateurRepository.findEvenementsByUsername(username).stream()
                 .anyMatch(evenement -> evenement.getId().equals(evenementId));
         if (!autorise) {
             throw new AccessDeniedException("Vous n'êtes pas administrateur de cet événement");
+        }
+    }
+
+    /**
+     * La gestion transversale est portée par un compte sans évènement associé
+     * (l'équivalent logique d'un évènement null). Cela évite d'exposer un
+     * évènement technique dans l'interface publique.
+     */
+    public void verifierAccesGlobal(String username) {
+        if (!estGlobal(getByUsername(username))) {
+            throw new AccessDeniedException("Vous n'êtes pas administrateur global");
         }
     }
 
@@ -137,7 +181,7 @@ public class AdministrateurService implements UserDetailsService {
 
     private Set<Evenement> eventsFor(Set<Integer> evenementIds) {
         if (evenementIds == null || evenementIds.isEmpty()) {
-            return new HashSet<>();
+            throw new IllegalArgumentException("Sélectionnez au moins un événement ou activez l'accès global");
         }
         List<Evenement> evenements = evenementRepository.findAllById(evenementIds);
         if (evenements.size() != evenementIds.size()) {
@@ -151,7 +195,18 @@ public class AdministrateurService implements UserDetailsService {
                 .map(Evenement::getId)
                 .collect(java.util.stream.Collectors.toSet());
         return new AdministrateurRessource(administrateur.getId(), administrateur.getUsername(),
-                administrateur.isEnabled(), evenementIds);
+                administrateur.isEnabled(), estGlobal(administrateur), evenementIds);
+    }
+
+    private boolean estGlobal(Administrateur administrateur) {
+        return administrateur.getEvenements() == null || administrateur.getEvenements().isEmpty();
+    }
+
+    private long nombreAdministrateursGlobauxActifs() {
+        return administrateurRepository.findAll().stream()
+                .filter(Administrateur::isEnabled)
+                .filter(this::estGlobal)
+                .count();
     }
 
     private void creerEtEnvoyerJetonReinitialisation(Administrateur administrateur) {

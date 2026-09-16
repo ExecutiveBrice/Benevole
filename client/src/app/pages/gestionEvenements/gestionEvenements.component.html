@@ -1,89 +1,119 @@
-
 @if (authorize) {
-<div class="row">
-  <div class="col-sm-12">
-    <button type="button" class="btn btn-block btn-warning" [routerLink]="['/evenements/creation/']">Créé un nouvel
-      évenement</button>
-  </div>
-  @for (evenement of evenements | orderBy:'id':false; track $index) {
-  <div class="col-sm-12">
-    <button type="button" class="btn btn-block btn-info" (click)="choixEvenement(evenement.id)">
-      {{evenement.id}} - {{evenement.eventName}} {{evenement.startDate | date:'dd/MM/yyyy'}}</button>
-    @if (choix == evenement.id) {
-    <div class="col-sm-12">
+  <section class="global-settings">
+    @if (!afficherAdministrateurs) {
+      <header class="settings-header">
+        <h1>Paramétrage global</h1>
+        <p>Gérez les évènements et les accès administrateurs de l’application.</p>
+      </header>
 
-      <div class="col-sm-6">
-        <div class="input-group mb-3 ">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Evenement</span>
+      <div class="settings-actions">
+        <a class="btn btn-warning btn-lg" [routerLink]="['/evenements/creation']">Ajouter un évènement</a>
+        <button type="button" class="btn btn-primary btn-lg" (click)="afficherGestionAdministrateurs()">
+          Ajouter et gérer les administrateurs
+        </button>
+      </div>
+
+      <section class="events-section">
+        <h2>Évènements</h2>
+        @for (evenement of evenements; track evenement.id) {
+          <article class="event-row">
+            <button type="button" class="btn btn-info event-title" (click)="choixEvenement(evenement.id)">
+              {{ evenement.eventName }} — {{ evenement.endDate | date:'dd/MM/yyyy' }}
+            </button>
+            @if (choix === evenement.id) {
+              <div class="event-editor">
+                <label>Nom de l’évènement<input type="text" [(ngModel)]="evenement.eventName" class="form-control"></label>
+                <label>Contact<input type="text" [(ngModel)]="evenement.contact" class="form-control"></label>
+                <label>E-mail de contact<input type="email" [(ngModel)]="evenement.contactEmail" class="form-control"></label>
+                <label>Début<input type="date" [ngModel]="evenement.startDate | date:'yyyy-MM-dd'"
+                  (ngModelChange)="evenement.startDate = $event" class="form-control"></label>
+                <label>Fin<input type="date" [ngModel]="evenement.endDate | date:'yyyy-MM-dd'"
+                  (ngModelChange)="evenement.endDate = $event" class="form-control"></label>
+                <div class="editor-actions">
+                  <button type="button" class="btn btn-warning" (click)="goToGestion(evenement)">Gérer l’évènement</button>
+                  <button type="button" class="btn btn-success" (click)="update(evenement)">Enregistrer</button>
+                  <button type="button" class="btn btn-danger" (click)="delete(evenement)">Supprimer</button>
+                </div>
+              </div>
+            }
+          </article>
+        } @empty {
+          <p>Aucun évènement n’a encore été créé.</p>
+        }
+      </section>
+    } @else {
+      <header class="settings-header settings-header-with-action">
+        <div>
+          <h1>Administrateurs</h1>
+          <p>Un administrateur global n’est rattaché à aucun évènement et peut tout gérer.</p>
+        </div>
+        <button type="button" class="btn btn-outline-secondary" (click)="retourTableauDeBord()">Retour</button>
+      </header>
+
+      <div class="admin-actions">
+        <button type="button" class="btn btn-primary" (click)="ouvrirAjoutAdministrateur()">Ajouter un administrateur</button>
+      </div>
+
+      @if (ajouterAdministrateur) {
+        <section class="admin-form">
+          <h2>Nouvel administrateur</h2>
+          <label>Adresse e-mail<input type="email" class="form-control" [(ngModel)]="nouvelAdministrateur.username"></label>
+          <label>Mot de passe<input type="password" class="form-control" [(ngModel)]="nouvelAdministrateur.password" minlength="12"></label>
+          <label class="form-check"><input type="checkbox" class="form-check-input" [(ngModel)]="nouvelAdministrateur.global"> Accès global</label>
+          @if (!nouvelAdministrateur.global) {
+            <fieldset>
+              <legend>Évènements autorisés</legend>
+              @for (evenement of evenements; track evenement.id) {
+                <label class="form-check"><input type="checkbox" class="form-check-input"
+                  [checked]="evenementSelectionne(evenement.id, nouvelAdministrateur)"
+                  (change)="basculerEvenement(evenement.id, nouvelAdministrateur)"> {{ evenement.eventName }}</label>
+              }
+            </fieldset>
+          }
+          <div class="editor-actions"><button type="button" class="btn btn-success" (click)="enregistrerNouvelAdministrateur()">Ajouter</button></div>
+        </section>
+      }
+
+      @if (administrateurEnEdition; as administrateur) {
+        <section class="admin-form">
+          <h2>Modifier {{ administrateur.username }}</h2>
+          <label>Adresse e-mail<input type="email" class="form-control" [(ngModel)]="administrateur.username"></label>
+          <label>Nouveau mot de passe <small>(laisser vide pour le conserver)</small><input type="password" class="form-control" [(ngModel)]="motDePasseEdition" minlength="12"></label>
+          <label class="form-check"><input type="checkbox" class="form-check-input" [(ngModel)]="administrateur.enabled"> Compte actif</label>
+          <label class="form-check"><input type="checkbox" class="form-check-input" [(ngModel)]="administrateur.global"> Accès global</label>
+          @if (!administrateur.global) {
+            <fieldset>
+              <legend>Évènements autorisés</legend>
+              @for (evenement of evenements; track evenement.id) {
+                <label class="form-check"><input type="checkbox" class="form-check-input"
+                  [checked]="evenementSelectionne(evenement.id, administrateur)"
+                  (change)="basculerEvenement(evenement.id, administrateur)"> {{ evenement.eventName }}</label>
+              }
+            </fieldset>
+          }
+          <div class="editor-actions">
+            <button type="button" class="btn btn-success" (click)="enregistrerAdministrateur()">Enregistrer</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="administrateurEnEdition = undefined">Annuler</button>
           </div>
-          <input type="text" [(ngModel)]="evenement.eventName" class="form-control" id="eventname">
-        </div>
-      </div>
-      <div class="col-sm-6">
-        <div class="input-group mb-3 ">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Nom Prenom</span>
-          </div>
-          <input type="text" [(ngModel)]="evenement.contact" class="form-control" id="contact">
-        </div>
-      </div>
+        </section>
+      }
 
-
-
-      <div class="col-sm-9">
-        <div class="input-group mb-3 ">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Email</span>
-          </div>
-          <input type="text" [(ngModel)]="evenement.contactEmail" class="form-control" id="contactemail">
-        </div>
-      </div>
-      <div class="col-sm-3">
-        <div class="input-group mb-3 ">
-          <button type="button" class="btn btn-block btn-warning" (click)="goToGestion(evenement)">
-            Gestion</button>
-        </div>
-      </div>
-
-
-
-
-      <div class="col-sm-4">
-        <div class="input-group mb-3 ">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Début</span>
-          </div>
-          <input type="date" [ngModel]="evenement.startDate | date:'yyyy-MM-dd'"
-            (ngModelChange)="evenement.startDate = $event" class="form-control" id="startDate">
-        </div>
-      </div>
-
-
-      <div class="col-sm-4">
-        <div class="input-group mb-3 ">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Fin</span>
-          </div>
-          <input type="date" [ngModel]="evenement.endDate | date:'yyyy-MM-dd'"
-            (ngModelChange)="evenement.endDate = $event" class="form-control" id="endDate">
-        </div>
-      </div>
-
-      <div class="col-sm-6">
-        <button type="button" class="btn btn-block btn-warning" (click)="update(evenement)">
-          Mettre à jour</button>
-      </div>
-      <div class="col-sm-3">
-        <button type="button" class="btn btn-block btn-danger" (click)="delete(evenement)">
-          Supprimer</button>
-      </div>
-
-
-
-    </div>
+      <section class="admin-list">
+        @for (administrateur of administrateurs; track administrateur.id) {
+          <article class="admin-row">
+            <div>
+              <strong>{{ administrateur.username }}</strong>
+              <span class="badge" [class.text-bg-success]="administrateur.global" [class.text-bg-secondary]="!administrateur.global">
+                {{ administrateur.global ? 'Global' : 'Évènements sélectionnés' }}
+              </span>
+              @if (!administrateur.enabled) { <span class="badge text-bg-danger">Désactivé</span> }
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="editerAdministrateur(administrateur)">Modifier</button>
+          </article>
+        } @empty {
+          <p>Aucun administrateur.</p>
+        }
+      </section>
     }
-  </div>
-  }
-</div>
+  </section>
 }

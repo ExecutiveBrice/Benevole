@@ -75,6 +75,7 @@ public class EvenementService {
     public Evenement update(Evenement evenement) {
 
         Evenement event = findById(evenement.getId());
+        event.setStartDate(evenement.getStartDate());
         event.setEndDate(evenement.getEndDate());
         event.setEventName(evenement.getEventName());
         event.setContactTel(evenement.getContactTel());
