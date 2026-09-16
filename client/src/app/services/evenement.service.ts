@@ -32,10 +32,6 @@ export class EvenementService {
     let params = new HttpParams().set('id', ''+creneau.id+'');
     return this.http.delete(this.apiUrl + '/', {params, responseType: 'json'});
   }
-  isAuthorize(id:number, password:string) {
-    let params = new HttpParams().set('id', '' + id + '').set('password', '' + password + '');
-    return this.http.get<boolean>(this.apiUrl + '/isAuthorize', {params, responseType: 'json'});
-  }
   isOpen(id:number): Observable<boolean> {
     let params = new HttpParams().set('id', '' + id + '');
     return this.http.get<boolean>(this.apiUrl + '/isOpen', {params, responseType: 'json'});

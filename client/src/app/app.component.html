@@ -42,7 +42,7 @@
   </div>
 
   @if (evenement?.id) {
-    <a class="btn btn-outline-light footer-action" [routerLink]="['/', evenement.id, 'gestion']">
+    <a class="btn btn-outline-light footer-action" [routerLink]="['/', evenement.id, 'gestion']" [queryParams]="{ connexion: '1' }">
       <mat-icon aria-hidden="true">settings</mat-icon>
       <span>Paramétrage</span>
     </a>

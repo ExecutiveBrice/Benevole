@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { FormGroup } from '@angular/forms';
 
 @Pipe({
   name: 'orderObjectBy',
@@ -12,9 +11,9 @@ export class OrderObjectByPipe implements PipeTransform {
       return null;
     }
     if (reverse) {
-      return values.sort((a: any, b: any): number => Number(a[key.split('.')[0]][key.split('.')[1]]) - Number(b[key.split('.')[0]][key.split('.')[1]])).reverse();
+      return [...values].sort((a: any, b: any): number => Number(a[key.split('.')[0]][key.split('.')[1]]) - Number(b[key.split('.')[0]][key.split('.')[1]])).reverse();
     } else {
-      return values.sort((a: any, b: any): number => Number(a[key.split('.')[0]][key.split('.')[1]]) - Number(b[key.split('.')[0]][key.split('.')[1]]));
+      return [...values].sort((a: any, b: any): number => Number(a[key.split('.')[0]][key.split('.')[1]]) - Number(b[key.split('.')[0]][key.split('.')[1]]));
     }
 
 

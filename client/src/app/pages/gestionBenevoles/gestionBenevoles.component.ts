@@ -1,5 +1,5 @@
-import {Component, inject, OnInit} from '@angular/core';
-import {BenevoleService, ExcelService} from '../../services';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {BenevoleService, ExcelService, AuthService} from '../../services';
 import {
   ConfigService,
   EvenementService,
@@ -34,6 +34,7 @@ import {ModalComponent} from '../../components/modal/modal.component';
 
 @Component({
   selector: 'app-gestionBenevoles',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   templateUrl: './gestionBenevoles.component.html',
   styleUrls: ['./gestionBenevoles.component.scss'],
@@ -76,6 +77,7 @@ export class GestionBenevolesComponent implements OnInit {
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
+    private authService: AuthService,
     private toastr: ToastService,
     public formBuilder: FormBuilder) {
   }
@@ -83,15 +85,15 @@ export class GestionBenevolesComponent implements OnInit {
 
   ngOnInit() {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
-    if (this.authorize) {
+    if (this.authService.isAuthenticated()) {
+      this.authorize = true;
       this.getEvenement(this.idEvenement);
       this.find();
       this.getStand();
       this.croisements = [];
       this.choix = "";
     } else {
-      this.router.navigate([this.idEvenement + '/gestion/']);
+      this.router.navigate(['/', this.idEvenement, 'gestion']);
     }
   }
 

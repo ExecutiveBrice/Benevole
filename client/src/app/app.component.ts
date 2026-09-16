@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Evenement } from './models';
 import { EvenementService, FileService, TransmissionService } from './services';
@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-root',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [RouterOutlet,
     RouterModule,

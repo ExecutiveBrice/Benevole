@@ -1,11 +1,12 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {
   CroisementService,
   StandService,
   CreneauService,
   EvenementService,
   TransmissionService,
-  ConfigService
+  ConfigService,
+  AuthService
 } from '../../services';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Croisement, Stand, Creneau, Evenement} from '../../models';
@@ -32,6 +33,7 @@ import {ListFilterPipe} from "../../services/simpleFilter.pipe";
 
 @Component({
   selector: 'app-gestionMajStands',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   templateUrl: './gestionMajStands.component.html',
   styleUrls: ['./gestionMajStands.component.scss'],
@@ -69,6 +71,7 @@ export class GestionMajStandsComponent implements OnInit {
     private toastr: ToastService,
     public transmissionService: TransmissionService,
     public standService: StandService,
+    private authService: AuthService,
     public fb: FormBuilder) {
 
   }
@@ -97,15 +100,13 @@ export class GestionMajStandsComponent implements OnInit {
   ngOnInit() {
     this.choix = "";
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
-    if (this.authorize) {
-      console.log("authorize");
+    if (this.authService.isAuthenticated()) {
+      this.authorize = true;
       this.getEvenement(this.idEvenement);
       this.getAllStands();
       this.getAllCreneaux();
     } else {
-      console.log("not authorize");
-      this.router.navigate([this.idEvenement + '/gestion/']);
+      this.router.navigate(['/', this.idEvenement, 'gestion']);
     }
   }
 

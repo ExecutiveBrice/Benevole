@@ -20,7 +20,7 @@ export class OrderByPipe implements PipeTransform {
       key = key.split('.');
     }
 
-    const array: any[] = value.sort((a: any, b: any): number => {
+    const array: any[] = [...value].sort((a: any, b: any): number => {
       if (!key) {
         return a > b ? 1 : -1;
       }

@@ -1,6 +1,6 @@
 
-import { Component, inject, OnInit } from '@angular/core';
-import { TransmissionService, CroisementService, EvenementService, StandService, MailService, BenevoleService, FileService, ConfigService } from '../../services';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { TransmissionService, CroisementService, EvenementService, StandService, MailService, BenevoleService, FileService, ConfigService, AuthService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -30,6 +30,7 @@ import { ModalAccessGestionComponent } from '../../components/modalAccessGestion
 
 @Component({
   selector: 'app-gestion',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [
     NgClass,
@@ -71,6 +72,8 @@ export class GestionComponent implements OnInit {
 
 
   authorize: boolean = false
+  connexionDialogOpen = false;
+  private ouvrirConnexionDepuisFooter = false;
   rappel!: boolean
 
   emailStands: LocalStand[] = []
@@ -102,6 +105,7 @@ export class GestionComponent implements OnInit {
     private toastr: ToastService,
     public router: Router,
     public evenementService: EvenementService,
+    private authService: AuthService,
     public transmissionService: TransmissionService,
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
@@ -114,19 +118,18 @@ export class GestionComponent implements OnInit {
 
 
   ngOnInit() {
-    this.params = JSON.parse(localStorage.getItem('allParams')!);
-
-
     this.mail = false;
 
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
+    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!);
+    this.ouvrirConnexionDepuisFooter = this.route.snapshot.queryParamMap.get('connexion') === '1';
 
-
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
-    if (this.authorize) {
-      this.loadPage()
+    if (this.authService.isAuthenticated()) {
+      this.authorize = true;
+      this.loadPage();
+    } else if (this.ouvrirConnexionDepuisFooter) {
+      this.authorizeAccess();
     } else {
-      this.authorizeAccess()
+      this.retourEvenement();
     }
 
 
@@ -147,35 +150,36 @@ export class GestionComponent implements OnInit {
   }
 
   authorizeAccess(): void {
+    if (this.connexionDialogOpen) {
+      return;
+    }
+    this.connexionDialogOpen = true;
     this.dialog.open(ModalAccessGestionComponent, {
       hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
       data: {
         title: 'Accès mode gestionnaire',
-        question: 'Saisissez le mot de passe de l\'évènement :',
+        question: 'Saisissez vos identifiants administrateur :',
       },
     }).afterClosed().subscribe(result => {
+      this.connexionDialogOpen = false;
       if (result instanceof FormGroup) {
-        this.evenementService.isAuthorize(this.idEvenement, result.get('passwood')?.value).subscribe({
-          next: (data) => {
-            console.log(data);
-            if (data) {
-              this.authorize = data;
-              localStorage.setItem('isValidAccessForEvent', JSON.stringify(this.idEvenement));
-              this.loadPage()
-            } else {
-              this.router.navigate(['/' + this.idEvenement]);
-              this.toastr.error("Mot de passe incorrect", 'Erreur');
-            }
-          },
-          error: (error: HttpErrorResponse) => {
-            this.router.navigate(['/' + this.idEvenement]);
-
-          }
-        })
+        this.authService.login(result.get('username')?.value, result.get('password')?.value);
+        this.authorize = true;
+        this.loadPage();
       } else {
         this.router.navigate(['/' + this.idEvenement]);
       }
     });
+  }
+
+  private retourEvenement(): void {
+    this.router.navigate(['/', this.idEvenement]);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.authorize = false;
+    this.retourEvenement();
   }
 
 

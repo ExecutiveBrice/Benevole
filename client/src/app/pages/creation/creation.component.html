@@ -81,18 +81,6 @@
       </mat-grid-tile>
 
 
-      <mat-grid-tile>
-
-
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'" formControlName="password"
-            required><mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' :
-            'visibility'}}</mat-icon>
-          <mat-hint>Nécéssaire pour garder la main sur les paramétrages de l'évenement</mat-hint>
-        </mat-form-field>
-      </mat-grid-tile>
-
-
       <mat-grid-tile [colspan]="3">
         <button class="full-width" mat-flat-button (click)="create()">Je valide la création de mon
           évenement</button>

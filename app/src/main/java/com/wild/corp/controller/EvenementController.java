@@ -1,11 +1,13 @@
 package com.wild.corp.controller;
 
 import com.wild.corp.model.Evenement;
+import com.wild.corp.service.AdministrateurService;
 import com.wild.corp.service.EvenementService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,25 +20,31 @@ public class EvenementController {
     @Autowired
     private EvenementService evenementService;
 
+    @Autowired
+    private AdministrateurService administrateurService;
+
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Evenement> add(@RequestBody Evenement evenement) {
+    public ResponseEntity<Evenement> add(@RequestBody Evenement evenement, Authentication authentication) {
         evenementService.persist(evenement);
 
         if(evenement.getId() == null) {
             return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        administrateurService.associerEvenement(authentication.getName(), evenement.getId());
         return new ResponseEntity<>(evenement, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Evenement> update(@RequestBody Evenement evenement) {
+    public ResponseEntity<Evenement> update(@RequestBody Evenement evenement, Authentication authentication) {
+        administrateurService.verifierAccesEvenement(authentication.getName(), evenement.getId());
         evenementService.update(evenement);
         return new ResponseEntity<>(evenement, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestParam Integer id) {
+    public ResponseEntity<?> delete(@RequestParam Integer id, Authentication authentication) {
+        administrateurService.verifierAccesEvenement(authentication.getName(), id);
         evenementService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -62,12 +70,6 @@ public class EvenementController {
         return new ResponseEntity<>(evenements, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/isAuthorize", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> isAuthorize(@RequestParam Integer id, @RequestParam String password) {
-        Boolean authorisation = evenementService.authorize(id, password);
-        return new ResponseEntity<>(authorisation, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/isOpen", method = RequestMethod.GET)
     public ResponseEntity<Boolean> isOpen(@RequestParam Integer id) {
         Boolean isOpen = evenementService.isOpen(id);
@@ -75,7 +77,8 @@ public class EvenementController {
     }
 
     @RequestMapping(value = "/opening", method = RequestMethod.PUT)
-    public ResponseEntity<Boolean> updateOpening(@RequestParam Integer id) {
+    public ResponseEntity<Boolean> updateOpening(@RequestParam Integer id, Authentication authentication) {
+        administrateurService.verifierAccesEvenement(authentication.getName(), id);
         Boolean isOpen =  evenementService.updateOpening(id);
         return new ResponseEntity<>(isOpen, HttpStatus.OK);
     }

@@ -42,12 +42,10 @@ export class CreationComponent implements OnInit {
   ok!: boolean;
   params!: Params
   error!: boolean
-  hide: any;
   formulaire = this.formBuilder.group({
 
     eventName: [this.evenement.eventName, [Validators.required]],
     contactEmail: [this.evenement.contactEmail, [Validators.required, Validators.email]],
-    password: [this.evenement.password, Validators.required],
     contactTel: [this.evenement.contactTel, []],
     contact: [this.evenement.contact, []],
     endDate: [this.evenement.endDate, []]
