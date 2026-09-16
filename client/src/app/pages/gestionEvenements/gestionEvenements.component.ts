@@ -10,7 +10,7 @@ import { FormGroup, FormsModule } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { ModalAccessGestionComponent } from '../../components/modalAccessGestion/modalAccessGestion.component';
 
 @Component({
@@ -39,7 +39,7 @@ export class GestionEvenementsComponent implements OnInit {
 
 
   constructor(
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public route: ActivatedRoute,
     public router: Router,
     public evenementService: EvenementService,

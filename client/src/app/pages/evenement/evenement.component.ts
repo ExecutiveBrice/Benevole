@@ -1,5 +1,5 @@
 
-import { Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
 import { BenevoleService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnexionComponent } from "../../components/connexion/connexion.component";
@@ -50,7 +50,7 @@ export class EvenementComponent implements OnInit {
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
     public route: ActivatedRoute,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public router: Router,
     public croisementService: CroisementService,
     public standService: StandService,
@@ -58,6 +58,7 @@ export class EvenementComponent implements OnInit {
     public transmissionService: TransmissionService,
   
     public sanitizer: DomSanitizer,
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
 
   showError() {
@@ -71,23 +72,19 @@ export class EvenementComponent implements OnInit {
 
   ngOnInit() {
 
-    this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
-
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
 
-    this.evenementService.isOpen(this.idEvenement).subscribe({
-      next: (data) => {
-        this.getEvenement(this.idEvenement);
-
-      },
-      error: (error: HttpErrorResponse) => {
-        console.log(error)
-
-        this.toastr.error(error.message, 'Erreur');
-
-      }
-    })
+    this.route.paramMap.subscribe(params => {
+      this.idEvenement = Number(params.get('id'));
+      this.evenementService.isOpen(this.idEvenement).subscribe({
+        next: () => this.getEvenement(this.idEvenement),
+        error: (error: HttpErrorResponse) => {
+          console.log(error);
+          this.toastr.error(error.message, 'Erreur');
+        }
+      });
+    });
 
 
 
@@ -102,6 +99,7 @@ export class EvenementComponent implements OnInit {
         this.evenement = data;
         document.getElementsByTagName('html')[0].style.setProperty('--background-color', this.evenement!.couleurFond);
         this.transmissionService.dataTransmission(data);
+        this.changeDetectorRef.detectChanges();
 
       },
       error: (error: HttpErrorResponse) => {
@@ -135,9 +133,8 @@ export class EvenementComponent implements OnInit {
   public getScreenWidth: any;
   public getScreenHeight: any;
   @HostListener('window:resize', ['$event'])
-  onWindowResize() {
+  onWindowResize(_event: Event) {
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
   }
 }
-

@@ -12,7 +12,7 @@
 
   <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
     <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         préparatifs
       </mat-card-title>
     </mat-card-header>
@@ -23,7 +23,7 @@
 
         <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
           <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-            <mat-panel-title [style]="'font-family: '+evenement?.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+            <mat-panel-title [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
               /{{ stand.placeTotal }})
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -57,7 +57,7 @@
 
   <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
     <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         stands
       </mat-card-title>
     </mat-card-header>
@@ -68,7 +68,7 @@
 
         <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
           <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-            <mat-panel-title [style]="'font-family: '+evenement?.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+            <mat-panel-title [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
               /{{ stand.placeTotal }})
             </mat-panel-title>
 
@@ -104,7 +104,7 @@
 @if (sansChoix.length > 0) {
   <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
     <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         dispos
       </mat-card-title>
     </mat-card-header>
@@ -136,7 +136,7 @@
 @if (besoins.length > 0) {
   <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
     <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         besoins
       </mat-card-title>
     </mat-card-header>
@@ -171,7 +171,7 @@
 @if (postparatifs.length > 0) {
   <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
     <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement?.titleFont" [style.color]="evenement?.couleurText">Les
+      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         postparatifs
       </mat-card-title>
     </mat-card-header>
@@ -181,7 +181,7 @@
 
         <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
           <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-            <mat-panel-title [style]="'font-family: '+evenement?.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+            <mat-panel-title [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
               /{{ stand.placeTotal }})
             </mat-panel-title>
           </mat-expansion-panel-header>

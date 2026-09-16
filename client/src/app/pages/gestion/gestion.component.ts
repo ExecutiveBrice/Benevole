@@ -20,7 +20,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { OrderByPipe } from '../../services/sort.pipe';
 import { Params } from '../../models/params';
 import { MatDialog } from '@angular/material/dialog';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -102,7 +102,7 @@ export class GestionComponent implements OnInit {
 
   constructor(
     public route: ActivatedRoute,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public router: Router,
     public evenementService: EvenementService,
     private authService: AuthService,
@@ -333,7 +333,7 @@ export class GestionComponent implements OnInit {
     if (this.emailInfo.to.length > 0) {
       this.mailService.sendMail(this.emailInfo)
         .subscribe(res => {
-          this.toastr.show("Les " + this.emailInfo.to.length + " emails sont bien partis", 'Bravo');
+          this.toastr.success("Les " + this.emailInfo.to.length + " emails sont bien partis", 'Bravo');
         }, err => {
           this.toastr.error("Il y a eu un problème lors de l'envoi des mails", 'Erreur');
           console.log(err);
