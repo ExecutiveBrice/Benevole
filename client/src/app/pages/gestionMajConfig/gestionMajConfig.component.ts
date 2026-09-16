@@ -24,7 +24,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {MatSelectModule} from '@angular/material/select';
 import {Editor, NgxEditorModule, Toolbar} from 'ngx-editor';
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
@@ -151,7 +151,7 @@ export class GestionMajConfigComponent implements OnInit {
     public transmissionService: TransmissionService,
     public evenementService: EvenementService,
     public fileService: FileService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder) {
   }
 

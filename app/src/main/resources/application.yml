@@ -1,5 +1,10 @@
 spring:
   datasource:
+    # Valeurs de développement local. Les variables SPRING_DATASOURCE_*
+    # fournies par Docker Compose les remplacent automatiquement.
+    url: ${DB_URL:jdbc:postgresql://localhost:8106/db_benevole}
+    username: ${DB_USER:benevoles}
+    password: ${DB_PASSWORD:benevolespass}
     driver-class-name: org.postgresql.Driver
   jpa:
     show_sql: false
@@ -13,3 +18,6 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 image-storage-dir: C:\Users\PC\Documents\ProjetsDev\Benevoles
+
+server:
+  port: 8006

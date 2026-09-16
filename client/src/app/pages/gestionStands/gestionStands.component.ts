@@ -26,7 +26,7 @@ import { ImageCropperComponent } from 'ngx-image-cropper';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from '../../components/modal/modal.component';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -60,7 +60,7 @@ export class GestionStandsComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public excelService: ExcelService,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,

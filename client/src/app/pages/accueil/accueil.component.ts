@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,11 +13,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { OrderByPipe } from '../../services/sort.pipe';
 import { Evenement } from '../../models';
 import { EvenementService, FileService, TransmissionService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 
 
 
@@ -32,7 +31,7 @@ import {ToastrService} from "ngx-toastr";
     MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
     ReactiveFormsModule, MatCardModule, MatSelectModule,
     FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
-    MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule],
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.scss']
 })
@@ -40,7 +39,7 @@ import {ToastrService} from "ngx-toastr";
 export class AccueilComponent implements OnInit {
 
   authorize: boolean = false;
-  evenements!: Evenement[];
+  evenements: Evenement[] = [];
   choix!: number;
   password!: string;
 
@@ -50,8 +49,9 @@ export class AccueilComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public fileService: FileService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public evenementService: EvenementService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {
 
   }
@@ -70,8 +70,8 @@ export class AccueilComponent implements OnInit {
     this.evenementService.getAll().subscribe({
       next: (data) => {
       this.evenements = data.filter(evenemet => evenemet.id != 0)
-      console.log(data);
       this.evenements.forEach(evenement => this.getAffiche(evenement))
+      this.changeDetectorRef.detectChanges();
     },
       error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);

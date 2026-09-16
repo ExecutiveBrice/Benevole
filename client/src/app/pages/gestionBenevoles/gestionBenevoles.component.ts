@@ -28,7 +28,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 
 import {MatSelectModule} from '@angular/material/select';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ToastrService} from 'ngx-toastr';
+import { ToastService } from '../../services';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalComponent} from '../../components/modal/modal.component';
 
@@ -76,7 +76,7 @@ export class GestionBenevolesComponent implements OnInit {
     public benevoleService: BenevoleService,
     public croisementService: CroisementService,
     public standService: StandService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder) {
   }
 

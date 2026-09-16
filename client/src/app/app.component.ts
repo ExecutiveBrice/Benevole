@@ -1,13 +1,12 @@
-import { Component, ElementRef, HostListener, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
-import {MatIconModule} from '@angular/material/icon';
 import { Evenement } from './models';
 import { EvenementService, FileService, TransmissionService } from './services';
-import { MatButtonModule } from '@angular/material/button';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatTabsModule } from '@angular/material/tabs';
 import {HttpErrorResponse} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from './services';
+import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
+import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -15,10 +14,13 @@ import {ToastrService} from "ngx-toastr";
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet,
-    MatTabsModule,
     RouterModule,
-    MatGridListModule,
-    MatButtonModule,
+    NgbToast,
+    NgbToastHeader,
+    NgbDropdown,
+    NgbDropdownToggle,
+    NgbDropdownMenu,
+    NgbDropdownItem,
     MatIconModule
   ],
   providers: [
@@ -34,6 +36,7 @@ export class AppComponent  implements OnInit{
 
 
   evenement?: Evenement;
+  evenements: Evenement[] = [];
   isValidAccessForEvent?: number
   logo?: string;
 
@@ -43,22 +46,45 @@ export class AppComponent  implements OnInit{
     public evenementService: EvenementService,
     public router: Router,
     public fileService: FileService,
-    private toastr: ToastrService,
-    public route: ActivatedRoute,private elementRef: ElementRef) {}
+    public toastService: ToastService,
+    public route: ActivatedRoute,
+    private elementRef: ElementRef,
+    private changeDetectorRef: ChangeDetectorRef) {}
 
 
   ngOnInit() {
-    this.getScreenWidth = window.innerWidth;
-    this.getScreenHeight = window.innerHeight;
+    this.getAllEvenements();
     this.transmissionService.dataStream.subscribe(data => {
-    console.log("transmissionService");
-
       this.evenement = data
       this.elementRef.nativeElement.ownerDocument
       .body.style.backgroundColor = data.couleurFond;
       this.isValidAccessForEvent = JSON.parse(localStorage.getItem('isValidAccessForEvent')!);
       this.getLogo()
+      this.changeDetectorRef.detectChanges();
     });
+  }
+
+  getAllEvenements() {
+    this.evenementService.getAll().subscribe({
+      next: (data) => {
+        this.evenements = data.filter(evenement => evenement.id !== 0);
+        this.evenements.forEach(evenement => this.getAffiche(evenement));
+        this.changeDetectorRef.detectChanges();
+      },
+      error: (error: HttpErrorResponse) => this.toastService.error(error.message, 'Erreur')
+    });
+  }
+
+  getAffiche(evenement: Evenement) {
+    this.fileService.get(evenement.id, 'affiche.jpeg').subscribe({
+      next: (data) => evenement.affiche = `data:image/jpeg;base64,${data}`,
+      // Une affiche est optionnelle : l'évènement reste sélectionnable sans elle.
+      error: () => evenement.affiche = ''
+    });
+  }
+
+  changeEvenement(evenement: Evenement) {
+    this.router.navigate(['/', evenement.id]);
   }
 
   getLogo() {
@@ -68,23 +94,8 @@ export class AppComponent  implements OnInit{
     },
       error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
-        this.toastr.error(error.message, 'Erreur');
+        this.toastService.error(error.message, 'Erreur');
       }
     });
   }
-
-
-
-  public getScreenWidth: any;
-  public getScreenHeight: any;
-
-
-@HostListener('window:resize', ['$event'])
-onWindowResize() {
-  this.getScreenWidth = window.innerWidth;
-  this.getScreenHeight = window.innerHeight;
 }
-
-}
-
-

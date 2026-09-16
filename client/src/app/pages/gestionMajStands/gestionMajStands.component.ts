@@ -27,7 +27,7 @@ import {MatStepperModule} from '@angular/material/stepper';
 import {MatDialog} from '@angular/material/dialog';
 import {ModalComponent} from '../../components/modal/modal.component';
 import {HttpErrorResponse} from '@angular/common/http';
-import {ToastrService} from 'ngx-toastr';
+import { ToastService } from '../../services';
 import {ListFilterPipe} from "../../services/simpleFilter.pipe";
 
 @Component({
@@ -66,7 +66,7 @@ export class GestionMajStandsComponent implements OnInit {
     public evenementService: EvenementService,
     public creneauService: CreneauService,
     public croisementService: CroisementService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public transmissionService: TransmissionService,
     public standService: StandService,
     public fb: FormBuilder) {

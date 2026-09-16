@@ -15,7 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Params } from '../../models/params';
 import {HttpErrorResponse} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 
 @Component({
   selector: 'app-creation',
@@ -58,7 +58,7 @@ export class CreationComponent implements OnInit {
     public configService: ConfigService,
     public evenementService: EvenementService,
     public transmissionService: TransmissionService,
-    private toastr: ToastrService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder) {
     console.log(this.formulaire)
   }

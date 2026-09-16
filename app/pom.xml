@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.4</version>
+        <version>4.1.1</version>
         <relativePath />
     </parent>
     <properties>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>com.brevo</groupId>
             <artifactId>brevo</artifactId>
-            <version>1.1.0</version>
+            <version>1.1.10</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -48,30 +48,31 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.48</version>
             <optional>true</optional>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.paulcwarren/spring-content-fs-boot-starter -->
         <dependency>
             <groupId>com.github.paulcwarren</groupId>
             <artifactId>spring-content-fs-boot-starter</artifactId>
-            <version>3.0.9</version>
+            <version>3.0.17</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.paulcwarren</groupId>
             <artifactId>spring-content-commons</artifactId>
-            <version>3.0.9</version>
+            <version>3.0.17</version>
         </dependency>
 
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
-            <version>0.2.7</version>
+            <version>0.2.11</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.8.0</version>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.1.1</version>
         </dependency>
     </dependencies>
     <build>
@@ -84,6 +85,13 @@
                 <configuration>
                     <mainClass>com.wild.corp.BenevoleWebApp</mainClass>
                     <layout>JAR</layout>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <proc>full</proc>
                 </configuration>
             </plugin>
 

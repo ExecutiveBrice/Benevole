@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -6,7 +6,7 @@ import { Benevole, Croisement, Evenement, Stand } from '../../models';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BenevoleService, StandService, TransmissionService } from '../../services';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { OrderByPipe } from "../../services/sort.pipe";
@@ -30,8 +30,9 @@ export class PlanningComponent implements OnInit {
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
     public standService: StandService,
-    private toastr: ToastrService,
-    public formBuilder: FormBuilder
+    private toastr: ToastService,
+    public formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -111,6 +112,7 @@ export class PlanningComponent implements OnInit {
       this.checkCroisements(this.besoins)
       this.checkCroisements(this.sansChoix)
       this.updateSum()
+      this.changeDetectorRef.detectChanges();
     } else {
       console.log("pas de benevole avec cette email")
     }
@@ -188,6 +190,7 @@ export class PlanningComponent implements OnInit {
           }
         })
         this.updateSum()
+        this.changeDetectorRef.detectChanges();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
@@ -271,5 +274,3 @@ export class PlanningComponent implements OnInit {
   }
 
 }
-
-
