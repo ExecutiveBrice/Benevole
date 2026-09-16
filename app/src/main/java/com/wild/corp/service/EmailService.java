@@ -78,6 +78,19 @@ public class EmailService {
         });
         return "ok";
     }
+
+    /** Envoie un lien à usage unique ; le jeton n'est jamais écrit dans les logs. */
+    public void sendPasswordResetMessage(String email, String resetUrl) {
+        String message = "<p>Une demande de réinitialisation de votre mot de passe a été reçue.</p>"
+                + "<p><a href='" + resetUrl + "'>Choisir un nouveau mot de passe</a></p>"
+                + "<p>Ce lien est valable 30 minutes et ne peut être utilisé qu'une fois.</p>"
+                + "<p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail.</p>";
+
+        log.error(message);
+
+        singleMessage(List.of(email), message, "Réinitialisation de votre mot de passe", "", "");
+    }
+
     public void singleMessage(List<String> destinataires, String text, String sujet, String prenom, String nom) {
 
         Properties prop = new Properties();
@@ -92,10 +105,20 @@ public class EmailService {
         prop.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 
 
+        String brevoApiKey = System.getenv("BREVO_APIKEY_PRIVATE");
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
+            // Nom utilisé par le docker-compose de cette application.
+            brevoApiKey = System.getenv("MJ_APIKEY_PRIVATE");
+        }
+        if (brevoApiKey == null || brevoApiKey.isBlank()) {
+            log.error("Aucune clé API Brevo n'est configurée : l'e-mail ne peut pas être envoyé");
+            return;
+        }
+
         ApiClient defaultClient = Configuration.getDefaultApiClient();
         // Configure API key authorization: api-key
         ApiKeyAuth apiKey = (ApiKeyAuth) defaultClient.getAuthentication("api-key");
-        apiKey.setApiKey(System.getenv("BREVO_APIKEY_PRIVATE"));
+        apiKey.setApiKey(brevoApiKey);
 
         try {
             log.info("Send singlemessage to {}",destinataires );

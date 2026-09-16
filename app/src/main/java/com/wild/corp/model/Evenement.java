@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -33,9 +34,6 @@ public class Evenement {
     private Date endDate;
 
     private String sitepersourl;
-
-    @JsonIgnore
-    private String password;
 
     private String validation;
 
@@ -90,6 +88,14 @@ public class Evenement {
     @JsonIgnore
     @OneToMany(mappedBy="evenement" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stand> stands;
+
+    /**
+     * Administrateurs autorisés à gérer cet événement.
+     * La table de jointure est définie côté {@link Administrateur}.
+     */
+    @JsonIgnore
+    @ManyToMany(mappedBy = "evenements")
+    private Set<Administrateur> administrateurs;
 
 
 }

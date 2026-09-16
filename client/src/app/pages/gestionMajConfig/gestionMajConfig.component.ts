@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {TransmissionService, EvenementService, FileService, ConfigService} from '../../services';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {TransmissionService, EvenementService, FileService, ConfigService, AuthService} from '../../services';
 import {DomSanitizer} from '@angular/platform-browser';
 import {Evenement} from '../../models';
 import {Router, ActivatedRoute, RouterModule} from '@angular/router';
@@ -24,11 +24,12 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {MatSelectModule} from '@angular/material/select';
 import {Editor, NgxEditorModule, Toolbar} from 'ngx-editor';
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-gestionMajConfig',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   providers: [
     {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
@@ -151,20 +152,21 @@ export class GestionMajConfigComponent implements OnInit {
     public transmissionService: TransmissionService,
     public evenementService: EvenementService,
     public fileService: FileService,
-    private toastr: ToastrService,
+    private authService: AuthService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder) {
   }
 
   ngOnInit() {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
 
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
-    if (this.authorize) {
+    if (this.authService.isAuthenticated()) {
+      this.authorize = true;
       this.getEvenement(this.idEvenement);
-      this.getLogo()
+      this.getLogo();
       this.getAffiche();
     } else {
-      this.router.navigate([this.idEvenement + '/gestion/']);
+      this.router.navigate(['/', this.idEvenement, 'gestion']);
     }
 
 

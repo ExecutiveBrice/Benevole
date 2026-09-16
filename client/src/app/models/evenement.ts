@@ -6,8 +6,6 @@ export class Evenement {
   contactEmail!: string;
   contactTel!: string;
   endDate!: Date;
-  password!: string;
-
   sitepersourl!: string;
 
   messageAccueil!: string;

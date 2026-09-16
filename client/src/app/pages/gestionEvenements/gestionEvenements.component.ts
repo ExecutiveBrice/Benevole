@@ -1,6 +1,6 @@
 
 import { Component, inject, OnInit } from '@angular/core';
-import { EvenementService, ConfigService } from '../../services';
+import { EvenementService, ConfigService, AuthService, AdministrateurService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -35,7 +35,6 @@ export class GestionEvenementsComponent implements OnInit {
   authorize: boolean = false;
   evenements!: Evenement[];
   choix!: number;
-  password!: string;
   dialog = inject(MatDialog);
 
 
@@ -44,6 +43,8 @@ export class GestionEvenementsComponent implements OnInit {
     public route: ActivatedRoute,
     public router: Router,
     public evenementService: EvenementService,
+    private authService: AuthService,
+    private administrateurService: AdministrateurService,
     public configService: ConfigService,
     public sanitizer: DomSanitizer) {
 
@@ -52,7 +53,11 @@ export class GestionEvenementsComponent implements OnInit {
   ngOnInit() {
     this.evenements = [];
     localStorage.removeItem('isValidAccessForEvent');
-    this.authorizeAccess()
+    if (this.authService.isAuthenticated()) {
+      this.verifierSession();
+    } else {
+      this.authorizeAccess();
+    }
   }
 
   authorizeAccess(): void {
@@ -60,25 +65,26 @@ export class GestionEvenementsComponent implements OnInit {
       hasBackdrop: true, disableClose: true, backdropClass: 'backdropBackground',
       data: {
         title: 'Accès mode gestionnaire',
-        question: 'Saisissez le mot de passe de l\'évènement :',
+        question: 'Saisissez vos identifiants administrateur :',
       },
     }).afterClosed().subscribe(result => {
       if (result instanceof FormGroup) {
-        this.evenementService.isAuthorize(0, result.get('passwood')?.value).subscribe({
-          next: (data) => {
-            if (data) {
-              this.authorize = data;
-              localStorage.setItem('isValidAccessForEvent', JSON.stringify(0));
-              this.getAllEvenements();
-            } else {
-              this.toastr.error("Mot de passe incorrect", 'Erreur');
-              this.authorizeAccess()
-            }
-          },
-          error: (error: HttpErrorResponse) => {
+        this.authService.login(result.get('username')?.value, result.get('password')?.value);
+        this.verifierSession();
+      }
+    });
+  }
 
-          }
-        })
+  private verifierSession(): void {
+    this.administrateurService.moi().subscribe({
+      next: () => {
+        this.authorize = true;
+        this.getAllEvenements();
+      },
+      error: () => {
+        this.authService.logout();
+        this.toastr.error("Identifiant ou mot de passe incorrect", 'Erreur');
+        this.authorizeAccess();
       }
     });
   }

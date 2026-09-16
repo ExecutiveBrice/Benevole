@@ -116,26 +116,11 @@ public class EvenementService {
     }
 
     public Evenement findById(Integer evenementId) {
-        List<Evenement> evenements = evenementRepository.findAllById(evenementId);
-        if (evenements == null) {
-            return null;
-        } else {
-            return evenements.get(0);
-        }
+        return evenementRepository.findById(evenementId).orElse(null);
     }
 
     public void deleteById(Integer evenementId) {
         evenementRepository.deleteById(evenementId);
-    }
-
-    public Boolean authorize(Integer evenementId, String password) {
-        if(evenementId != null) {
-            Evenement evenement = findById(evenementId);
-            if (evenement.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
     }
 
      public Boolean isOpen(Integer evenementId) {

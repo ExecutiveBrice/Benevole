@@ -1,6 +1,6 @@
 
-import { Component, OnInit } from '@angular/core';
-import { CreneauService, EvenementService, TransmissionService, ConfigService } from '../../services';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { CreneauService, EvenementService, TransmissionService, ConfigService, AuthService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Creneau, Evenement } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -22,11 +22,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import {HttpErrorResponse} from "@angular/common/http";
-import {ToastrService} from "ngx-toastr";
+import { ToastService } from '../../services';
 
 
 @Component({
   selector: 'app-gestionMajCreneaux',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   templateUrl: './gestionMajCreneaux.component.html',
   styleUrls: ['./gestionMajCreneaux.component.scss'],
@@ -59,7 +60,8 @@ export class GestionMajCreneauxComponent implements OnInit {
     public transmissionService: TransmissionService,
     public router: Router,
     public creneauService: CreneauService,
-    private toastr: ToastrService,
+    private authService: AuthService,
+    private toastr: ToastService,
     public formBuilder: FormBuilder) { }
 
   ngOnInit() {
@@ -68,12 +70,12 @@ export class GestionMajCreneauxComponent implements OnInit {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
 
 
-    this.authorize = JSON.parse(localStorage.getItem('isValidAccessForEvent')!) == this.idEvenement ? true : false;
-    if (this.authorize) {
+    if (this.authService.isAuthenticated()) {
+      this.authorize = true;
       this.getEvenement(this.idEvenement);
-      this.getAll()
+      this.getAll();
     } else {
-      this.router.navigate([this.idEvenement + '/gestion/']);
+      this.router.navigate(['/', this.idEvenement, 'gestion']);
     }
   }
 

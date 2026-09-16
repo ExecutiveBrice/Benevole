@@ -1,5 +1,10 @@
 spring:
   datasource:
+    # Valeurs de développement local. Les variables SPRING_DATASOURCE_*
+    # fournies par Docker Compose les remplacent automatiquement.
+    url: ${DB_URL:jdbc:postgresql://localhost:8106/db_benevole}
+    username: ${DB_USER:benevoles}
+    password: ${DB_PASSWORD:benevolespass}
     driver-class-name: org.postgresql.Driver
   jpa:
     show_sql: false
@@ -13,3 +18,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 image-storage-dir: C:\Users\PC\Documents\ProjetsDev\Benevoles
+
+server:
+  port: 8006
+
+# Crée le premier compte administrateur au démarrage lorsqu'il n'existe pas.
+# En production, renseigner les deux variables d'environnement et ne jamais
+# placer le mot de passe dans ce fichier :
+# APP_BOOTSTRAP_ADMIN_USERNAME (adresse e-mail) et APP_BOOTSTRAP_ADMIN_PASSWORD.
+app:
+  # URL publique de l'application utilisée dans les liens de réinitialisation.
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:4200/benevoles/}
+  bootstrap-admin:
+    username: ${APP_BOOTSTRAP_ADMIN_USERNAME:}
+    password: ${APP_BOOTSTRAP_ADMIN_PASSWORD:}

@@ -12,6 +12,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-modalAccessGestion',
@@ -23,30 +24,53 @@ import { MatInputModule } from '@angular/material/input';
 export class ModalAccessGestionComponent {
   data = inject(MAT_DIALOG_DATA);
   passwordVisible:boolean=false
+  resetMode = false;
+  resetSent = false;
+  resetError = false;
 
   authorizeForm = this.formBuilder.group({
-    passwood: new FormControl("", [Validators.required])
+    username: new FormControl("", [Validators.required]),
+    password: new FormControl("", [Validators.required])
 
+  })
+
+  resetForm = this.formBuilder.group({
+    email: new FormControl("", [Validators.required, Validators.email])
   })
 
 
   constructor(public dialogRef: MatDialogRef<ModalAccessGestionComponent>,
     
-    public formBuilder: FormBuilder
+    public formBuilder: FormBuilder,
+    private authService: AuthService
   ){
-console.log(this.authorizeForm);
-
-
   }
 
   cancel() {
     this.dialogRef.close('cancel');
   }
 
-  accept(password:FormGroup) {
-    console.log(password);
-    
-    this.dialogRef.close(password);
+  accept(form:FormGroup) {
+    if (form.valid) {
+      this.dialogRef.close(form);
+    }
+  }
+
+  requestPasswordReset(): void {
+    if (this.resetForm.invalid) {
+      return;
+    }
+    this.resetError = false;
+    this.authService.requestPasswordReset(this.resetForm.get('email')?.value ?? '').subscribe({
+      next: () => this.resetSent = true,
+      error: () => this.resetError = true
+    });
+  }
+
+  showLogin(): void {
+    this.resetMode = false;
+    this.resetSent = false;
+    this.resetError = false;
   }
 
   
