@@ -106,6 +106,40 @@
   src: url(app/assets/fonts/TradeWinds-Regular.ttf) format('truetype');
 }
 
+html, body {
+  min-height: 100%;
+}
+
+body {
+  color: var(--bs-body-color);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  border-color: var(--bs-border-color);
+}
+
+.card-header {
+  background-color: var(--bs-tertiary-bg);
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+
 .toast-custom-rigth {
   top: 350px;
   left: 12px;
@@ -113,7 +147,13 @@
 
 .app-icon {
   display: inline-block;
-  font-weight: 700;
+  font-family: 'Material Symbols Outlined';
+  font-size: 1.25rem;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .warning {

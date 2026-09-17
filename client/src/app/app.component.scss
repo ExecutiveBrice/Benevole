@@ -1,3 +1,9 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .app-header {
   position: fixed;
   inset: 0 0 auto;
@@ -7,16 +13,26 @@
 }
 
 .app-content {
-  position: fixed;
-  inset: 72px 0 68px;
-  z-index: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  flex: 1 0 auto;
+  padding-top: calc(72px + 1.5rem) !important;
+  padding-bottom: calc(68px + 1.5rem) !important;
+}
+
+.app-header .navbar {
+  min-height: 72px;
 }
 
 .navbar-brand {
-  max-width: min(100%, 42rem);
-  margin-right: 1rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(70%, 52rem);
+  margin: 0;
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
 
 .event-logo {
@@ -27,14 +43,24 @@
 }
 
 .event-logo-link {
-  margin-right: .5rem;
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 54px;
+  height: 54px;
+  overflow: hidden;
 }
 
 .event-title {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: clamp(1.25rem, 3vw, 2rem);
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font-size: clamp(.85rem, 2vw, 1.5rem);
+  line-height: 1.05;
+  text-align: center;
+  white-space: normal;
 }
 
 .event-selector {
@@ -85,13 +111,15 @@
   position: fixed;
   inset: auto 0 0;
   z-index: 1040;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
-  gap: .5rem;
   min-height: 68px;
-  padding: .75rem 1rem;
+  padding: .75rem 0;
   box-shadow: 0 -.35rem .8rem rgb(0 0 0 / 28%);
+}
+
+.app-footer .container-fluid {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
 }
 
 .footer-action {
@@ -102,7 +130,7 @@
   white-space: nowrap;
 }
 
-.app-footer > .btn {
+.app-footer .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -116,14 +144,13 @@
 }
 
 @media (max-width: 575.98px) {
-  .app-footer {
-    gap: .35rem;
-    padding: .625rem;
-  }
+  .navbar-brand { width: calc(100% - 10rem); }
 
   .event-selector {
     font-size: .875rem;
   }
+
+  .app-footer .btn { font-size: .8rem; }
 }
 
 .toast-container {

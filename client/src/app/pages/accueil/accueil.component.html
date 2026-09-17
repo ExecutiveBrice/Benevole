@@ -1,13 +1,27 @@
-<div class="row marge">
-@for (evenement of evenements; track evenement.id) {
-    <div class="col-6 col-md-4 col-lg-2">
-      <section class="card shadow-sm mb-3" [routerLink]="['/',evenement?.id]">
-            <button class="full-width" type="button" >
-                {{evenement.eventName}}</button>
-            @if (evenement.affiche) {
-                <img [src]="evenement.affiche" alt="Affiche">
-                }
-      </section>
+<section class="page-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Évènements</h1>
+      <p class="text-body-secondary mb-0">Choisissez un évènement pour consulter le planning.</p>
     </div>
-}
-</div>
+  </div>
+
+  <div class="row g-3">
+  @for (evenement of evenements; track evenement.id) {
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <a class="card h-100 shadow-sm text-decoration-none text-body event-card" [routerLink]="['/', evenement.id]">
+        @if (evenement.affiche) {
+          <img class="card-img-top event-poster" [src]="evenement.affiche" [alt]="'Affiche de ' + evenement.eventName">
+        } @else {
+          <div class="event-poster-placeholder">Aucune affiche</div>
+        }
+        <div class="card-body">
+          <h2 class="h5 card-title mb-0">{{ evenement.eventName }}</h2>
+        </div>
+      </a>
+    </div>
+  } @empty {
+    <div class="col-12"><div class="alert alert-info mb-0">Aucun évènement disponible.</div></div>
+  }
+  </div>
+</section>

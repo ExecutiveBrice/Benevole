@@ -1,0 +1,22 @@
+.event-card {
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.event-card:hover,
+.event-card:focus {
+  transform: translateY(-2px);
+  box-shadow: var(--bs-box-shadow) !important;
+}
+
+.event-poster,
+.event-poster-placeholder {
+  height: 13rem;
+  object-fit: cover;
+}
+
+.event-poster-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--bs-secondary-color);
+  background: var(--bs-secondary-bg);
+}

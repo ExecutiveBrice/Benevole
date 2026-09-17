@@ -1,70 +1,25 @@
 @if (evenement; as currentEvenement) {
-@for (event of [currentEvenement]; track event.id) {
-@if (getScreenWidth>500) {
-<div class="row marge small">
-  <div class="col-4">
-    @if (evenement) {
-    <app-connexion 
-    [benevole]="benevole"
-    [evenement]="evenement"
-    >
-    </app-connexion>
-    }
-  </div>
-  <div class="col-4">
-    @if (evenement) {
-    <app-planning [benevole]="benevole" [evenement]="evenement">
-    </app-planning>
-    }
-  </div>
-  <div class="col-4">
-    @if (evenement) {
-    <app-info [evenement]="evenement">
-    </app-info>
-    }
-  </div>
-</div>
-}
-@else {
-<div class="nav nav-tabs mb-3">
-  <section class="card card-body mb-3">
-    <h2 class="h5" >
+  <div class="page-container">
+    <div class="row g-4 align-items-start">
+      <div class="col-12 col-lg-4">
+        <app-connexion
+          [benevole]="benevole"
+          [evenement]="currentEvenement"
+          (actionEmitter)="isBenevoleExiste($event)">
+        </app-connexion>
+      </div>
 
-      <span class="app-icon" [ngClass]="{'pulse':clignotage}" fontIcon="attribution"></span>
-    </h2>
-    @if (evenement) {
-      <app-connexion 
-      [benevole]="benevole"
-      [evenement]="evenement"
-      (actionEmitter)="isBenevoleExiste($event)"
-      >
-      </app-connexion>
-    }
-  </section>
-  <section class="card card-body mb-3">
-    <h2 class="h5">
-      <span class="app-icon" fontIcon="calendar_month"></span>
-    </h2>
-    @if (evenement) {
-    <app-planning
-    [benevole]="benevole" 
-    [evenement]="evenement"
-    (actionEmitter)="isBenevoleExiste($event)"
-    >
-    </app-planning>
-    }
-  </section>
-  <section class="card card-body mb-3">
-    <h2 class="h5">
-      <span class="app-icon" fontIcon="info"></span>
-    </h2>
-    @if (evenement) {
-    <app-info [evenement]="evenement">
+      <div class="col-12 col-lg-4">
+        <app-planning
+          [benevole]="benevole"
+          [evenement]="currentEvenement"
+          (actionEmitter)="isBenevoleExiste($event)">
+        </app-planning>
+      </div>
 
-    </app-info>
-    }
-  </section>
-</div>
-}
-}
+      <div class="col-12 col-lg-4">
+        <app-info [evenement]="currentEvenement"></app-info>
+      </div>
+    </div>
+  </div>
 }

@@ -1,13 +1,13 @@
-::ng-deep {
-    .backdropBackground{
-
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color:aliceblue;
-    opacity: 0.7!important;
-    z-index: 998;
-    height: 100%;
-    width: 100%;
+.dashboard-card {
+  transition: transform .15s ease, box-shadow .15s ease;
 }
+
+.dashboard-card:hover,
+.dashboard-card:focus {
+  transform: translateY(-2px);
+  box-shadow: var(--bs-box-shadow) !important;
+}
+
+::ng-deep .backdropBackground {
+  background-color: rgb(33 37 41 / 45%);
 }

@@ -1,145 +1,105 @@
 @if (authorize) {
-
-<div #backGround class="row marge">
-
-
-  <div class="col-md-4">
-
-
-    <section class="card shadow-sm mb-3">
-
-
-      <div class="card-body">
-        <button class="full-width" type="button" [routerLink]="['benevoles']">Remplissage par
-          bénévole</button>
+  <div #backGround class="page-container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+      <div>
+        <h1 class="h3 mb-1">Gestion de l’évènement</h1>
+        <p class="text-body-secondary mb-0">Accédez rapidement aux réglages et aux inscriptions.</p>
       </div>
-    </section>
+      <button class="btn btn-outline-secondary" type="button" (click)="logout()">Se déconnecter</button>
+    </div>
 
-    <section class="card shadow-sm mb-3">
-
-      <div class="card-body">
-        <button class="full-width" type="button" [routerLink]="['stands']">Remplissage par
-          stand</button>
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-xl-4">
+        <a class="card h-100 text-decoration-none text-body dashboard-card" [routerLink]="['benevoles']">
+          <div class="card-body"><h2 class="h5">Bénévoles</h2><p class="mb-0 text-body-secondary">Consulter et modifier les inscriptions.</p></div>
+        </a>
       </div>
-    </section>
-
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
-        <button class="full-width" type="button" [routerLink]="['majconfig']">Paramètrage de
-          l'évènement</button>
+      <div class="col-12 col-md-6 col-xl-4">
+        <a class="card h-100 text-decoration-none text-body dashboard-card" [routerLink]="['stands']">
+          <div class="card-body"><h2 class="h5">Répartition par stand</h2><p class="mb-0 text-body-secondary">Gérer les équipes par créneau.</p></div>
+        </a>
       </div>
-    </section>
-
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
-        <button class="full-width" type="button" (click)="logout()">Se déconnecter</button>
+      <div class="col-12 col-md-6 col-xl-4">
+        <a class="card h-100 text-decoration-none text-body dashboard-card" [routerLink]="['majstands']">
+          <div class="card-body"><h2 class="h5">Stands</h2><p class="mb-0 text-body-secondary">Créer et organiser les stands.</p></div>
+        </a>
       </div>
-    </section>
-
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
+      <div class="col-12 col-md-6 col-xl-4">
+        <a class="card h-100 text-decoration-none text-body dashboard-card" [routerLink]="['majcreneaux']">
+          <div class="card-body"><h2 class="h5">Créneaux</h2><p class="mb-0 text-body-secondary">Définir les horaires disponibles.</p></div>
+        </a>
+      </div>
+      <div class="col-12 col-md-6 col-xl-4">
+        <a class="card h-100 text-decoration-none text-body dashboard-card" [routerLink]="['majconfig']">
+          <div class="card-body"><h2 class="h5">Paramètres</h2><p class="mb-0 text-body-secondary">Personnaliser l’évènement et ses messages.</p></div>
+        </a>
+      </div>
+      <div class="col-12 col-md-6 col-xl-4">
         @if (evenement) {
-        <button class="full-width" type="button" [ngClass]="{'red':evenement.lock}"
-          (click)="updateBlocage(evenement)">Je clique
-          pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
-
+          <button class="btn w-100 h-100 text-start" [class.btn-outline-danger]="!evenement.lock" [class.btn-danger]="evenement.lock"
+            type="button" (click)="updateBlocage(evenement)">
+            <span class="d-block h5">{{ evenement.lock ? 'Débloquer le site' : 'Bloquer le site' }}</span>
+            <span class="small">{{ evenement.lock ? 'Les inscriptions pourront reprendre.' : 'Suspendre temporairement les inscriptions.' }}</span>
+          </button>
         }
       </div>
-    </section>
+    </div>
 
-
-  </div>
-
-
-  <div class="col-md-4">
-
-    <section class="card shadow-sm mb-3">
-
-
-      <div class="card-body">
-        <button class="full-width" type="button" [routerLink]="['majstands']">Gestion des
-          Stands</button>
-      </div>
-    </section>
-
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
-        <button class="full-width" type="button" [routerLink]="['majcreneaux']">Gestion des
-          Creneaux</button>
-      </div>
-    </section>
-
-    <section class="card shadow-sm mb-3">
-
-
-      <div class="card-body">
-
-        <button class="full-width" type="button" (click)="mail = !mail">Envoi de mails</button>
-      </div>
-      <div class="card-body">
-        @if (mail) {
-        <div class="form-group col-sm-12">
-
-
-          <div class="mb-3 full-width">
-            <label class="form-label">Stand</label>
-            <select class="form-select"  [(ngModel)]="emailInfo.to">
-              @for (stand of emailStands; track stand) {
-              <option [value]="stand.benevoles">{{ stand.nom }} ({{ stand.benevoles.length }})</option>
-              }
-            </select>
+    <div class="row g-4">
+      <div class="col-12 col-lg-8">
+        <section class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h2 class="h5 mb-0">Communication</h2>
+            <button class="btn btn-outline-primary btn-sm" type="button" (click)="mail = !mail">
+              {{ mail ? 'Masquer' : 'Envoyer un e-mail' }}
+            </button>
           </div>
-
-          <div class="mb-3 example-full-width">
-            <label class="form-label">Objet email</label>
-            <input class="form-control" type="text"  [(ngModel)]="emailInfo.subject">
-
-          </div>
-
-
-
-          <div class="NgxEditor__Wrapper">
-            <ngx-editor-menu [toolbar]="toolbar" [editor]="editor"> </ngx-editor-menu>
-            <ngx-editor [editor]="editor" [(ngModel)]="emailInfo.text" [disabled]="false"  [placeholder]="'Corps de l\'email...'"></ngx-editor>
-          </div>
-
-          <label class="form-check-label checkboxn">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="emailInfo.rappel">
-            Rappel des choix des bénévoles
-          </label>
-
-          <button class="full-width" type="button" (click)="envoiMail()">
-            Envoyer ce message à la liste choisi</button>
-        </div>
-        }
+          @if (mail) {
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label" for="emailStand">Destinataires</label>
+                  <select id="emailStand" class="form-select" [(ngModel)]="emailInfo.to">
+                    @for (stand of emailStands; track stand) {
+                      <option [value]="stand.benevoles">{{ stand.nom }} ({{ stand.benevoles.length }})</option>
+                    }
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="emailSubject">Objet</label>
+                  <input id="emailSubject" class="form-control" type="text" [(ngModel)]="emailInfo.subject">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Message</label>
+                  <div class="NgxEditor__Wrapper">
+                    <ngx-editor-menu [toolbar]="toolbar" [editor]="editor"></ngx-editor-menu>
+                    <ngx-editor [editor]="editor" [(ngModel)]="emailInfo.text" [disabled]="false" placeholder="Corps de l’e-mail…"></ngx-editor>
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input id="emailReminder" class="form-check-input" type="checkbox" [(ngModel)]="emailInfo.rappel">
+                    <label class="form-check-label" for="emailReminder">Ajouter le rappel des choix des bénévoles</label>
+                  </div>
+                </div>
+                <div class="col-12"><button class="btn btn-primary" type="button" (click)="envoiMail()">Envoyer le message</button></div>
+              </div>
+            </div>
+          } @else {
+            <div class="card-body text-body-secondary">Préparez un message pour les bénévoles d’un stand.</div>
+          }
+        </section>
       </div>
-    </section>
 
-
-
-
+      <div class="col-12 col-lg-4">
+        <section class="card h-100 text-center">
+          <div class="card-header"><h2 class="h5 mb-0">Lien d’inscription</h2></div>
+          <div class="card-body">
+            <a class="d-block text-break mb-3" [href]="using_address">{{ using_address }}</a>
+            @if (qrcode) { <img class="img-fluid" [src]="qrcode" alt="QR code du lien d’inscription"> }
+          </div>
+        </section>
+      </div>
+    </div>
   </div>
-
-
-  <div class="col-md-4">
-
-
-
-
-    <section class="card shadow-sm mb-3">
-      <a href="{{using_address}}">
-        {{using_address}}
-      </a>
-      <img src="{{qrcode}}" />
-
-    </section>
-
-
-
-
-  </div>
-
-
-</div>
-
 }

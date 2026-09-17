@@ -1,169 +1,57 @@
 @if (authorize) {
-<div class="row marge">
-  <div class="col-sm-12">
-    <section class="card shadow-sm mb-3">
-      <div class="row marge" [formGroup]="formulaireNewStand">
-        <div class="col-12 col-md-5">
-          <div class="mb-3 full-width">
-            <label class="form-label">Ordre</label>
-            <input class="form-control" type="text" formControlName="ordre">
-            @if (formulaireNewStand.get('ordre')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire</div>
-            }
-          </div>
-        </div>
-        <div class="col-12 col-md-5">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nom</label>
-            <input class="form-control" type="text" formControlName="nom">
-            @if (formulaireNewStand.get('nom')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom du stand est obligatoire</div>
-            }
-          </div>
-        </div>
-        <div class="col-12 col-md-5">
-          <div class="mb-3 full-width">
-            <label class="form-label">SousTitre</label>
-            <input class="form-control" type="text" formControlName="soustitre">
+  <div class="page-container">
+    <div class="mb-4">
+      <h1 class="h3 mb-1">Stands</h1>
+      <p class="text-body-secondary mb-0">Organisez les activités et associez leurs créneaux.</p>
+    </div>
 
-          </div>
-        </div>
-        <div class="col-12 col-md-2">
-          <button class="blue-icon" type="button" (click)="ajout(formulaireNewStand)"><span class="app-icon">save</span>
-          </button>
-        </div>
-      </div>
+    <section class="card mb-4" [formGroup]="formulaireNewStand">
+      <div class="card-header"><h2 class="h5 mb-0">Nouveau stand</h2></div>
+      <div class="card-body"><div class="row g-3 align-items-end">
+        <div class="col-12 col-md-2"><label class="form-label">Ordre</label><input class="form-control" type="text" formControlName="ordre">@if (formulaireNewStand.get('ordre')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }</div>
+        <div class="col-12 col-md-4"><label class="form-label">Nom</label><input class="form-control" type="text" formControlName="nom">@if (formulaireNewStand.get('nom')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }</div>
+        <div class="col-12 col-md-4"><label class="form-label">Sous-titre</label><input class="form-control" type="text" formControlName="soustitre"></div>
+        <div class="col-12 col-md-2"><button class="btn btn-primary w-100" type="button" (click)="ajout(formulaireNewStand)">Ajouter</button></div>
+      </div></div>
     </section>
-  </div>
 
-  @if (standsFormulaire != null && standsFormulaire.controls.length > 0) {
-  @for (stand of standsFormulaire.controls | orderObjectBy:"value.ordre":false; track stand) {
-  <div class="col-12 col-md-6 col-lg-4 col-xxl-3" [formGroup]="stand">
-    <section class="card shadow-sm mb-3 padding-top">
-      <div class="row marge">
+    <div class="row g-3">
+    @if (standsFormulaire != null && standsFormulaire.controls.length > 0) {
+      @for (stand of standsFormulaire.controls | orderObjectBy:"value.ordre":false; track stand) {
+        <div class="col-12 col-lg-6" [formGroup]="stand">
+          <section class="card h-100">
+            <div class="card-body">
+              <div class="row g-3 align-items-end">
+                <div class="col-4"><label class="form-label">Ordre</label><input class="form-control" type="text" formControlName="ordre">@if (stand.get('ordre')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }</div>
+                <div class="col-8"><label class="form-label">Nom</label><input class="form-control" type="text" formControlName="nom">@if (stand.get('nom')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }</div>
+                <div class="col-12"><label class="form-label">Sous-titre</label><input class="form-control" type="text" formControlName="soustitre"></div>
+                <div class="col-12"><label class="form-label">Type</label><select class="form-select" [(value)]="stand.get('type')!.value" formControlName="type"><option [value]="5">Préparatifs</option><option [value]="2">Activité</option><option [value]="4">Non visible</option><option [value]="6">Postparatifs</option><option [value]="1">Sans choix</option></select></div>
+                <div class="col-12 d-flex gap-2"><button class="btn btn-success" type="button" [disabled]="!stand.touched" (click)="update(stand)">Enregistrer</button><button class="btn btn-outline-danger" type="button" (click)="delete(stand)">Supprimer</button></div>
+              </div>
 
-        <div class="col-6">
-          <div class="mb-3 full-width">
-            <label class="form-label">Ordre</label>
-            <input class="form-control" type="text" formControlName="ordre">
+              <hr class="my-4">
+              <h3 class="h6">Créneaux associés</h3>
+              <div class="mb-3"><label class="form-label">Ajouter un créneau</label><select class="form-select" (change)="addCreneauToStand($any($event.target).value, stand)"><option value="" selected disabled>Choisir un créneau</option>@for (creneau of creneaux | listFilter:'plage':getCreneauxStand(stand); track creneau) { <option [value]="creneau.id">{{ creneau.plage }}</option> }</select></div>
 
-            @if (stand.get('ordre')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire</div>
-            }
-          </div>
-        </div>
-        <div class="col-3">
-          <button class="green-icon" type="button" [disabled]="!stand.touched"
-            (click)="update(stand)"><span class="app-icon">save</span>
-          </button>
-        </div>
-        <div class="col-3">
-          <button class="red-icon" type="button"
-            (click)="delete(stand)"><span class="app-icon">delete_forever</span>
-          </button>
-        </div>
-
-        <div class="col-12">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nom</label>
-            <input class="form-control" type="text" formControlName="nom">
-
-            @if (stand.get('nom')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom du stand est obligatoire</div>
-            }
-
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="mb-3 full-width">
-            <label class="form-label">SousTitre</label>
-            <input class="form-control" type="text" formControlName="soustitre">
-
-          </div>
-        </div>
-
-        <div class="col-12 ">
-          <div class="mb-3">
-            <label class="form-label">Modifier le type</label>
-            <select class="form-select" [(value)]="stand.get('type')!.value" formControlName="type">
-              <option [value]=5>Préparatifs</option>
-              <option [value]=2>Activité</option>
-              <option [value]=4>Non visible</option>
-              <option [value]=6>Postparatifs</option>
-              <option [value]=1>Sans choix</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="col-12 ">
-          <div class="row max_width">
-            <div class="col-12">
-              <details class="card mb-3">
-                <summary class="card-header">
-                  <span class="fw-semibold">Créneaux:</span>
-                </summary>
-
-                <div class="mb-3">
-                  <label class="form-label">Ajouter un creneau</label>
-                  <select class="form-select" (change)="addCreneauToStand($any($event.target).value, stand)">
-                    @for (creneau of creneaux | listFilter:'plage':getCreneauxStand(stand); track creneau) {
-                    <option [value]="creneau.id">{{ creneau.plage }}</option>
-                    }
-                  </select>
-                </div>
-
-                @for (croisement of getCroisement(stand).controls | orderObjectBy:'value.id':false ; track $index) {
-                <div class="col-sm-12" [formGroup]="croisement">
-                  <div class="row">
-
-                    <div class="col-12">
-                      -{{croisement.get('plage')?.value}}
-                    </div>
-                    <div class="col-5">
-                      <div class="mb-3 full-width">
-                        <label class="form-label">Limite</label>
-                        <input class="form-control" type="text" formControlName="limite">
-                        @if (croisement.get('limite')?.hasError('required')) {
-                        <div class="invalid-feedback d-block">Une limite est obligatoire</div>
-                        }
-                      </div>
-                    </div>
-
-                    <div class="col-4">
-                      <div class="mb-3">
-                        <label class="form-label">Besoin</label>
-                        <select class="form-select" formControlName="besoin" [(value)]="croisement.get('besoin')!.value">
-                          <option [value]=true>Oui</option>
-                          <option [value]=false>Non</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-3">
-
-                      <button class="red-icon" type="button"
-                        (click)="dialogDeleteCroisement(croisement, stand, $index)"><span class="app-icon">auto_delete</span></button>
-                    </div>
+              <div class="list-group list-group-flush">
+              @for (croisement of getCroisement(stand).controls | orderObjectBy:'value.id':false; track $index) {
+                <div class="list-group-item px-0" [formGroup]="croisement">
+                  <div class="row g-2 align-items-end">
+                    <div class="col-12"><strong>{{ croisement.get('plage')?.value }}</strong></div>
+                    <div class="col-5"><label class="form-label">Limite</label><input class="form-control" type="text" formControlName="limite">@if (croisement.get('limite')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }</div>
+                    <div class="col-4"><label class="form-label">Besoin</label><select class="form-select" formControlName="besoin" [(value)]="croisement.get('besoin')!.value"><option [value]="true">Oui</option><option [value]="false">Non</option></select></div>
+                    <div class="col-3"><button class="btn btn-outline-danger w-100" type="button" (click)="dialogDeleteCroisement(croisement, stand, $index)">Retirer</button></div>
                   </div>
                 </div>
-                }
-
-              </details>
+              }
+              </div>
             </div>
-          </div>
-
-
+          </section>
         </div>
-
-
-
-      </div>
-
-    </section>
+      }
+    } @else {
+      <div class="col-12"><div class="alert alert-info mb-0">Aucun stand enregistré.</div></div>
+    }
+    </div>
   </div>
-
-  }
-  }
-
-
-</div>
 }
