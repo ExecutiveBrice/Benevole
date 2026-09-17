@@ -1,4 +1,8 @@
-<div class="app-shell">
+<div class="app-shell"
+     [style.--event-card-color]="evenement?.couleurCard"
+     [style.--event-block-color]="evenement?.couleurBloc"
+     [style.--event-title-color]="evenement?.couleurTitre"
+     [style.--event-text-color]="evenement?.couleurText">
 <header class="app-header" [style.backgroundColor]="evenement?.couleurBandeau">
   <nav class="navbar container-fluid px-3 py-2" aria-label="Navigation principale">
     @if (logo) {

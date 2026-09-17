@@ -1,0 +1,19 @@
+<button class="selection"
+        type="button"
+        [ngClass]="{
+          'selected': croisement.selected,
+          'complet': croisement.benevoles.length >= croisement.limite
+        }"
+        (click)="selection.emit(croisement)">
+  <span class="selection-slot">{{ croisement.creneau.plage }}</span>
+  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
+    <span class="selection-participants">
+      @for (benevole of croisement.benevoles | orderBy:'nom':false; track benevole.id) {
+        <span [title]="benevole.prenom + (evenement.basique ? '' : ' ' + benevole.nom.charAt(0).toUpperCase() + '.')">
+          {{ benevole.prenom }} {{ evenement.basique ? '' : benevole.nom.charAt(0).toUpperCase() + '.' }}
+        </span>
+      }
+    </span>
+  }
+  <span class="selection-capacity">{{ croisement.benevoles.length }} / {{ croisement.limite }}</span>
+</button>
