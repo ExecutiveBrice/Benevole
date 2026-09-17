@@ -1,13 +1,13 @@
 <div class="row marge">
 @for (evenement of evenements; track evenement.id) {
     <div class="col-6 col-md-4 col-lg-2">
-      <mat-card appearance="raised" [routerLink]="['/',evenement?.id]">
-            <button class="full-width" mat-flat-button type="button" >
+      <section class="card shadow-sm mb-3" [routerLink]="['/',evenement?.id]">
+            <button class="full-width" type="button" >
                 {{evenement.eventName}}</button>
             @if (evenement.affiche) {
-                <img mat-card-image [src]="evenement.affiche" alt="Affiche">
+                <img [src]="evenement.affiche" alt="Affiche">
                 }
-      </mat-card>
+      </section>
     </div>
 }
 </div>

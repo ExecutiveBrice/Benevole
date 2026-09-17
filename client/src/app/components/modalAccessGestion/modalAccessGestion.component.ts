@@ -1,32 +1,27 @@
-import {Component, inject} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  MatDialogActions,
-  MatDialogClose,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-modalAccessGestion',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
-  imports: [FormsModule,ReactiveFormsModule,MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, MatInputModule, MatFormFieldModule,MatIconModule],
+  imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './modalAccessGestion.component.html',
   styleUrl: './modalAccessGestion.component.scss'
 })
 export class ModalAccessGestionComponent {
-  data = inject(MAT_DIALOG_DATA);
+  data: { title?: string; question?: string } = {};
   passwordVisible:boolean=false
   resetMode = false;
   resetSent = false;
   resetError = false;
+  connexionEnCours = false;
+  connexionError = '';
+  private destroyRef = inject(DestroyRef);
 
   authorizeForm = this.formBuilder.group({
     username: new FormControl("", [Validators.required]),
@@ -39,7 +34,7 @@ export class ModalAccessGestionComponent {
   })
 
 
-  constructor(public dialogRef: MatDialogRef<ModalAccessGestionComponent>,
+  constructor(public dialogRef: NgbActiveModal,
     
     public formBuilder: FormBuilder,
     private authService: AuthService
@@ -47,13 +42,30 @@ export class ModalAccessGestionComponent {
   }
 
   cancel() {
-    this.dialogRef.close('cancel');
+    if (!this.connexionEnCours) {
+      this.dialogRef.close(false);
+    }
   }
 
-  accept(form:FormGroup) {
-    if (form.valid) {
-      this.dialogRef.close(form);
+  accept(): void {
+    if (this.authorizeForm.invalid || this.connexionEnCours) {
+      return;
     }
+    this.connexionEnCours = true;
+    this.connexionError = '';
+    const { username, password } = this.authorizeForm.getRawValue();
+    this.authService.login(username!, password!).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.connexionEnCours = false;
+        this.dialogRef.close(true);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.connexionEnCours = false;
+        this.connexionError = error.status === 401
+          ? 'Identifiant ou mot de passe incorrect.'
+          : 'La connexion au serveur a échoué. Veuillez réessayer.';
+      }
+    });
   }
 
   requestPasswordReset(): void {

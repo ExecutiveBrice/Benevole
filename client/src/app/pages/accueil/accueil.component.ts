@@ -1,17 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Evenement } from '../../models';
 import { EvenementService, FileService, TransmissionService } from '../../services';
@@ -28,10 +16,7 @@ import { ToastService } from '../../services';
   ],
   imports: [FormsModule,
     RouterModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule, MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
-    MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule],
+    ReactiveFormsModule, FormsModule, ],
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.scss']
 })

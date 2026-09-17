@@ -6,46 +6,46 @@
   <div class="col-md-4">
 
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
 
 
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="button" [routerLink]="['benevoles']">Remplissage par
+      <div class="card-body">
+        <button class="full-width" type="button" [routerLink]="['benevoles']">Remplissage par
           bénévole</button>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
 
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="button" [routerLink]="['stands']">Remplissage par
+      <div class="card-body">
+        <button class="full-width" type="button" [routerLink]="['stands']">Remplissage par
           stand</button>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
-    <mat-card appearance="raised">
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="button" [routerLink]="['majconfig']">Paramètrage de
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
+        <button class="full-width" type="button" [routerLink]="['majconfig']">Paramètrage de
           l'évènement</button>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
-    <mat-card appearance="raised">
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="button" (click)="logout()">Se déconnecter</button>
-      </mat-card-content>
-    </mat-card>
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
+        <button class="full-width" type="button" (click)="logout()">Se déconnecter</button>
+      </div>
+    </section>
 
-    <mat-card appearance="raised">
-      <mat-card-content>
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
         @if (evenement) {
-        <button class="full-width" mat-stroked-button type="button" [ngClass]="{'red':evenement.lock}"
+        <button class="full-width" type="button" [ngClass]="{'red':evenement.lock}"
           (click)="updateBlocage(evenement)">Je clique
           pour<br />{{evenement.lock?'bloquer le site':'débloquer le site'}}</button>
 
         }
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
 
   </div>
@@ -53,48 +53,48 @@
 
   <div class="col-md-4">
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
 
 
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="button" [routerLink]="['majstands']">Gestion des
+      <div class="card-body">
+        <button class="full-width" type="button" [routerLink]="['majstands']">Gestion des
           Stands</button>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
-    <mat-card appearance="raised">
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="button" [routerLink]="['majcreneaux']">Gestion des
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
+        <button class="full-width" type="button" [routerLink]="['majcreneaux']">Gestion des
           Creneaux</button>
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
 
 
-      <mat-card-content>
+      <div class="card-body">
 
-        <button class="full-width" mat-stroked-button type="button" (click)="mail = !mail">Envoi de mails</button>
-      </mat-card-content>
-      <mat-card-content>
+        <button class="full-width" type="button" (click)="mail = !mail">Envoi de mails</button>
+      </div>
+      <div class="card-body">
         @if (mail) {
         <div class="form-group col-sm-12">
 
 
-          <mat-form-field class="full-width">
-            <mat-label>Stand</mat-label>
-            <mat-select  [(ngModel)]="emailInfo.to">
+          <div class="mb-3 full-width">
+            <label class="form-label">Stand</label>
+            <select class="form-select"  [(ngModel)]="emailInfo.to">
               @for (stand of emailStands; track stand) {
-              <mat-option [value]="stand.benevoles">{{ stand.nom }} ({{ stand.benevoles.length }})</mat-option>
+              <option [value]="stand.benevoles">{{ stand.nom }} ({{ stand.benevoles.length }})</option>
               }
-            </mat-select>
-          </mat-form-field>
+            </select>
+          </div>
 
-          <mat-form-field class="example-full-width">
-            <mat-label>Objet email</mat-label>
-            <input type="text"  [(ngModel)]="emailInfo.subject"  matInput>
+          <div class="mb-3 example-full-width">
+            <label class="form-label">Objet email</label>
+            <input class="form-control" type="text"  [(ngModel)]="emailInfo.subject">
 
-          </mat-form-field>
+          </div>
 
 
 
@@ -103,15 +103,17 @@
             <ngx-editor [editor]="editor" [(ngModel)]="emailInfo.text" [disabled]="false"  [placeholder]="'Corps de l\'email...'"></ngx-editor>
           </div>
 
-          <mat-checkbox class="checkboxn" [(ngModel)]="emailInfo.rappel">Rappel des
-            choix des bénévoles</mat-checkbox>
+          <label class="form-check-label checkboxn">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="emailInfo.rappel">
+            Rappel des choix des bénévoles
+          </label>
 
-          <button class="full-width" mat-stroked-button type="button" (click)="envoiMail()">
+          <button class="full-width" type="button" (click)="envoiMail()">
             Envoyer ce message à la liste choisi</button>
         </div>
         }
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
 
 
@@ -124,13 +126,13 @@
 
 
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
       <a href="{{using_address}}">
         {{using_address}}
       </a>
-      <img mat-card-image src="{{qrcode}}" />
+      <img src="{{qrcode}}" />
 
-    </mat-card>
+    </section>
 
 
 

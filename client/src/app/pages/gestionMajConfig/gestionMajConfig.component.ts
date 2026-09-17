@@ -4,25 +4,9 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {Evenement} from '../../models';
 import {Router, ActivatedRoute, RouterModule} from '@angular/router';
 import {Subscription} from 'rxjs';
-import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
 import {ImageCropperComponent, ImageCroppedEvent} from 'ngx-image-cropper';
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {MatSelectModule} from '@angular/material/select';
 import {Editor, NgxEditorModule, Toolbar} from 'ngx-editor';
 import { ToastService } from '../../services';
 import {HttpErrorResponse} from "@angular/common/http";
@@ -32,21 +16,12 @@ import {HttpErrorResponse} from "@angular/common/http";
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'fr-FR'},
-    // Moment can be provided globally to your app by adding `provideMomentDateAdapter`
-    // to your app config. We provide it at the component level here, due to limitations
-    // of our example generation script.
-    provideMomentDateAdapter(),
     EvenementService,
     FileService,
     ConfigService
   ],
   imports: [FormsModule,
-    ImageCropperComponent, RouterModule, ColorPickerModule, MatSelectModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
-    MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule, NgxEditorModule],
+    ImageCropperComponent, RouterModule, ColorPickerModule, ReactiveFormsModule, FormsModule, NgxEditorModule],
 
   templateUrl: './gestionMajConfig.component.html',
   styleUrls: ['./gestionMajConfig.component.scss']

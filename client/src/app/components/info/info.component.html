@@ -1,16 +1,16 @@
-<mat-card appearance="raised">
-  <mat-card-content>
-    <img mat-card-image [src]="affiche" alt="Affiche">
-  </mat-card-content>
-</mat-card>
+<section class="card shadow-sm mb-3">
+  <div class="card-body">
+    <img [src]="affiche" alt="Affiche">
+  </div>
+</section>
 
 @if (evenement.afficherMessageInfo) {
-  <mat-card appearance="raised">
-    <mat-card-header>
-      <mat-card-title> <strong>Informations :</strong></mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  <section class="card shadow-sm mb-3">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0"> <strong>Informations :</strong></h2>
+    </header>
+    <div class="card-body">
       <div [innerHtml]="evenement.messageInfo"></div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }

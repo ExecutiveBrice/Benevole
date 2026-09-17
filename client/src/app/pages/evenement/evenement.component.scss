@@ -12,7 +12,7 @@
   background-color: rgb(207, 197, 195) !important;
 }
 
-.mat-mdc-standard-chip {
+.badge {
   width: 100%;
 }
 
@@ -21,7 +21,7 @@
   color: red;
 }
 
-mat-card-content {
+.card-body {
   padding: 16px 16px 0 16px;
 }
 
@@ -40,7 +40,7 @@ mat-card-content {
   --background-color: white;
 }
 
-.mat-mdc-tab-header {
+.nav-tabs {
   background-color: var(--background-color);
   top: 0;
   z-index: 1000; 

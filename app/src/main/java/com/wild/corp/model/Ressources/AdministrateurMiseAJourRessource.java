@@ -11,7 +11,7 @@ public record AdministrateurMiseAJourRessource(
         @NotBlank @Email @Size(max = 254) String username,
         @Size(min = 12, max = 128) String password,
         boolean enabled,
-        boolean global,
+        boolean superadmin,
         Set<Integer> evenementIds
 ) {
 }

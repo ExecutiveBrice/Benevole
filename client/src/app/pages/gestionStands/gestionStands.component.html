@@ -2,22 +2,22 @@
 
 
 
-<mat-card appearance="raised">
-  <mat-grid-list cols="3" rowHeight="50px">
-    <mat-grid-tile [colspan]="2">
+<section class="card shadow-sm mb-3">
+  <div class="row g-3">
+    <div class="col">
 
       <strong>
         {{stands.length}} créneaux
       </strong>
 
 
-    </mat-grid-tile>
-    <mat-grid-tile>
-      <button class="full-width" mat-flat-button type="button" (click)="exportAsXLSX()">Télécharger</button>
+    </div>
+    <div class="col">
+      <button class="full-width" type="button" (click)="exportAsXLSX()">Télécharger</button>
 
-    </mat-grid-tile>
-  </mat-grid-list>
-</mat-card>
+    </div>
+  </div>
+</section>
 
 
 
@@ -26,10 +26,10 @@
 
   @for (stand of stands | orderBy:'ordre':false; track $index) {
   <div class="col-12 col-md-6 col-lg-4 col-xxl-3">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>{{stand.nom}}</mat-panel-title>
-      </mat-expansion-panel-header>
+    <details class="card mb-3">
+      <summary class="card-header">
+        <span class="fw-semibold">{{stand.nom}}</span>
+      </summary>
 
 
       <div class="col-sm-12">
@@ -42,22 +42,22 @@
                   ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
               </div>
               <div class="col-6">
-                <button class="green-icon" mat-fab type="button" (click)="addBen(standcroisement, stand)">
-                  <mat-icon>person_add</mat-icon>
+                <button class="green-icon" type="button" (click)="addBen(standcroisement, stand)">
+                  <span class="app-icon">person_add</span>
                 </button>
               </div>
             </div>
             @if (standcroisement.benevoles.length > 0) {
             @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track benevole) {
 
-            <mat-grid-list cols="4" rowHeight="20px" class="carre">
-              <mat-grid-tile class="title" [colspan]="3" [rowspan]="1"> {{benevole.prenom}}
-                {{benevole.nom}}</mat-grid-tile>
-              <mat-grid-tile [colspan]="1" [rowspan]="3"> <button class="red-icon" mat-fab type="button"
-                  (click)="delete(benevole, standcroisement, stand)"><mat-icon>delete_forever</mat-icon></button></mat-grid-tile>
-              <mat-grid-tile [colspan]="3" [rowspan]="1"> email{{benevole.email}}</mat-grid-tile>
-              <mat-grid-tile [colspan]="3" [rowspan]="1"> tel{{benevole.telephone}}</mat-grid-tile>
-            </mat-grid-list>
+            <div class="row g-3 carre">
+              <div class="col title"> {{benevole.prenom}}
+                {{benevole.nom}}</div>
+              <div class="col"> <button class="red-icon" type="button"
+                  (click)="delete(benevole, standcroisement, stand)"><span class="app-icon">delete_forever</span></button></div>
+              <div class="col"> email{{benevole.email}}</div>
+              <div class="col"> tel{{benevole.telephone}}</div>
+            </div>
 
             }
             }
@@ -70,7 +70,7 @@
       </div>
 
 
-    </mat-expansion-panel>
+    </details>
   </div>
   }
 </div>

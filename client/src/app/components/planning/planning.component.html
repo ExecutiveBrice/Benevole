@@ -1,37 +1,37 @@
 @if (evenement.afficherMessagePlanning) {
-  <mat-card appearance="raised">
-    <mat-card-header>
-      <mat-card-title><strong>Informations :</strong></mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  <section class="card shadow-sm mb-3">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0"><strong>Informations :</strong></h2>
+    </header>
+    <div class="card-body">
       <div [innerHtml]="evenement.messagePlanning"></div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }
 @if (preparatifs.length > 0) {
 
-  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-    <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
+  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         préparatifs
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+      </h2>
+    </header>
+    <div class="card-body">
 
 
       @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
 
-        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
-          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-            <mat-panel-title [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+        <details class="card mb-3" [style.backgroundColor]="evenement.couleurBloc">
+          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" #title>
+            <span class="fw-semibold" [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
               /{{ stand.placeTotal }})
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+            </span>
+          </summary>
           {{ stand.soustitre }}
           <div class="row">
             @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
               <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-                <button mat-raised-button class="selection"
+                <button class="selection"
                         [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
                         (click)="choisir(croisement)">
 
@@ -47,37 +47,37 @@
             }
           </div>
 
-        </mat-expansion-panel>
+        </details>
       }
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }
 
 @if (stands && stands.length > 0) {
 
-  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-    <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
+  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         stands
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+      </h2>
+    </header>
+    <div class="card-body">
 
 
       @for (stand of activites | orderBy:'ordre':false; track $index) {
 
-        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
-          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-            <mat-panel-title [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+        <details class="card mb-3" [style.backgroundColor]="evenement.couleurBloc">
+          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" #title>
+            <span class="fw-semibold" [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
               /{{ stand.placeTotal }})
-            </mat-panel-title>
+            </span>
 
-          </mat-expansion-panel-header>
+          </summary>
           {{ stand.soustitre }}
           <div class="row">
             @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
               <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-                <button mat-raised-button class="selection"
+                <button class="selection"
                         [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite,'selected':croisement.selected}"
                         (click)="choisir(croisement)">
 
@@ -94,26 +94,26 @@
             }
           </div>
 
-        </mat-expansion-panel>
+        </details>
       }
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }
 
 
 @if (sansChoix.length > 0) {
-  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-    <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
+  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         dispos
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+      </h2>
+    </header>
+    <div class="card-body">
 
       <div class="row">
         @for (croisement of sansChoix | orderBy:'creneau.ordre':false; track $index) {
           <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-            <button mat-raised-button class="selection"
+            <button class="selection"
                     [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
                     (click)="choisir(croisement)">
 
@@ -129,24 +129,24 @@
         }
       </div>
 
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }
 
 @if (besoins.length > 0) {
-  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-    <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
+  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         besoins
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+      </h2>
+    </header>
+    <div class="card-body">
 
 
       <div class="row">
         @for (croisement of besoins | orderBy:'creneau.ordre':false; track $index) {
           <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-            <button mat-raised-button class="selection"
+            <button class="selection"
                     [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
                     (click)="choisir(croisement)">
 
@@ -163,33 +163,33 @@
       </div>
 
 
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }
 
 
 @if (postparatifs.length > 0) {
-  <mat-card appearance="raised" [style.backgroundColor]="evenement.couleurCard">
-    <mat-card-header>
-      <mat-card-title [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
+  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
         postparatifs
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+      </h2>
+    </header>
+    <div class="card-body">
 
       @for (stand of postparatifs | orderBy:'ordre':false; track $index) {
 
-        <mat-expansion-panel [style.backgroundColor]="evenement.couleurBloc">
-          <mat-expansion-panel-header [style.backgroundColor]="evenement.couleurTitre" #title>
-            <mat-panel-title [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
+        <details class="card mb-3" [style.backgroundColor]="evenement.couleurBloc">
+          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" #title>
+            <span class="fw-semibold" [style]="'font-family: '+evenement.titleFont">{{ stand.nom }} ({{ stand.placeOccupe }}
               /{{ stand.placeTotal }})
-            </mat-panel-title>
-          </mat-expansion-panel-header>
+            </span>
+          </summary>
           {{ stand.soustitre }}
           <div class="row">
             @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
               <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-                <button mat-raised-button class="selection"
+                <button class="selection"
                         [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
                         (click)="choisir(croisement)">
 
@@ -206,8 +206,8 @@
             }
           </div>
 
-        </mat-expansion-panel>
+        </details>
       }
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }

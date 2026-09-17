@@ -6,14 +6,13 @@ export interface AdministrateurConnecte {
   id: number;
   username: string;
   enabled: boolean;
-  global: boolean;
+  superadmin: boolean;
   evenementIds: number[];
 }
 
 export interface AdministrateurCreation {
   username: string;
-  password: string;
-  global: boolean;
+  superadmin: boolean;
   evenementIds: number[];
 }
 
@@ -21,7 +20,7 @@ export interface AdministrateurMiseAJour {
   username: string;
   password: string | null;
   enabled: boolean;
-  global: boolean;
+  superadmin: boolean;
   evenementIds: number[];
 }
 

@@ -9,27 +9,13 @@ import { DatePipe, NgClass } from '@angular/common';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ModalAddBenComponent } from '../../components/modalAddBen/modalAddBen.component';
 import { OrderByPipe } from "../../services/sort.pipe";
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatStepperModule } from '@angular/material/stepper';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatDialog } from '@angular/material/dialog';
 import { ModalComponent } from '../../components/modal/modal.component';
 import { ToastService } from '../../services';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { map, Observable, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
+import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 
 @Component({
   selector: 'app-gestionStands',
@@ -38,10 +24,7 @@ import { AsyncPipe } from '@angular/common';
   templateUrl: './gestionStands.component.html',
   styleUrls: ['./gestionStands.component.scss'],
   imports: [
-    RouterModule, MatAutocompleteModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule, MatCheckboxModule, MatSlideToggleModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    RouterModule, ReactiveFormsModule, FormsModule, OrderByPipe, ],
   providers: [
     EvenementService,
     CroisementService,
@@ -213,7 +196,7 @@ updateCroisement(croisement: Croisement,benevole :Benevole, stand: Stand) {
   }
 
 
-  dialog = inject(MatDialog);
+  dialog = inject(BootstrapModalService);
   delete(benevole: Benevole, croisement: Croisement, stand: Stand): void {
     console.log(croisement);
 

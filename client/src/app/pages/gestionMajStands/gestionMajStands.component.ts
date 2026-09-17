@@ -13,22 +13,10 @@ import {Croisement, Stand, Creneau, Evenement} from '../../models';
 import {Router, ActivatedRoute, RouterModule} from '@angular/router';
 import {FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {OrderObjectByPipe} from "../../services/sortObject.pipe";
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatSelectChange, MatSelectModule} from '@angular/material/select';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatStepperModule} from '@angular/material/stepper';
-import {MatDialog} from '@angular/material/dialog';
 import {ModalComponent} from '../../components/modal/modal.component';
 import {HttpErrorResponse} from '@angular/common/http';
 import { ToastService } from '../../services';
+import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 import {ListFilterPipe} from "../../services/simpleFilter.pipe";
 
 @Component({
@@ -38,12 +26,7 @@ import {ListFilterPipe} from "../../services/simpleFilter.pipe";
   templateUrl: './gestionMajStands.component.html',
   styleUrls: ['./gestionMajStands.component.scss'],
   imports: [
-    FormsModule, RouterModule, MatStepperModule, MatSidenavModule,
-    MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule, MatSelectModule,
-    MatFormFieldModule, MatInputModule, MatGridListModule,
-    MatDatepickerModule, MatIconModule, MatButtonModule,
-    OrderObjectByPipe, MatExpansionModule, ListFilterPipe],
+    FormsModule, RouterModule, ReactiveFormsModule, OrderObjectByPipe, ListFilterPipe],
   providers: [
     EvenementService,
     CroisementService,
@@ -199,11 +182,15 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
 
-  addCreneauToStand(creneauSelected: MatSelectChange, standForm: FormGroup): void {
+  addCreneauToStand(creneauId: string | number, standForm: FormGroup): void {
     let croisementTemp = new Croisement()
     croisementTemp.stand = new Stand();
     croisementTemp.stand.id = standForm.get('id')?.value
-    croisementTemp.creneau = creneauSelected.value;
+    const creneau = this.creneaux.find(item => item.id === Number(creneauId));
+    if (!creneau) {
+      return;
+    }
+    croisementTemp.creneau = creneau;
     croisementTemp.besoin = false;
     croisementTemp.limite = 0;
 
@@ -287,7 +274,7 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
 
-  dialog = inject(MatDialog);
+  dialog = inject(BootstrapModalService);
 
   dialogDeleteCroisement(croisementForm: FormGroup, standForm: FormGroup, index: number) {
 

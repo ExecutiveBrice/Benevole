@@ -6,10 +6,6 @@ import {HttpErrorResponse} from "@angular/common/http";
 import { ToastService } from './services';
 import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
 import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
-import { MatIconModule } from '@angular/material/icon';
-
-
-
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -22,8 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
     NgbDropdownToggle,
     NgbDropdownMenu,
     NgbDropdownItem,
-    MatIconModule
-  ],
+    ],
   providers: [
     TransmissionService,
     EvenementService,

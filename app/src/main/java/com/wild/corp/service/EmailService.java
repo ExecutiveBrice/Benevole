@@ -91,6 +91,14 @@ public class EmailService {
         singleMessage(List.of(email), message, "Réinitialisation de votre mot de passe", "", "");
     }
 
+    public void sendAdministratorInvitationMessage(String email, String resetUrl) {
+        String message = "<p>Un compte administrateur vient d'être créé pour vous.</p>"
+                + "<p><a href='" + resetUrl + "'>Choisir votre mot de passe</a></p>"
+                + "<p>Ce lien est valable 30 minutes et ne peut être utilisé qu'une fois.</p>";
+
+        singleMessage(List.of(email), message, "Invitation à administrer l'application", "", "");
+    }
+
     public void singleMessage(List<String> destinataires, String text, String sujet, String prenom, String nom) {
 
         Properties prop = new Properties();

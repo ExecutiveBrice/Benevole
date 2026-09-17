@@ -1,73 +1,72 @@
-<h2 mat-dialog-title>{{data.title}}</h2>
-<mat-dialog-content>
-  <mat-form-field class="example-full-width">
-    <mat-label>liste des benevoles déjà inscrits</mat-label>
-    <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
-      (optionSelected)='selectBen($event.option.value)'>
-      @for (benevole of filteredOptions | async; track benevole) {
-      <mat-option [value]="benevole">{{benevole.prenom}} {{benevole.nom}}</mat-option>
+<h2 class="modal-title h5">{{data.title}}</h2>
+<div class="modal-body">
+  <div class="mb-3 example-full-width">
+    <label class="form-label">liste des benevoles déjà inscrits</label>
+    <select class="form-select" (change)="selectBenById($any($event.target).value)">
+      <option value="">Sélectionner un bénévole</option>
+      @for (benevole of filteredOptions | async; track benevole.id) {
+        <option [value]="benevole.id">{{benevole.prenom}} {{benevole.nom}}</option>
       }
-    </mat-autocomplete>
-  </mat-form-field>
+    </select>
+  </div>
 
 
 
   <form [formGroup]="benevoleForm">
-    <mat-form-field class="full-width">
-      <mat-label>Prenom</mat-label>
-      <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+    <div class="mb-3 full-width">
+      <label class="form-label">Prenom</label>
+      <input class="form-control" formControlName="prenom" placeholder="Ex: Sarah">
       @if (benevoleForm.get('prenom')?.hasError('required')) {
-      <mat-error>Le prenom est obligatoire</mat-error>
+      <div class="invalid-feedback d-block">Le prenom est obligatoire</div>
       }
       @if (benevoleForm.get('prenom')?.hasError('minlength')) {
-      <mat-error>C'est un peu court comme prenom!</mat-error>
+      <div class="invalid-feedback d-block">C'est un peu court comme prenom!</div>
       }
-      <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
-    </mat-form-field>
+      <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
+    </div>
 
-    <mat-form-field class="full-width">
-      <mat-label>Nom</mat-label>
-      <input matInput formControlName="nom" placeholder="Ex: Connor">
+    <div class="mb-3 full-width">
+      <label class="form-label">Nom</label>
+      <input class="form-control" formControlName="nom" placeholder="Ex: Connor">
       @if (benevoleForm.get('nom')?.hasError('required')) {
-      <mat-error>Le nom est obligatoire</mat-error>
+      <div class="invalid-feedback d-block">Le nom est obligatoire</div>
       }
       @if (benevoleForm.get('nom')?.hasError('minlength')) {
-      <mat-error>C'est un peu court comme nom!</mat-error>
+      <div class="invalid-feedback d-block">C'est un peu court comme nom!</div>
       }
-      <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
-    </mat-form-field>
+      <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
+    </div>
 
 
 
 
 
-    <mat-form-field class="full-width">
-      <mat-label>Email</mat-label>
-      <input type="email" matInput formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
+    <div class="mb-3 full-width">
+      <label class="form-label">Email</label>
+      <input class="form-control" type="email" formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
       @if (benevoleForm.get('email')?.hasError('email')) {
-      <mat-error>Le format est incorrecte</mat-error>
+      <div class="invalid-feedback d-block">Le format est incorrecte</div>
       }
       @if (benevoleForm.get('email')?.hasError('required')) {
-      <mat-error>L'email est obligatoire</mat-error>
+      <div class="invalid-feedback d-block">L'email est obligatoire</div>
       }
-      <mat-hint>C'est le contact privilégié pour échanger avec vous</mat-hint>
-    </mat-form-field>
+      <div class="form-text">C'est le contact privilégié pour échanger avec vous</div>
+    </div>
 
     @if (!benevoleForm.get('telephone')?.disabled) {
-    <mat-form-field class="full-width">
-      <mat-label>Téléphone</mat-label>
-      <input matInput formControlName="telephone" placeholder="Ex: 06 95 48 32 45 45 98 78 97 45 31 56">
-      <mat-hint>Votre numéro de téléphone, si il est demandé c'est que les organisateurs en auront
-        besoin</mat-hint>
-    </mat-form-field>
+    <div class="mb-3 full-width">
+      <label class="form-label">Téléphone</label>
+      <input class="form-control" formControlName="telephone" placeholder="Ex: 06 95 48 32 45 45 98 78 97 45 31 56">
+      <div class="form-text">Votre numéro de téléphone, si il est demandé c'est que les organisateurs en auront
+        besoin</div>
+    </div>
     }
 
 
   </form>
 
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="cancel()">Annuler</button>
-  <button mat-button mat-dialog-close cdkFocusInitial (click)="accept()">Ajouter</button>
-</mat-dialog-actions>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-outline-primary" (click)="cancel()">Annuler</button>
+  <button class="btn btn-outline-primary" (click)="accept()">Ajouter</button>
+</div>

@@ -8,18 +8,6 @@ import { Subscription } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OrderByPipe } from "../../services/sort.pipe";
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatStepperModule } from '@angular/material/stepper';
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import {HttpErrorResponse} from "@angular/common/http";
 import { ToastService } from '../../services';
@@ -34,9 +22,7 @@ import { ToastService } from '../../services';
   imports: [
     FormsModule,
     RouterModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule, MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    ReactiveFormsModule, FormsModule, OrderByPipe, ],
 
   providers: [
     EvenementService,

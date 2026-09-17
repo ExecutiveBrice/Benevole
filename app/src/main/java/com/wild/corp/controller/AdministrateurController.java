@@ -39,7 +39,7 @@ public class AdministrateurController {
         return administrateurService.lister();
     }
 
-    /** Seul un administrateur global peut créer des comptes ou leur attribuer des évènements. */
+    /** Seul un super-administrateur peut créer des comptes ou leur attribuer des évènements. */
     @PostMapping
     public ResponseEntity<AdministrateurRessource> creer(Authentication authentication,
                                                           @Valid @RequestBody AdministrateurCreationRessource request) {

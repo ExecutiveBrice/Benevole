@@ -1,30 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialogActions,
-  MatDialogClose,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Benevole } from '../../models';
 import { map, Observable, startWith } from 'rxjs';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AsyncPipe } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-modalAddBen',
   standalone: true,
-  imports: [AsyncPipe, MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent, FormsModule, MatFormFieldModule, ReactiveFormsModule, MatAutocompleteModule, MatInputModule],
+  imports: [AsyncPipe, FormsModule, ReactiveFormsModule],
   templateUrl: './modalAddBen.component.html',
   styleUrl: './modalAddBen.component.scss'
 })
 export class ModalAddBenComponent implements OnInit {
-  data = inject(MAT_DIALOG_DATA);
+  data: { title?: string; benevoles?: Benevole[]; needtel?: boolean } = {};
 
   benevoles:Benevole[]=[]
 
@@ -40,11 +29,9 @@ export class ModalAddBenComponent implements OnInit {
 
 
 
-  constructor(public dialogRef: MatDialogRef<ModalAddBenComponent>,
+  constructor(public dialogRef: NgbActiveModal,
     public formBuilder: FormBuilder
   ) {
-console.log(this.data);
-
   }
   myControl = new FormControl<string | Benevole>('');
   filteredOptions!: Observable<Benevole[]>;
@@ -53,7 +40,7 @@ console.log(this.data);
   }
 
   ngOnInit(): void {
-    this.benevoles = this.data.benevoles
+    this.benevoles = this.data.benevoles ?? [];
 
     if(this.data.needtel){
       this.benevoleForm.get('telephone')?.enable()
@@ -65,7 +52,7 @@ console.log(this.data);
       startWith(''),
       map(value => {
         const name = typeof value === 'string' ? value : value?.prenom;
-        return name ? this._filter(name as string) : this.data.benevoles.slice();
+        return name ? this._filter(name as string) : this.benevoles;
       }),
     );
   }
@@ -92,6 +79,13 @@ console.log(this.benevoleForm.valid);
     this.benevoleForm.get('email')?.setValue(benevole.email);
     this.benevoleForm.get('telephone')?.setValue(benevole.telephone);
     this.benevoleForm.get('id')?.setValue(benevole.id);
+  }
+
+  selectBenById(id: string): void {
+    const benevole = this.benevoles.find(item => item.id === Number(id));
+    if (benevole) {
+      this.selectBen(benevole);
+    }
   }
 
   private _filter(name: string): Benevole[] {

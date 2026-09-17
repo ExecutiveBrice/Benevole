@@ -80,10 +80,15 @@ public class AdministrateurService implements UserDetailsService {
 
         Administrateur administrateur = new Administrateur();
         administrateur.setUsername(username);
-        administrateur.setPasswordHash(passwordEncoder.encode(request.password()));
+        // Le mot de passe est choisi par le nouvel administrateur via le lien d'invitation.
+        // Un secret aléatoire rend toute connexion impossible avant cette étape.
+        administrateur.setPasswordHash(passwordEncoder.encode(genererSecretAleatoire()));
         administrateur.setEnabled(true);
-        administrateur.setEvenements(request.global() ? new HashSet<>() : eventsFor(request.evenementIds()));
-        return toRessource(administrateurRepository.save(administrateur));
+        administrateur.setSuperadmin(request.superadmin());
+        administrateur.setEvenements(eventsFor(request.evenementIds(), request.superadmin()));
+        Administrateur administrateurCree = administrateurRepository.save(administrateur);
+        creerEtEnvoyerJetonInvitation(administrateurCree);
+        return toRessource(administrateurCree);
     }
 
     public AdministrateurRessource mettreAJour(Integer id, AdministrateurMiseAJourRessource request) {
@@ -94,23 +99,34 @@ public class AdministrateurService implements UserDetailsService {
                 .filter(existant -> !existant.getId().equals(id))
                 .ifPresent(existant -> { throw new IllegalArgumentException("Cet identifiant est déjà utilisé"); });
 
-        boolean retireDernierAdministrateurGlobal = administrateur.isEnabled() && estGlobal(administrateur)
-                && (!request.enabled() || !request.global());
-        if (retireDernierAdministrateurGlobal && nombreAdministrateursGlobauxActifs() <= 1) {
-            throw new IllegalArgumentException("Il doit rester au moins un administrateur global actif");
+        boolean retireDernierSuperadministrateur = administrateur.isEnabled() && administrateur.isSuperadmin()
+                && (!request.enabled() || !request.superadmin());
+        if (retireDernierSuperadministrateur && nombreSuperadministrateursActifs() <= 1) {
+            throw new IllegalArgumentException("Il doit rester au moins un super-administrateur actif");
         }
 
         administrateur.setUsername(username);
         administrateur.setEnabled(request.enabled());
+        administrateur.setSuperadmin(request.superadmin());
         if (request.password() != null && !request.password().isBlank()) {
             administrateur.setPasswordHash(passwordEncoder.encode(request.password()));
         }
-        administrateur.setEvenements(request.global() ? new HashSet<>() : eventsFor(request.evenementIds()));
+        administrateur.setEvenements(eventsFor(request.evenementIds(), request.superadmin()));
         return toRessource(administrateurRepository.save(administrateur));
     }
 
     public AdministrateurRessource moi(String username) {
         return toRessource(getByUsername(username));
+    }
+
+    /** Vérifie les identifiants sans les conserver dans le navigateur. */
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public String authentifier(String username, String password) {
+        return administrateurRepository.findByUsernameIgnoreCase(username.trim())
+                .filter(Administrateur::isEnabled)
+                .filter(administrateur -> passwordEncoder.matches(password, administrateur.getPasswordHash()))
+                .map(Administrateur::getUsername)
+                .orElse(null);
     }
 
     public List<AdministrateurRessource> lister() {
@@ -142,9 +158,8 @@ public class AdministrateurService implements UserDetailsService {
     /** Associe automatiquement un événement à l'administrateur qui le crée. */
     public void associerEvenement(String username, Integer evenementId) {
         Administrateur administrateur = getByUsername(username);
-        // Un compte global est matérialisé par l'absence d'évènement associé.
-        // Il conserve ce rôle lorsqu'il crée un nouvel évènement.
-        if (estGlobal(administrateur)) {
+        // Un super-administrateur peut gérer tous les évènements sans affectation dédiée.
+        if (administrateur.isSuperadmin()) {
             return;
         }
         Evenement evenement = evenementRepository.findById(evenementId)
@@ -153,7 +168,7 @@ public class AdministrateurService implements UserDetailsService {
     }
 
     public void verifierAccesEvenement(String username, Integer evenementId) {
-        if (estGlobal(getByUsername(username))) {
+        if (getByUsername(username).isSuperadmin()) {
             return;
         }
         boolean autorise = administrateurRepository.findEvenementsByUsername(username).stream()
@@ -164,13 +179,11 @@ public class AdministrateurService implements UserDetailsService {
     }
 
     /**
-     * La gestion transversale est portée par un compte sans évènement associé
-     * (l'équivalent logique d'un évènement null). Cela évite d'exposer un
-     * évènement technique dans l'interface publique.
+     * La gestion transversale est réservée aux super-administrateurs.
      */
     public void verifierAccesGlobal(String username) {
-        if (!estGlobal(getByUsername(username))) {
-            throw new AccessDeniedException("Vous n'êtes pas administrateur global");
+        if (!getByUsername(username).isSuperadmin()) {
+            throw new AccessDeniedException("Vous n'êtes pas super-administrateur");
         }
     }
 
@@ -179,9 +192,12 @@ public class AdministrateurService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Administrateur introuvable"));
     }
 
-    private Set<Evenement> eventsFor(Set<Integer> evenementIds) {
+    private Set<Evenement> eventsFor(Set<Integer> evenementIds, boolean superadmin) {
         if (evenementIds == null || evenementIds.isEmpty()) {
-            throw new IllegalArgumentException("Sélectionnez au moins un événement ou activez l'accès global");
+            if (superadmin) {
+                return new HashSet<>();
+            }
+            throw new IllegalArgumentException("Sélectionnez au moins un événement ou activez le rôle super-administrateur");
         }
         List<Evenement> evenements = evenementRepository.findAllById(evenementIds);
         if (evenements.size() != evenementIds.size()) {
@@ -195,33 +211,44 @@ public class AdministrateurService implements UserDetailsService {
                 .map(Evenement::getId)
                 .collect(java.util.stream.Collectors.toSet());
         return new AdministrateurRessource(administrateur.getId(), administrateur.getUsername(),
-                administrateur.isEnabled(), estGlobal(administrateur), evenementIds);
+                administrateur.isEnabled(), administrateur.isSuperadmin(), evenementIds);
     }
 
-    private boolean estGlobal(Administrateur administrateur) {
-        return administrateur.getEvenements() == null || administrateur.getEvenements().isEmpty();
-    }
-
-    private long nombreAdministrateursGlobauxActifs() {
+    private long nombreSuperadministrateursActifs() {
         return administrateurRepository.findAll().stream()
                 .filter(Administrateur::isEnabled)
-                .filter(this::estGlobal)
+                .filter(Administrateur::isSuperadmin)
                 .count();
     }
 
     private void creerEtEnvoyerJetonReinitialisation(Administrateur administrateur) {
+        String tokenBrut = creerJetonReinitialisation(administrateur);
+        emailService.sendPasswordResetMessage(administrateur.getUsername(),
+                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+    }
+
+    private void creerEtEnvoyerJetonInvitation(Administrateur administrateur) {
+        String tokenBrut = creerJetonReinitialisation(administrateur);
+        emailService.sendAdministratorInvitationMessage(administrateur.getUsername(),
+                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+    }
+
+    private String creerJetonReinitialisation(Administrateur administrateur) {
         passwordResetTokenRepository.deleteByAdministrateur(administrateur);
-        byte[] randomBytes = new byte[32];
-        secureRandom.nextBytes(randomBytes);
-        String tokenBrut = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+        String tokenBrut = genererSecretAleatoire();
 
         PasswordResetToken token = new PasswordResetToken();
         token.setAdministrateur(administrateur);
         token.setTokenHash(hash(tokenBrut));
         token.setExpiresAt(Instant.now().plus(30, ChronoUnit.MINUTES));
         passwordResetTokenRepository.save(token);
-        emailService.sendPasswordResetMessage(administrateur.getUsername(),
-                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+        return tokenBrut;
+    }
+
+    private String genererSecretAleatoire() {
+        byte[] randomBytes = new byte[32];
+        secureRandom.nextBytes(randomBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 
     private String hash(String value) {
@@ -242,6 +269,9 @@ public class AdministrateurService implements UserDetailsService {
             @Value("${app.bootstrap-admin.username:}") String username,
             @Value("${app.bootstrap-admin.password:}") String password) {
         return args -> {
+            // Compatibilité avec les données existantes : auparavant, un compte sans
+            // évènement associé représentait un administrateur global.
+            administrateurRepository.migrerAdministrateursGlobauxHistoriques();
             if (username.isBlank() && password.isBlank()) {
                 return;
             }
@@ -256,6 +286,7 @@ public class AdministrateurService implements UserDetailsService {
                 Administrateur administrateur = new Administrateur();
                 administrateur.setUsername(username.trim().toLowerCase());
                 administrateur.setPasswordHash(passwordEncoder.encode(password));
+                administrateur.setSuperadmin(true);
                 administrateurRepository.save(administrateur);
             }
         };

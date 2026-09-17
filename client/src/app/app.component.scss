@@ -109,7 +109,7 @@
   gap: .4rem;
 }
 
-.app-footer mat-icon {
+.app-footer .app-icon {
   width: 1.1rem;
   height: 1.1rem;
   font-size: 1.1rem;
@@ -132,7 +132,7 @@
 }
   .large{
 
-    mat-icon {
+    .app-icon {
         font-size: 50px;
         height: 50px;
         width: 50px;
@@ -142,7 +142,7 @@
   }
   .larger{
 
-    mat-icon {
+    .app-icon {
         margin-top: 10px;
         font-size: 60px;
         height: 60px;

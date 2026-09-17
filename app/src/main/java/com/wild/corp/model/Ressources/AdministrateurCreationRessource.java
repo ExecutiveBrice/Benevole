@@ -9,8 +9,7 @@ import java.util.Set;
 /** Corps d'entrée dédié pour éviter d'exposer le hash du mot de passe. */
 public record AdministrateurCreationRessource(
         @NotBlank @Email @Size(max = 254) String username,
-        @NotBlank @Size(min = 12, max = 128) String password,
-        boolean global,
+        boolean superadmin,
         Set<Integer> evenementIds
 ) {
 }
