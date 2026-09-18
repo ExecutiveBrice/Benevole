@@ -109,40 +109,47 @@
 
 
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="basique" (change)="updateConnexionParams()">
-            Connexion simplifiée (uniquement un prénom) ?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="basique" type="checkbox" formControlName="basique"
+                   (change)="updateConnexionParams()">
+            <label class="form-check-label" for="basique">Connexion simplifiée (uniquement un prénom) ?</label>
+          </div>
         </div>
         @if (!formulaireEvent.get('basique')?.value){
 
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="needtel">
-            Besoin du téléphone des bénévoles?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="needtel" type="checkbox" formControlName="needtel">
+            <label class="form-check-label" for="needtel">Besoin du téléphone des bénévoles ?</label>
+          </div>
         </div>
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="notification">
-            Les bénévoles recoivent un mail de confirmation ?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="notification" type="checkbox" formControlName="notification">
+            <label class="form-check-label" for="notification">Les bénévoles recoivent un mail de confirmation ?</label>
+          </div>
         </div>
         }
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="copie">
-           Souhaiez vous une copie des mails de confirmation ?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="copie" type="checkbox" formControlName="copie">
+            <label class="form-check-label" for="copie">Souhaiez vous une copie des mails de confirmation ?</label>
+          </div>
         </div>
 
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="afficherBenevoles">
-            Affichage du prenom des bénévoles déjà inscrits sur les boutons de selection?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="afficherBenevoles" type="checkbox" formControlName="afficherBenevoles">
+            <label class="form-check-label" for="afficherBenevoles">Affichage du prenom des bénévoles déjà inscrits sur les boutons de selection ?</label>
+          </div>
 
         </div>
 
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="afficherMessageAccueil">
-            Afficher le message ci dessous dans la page d'accueil ?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="afficherMessageAccueil" type="checkbox" formControlName="afficherMessageAccueil">
+            <label class="form-check-label" for="afficherMessageAccueil">Afficher le message ci dessous dans la page d'accueil ?</label>
+          </div>
         </div>
         <div class="card-body">
           <label class="form-label">Message d'accueil</label>
@@ -152,9 +159,10 @@
 
 
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="afficherMessagePlanning">
-            Afficher le message ci dessous dans le planning?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="afficherMessagePlanning" type="checkbox" formControlName="afficherMessagePlanning">
+            <label class="form-check-label" for="afficherMessagePlanning">Afficher le message ci dessous dans le planning ?</label>
+          </div>
         </div>
         <div class="card-body">
           <label class="form-label">Message du planning</label>
@@ -165,9 +173,10 @@
 
 
         <div class="card-body">
-          <label class="form-check form-switch" formControlName="afficherMessageInfo">
-            Afficher le message ci dessous dans la page d'info?
-          </label>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="afficherMessageInfo" type="checkbox" formControlName="afficherMessageInfo">
+            <label class="form-check-label" for="afficherMessageInfo">Afficher le message ci dessous dans la page d'info ?</label>
+          </div>
         </div>
         <div class="card-body">
           <label class="form-label">Message d'accueil</label>

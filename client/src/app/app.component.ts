@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Evenement } from './models';
-import { EvenementService, FileService, TransmissionService } from './services';
+import { AuthService, EvenementService, FileService, TransmissionService } from './services';
 import {HttpErrorResponse} from "@angular/common/http";
 import { ToastService } from './services';
 import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
@@ -40,6 +40,7 @@ export class AppComponent  implements OnInit{
 
     public transmissionService: TransmissionService,
     public evenementService: EvenementService,
+    private authService: AuthService,
     public router: Router,
     public fileService: FileService,
     public toastService: ToastService,
@@ -81,6 +82,32 @@ export class AppComponent  implements OnInit{
 
   changeEvenement(evenement: Evenement) {
     this.router.navigate(['/', evenement.id]);
+  }
+
+  isEventManagementPage(): boolean {
+    return this.router.url.includes('/gestion');
+  }
+
+  isGlobalManagementPage(): boolean {
+    return this.router.url.includes('/evenements/management');
+  }
+
+  getEventManagementBackLink(): (string | number)[] {
+    if (!this.evenement?.id) {
+      return ['/'];
+    }
+
+    const isSubPage = /\/gestion\/[^/?]+/.test(this.router.url);
+    return isSubPage ? ['/', this.evenement.id, 'gestion'] : ['/', this.evenement.id];
+  }
+
+  isManagementPage(): boolean {
+    return this.isEventManagementPage() || this.isGlobalManagementPage();
+  }
+
+  logoutFromManagement(): void {
+    this.authService.logout();
+    this.router.navigate(this.isEventManagementPage() && this.evenement?.id ? ['/', this.evenement.id] : ['/']);
   }
 
   getLogo() {

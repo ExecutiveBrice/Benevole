@@ -6,7 +6,6 @@ import { Benevole, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import QRCode from 'qrcode'
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
-import { NgClass } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderByPipe } from '../../services/sort.pipe';
 import { Params } from '../../models/params';
@@ -22,7 +21,6 @@ import { BootstrapModalService } from '../../services/bootstrap-modal.service';
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [
-    NgClass,
     NgxEditorModule,
     FormsModule,
     RouterModule,

@@ -1,0 +1,12 @@
+<section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0"
+        [style.font-family]="evenement.titleFont"
+        [style.color]="evenement.couleurText">
+      {{ title }}
+    </h2>
+  </header>
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</section>

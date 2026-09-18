@@ -25,7 +25,7 @@
 
 
     <div class="card-body">
-      <button class="full-width" type="submit" (click)="find()">Entrer</button>
+      <button class="btn btn-primary w-100" type="submit" (click)="find()">Entrer</button>
     </div>
   </form>
   }@else {
@@ -99,7 +99,7 @@
     <div class="card-body">
 
 
-      <button class="full-width" type="submit" (click)="addBenevole()">Je m'inscris</button>
+      <button class="btn btn-primary w-100" type="submit" (click)="addBenevole()">Je m'inscris</button>
     </div>
   </form>
   }
@@ -121,7 +121,7 @@
 
 
       <div class="card-body">
-        <button class="full-width" type="submit" (click)="connexionBasique()">Entrer</button>
+        <button class="btn btn-primary w-100" type="submit" (click)="connexionBasique()">Entrer</button>
       </div>
     </form>
   }
@@ -133,7 +133,7 @@
 @if (userExist) {
 <section class="card shadow-sm mb-3">
   <header class="card-header text-center">
-    <h2 class="card-title h5 mb-0">Bonjour {{ formulaireBenevole.value.prenom }}   <span class="app-icon" (click)="exit()" class="red-icon" >exit_to_app</span></h2>
+    <div class="d-flex align-items-center justify-content-between gap-2"><h2 class="card-title h5 mb-0">Bonjour {{ formulaireBenevole.value.prenom }}</h2><button class="btn btn-sm btn-outline-danger" type="button" (click)="exit()">Quitter</button></div>
 
   </header>
 

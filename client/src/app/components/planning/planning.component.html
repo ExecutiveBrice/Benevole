@@ -10,13 +10,7 @@
 }
 @if (preparatifs.length > 0) {
 
-  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
-    <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
-        préparatifs
-      </h2>
-    </header>
-    <div class="card-body">
+  <app-event-card title="Les préparatifs" [evenement]="evenement">
 
 
       @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
@@ -31,37 +25,23 @@
           <div class="row">
             @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
               <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-                <button class="selection"
-                        [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
-                        (click)="choisir(croisement)">
-
-                  <span>{{ croisement.creneau.plage }}</span><br>
-                  <span>({{ croisement.benevoles.length + '\/' + croisement.limite }})</span>
-                  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
-                    @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                      {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
-                    }
-                  }
-                </button>
+                <app-selection-button
+                  [croisement]="croisement"
+                  [evenement]="evenement"
+                  (selection)="choisir($event)">
+                </app-selection-button>
               </div>
             }
           </div>
 
         </details>
       }
-    </div>
-  </section>
+  </app-event-card>
 }
 
 @if (stands && stands.length > 0) {
 
-  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
-    <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
-        stands
-      </h2>
-    </header>
-    <div class="card-body">
+  <app-event-card title="Les stands" [evenement]="evenement">
 
 
       @for (stand of activites | orderBy:'ordre':false; track $index) {
@@ -77,105 +57,62 @@
           <div class="row">
             @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
               <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-                <button class="selection"
-                        [ngClass]="{'complet':croisement.benevoles.length >= croisement.limite,'selected':croisement.selected}"
-                        (click)="choisir(croisement)">
-
-                  <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
-                  )</span>
-                  <br>
-                  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
-                    @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                      {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
-                    }
-                  }
-                </button>
+                <app-selection-button
+                  [croisement]="croisement"
+                  [evenement]="evenement"
+                  (selection)="choisir($event)">
+                </app-selection-button>
               </div>
             }
           </div>
 
         </details>
       }
-    </div>
-  </section>
+  </app-event-card>
 }
 
 
 @if (sansChoix.length > 0) {
-  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
-    <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
-        dispos
-      </h2>
-    </header>
-    <div class="card-body">
+  <app-event-card title="Les dispos" [evenement]="evenement">
 
       <div class="row">
         @for (croisement of sansChoix | orderBy:'creneau.ordre':false; track $index) {
           <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-            <button class="selection"
-                    [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
-                    (click)="choisir(croisement)">
-
-              <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
-              )</span>
-              @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
-                @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                  {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
-                }
-              }
-            </button>
+            <app-selection-button
+              [croisement]="croisement"
+              [evenement]="evenement"
+              (selection)="choisir($event)">
+            </app-selection-button>
           </div>
         }
       </div>
 
-    </div>
-  </section>
+  </app-event-card>
 }
 
 @if (besoins.length > 0) {
-  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
-    <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
-        besoins
-      </h2>
-    </header>
-    <div class="card-body">
+  <app-event-card title="Les besoins" [evenement]="evenement">
 
 
       <div class="row">
         @for (croisement of besoins | orderBy:'creneau.ordre':false; track $index) {
           <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-            <button class="selection"
-                    [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
-                    (click)="choisir(croisement)">
-
-              <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
-              )</span>
-              @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
-                @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                  {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
-                }
-              }
-            </button>
+            <app-selection-button
+              [croisement]="croisement"
+              [evenement]="evenement"
+              (selection)="choisir($event)">
+            </app-selection-button>
           </div>
         }
       </div>
 
 
-    </div>
-  </section>
+  </app-event-card>
 }
 
 
 @if (postparatifs.length > 0) {
-  <section class="card shadow-sm mb-3" [style.backgroundColor]="evenement.couleurCard">
-    <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0" [style]="'font-family: '+evenement.titleFont" [style.color]="evenement.couleurText">Les
-        postparatifs
-      </h2>
-    </header>
-    <div class="card-body">
+  <app-event-card title="Les postparatifs" [evenement]="evenement">
 
       @for (stand of postparatifs | orderBy:'ordre':false; track $index) {
 
@@ -189,25 +126,16 @@
           <div class="row">
             @for (croisement of stand.croisements| orderBy:'creneau.ordre':false; track $index) {
               <div class="col-6 col-lg-4 col-xxl-4 selectionCol">
-                <button class="selection"
-                        [ngClass]="{'selected':croisement.selected,'complet':croisement.benevoles.length >= croisement.limite}"
-                        (click)="choisir(croisement)">
-
-                  <span>{{ croisement.creneau.plage }}</span><br><span>({{ croisement.benevoles.length + '\/' + croisement.limite }}
-                  )</span>
-                  <br>
-                  @if (evenement.afficherBenevoles && croisement.benevoles.length > 0) {
-                    @for (benevole of croisement.benevoles | orderBy:'nom':false; track $index) {
-                      {{ benevole.prenom }} {{ evenement.basique?'':benevole.nom.charAt(0).toUpperCase()+'.' }}<br>
-                    }
-                  }
-                </button>
+                <app-selection-button
+                  [croisement]="croisement"
+                  [evenement]="evenement"
+                  (selection)="choisir($event)">
+                </app-selection-button>
               </div>
             }
           </div>
 
         </details>
       }
-    </div>
-  </section>
+  </app-event-card>
 }

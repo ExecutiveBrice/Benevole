@@ -106,6 +106,119 @@
   src: url(app/assets/fonts/TradeWinds-Regular.ttf) format('truetype');
 }
 
+html, body {
+  min-height: 100%;
+}
+
+body {
+  color: var(--bs-body-color);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/*
+ * Les couleurs sont injectées par l'évènement courant sur .app-shell.
+ * Les valeurs Bootstrap conservent un rendu cohérent sur la liste des
+ * évènements, où aucune palette n'est encore sélectionnée.
+ */
+.card {
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--event-title-color, var(--bs-border-color)) 28%, var(--bs-border-color));
+  border-radius: 1rem;
+  background-color: var(--event-card-color, var(--bs-card-bg));
+  box-shadow: 0 .35rem 1rem rgb(0 0 0 / 7%);
+  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.card-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 3.75rem;
+  padding: .85rem 1.1rem;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--event-title-color, var(--bs-border-color)) 42%, transparent);
+  background: linear-gradient(115deg,
+    color-mix(in srgb, var(--event-title-color, var(--bs-tertiary-bg)) 94%, white),
+    var(--event-title-color, var(--bs-tertiary-bg)));
+  color: var(--event-text-color, inherit);
+}
+
+.card-header::before {
+  width: .3rem;
+  height: 1.4rem;
+  flex: 0 0 .3rem;
+  margin-right: .75rem;
+  border-radius: 99px;
+  background: currentColor;
+  content: '';
+  opacity: .72;
+}
+
+.card-header .card-title {
+  padding: 0;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+.card-body {
+  padding: 1.15rem;
+}
+
+.card > .card-body + .card-body {
+  padding-top: 0;
+}
+
+.card:not(.event-card):hover {
+  border-color: color-mix(in srgb, var(--event-title-color, var(--bs-primary)) 58%, var(--bs-border-color));
+  box-shadow: 0 .6rem 1.5rem rgb(0 0 0 / 10%);
+}
+
+details > summary {
+  cursor: pointer;
+}
+
+details.card {
+  background-color: var(--event-block-color, var(--bs-card-bg));
+  box-shadow: none;
+}
+
+details.card > summary.card-header {
+  min-height: 3.25rem;
+  list-style: none;
+}
+
+details.card > summary.card-header::-webkit-details-marker {
+  display: none;
+}
+
+details.card > summary.card-header::after {
+  width: .55rem;
+  height: .55rem;
+  margin-left: auto;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-.18rem);
+  content: '';
+  transition: transform .2s ease;
+}
+
+details.card[open] > summary.card-header::after {
+  transform: rotate(225deg) translate(-.15rem, -.1rem);
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+
 .toast-custom-rigth {
   top: 350px;
   left: 12px;
@@ -113,7 +226,13 @@
 
 .app-icon {
   display: inline-block;
-  font-weight: 700;
+  font-family: 'Material Symbols Outlined';
+  font-size: 1.25rem;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .warning {

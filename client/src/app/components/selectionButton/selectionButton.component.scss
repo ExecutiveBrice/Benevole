@@ -1,0 +1,75 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.selection {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: start;
+  min-height: 5.5rem;
+  height: 100%;
+  width: 100%;
+  margin-top: .25rem;
+  padding: .5rem;
+  border: 1px solid color-mix(in srgb, var(--event-title-color, var(--bs-border-color)) 28%, var(--bs-border-color));
+  border-radius: .75rem;
+  background: #fff;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+.selection-slot {
+  width: 100%;
+  font-weight: 700;
+  text-align: center;
+}
+
+.selection-participants {
+  display: grid;
+  grid-row: 2;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .15rem;
+  width: 100%;
+  padding: .45rem 0;
+  font-size: .875rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.selection-participants > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selection-capacity {
+  grid-row: 3;
+  justify-self: end;
+  padding: .15rem .45rem;
+  border-radius: 99px;
+  background: rgb(0 0 0 / 9%);
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.selection:hover:not(.complet) {
+  transform: translateY(-2px);
+  border-color: var(--event-title-color, var(--bs-primary));
+  box-shadow: 0 .35rem .8rem rgb(0 0 0 / 12%);
+}
+
+.complet {
+  background-color: var(--bs-secondary-bg) !important;
+  color: var(--bs-secondary-color);
+}
+
+/* Le choix du bénévole connecté reste identifiable, même pour la dernière
+ * place d'un créneau désormais complet. */
+.selected,
+.complet.selected {
+  background-color: var(--bs-success-bg-subtle) !important;
+  border-color: var(--bs-success-border-subtle);
+  color: var(--bs-body-color);
+}

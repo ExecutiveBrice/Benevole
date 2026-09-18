@@ -1,5 +1,10 @@
+<div class="app-shell"
+     [style.--event-card-color]="evenement?.couleurCard"
+     [style.--event-block-color]="evenement?.couleurBloc"
+     [style.--event-title-color]="evenement?.couleurTitre"
+     [style.--event-text-color]="evenement?.couleurText">
 <header class="app-header" [style.backgroundColor]="evenement?.couleurBandeau">
-  <nav class="navbar navbar-expand-lg px-3 py-2" aria-label="Navigation principale">
+  <nav class="navbar container-fluid px-3 py-2" aria-label="Navigation principale">
     @if (logo) {
       @if (evenement?.sitepersourl) {
         <a class="event-logo-link" [href]="evenement.sitepersourl" target="_blank" rel="noopener">
@@ -9,21 +14,22 @@
         <img class="event-logo" [src]="logo" alt="Logo de l'évènement">
       }
     }
-    <a class="navbar-brand d-flex align-items-center" routerLink="/" [style.color]="evenement?.couleurText">
+    <a class="navbar-brand d-flex align-items-center text-decoration-none" routerLink="/" [style.color]="evenement?.couleurText">
       <span class="event-title" [style.font-family]="evenement?.titleFont">{{ evenement?.eventName || 'Bénévoles' }}</span>
     </a>
   </nav>
 </header>
 
-<main class="app-content">
+<main class="app-content container-fluid py-4">
   <router-outlet/>
 </main>
 
 <footer class="app-footer" [style.backgroundColor]="evenement?.couleurBandeau" aria-label="Actions principales">
+  <div class="container-fluid d-flex flex-wrap justify-content-center gap-2">
   <div ngbDropdown container="body" placement="top-start" class="footer-action">
     <button type="button" class="btn btn-outline-light dropdown-toggle event-selector" ngbDropdownToggle
       aria-label="Changer d'évènement">
-      {{ evenement?.eventName || 'Choisir un évènement' }}
+      Autres évènements
     </button>
     <div ngbDropdownMenu class="event-menu">
       @for (event of evenements; track event.id) {
@@ -41,7 +47,17 @@
     </div>
   </div>
 
-  @if (evenement?.id) {
+  @if (isEventManagementPage() && evenement?.id) {
+    <a class="btn btn-outline-light footer-action" [routerLink]="getEventManagementBackLink()">
+      <span class="app-icon" aria-hidden="true">arrow_back</span>
+      <span>Retour</span>
+    </a>
+  } @else if (isGlobalManagementPage()) {
+    <a class="btn btn-outline-light footer-action" routerLink="/">
+      <span class="app-icon" aria-hidden="true">arrow_back</span>
+      <span>Retour</span>
+    </a>
+  } @else if (evenement?.id) {
     <a class="btn btn-outline-light footer-action" [routerLink]="['/', evenement.id, 'gestion']" [queryParams]="{ connexion: '1' }">
       <span class="app-icon" aria-hidden="true">settings</span>
       <span>Paramétrage</span>
@@ -53,10 +69,18 @@
     </a>
   }
 
-  <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener">
-    <span class="app-icon" aria-hidden="true">help</span>
-    <span>Aide</span>
-  </a>
+  @if (isManagementPage()) {
+    <button class="btn btn-outline-light footer-action" type="button" (click)="logoutFromManagement()">
+      <span class="app-icon" aria-hidden="true">logout</span>
+      <span>Déconnexion</span>
+    </button>
+  } @else {
+    <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener">
+      <span class="app-icon" aria-hidden="true">help</span>
+      <span>Aide</span>
+    </a>
+  }
+  </div>
 </footer>
 
 <div class="toast-container position-fixed top-0 end-0 p-3">
@@ -68,4 +92,5 @@
       <span [innerHTML]="toast.message"></span>
     </ngb-toast>
   }
+</div>
 </div>

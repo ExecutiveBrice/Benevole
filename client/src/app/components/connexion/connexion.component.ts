@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {Benevole, Croisement, Evenement} from '../../models';
 import {BenevoleService, TransmissionService} from '../../services';
@@ -27,7 +27,8 @@ export class ConnexionComponent implements OnInit {
     public transmissionService: TransmissionService,
     private router: Router,
     private toastr: ToastService,
-    public formBuilder: FormBuilder,) {
+    public formBuilder: FormBuilder,
+    private changeDetectorRef: ChangeDetectorRef,) {
   }
 
   ngOnInit(): void {
@@ -43,6 +44,9 @@ export class ConnexionComponent implements OnInit {
     }
     this.transmissionService.benevoleStream.subscribe(benevole => {
       this.benevole = benevole;
+      // Le bénévole est mis à jour depuis le composant planning. Demander un
+      // rendu du panneau « Mes tâches » pour refléter immédiatement ce choix.
+      this.changeDetectorRef.markForCheck();
     });
 
     this.benevoleEmail = JSON.parse(localStorage.getItem('benevoleEmail')!);

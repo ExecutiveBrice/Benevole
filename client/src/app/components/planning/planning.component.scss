@@ -1,28 +1,19 @@
-.selection {
-  margin-top: 5px;
-height: 100%;
-  width: 100%;
-}
 .selectionCol {
-  margin-bottom: 5px;
-}
-.selected{
-  background-color:  rgb(207, 241, 192)!important;
-}
-.complet {
-  background-color:rgb(204, 204, 204)!important;
+  margin-bottom: .5rem;
 }
 
-.card-title {
-  padding: 10px;
+/* Les cartes de stands ne disposent pas d'un .card-body : ce retrait évite
+ * que leur grille de créneaux touche le bord de la carte. */
+details.card > .row {
+  margin:  0;
+  padding: 0;
 }
 
 .card summary .fw-semibold {
   margin-right: 1px!important;
-  font-weight: lighter;
+  font-weight: 650;
 }
 
 .card summary {
-  height: 75px !important;
-  padding: 0 10px;
+  padding: .5rem .5rem;
 }

@@ -6,11 +6,13 @@ import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrderByPipe } from "../../services/sort.pipe";
 import { NgClass } from '@angular/common';
+import { EventCardComponent } from '../eventCard/eventCard.component';
+import { SelectionButtonComponent } from '../selectionButton/selectionButton.component';
 
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [NgClass, FormsModule, ReactiveFormsModule, OrderByPipe],
+  imports: [FormsModule, ReactiveFormsModule, OrderByPipe, EventCardComponent, SelectionButtonComponent],
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.scss'
 })

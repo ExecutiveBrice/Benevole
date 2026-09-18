@@ -1,77 +1,46 @@
 @if (authorize && evenement != undefined) {
-
-
-
-<section class="card shadow-sm mb-3">
-  <div class="row g-3">
-    <div class="col">
-
-      <strong>
-        {{stands.length}} créneaux
-      </strong>
-
-
+  <div class="page-container">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+      <div><h1 class="h3 mb-1">Répartition par stand</h1><p class="text-body-secondary mb-0">{{ stands.length }} stand(s) à suivre.</p></div>
+      <button class="btn btn-outline-primary" type="button" (click)="exportAsXLSX()">Télécharger</button>
     </div>
-    <div class="col">
-      <button class="full-width" type="button" (click)="exportAsXLSX()">Télécharger</button>
 
-    </div>
-  </div>
-</section>
-
-
-
-
-<div class="row">
-
-  @for (stand of stands | orderBy:'ordre':false; track $index) {
-  <div class="col-12 col-md-6 col-lg-4 col-xxl-3">
-    <details class="card mb-3">
-      <summary class="card-header">
-        <span class="fw-semibold">{{stand.nom}}</span>
-      </summary>
-
-
-      <div class="col-sm-12">
-        <div class="row">
-          @for (standcroisement of stand.croisements | orderBy:'creneau.ordre':false; track standcroisement) {
-          <div class="col-sm-12 dropdown">
-            <div class="row">
-              <div class="col-6">
-                <strong>{{standcroisement.creneau.plage}} :
-                  ({{standcroisement.benevoles.length}}/{{standcroisement.limite}})</strong>
+    <div class="row g-3">
+    @for (stand of stands | orderBy:'ordre':false; track $index) {
+      <div class="col-12 col-lg-6 col-xl-4">
+        <section class="card h-100">
+          <div class="card-header"><h2 class="h5 mb-0">{{ stand.nom }}</h2></div>
+          <div class="card-body p-0">
+            <div class="list-group list-group-flush">
+            @for (standcroisement of stand.croisements | orderBy:'creneau.ordre':false; track standcroisement) {
+              <div class="list-group-item">
+                <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                  <div><strong>{{ standcroisement.creneau.plage }}</strong><span class="text-body-secondary"> · {{ standcroisement.benevoles.length }}/{{ standcroisement.limite }}</span></div>
+                  <button class="btn btn-sm btn-outline-primary" type="button" (click)="addBen(standcroisement, stand)">Ajouter</button>
+                </div>
+                @if (standcroisement.benevoles.length > 0) {
+                  <ul class="list-group list-group-flush border rounded">
+                  @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track benevole) {
+                    <li class="list-group-item d-flex align-items-center justify-content-between gap-2">
+                      <div class="small"><strong class="d-block">{{ benevole.prenom }} {{ benevole.nom }}</strong><span class="text-body-secondary">{{ benevole.email }} · {{ benevole.telephone }}</span></div>
+                      <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(benevole, standcroisement, stand)">Retirer</button>
+                    </li>
+                  }
+                  </ul>
+                } @else {
+                  <p class="small text-body-secondary mb-0">Aucun bénévole inscrit.</p>
+                }
               </div>
-              <div class="col-6">
-                <button class="green-icon" type="button" (click)="addBen(standcroisement, stand)">
-                  <span class="app-icon">person_add</span>
-                </button>
-              </div>
-            </div>
-            @if (standcroisement.benevoles.length > 0) {
-            @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track benevole) {
-
-            <div class="row g-3 carre">
-              <div class="col title"> {{benevole.prenom}}
-                {{benevole.nom}}</div>
-              <div class="col"> <button class="red-icon" type="button"
-                  (click)="delete(benevole, standcroisement, stand)"><span class="app-icon">delete_forever</span></button></div>
-              <div class="col"> email{{benevole.email}}</div>
-              <div class="col"> tel{{benevole.telephone}}</div>
-            </div>
-
+            } @empty {
+              <div class="list-group-item text-body-secondary">Aucun créneau associé.</div>
             }
-            }
+            </div>
           </div>
-
-          }
-
-
-        </div>
+        </section>
       </div>
-
-
-    </details>
+    } @empty {
+      <div class="col-12"><div class="alert alert-info mb-0">Aucun stand enregistré.</div></div>
+    }
+    </div>
   </div>
-  }
-</div>
 }

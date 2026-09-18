@@ -1,91 +1,56 @@
 @if (authorize && evenement != undefined) {
+  <div class="page-container">
+    <div class="mb-4">
+      <h1 class="h3 mb-1">Créneaux</h1>
+      <p class="text-body-secondary mb-0">Ajoutez, modifiez ou supprimez les horaires disponibles.</p>
+    </div>
 
-
-<div class="row marge">
-
-
-
-
-  <div class="col-sm-12">
-    <section class="card shadow-sm mb-3 padding-top" [formGroup]="formulaireNewCreneau">
-      <div class="row marge">
-        <div class="col-12 col-md-5">
-          <div class="mb-3 full-width">
-            <label class="form-label">Ordre</label>
-            <input class="form-control" type="text" formControlName="ordre">
-
-            @if (formulaireNewCreneau.get('ordre')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire</div>
-            }
+    <section class="card mb-4" [formGroup]="formulaireNewCreneau">
+      <div class="card-header"><h2 class="h5 mb-0">Nouveau créneau</h2></div>
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="newCreneauOrder">Ordre</label>
+            <input id="newCreneauOrder" class="form-control" type="text" formControlName="ordre">
+            @if (formulaireNewCreneau.get('ordre')?.hasError('required')) { <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire.</div> }
           </div>
-
-        </div>
-
-        <div class="col-12 col-md-5">
-          <div class="mb-3 full-width">
-            <label class="form-label">Plage horaire</label>
-            <input class="form-control" type="text" formControlName="plage">
-
-            @if (formulaireNewCreneau.get('plage')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La plage horaire est obligatoire</div>
-            }
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="newCreneauPlage">Plage horaire</label>
+            <input id="newCreneauPlage" class="form-control" type="text" formControlName="plage">
+            @if (formulaireNewCreneau.get('plage')?.hasError('required')) { <div class="invalid-feedback d-block">La plage horaire est obligatoire.</div> }
           </div>
-        </div>
-        <div class="col-12 col-md-2">
-          <button class="blue-icon" type="button" (click)="ajout(formulaireNewCreneau)"><span class="app-icon">save</span>
-          </button>
-        </div>
-
-
-
-      </div>
-
-    </section>
-  </div>
-  @for (creneau of creneaux | orderBy:'ordre':false; track $index) {
-
-  <div class="col-12 col-md-6 col-lg-4 col-xxl-3">
-    <section class="card shadow-sm mb-3 padding-top" [formGroup]="creneau.formulaire">
-      <div class="row marge">
-
-        <div class="col-6">
-          <div class="mb-3 full-width">
-            <label class="form-label">Ordre</label>
-            <input class="form-control" type="text" formControlName="ordre" >
-
-            @if (creneau.formulaire.get('ordre')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire</div>
-            }
-          </div>
-        </div>
-
-        <div class="col-3">
-          <button class="green-icon" type="button" [disabled]="!creneau.formulaire.touched"
-            (click)="update(creneau.formulaire)"><span class="app-icon">save</span>
-          </button>
-        </div>
-        <div class="col-3">
-
-          <button class="red-icon" type="button"
-            (click)="delete(creneau)"><span class="app-icon">delete_forever</span></button>
-        </div>
-
-
-        <div class="col-12">
-          <div class="mb-3 full-width">
-            <label class="form-label">Plage horaire</label>
-            <input class="form-control" type="text" formControlName="plage" >
-
-            @if (creneau.formulaire.get('plage')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La plage horaire est obligatoire</div>
-            }
-          </div>
+          <div class="col-12 col-md-3"><button class="btn btn-primary w-100" type="button" (click)="ajout(formulaireNewCreneau)">Ajouter</button></div>
         </div>
       </div>
-
     </section>
-  </div>
-  }
 
-</div>
+    <div class="row g-3">
+    @for (creneau of creneaux | orderBy:'ordre':false; track $index) {
+      <div class="col-12 col-md-6 col-xl-4">
+        <section class="card h-100" [formGroup]="creneau.formulaire">
+          <div class="card-body">
+            <div class="row g-3 align-items-end">
+              <div class="col-4">
+                <label class="form-label">Ordre</label>
+                <input class="form-control" type="text" formControlName="ordre">
+                @if (creneau.formulaire.get('ordre')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }
+              </div>
+              <div class="col-8">
+                <label class="form-label">Plage horaire</label>
+                <input class="form-control" type="text" formControlName="plage">
+                @if (creneau.formulaire.get('plage')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }
+              </div>
+              <div class="col-12 d-flex gap-2">
+                <button class="btn btn-success" type="button" [disabled]="!creneau.formulaire.touched" (click)="update(creneau.formulaire)">Enregistrer</button>
+                <button class="btn btn-outline-danger" type="button" (click)="delete(creneau)">Supprimer</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    } @empty {
+      <div class="col-12"><div class="alert alert-info mb-0">Aucun créneau enregistré.</div></div>
+    }
+    </div>
+  </div>
 }

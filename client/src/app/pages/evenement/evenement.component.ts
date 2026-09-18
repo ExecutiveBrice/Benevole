@@ -1,5 +1,5 @@
 
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { BenevoleService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,7 +10,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnexionComponent } from "../../components/connexion/connexion.component";
 import { PlanningComponent } from "../../components/planning/planning.component";
 import { InfoComponent } from "../../components/info/info.component";
-import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-evenement',
@@ -18,8 +17,7 @@ import { NgClass } from '@angular/common';
   templateUrl: './evenement.component.html',
   styleUrls: ['./evenement.component.scss'],
   
-  imports: [NgClass,
-    ConnexionComponent, PlanningComponent, InfoComponent],
+  imports: [ConnexionComponent, PlanningComponent, InfoComponent],
   providers: [
     StandService,
     CroisementService,
@@ -60,9 +58,6 @@ export class EvenementComponent implements OnInit {
 
 
   ngOnInit() {
-
-    this.getScreenWidth = window.innerWidth;
-    this.getScreenHeight = window.innerHeight;
 
     this.route.paramMap.subscribe(params => {
       this.idEvenement = Number(params.get('id'));
@@ -114,16 +109,4 @@ export class EvenementComponent implements OnInit {
 
 
 
-
-
-
-
-
-  public getScreenWidth: any;
-  public getScreenHeight: any;
-  @HostListener('window:resize', ['$event'])
-  onWindowResize(_event: Event) {
-    this.getScreenWidth = window.innerWidth;
-    this.getScreenHeight = window.innerHeight;
-  }
 }
