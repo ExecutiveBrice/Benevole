@@ -41,6 +41,10 @@ public class Administrateur {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    /** Autorise le paramétrage transversal, indépendamment des évènements affectés. */
+    @Column(name = "SUPERADMIN", nullable = false, columnDefinition = "boolean default false")
+    private boolean superadmin = false;
+
     @JsonIgnore
     @ManyToMany
     @JoinTable(

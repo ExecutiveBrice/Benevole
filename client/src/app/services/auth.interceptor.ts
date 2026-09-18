@@ -1,18 +1,30 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 
-/** Ajoute les identifiants Spring Security aux seuls appels vers l'API de l'application. */
-export const basicAuthenticationInterceptor: HttpInterceptorFn = (request, next) => {
-  const authorization = inject(AuthService).authorizationHeader();
+/** Ajoute le JWT aux appels protégés et purge la session si le serveur le refuse. */
+export const jwtAuthenticationInterceptor: HttpInterceptorFn = (request, next) => {
+  const authService = inject(AuthService);
   const isApiRequest = request.url.startsWith(environment.url);
+  const isAuthenticationRequest = request.url.startsWith(`${environment.url}auth/`);
   const requiresAuthentication = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
-    || request.url === `${environment.url}administrateurs/moi`
+    || request.url.startsWith(`${environment.url}administrateurs`)
     || request.url === `${environment.url}config/getProps`;
 
-  if (!authorization || !isApiRequest || !requiresAuthentication) {
-    return next(request);
-  }
-  return next(request.clone({ setHeaders: { Authorization: authorization } }));
+  const authorization = isApiRequest && !isAuthenticationRequest && requiresAuthentication
+    ? authService.authorizationHeader()
+    : null;
+  const authenticatedRequest = authorization
+    ? request.clone({ setHeaders: { Authorization: authorization } })
+    : request;
+  return next(authenticatedRequest).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (authorization && error.status === 401 && authService.authorizationHeader() === authorization) {
+        authService.logout();
+      }
+      return throwError(() => error);
+    }),
+  );
 };

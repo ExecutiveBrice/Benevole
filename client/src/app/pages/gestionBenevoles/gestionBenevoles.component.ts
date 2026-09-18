@@ -14,23 +14,10 @@ import {Subscription} from 'rxjs';
 
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {OrderByPipe} from "../../services/sort.pipe";
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatSidenavModule} from '@angular/material/sidenav';
-import {MatStepperModule} from '@angular/material/stepper';
-
-import {MatSelectModule} from '@angular/material/select';
 import {HttpErrorResponse} from '@angular/common/http';
 import { ToastService } from '../../services';
-import {MatDialog} from '@angular/material/dialog';
 import {ModalComponent} from '../../components/modal/modal.component';
+import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 
 @Component({
   selector: 'app-gestionBenevoles',
@@ -41,10 +28,7 @@ import {ModalComponent} from '../../components/modal/modal.component';
   imports: [
     FormsModule,
     RouterModule,
-    MatStepperModule, MatSidenavModule, MatButtonModule, MatChipsModule,
-    ReactiveFormsModule, MatCardModule, MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule,
-    MatDatepickerModule, MatIconModule, MatButtonModule, OrderByPipe, MatExpansionModule],
+    ReactiveFormsModule, FormsModule, OrderByPipe, ],
   providers: [
     EvenementService,
     BenevoleService,
@@ -264,5 +248,5 @@ export class GestionBenevolesComponent implements OnInit {
   }
 
 
-  dialog = inject(MatDialog);
+  dialog = inject(BootstrapModalService);
 }

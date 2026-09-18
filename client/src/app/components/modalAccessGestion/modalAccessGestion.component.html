@@ -1,38 +1,41 @@
-<form [formGroup]="authorizeForm">
-<h2 mat-dialog-title>{{data.title}}</h2>
-<mat-dialog-content>
+<form [formGroup]="authorizeForm" (ngSubmit)="resetMode ? requestPasswordReset() : accept()">
+<h2 class="modal-title h5">{{data.title}}</h2>
+<div class="modal-body">
 
   @if (!resetMode) {
-  <mat-form-field>
-    <mat-label>Identifiant</mat-label>
-    <input matInput formControlName="username" autocomplete="username">
-  </mat-form-field>
+  <div class="mb-3">
+    <label class="form-label">Identifiant</label>
+    <input class="form-control" formControlName="username" autocomplete="username">
+  </div>
 
-  <mat-form-field>
-    <mat-label>Mot de passe</mat-label>
-    <input matInput formControlName="password" [type]="passwordVisible ? 'text' : 'password'" autocomplete="current-password" (keyup.enter)="accept(authorizeForm)">
-    <button type="button" mat-icon-button matSuffix (click)="passwordVisible = !passwordVisible" [attr.aria-label]="'Hide password'"
+  <div class="mb-3">
+    <label class="form-label">Mot de passe</label>
+    <input class="form-control" formControlName="password" [type]="passwordVisible ? 'text' : 'password'" autocomplete="current-password">
+    <button class="btn btn-outline-primary" type="button" (click)="passwordVisible = !passwordVisible" [attr.aria-label]="'Hide password'"
               [attr.aria-pressed]="!passwordVisible">
-        <mat-icon>{{passwordVisible ? 'visibility' : 'visibility_off'}}</mat-icon>
+        <span class="app-icon">{{passwordVisible ? 'visibility' : 'visibility_off'}}</span>
       </button>
 
-  </mat-form-field>
+  </div>
+  @if (connexionError) {
+    <p class="text-danger" role="alert">{{ connexionError }}</p>
+  }
   } @else {
     @if (resetSent) {
       <p>Si cette adresse correspond à un compte administrateur, un lien de réinitialisation vient d'être envoyé.</p>
     } @else {
       <p>Indiquez l'adresse e-mail associée à votre compte administrateur.</p>
-      <mat-form-field>
-        <mat-label>Adresse e-mail</mat-label>
-        <input matInput [formControl]="resetForm.controls.email" type="email" autocomplete="email" (keyup.enter)="requestPasswordReset()">
-      </mat-form-field>
+      <div class="mb-3">
+        <label class="form-label">Adresse e-mail</label>
+        <input class="form-control" [formControl]="resetForm.controls.email" type="email" autocomplete="email">
+      </div>
       @if (resetError) {
         <p class="text-danger">L'envoi n'a pas pu être effectué. Réessayez plus tard.</p>
       }
     }
   }
 
-</mat-dialog-content>
+</div>
 
 
 
@@ -40,15 +43,15 @@
   
  
 
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="cancel()">Non</button>
+<div class="modal-footer">
+  <button class="btn btn-outline-primary" type="button" (click)="cancel()" [disabled]="connexionEnCours">Non</button>
   @if (!resetMode) {
-    <button mat-button type="button" (click)="resetMode = true">Mot de passe oublié ?</button>
-    <button mat-button cdkFocusInitial (click)="accept(authorizeForm)" [disabled]="authorizeForm.invalid">Connexion</button>
+    <button class="btn btn-outline-primary" type="button" (click)="resetMode = true" [disabled]="connexionEnCours">Mot de passe oublié ?</button>
+    <button class="btn btn-outline-primary" type="submit" [disabled]="authorizeForm.invalid || connexionEnCours">{{ connexionEnCours ? 'Connexion…' : 'Connexion' }}</button>
   } @else if (!resetSent) {
-    <button mat-button type="button" (click)="showLogin()">Retour</button>
-    <button mat-button cdkFocusInitial type="button" (click)="requestPasswordReset()" [disabled]="resetForm.invalid">Envoyer le lien</button>
+    <button class="btn btn-outline-primary" type="button" (click)="showLogin()">Retour</button>
+    <button class="btn btn-outline-primary" type="button" (click)="requestPasswordReset()" [disabled]="resetForm.invalid">Envoyer le lien</button>
   }
-</mat-dialog-actions>
+</div>
 
 </form>

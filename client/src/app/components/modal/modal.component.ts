@@ -1,25 +1,16 @@
-import {Component, inject} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
-import {
-  MatDialogActions,
-  MatDialogClose,
-  MAT_DIALOG_DATA,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import {Component} from '@angular/core';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [MatButtonModule, MatDialogActions, MatDialogClose, MatDialogTitle, MatDialogContent],
   templateUrl: './modal.component.html',
   styleUrl: './modal.component.scss'
 })
 export class ModalComponent {
-  data = inject(MAT_DIALOG_DATA);
+  data: { title?: string; question?: string } = {};
 
-  constructor(public dialogRef: MatDialogRef<ModalComponent>){}
+  constructor(public dialogRef: NgbActiveModal){}
 
   cancel() {
     this.dialogRef.close('cancel');

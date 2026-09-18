@@ -4,21 +4,21 @@
 <div class="row marge">
   <div class="col-sm-12">
 
-    <mat-card appearance="raised">
-      <mat-grid-list cols="3" rowHeight="50px">
-        <mat-grid-tile [colspan]="2">
+    <section class="card shadow-sm mb-3">
+      <div class="row g-3">
+        <div class="col">
 
-          <button class="full-width" mat-flat-button type="button" (click)="update()">Enregistrer les
+          <button class="full-width" type="button" (click)="update()">Enregistrer les
             modifications</button>
 
-        </mat-grid-tile>
-        <mat-grid-tile>
+        </div>
+        <div class="col">
 
 
 
-        </mat-grid-tile>
-      </mat-grid-list>
-    </mat-card>
+        </div>
+      </div>
+    </section>
 
 
   </div>
@@ -28,279 +28,276 @@
 
 
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
       <form [formGroup]="formulaireEvent">
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Nom de l'évènement</mat-label>
-            <input type="text" matInput formControlName="eventName">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">Nom de l'évènement</label>
+            <input class="form-control" type="text" formControlName="eventName">
 
             @if (formulaireEvent.get('eventName')?.hasError('required')) {
-            <mat-error>Le nom de l'évènement est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">Le nom de l'évènement est obligatoire</div>
             }
 
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
 
 
 
 
-        <mat-card-content>
+        <div class="card-body">
 
-          <mat-form-field>
-            <mat-label>Vidange de la base donnée des bénévoles</mat-label>
-            <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="dp" formControlName="endDate">
-
-            <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
-            <mat-datepicker #dp></mat-datepicker>
+          <div class="mb-3">
+            <label class="form-label">Vidange de la base donnée des bénévoles</label>
+            <input class="form-control" type="date" [min]="minDate" [max]="maxDate" formControlName="endDate">
             @if (formulaireEvent.get('endDate')?.hasError('min')) {
-            <mat-error>La date minimale est {{minDate}}</mat-error>
+            <div class="invalid-feedback d-block">La date minimale est {{minDate}}</div>
             }
 
-          </mat-form-field>
+          </div>
 
-        </mat-card-content>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Nom complet du contact</mat-label>
-            <input type="text" matInput formControlName="contact">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">Nom complet du contact</label>
+            <input class="form-control" type="text" formControlName="contact">
 
             @if (formulaireEvent.get('contact')?.hasError('required')) {
-            <mat-error>Le nom du contact est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">Le nom du contact est obligatoire</div>
             }
 
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Numéro de tel du téléphone</mat-label>
-            <input type="text" matInput formControlName="contactTel">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">Numéro de tel du téléphone</label>
+            <input class="form-control" type="text" formControlName="contactTel">
 
             @if (formulaireEvent.get('contactTel')?.hasError('required')) {
-            <mat-error>Le nom du contactTel est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">Le nom du contactTel est obligatoire</div>
             }
 
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Nom complet du contactEmail</mat-label>
-            <input type="email" matInput formControlName="contactEmail">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">Nom complet du contactEmail</label>
+            <input class="form-control" type="email" formControlName="contactEmail">
 
             @if (formulaireEvent.get('contactEmail')?.hasError('required')) {
-            <mat-error>Le nom du contactTel est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">Le nom du contactTel est obligatoire</div>
             }
 
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Nom complet du sitepersourl</mat-label>
-            <input type="text" matInput formControlName="sitepersourl">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">Nom complet du sitepersourl</label>
+            <input class="form-control" type="text" formControlName="sitepersourl">
 
             @if (formulaireEvent.get('sitepersourl')?.hasError('required')) {
-            <mat-error>Le nom du contactTel est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">Le nom du contactTel est obligatoire</div>
             }
 
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="basique" (change)="updateConnexionParams()">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="basique" (change)="updateConnexionParams()">
             Connexion simplifiée (uniquement un prénom) ?
-          </mat-slide-toggle>
-        </mat-card-content>
+          </label>
+        </div>
         @if (!formulaireEvent.get('basique')?.value){
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="needtel">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="needtel">
             Besoin du téléphone des bénévoles?
-          </mat-slide-toggle>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-slide-toggle formControlName="notification">
+          </label>
+        </div>
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="notification">
             Les bénévoles recoivent un mail de confirmation ?
-          </mat-slide-toggle>
-        </mat-card-content>
+          </label>
+        </div>
         }
-        <mat-card-content>
-          <mat-slide-toggle formControlName="copie">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="copie">
            Souhaiez vous une copie des mails de confirmation ?
-          </mat-slide-toggle>
-        </mat-card-content>
+          </label>
+        </div>
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="afficherBenevoles">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="afficherBenevoles">
             Affichage du prenom des bénévoles déjà inscrits sur les boutons de selection?
-          </mat-slide-toggle>
+          </label>
 
-        </mat-card-content>
+        </div>
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="afficherMessageAccueil">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="afficherMessageAccueil">
             Afficher le message ci dessous dans la page d'accueil ?
-          </mat-slide-toggle>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-label>Message d'accueil</mat-label>
+          </label>
+        </div>
+        <div class="card-body">
+          <label class="form-label">Message d'accueil</label>
           <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageAccueil"> </ngx-editor-menu>
           <ngx-editor [editor]="editorMessageAccueil" formControlName="messageAccueil" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
-        </mat-card-content>
+        </div>
 
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="afficherMessagePlanning">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="afficherMessagePlanning">
             Afficher le message ci dessous dans le planning?
-          </mat-slide-toggle>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-label>Message du planning</mat-label>
+          </label>
+        </div>
+        <div class="card-body">
+          <label class="form-label">Message du planning</label>
           <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessagePlanning"> </ngx-editor-menu>
           <ngx-editor [editor]="editorMessagePlanning" formControlName="messagePlanning" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
-        </mat-card-content>
+        </div>
 
 
 
-        <mat-card-content>
-          <mat-slide-toggle formControlName="afficherMessageInfo">
+        <div class="card-body">
+          <label class="form-check form-switch" formControlName="afficherMessageInfo">
             Afficher le message ci dessous dans la page d'info?
-          </mat-slide-toggle>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-label>Message d'accueil</mat-label>
+          </label>
+        </div>
+        <div class="card-body">
+          <label class="form-label">Message d'accueil</label>
           <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageInfo"> </ngx-editor-menu>
           <ngx-editor [editor]="editorMessageInfo" formControlName="messageInfo" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
-        </mat-card-content>
+        </div>
       </form>
 
-    </mat-card>
+    </section>
 
   </div>
 
 
   <div class="col-md-4">
 
-    <mat-card appearance="raised">
+    <section class="card shadow-sm mb-3">
       <form [formGroup]="formulaireEvent">
-        <mat-card-content>
-          <mat-label>Contenu de l'email de validation</mat-label>
+        <div class="card-body">
+          <label class="form-label">Contenu de l'email de validation</label>
           <ngx-editor-menu [toolbar]="toolbar" [editor]="editorValidation"> </ngx-editor-menu>
           <ngx-editor [editor]="editorValidation" formControlName="validation" [disabled]="false"  [placeholder]="'Contenu'"></ngx-editor>
 
 
 
-        </mat-card-content>
+        </div>
 
-        <mat-card-content>
+        <div class="card-body">
 
-          <mat-label>Signature automatique des emails de l'application</mat-label>
+          <label class="form-label">Signature automatique des emails de l'application</label>
           <ngx-editor-menu [toolbar]="toolbar" [editor]="editorSignature"> </ngx-editor-menu>
           <ngx-editor [editor]="editorSignature" formControlName="signature" [disabled]="false"  [placeholder]="'Une signature dans les mails de validation'"></ngx-editor>
 
 
-        </mat-card-content>
+        </div>
 
 
 
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>La couleur du fond</mat-label>
-            <input type="color" matInput formControlName="couleurFond" (change)="forceUpdateEvenement()">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">La couleur du fond</label>
+            <input class="form-control" type="color" formControlName="couleurFond" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurFond')?.hasError('required')) {
-            <mat-error>La couleur du fond est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">La couleur du fond est obligatoire</div>
             }
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>La couleur du bandeau</mat-label>
-            <input type="color" matInput formControlName="couleurBandeau" (change)="forceUpdateEvenement()">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">La couleur du bandeau</label>
+            <input class="form-control" type="color" formControlName="couleurBandeau" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurBandeau')?.hasError('required')) {
-            <mat-error>La couleur du bandeau est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">La couleur du bandeau est obligatoire</div>
             }
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>La couleur du texte du bandeau</mat-label>
-            <input type="color" matInput formControlName="couleurText" (change)="forceUpdateEvenement()">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">La couleur du texte du bandeau</label>
+            <input class="form-control" type="color" formControlName="couleurText" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurText')?.hasError('required')) {
-            <mat-error>La couleur du texte du bandeau est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">La couleur du texte du bandeau est obligatoire</div>
             }
-          </mat-form-field>
-        </mat-card-content>
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>La couleur des titres</mat-label>
-            <input type="color" matInput formControlName="couleurTitre" (change)="forceUpdateEvenement()">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">La couleur des titres</label>
+            <input class="form-control" type="color" formControlName="couleurTitre" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurTitre')?.hasError('required')) {
-            <mat-error>La couleur des titres est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">La couleur des titres est obligatoire</div>
             }
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>La couleur des Bloques</mat-label>
-            <input type="color" matInput formControlName="couleurCard" (change)="forceUpdateEvenement()">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">La couleur des Bloques</label>
+            <input class="form-control" type="color" formControlName="couleurCard" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurCard')?.hasError('required')) {
-            <mat-error>La couleur des Bloques est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">La couleur des Bloques est obligatoire</div>
             }
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>La couleur des menus de stands</mat-label>
-            <input type="color" matInput formControlName="couleurBloc" (change)="forceUpdateEvenement()">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">La couleur des menus de stands</label>
+            <input class="form-control" type="color" formControlName="couleurBloc" (change)="forceUpdateEvenement()">
             @if (formulaireEvent.get('couleurBloc')?.hasError('required')) {
-            <mat-error>La couleur des des menus de stands est obligatoire</mat-error>
+            <div class="invalid-feedback d-block">La couleur des des menus de stands est obligatoire</div>
             }
-          </mat-form-field>
-        </mat-card-content>
+          </div>
+        </div>
 
 
-        <mat-card-content>
-          <mat-form-field class="full-width">
-            <mat-label>Besoin</mat-label>
-            <mat-select formControlName="titleFont" (selectionChange)="forceUpdateEvenement()">
+        <div class="card-body">
+          <div class="mb-3 full-width">
+            <label class="form-label">Besoin</label>
+            <select class="form-select" formControlName="titleFont" (change)="forceUpdateEvenement()">
               @for (font of fontList; track font) {
-              <mat-option [value]="font">{{ font }}</mat-option>
+              <option [value]="font">{{ font }}</option>
               }
-            </mat-select>
-          </mat-form-field>
-        </mat-card-content>
+            </select>
+          </div>
+        </div>
       </form>
 
-    </mat-card>
+    </section>
 
   </div>
 
 
   <div class="col-md-4">
 
-    <mat-card appearance="raised">
-      <mat-card-content>
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
 
         @if (logo) {
-        <img mat-card-image [src]="logo" alt="logo">
+        <img [src]="logo" alt="logo">
         }
 
 
 
-        <button class="full-width" type="button" mat-stroked-button (click)="fileInput.click()">Modifier le
+        <button class="full-width" type="button" (click)="fileInput.click()">Modifier le
           logo</button>
-        <input hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
+        <input class="form-control" hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
         @if (croppedImage.length > 5) {
-        <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadImage()">Enregistrer cette
+        <button class="full-width text-danger" type="button" (click)="uploadImage()">Enregistrer cette
           image</button>
         }
 
@@ -310,21 +307,21 @@
         </image-cropper>
 
 
-      </mat-card-content>
-    </mat-card>
-    <mat-card appearance="raised">
-      <mat-card-content>
+      </div>
+    </section>
+    <section class="card shadow-sm mb-3">
+      <div class="card-body">
 
         @if (affiche) {
-          <img mat-card-image [src]="affiche" alt="Affiche">
+          <img [src]="affiche" alt="Affiche">
           }
 
 
-        <button class="full-width" type="button" mat-stroked-button (click)="afficheInput.click()">Modifier l'affiche de
+        <button class="full-width" type="button" (click)="afficheInput.click()">Modifier l'affiche de
           l'évènement</button>
-        <input hidden (change)="afficheChangeEvent($event)" #afficheInput type="file" id="affiche" accept="image/*">
+        <input class="form-control" hidden (change)="afficheChangeEvent($event)" #afficheInput type="file" id="affiche" accept="image/*">
         @if (croppedAffiche.length > 5) {
-        <button class="full-width mat-error" mat-stroked-button type="button" (click)="uploadAffiche()">Enregistrer cette
+        <button class="full-width text-danger" type="button" (click)="uploadAffiche()">Enregistrer cette
           image</button>
         }
 
@@ -334,8 +331,8 @@
         </image-cropper>
 
 
-      </mat-card-content>
-    </mat-card>
+      </div>
+    </section>
 
 
   </div>

@@ -32,3 +32,7 @@ app:
   bootstrap-admin:
     username: ${APP_BOOTSTRAP_ADMIN_USERNAME:}
     password: ${APP_BOOTSTRAP_ADMIN_PASSWORD:}
+  # À définir en production avec une valeur aléatoire d'au moins 32 caractères.
+  jwt:
+    secret: ${APP_JWT_SECRET:changez-cette-cle-de-developpement-avant-la-production-2026}
+    expiration-seconds: ${APP_JWT_EXPIRATION_SECONDS:28800}

@@ -1,22 +1,16 @@
 import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { Benevole, Croisement, Evenement, Stand } from '../../models';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { BenevoleService, StandService, TransmissionService } from '../../services';
 import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { OrderByPipe } from "../../services/sort.pipe";
-import { MatIconModule } from '@angular/material/icon';
 import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [NgClass, MatButtonModule, MatCardModule, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, MatExpansionModule, MatIconModule, OrderByPipe],
+  imports: [NgClass, FormsModule, ReactiveFormsModule, OrderByPipe],
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.scss'
 })

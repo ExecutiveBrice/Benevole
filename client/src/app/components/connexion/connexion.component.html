@@ -1,151 +1,151 @@
 
 
 @if (!userExist) {
-<mat-card appearance="raised">
+<section class="card shadow-sm mb-3">
   @if (!evenement.basique) {
   @if (!inconnu) {
-  <mat-card-header>
-    <mat-card-title> <strong>Connectez vous :</strong></mat-card-title>
-  </mat-card-header>
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0"> <strong>Connectez vous :</strong></h2>
+  </header>
 
   <form [formGroup]="formulaire">
-    <mat-card-content>
-      <mat-form-field class="full-width">
-        <mat-label>Email</mat-label>
-        <input type="email" matInput formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
+    <div class="card-body">
+      <div class="mb-3 full-width">
+        <label class="form-label">Email</label>
+        <input class="form-control" type="email" formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
         @if (formulaire.get('email')?.hasError('email')) {
-        <mat-error>Le format est incorrecte</mat-error>
+        <div class="invalid-feedback d-block">Le format est incorrecte</div>
         }
         @if (formulaire.get('email')?.hasError('required')) {
-        <mat-error>L'email est obligatoire</mat-error>
+        <div class="invalid-feedback d-block">L'email est obligatoire</div>
         }
-        <mat-hint>C'est le contact privilégié pour échanger avec vous</mat-hint>
-      </mat-form-field>
-    </mat-card-content>
+        <div class="form-text">C'est le contact privilégié pour échanger avec vous</div>
+      </div>
+    </div>
 
 
-    <mat-card-content>
-      <button class="full-width" mat-stroked-button type="submit" (click)="find()">Entrer</button>
-    </mat-card-content>
+    <div class="card-body">
+      <button class="full-width" type="submit" (click)="find()">Entrer</button>
+    </div>
   </form>
   }@else {
-  <mat-card-header>
-    <mat-card-title> <strong>Inscrivez vous :</strong></mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0"> <strong>Inscrivez vous :</strong></h2>
+  </header>
+  <div class="card-body">
     Nous ne nous connaissons pas encore. Nous avons simplement besoin de votre nom et prénom pour communiquer plus
     poliement avec vous.
-  </mat-card-content>
+  </div>
 
 
   <form [formGroup]="formulaireBenevole">
-    <mat-card-content>
-      <mat-form-field class="full-width">
-        <mat-label>Email</mat-label>
-        <input type="email" matInput formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
+    <div class="card-body">
+      <div class="mb-3 full-width">
+        <label class="form-label">Email</label>
+        <input class="form-control" type="email" formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
         @if (formulaire.get('email')?.hasError('email')) {
-        <mat-error>Le format est incorrecte</mat-error>
+        <div class="invalid-feedback d-block">Le format est incorrecte</div>
         }
         @if (formulaire.get('email')?.hasError('required')) {
-        <mat-error>L'email est obligatoire</mat-error>
+        <div class="invalid-feedback d-block">L'email est obligatoire</div>
         }
-        <mat-hint>C'est le contact pour échanger avec vous</mat-hint>
-      </mat-form-field>
-    </mat-card-content>
+        <div class="form-text">C'est le contact pour échanger avec vous</div>
+      </div>
+    </div>
 
 
-    <mat-card-content>
+    <div class="card-body">
 
-      <mat-form-field class="full-width">
-        <mat-label>Nom</mat-label>
-        <input matInput formControlName="nom" placeholder="Ex: Connor">
+      <div class="mb-3 full-width">
+        <label class="form-label">Nom</label>
+        <input class="form-control" formControlName="nom" placeholder="Ex: Connor">
         @if (formulaireBenevole.get('nom')?.hasError('required')) {
-        <mat-error>Les organisateurs en auront besoin !</mat-error>
+        <div class="invalid-feedback d-block">Les organisateurs en auront besoin !</div>
         }
         @if (formulaireBenevole.get('nom')?.hasError('minlength')) {
-        <mat-error>C'est un peu court comme nom!</mat-error>
+        <div class="invalid-feedback d-block">C'est un peu court comme nom!</div>
         }
-        <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
-      </mat-form-field>
+        <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
+      </div>
 
-    </mat-card-content>
-    <mat-card-content>
+    </div>
+    <div class="card-body">
 
-      <mat-form-field class="full-width">
-        <mat-label>Prenom</mat-label>
-        <input matInput formControlName="prenom" placeholder="Ex: Célia">
+      <div class="mb-3 full-width">
+        <label class="form-label">Prenom</label>
+        <input class="form-control" formControlName="prenom" placeholder="Ex: Célia">
         @if (formulaireBenevole.get('prenom')?.hasError('required')) {
-        <mat-error>Les organisateurs en auront besoin !</mat-error>
+        <div class="invalid-feedback d-block">Les organisateurs en auront besoin !</div>
         }
         @if (formulaireBenevole.get('prenom')?.hasError('minlength')) {
-        <mat-error>C'est un peu court comme prenom!</mat-error>
+        <div class="invalid-feedback d-block">C'est un peu court comme prenom!</div>
         }
-        <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-content>
+        <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
+      </div>
+    </div>
+    <div class="card-body">
 
       @if (!formulaireBenevole.get('telephone')?.disabled) {
-      <mat-form-field class="full-width">
-        <mat-label>Téléphone</mat-label>
-        <input matInput formControlName="telephone">
+      <div class="mb-3 full-width">
+        <label class="form-label">Téléphone</label>
+        <input class="form-control" formControlName="telephone">
         @if (formulaireBenevole.get('nom')?.hasError('required')) {
-          <mat-error>Les organisateurs en auront besoin !</mat-error>
+          <div class="invalid-feedback d-block">Les organisateurs en auront besoin !</div>
           }
-        <mat-hint>Un numéro de tel pour être plus efficace!</mat-hint>
-      </mat-form-field>
+        <div class="form-text">Un numéro de tel pour être plus efficace!</div>
+      </div>
       }
-    </mat-card-content>
-    <mat-card-content>
+    </div>
+    <div class="card-body">
 
 
-      <button class="full-width" mat-stroked-button type="submit" (click)="addBenevole()">Je m'inscris</button>
-    </mat-card-content>
+      <button class="full-width" type="submit" (click)="addBenevole()">Je m'inscris</button>
+    </div>
   </form>
   }
   } @else {
     <form [formGroup]="formulaireBenevole">
-      <mat-card-content>
-        <mat-form-field class="full-width">
-          <mat-label>Prenom</mat-label>
-          <input matInput formControlName="prenom" placeholder="Ex: Sarah">
+      <div class="card-body">
+        <div class="mb-3 full-width">
+          <label class="form-label">Prenom</label>
+          <input class="form-control" formControlName="prenom" placeholder="Ex: Sarah">
           @if (formulaireBenevole.get('prenom')?.hasError('required')) {
-            <mat-error>Les organisateurs en auront besoin !</mat-error>
+            <div class="invalid-feedback d-block">Les organisateurs en auront besoin !</div>
           }
           @if (formulaireBenevole.get('prenom')?.hasError('minlength')) {
-            <mat-error>C'est un peu court comme prenom!</mat-error>
+            <div class="invalid-feedback d-block">C'est un peu court comme prenom!</div>
           }
-          <mat-hint>Pour vous identifier sur le planning et dans les échanges</mat-hint>
-        </mat-form-field>
-      </mat-card-content>
+          <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
+        </div>
+      </div>
 
 
-      <mat-card-content>
-        <button class="full-width" mat-stroked-button type="submit" (click)="connexionBasique()">Entrer</button>
-      </mat-card-content>
+      <div class="card-body">
+        <button class="full-width" type="submit" (click)="connexionBasique()">Entrer</button>
+      </div>
     </form>
   }
 
 
-</mat-card>
+</section>
 }
 
 @if (userExist) {
-<mat-card appearance="raised">
-  <mat-card-header>
-    <mat-card-title>Bonjour {{ formulaireBenevole.value.prenom }}   <mat-icon (click)="exit()" class="red-icon" >exit_to_app</mat-icon></mat-card-title>
+<section class="card shadow-sm mb-3">
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0">Bonjour {{ formulaireBenevole.value.prenom }}   <span class="app-icon" (click)="exit()" class="red-icon" >exit_to_app</span></h2>
 
-  </mat-card-header>
+  </header>
 
   @if(benevole && benevole.croisements != undefined && benevole.croisements.length == 0){
-  <mat-card-content>
+  <div class="card-body">
     <strong>Ajoutez un moment de bénévolat !</strong><br>
     Cliquez sur le planing puis choisissez le créneau qui vous convient.<br>
     Vous pouvez en choisir plusieurs !
-  </mat-card-content>
+  </div>
   }
   @if(benevole && benevole.croisements != undefined && benevole.croisements.length > 0){
-  <ul> <mat-card-content>
+  <ul> <div class="card-body">
       @for (croisement of benevole.croisements | orderBy:'creneau.ordre':false; track $index) {
       <li>
         {{croisement.creneau.plage}} :
@@ -153,30 +153,30 @@
         <span class="red" (click)="retraitCroisement(croisement)">X</span>
       </li>
       }
-    </mat-card-content>
+    </div>
   </ul>
   }
 
-</mat-card>
+</section>
 }
 
 @if (evenement.afficherMessageAccueil) {
-  <mat-card appearance="raised">
-    <mat-card-header>
-      <mat-card-title> <strong>Informations :</strong></mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  <section class="card shadow-sm mb-3">
+    <header class="card-header text-center">
+      <h2 class="card-title h5 mb-0"> <strong>Informations :</strong></h2>
+    </header>
+    <div class="card-body">
       <div [innerHtml]="evenement.messageAccueil"></div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 }
 
-<mat-card appearance="raised">
-  <mat-card-header>
-    <mat-card-title> <strong>Informations :</strong></mat-card-title>
+<section class="card shadow-sm mb-3">
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0"> <strong>Informations :</strong></h2>
 
-  </mat-card-header>
-  <mat-card-content>
+  </header>
+  <div class="card-body">
     <div class="row">
       <div class="col-12">
         <b>Organisateur</b>
@@ -199,6 +199,6 @@
 
 
     </div>
-  </mat-card-content>
+  </div>
 
-</mat-card>
+</section>

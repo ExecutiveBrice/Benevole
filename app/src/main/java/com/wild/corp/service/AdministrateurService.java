@@ -4,6 +4,7 @@ import com.wild.corp.model.Administrateur;
 import com.wild.corp.model.Evenement;
 import com.wild.corp.model.PasswordResetToken;
 import com.wild.corp.model.Ressources.AdministrateurCreationRessource;
+import com.wild.corp.model.Ressources.AdministrateurMiseAJourRessource;
 import com.wild.corp.model.Ressources.AdministrateurRessource;
 import com.wild.corp.model.Ressources.DemandeReinitialisationMotDePasseRessource;
 import com.wild.corp.model.Ressources.ReinitialisationMotDePasseRessource;
@@ -71,25 +72,65 @@ public class AdministrateurService implements UserDetailsService {
                 .build();
     }
 
-    public AdministrateurRessource creer(String createurUsername, AdministrateurCreationRessource request) {
+    public AdministrateurRessource creer(AdministrateurCreationRessource request) {
         String username = request.username().trim().toLowerCase();
         if (administrateurRepository.findByUsernameIgnoreCase(username).isPresent()) {
             throw new IllegalArgumentException("Cet identifiant est déjà utilisé");
         }
 
-        if (request.evenementIds() != null) {
-            request.evenementIds().forEach(evenementId -> verifierAccesEvenement(createurUsername, evenementId));
-        }
-
         Administrateur administrateur = new Administrateur();
         administrateur.setUsername(username);
-        administrateur.setPasswordHash(passwordEncoder.encode(request.password()));
-        administrateur.setEvenements(eventsFor(request.evenementIds()));
+        // Le mot de passe est choisi par le nouvel administrateur via le lien d'invitation.
+        // Un secret aléatoire rend toute connexion impossible avant cette étape.
+        administrateur.setPasswordHash(passwordEncoder.encode(genererSecretAleatoire()));
+        administrateur.setEnabled(true);
+        administrateur.setSuperadmin(request.superadmin());
+        administrateur.setEvenements(eventsFor(request.evenementIds(), request.superadmin()));
+        Administrateur administrateurCree = administrateurRepository.save(administrateur);
+        creerEtEnvoyerJetonInvitation(administrateurCree);
+        return toRessource(administrateurCree);
+    }
+
+    public AdministrateurRessource mettreAJour(Integer id, AdministrateurMiseAJourRessource request) {
+        Administrateur administrateur = administrateurRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Administrateur introuvable"));
+        String username = request.username().trim().toLowerCase();
+        administrateurRepository.findByUsernameIgnoreCase(username)
+                .filter(existant -> !existant.getId().equals(id))
+                .ifPresent(existant -> { throw new IllegalArgumentException("Cet identifiant est déjà utilisé"); });
+
+        boolean retireDernierSuperadministrateur = administrateur.isEnabled() && administrateur.isSuperadmin()
+                && (!request.enabled() || !request.superadmin());
+        if (retireDernierSuperadministrateur && nombreSuperadministrateursActifs() <= 1) {
+            throw new IllegalArgumentException("Il doit rester au moins un super-administrateur actif");
+        }
+
+        administrateur.setUsername(username);
+        administrateur.setEnabled(request.enabled());
+        administrateur.setSuperadmin(request.superadmin());
+        if (request.password() != null && !request.password().isBlank()) {
+            administrateur.setPasswordHash(passwordEncoder.encode(request.password()));
+        }
+        administrateur.setEvenements(eventsFor(request.evenementIds(), request.superadmin()));
         return toRessource(administrateurRepository.save(administrateur));
     }
 
     public AdministrateurRessource moi(String username) {
         return toRessource(getByUsername(username));
+    }
+
+    /** Vérifie les identifiants sans les conserver dans le navigateur. */
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public String authentifier(String username, String password) {
+        return administrateurRepository.findByUsernameIgnoreCase(username.trim())
+                .filter(Administrateur::isEnabled)
+                .filter(administrateur -> passwordEncoder.matches(password, administrateur.getPasswordHash()))
+                .map(Administrateur::getUsername)
+                .orElse(null);
+    }
+
+    public List<AdministrateurRessource> lister() {
+        return administrateurRepository.findAll().stream().map(this::toRessource).toList();
     }
 
     /** Réponse identique qu'un compte existe ou non pour ne pas révéler les adresses enregistrées. */
@@ -117,16 +158,32 @@ public class AdministrateurService implements UserDetailsService {
     /** Associe automatiquement un événement à l'administrateur qui le crée. */
     public void associerEvenement(String username, Integer evenementId) {
         Administrateur administrateur = getByUsername(username);
+        // Un super-administrateur peut gérer tous les évènements sans affectation dédiée.
+        if (administrateur.isSuperadmin()) {
+            return;
+        }
         Evenement evenement = evenementRepository.findById(evenementId)
                 .orElseThrow(() -> new IllegalArgumentException("Événement introuvable"));
         administrateur.getEvenements().add(evenement);
     }
 
     public void verifierAccesEvenement(String username, Integer evenementId) {
+        if (getByUsername(username).isSuperadmin()) {
+            return;
+        }
         boolean autorise = administrateurRepository.findEvenementsByUsername(username).stream()
                 .anyMatch(evenement -> evenement.getId().equals(evenementId));
         if (!autorise) {
             throw new AccessDeniedException("Vous n'êtes pas administrateur de cet événement");
+        }
+    }
+
+    /**
+     * La gestion transversale est réservée aux super-administrateurs.
+     */
+    public void verifierAccesGlobal(String username) {
+        if (!getByUsername(username).isSuperadmin()) {
+            throw new AccessDeniedException("Vous n'êtes pas super-administrateur");
         }
     }
 
@@ -135,9 +192,12 @@ public class AdministrateurService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Administrateur introuvable"));
     }
 
-    private Set<Evenement> eventsFor(Set<Integer> evenementIds) {
+    private Set<Evenement> eventsFor(Set<Integer> evenementIds, boolean superadmin) {
         if (evenementIds == null || evenementIds.isEmpty()) {
-            return new HashSet<>();
+            if (superadmin) {
+                return new HashSet<>();
+            }
+            throw new IllegalArgumentException("Sélectionnez au moins un événement ou activez le rôle super-administrateur");
         }
         List<Evenement> evenements = evenementRepository.findAllById(evenementIds);
         if (evenements.size() != evenementIds.size()) {
@@ -151,22 +211,44 @@ public class AdministrateurService implements UserDetailsService {
                 .map(Evenement::getId)
                 .collect(java.util.stream.Collectors.toSet());
         return new AdministrateurRessource(administrateur.getId(), administrateur.getUsername(),
-                administrateur.isEnabled(), evenementIds);
+                administrateur.isEnabled(), administrateur.isSuperadmin(), evenementIds);
+    }
+
+    private long nombreSuperadministrateursActifs() {
+        return administrateurRepository.findAll().stream()
+                .filter(Administrateur::isEnabled)
+                .filter(Administrateur::isSuperadmin)
+                .count();
     }
 
     private void creerEtEnvoyerJetonReinitialisation(Administrateur administrateur) {
+        String tokenBrut = creerJetonReinitialisation(administrateur);
+        emailService.sendPasswordResetMessage(administrateur.getUsername(),
+                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+    }
+
+    private void creerEtEnvoyerJetonInvitation(Administrateur administrateur) {
+        String tokenBrut = creerJetonReinitialisation(administrateur);
+        emailService.sendAdministratorInvitationMessage(administrateur.getUsername(),
+                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+    }
+
+    private String creerJetonReinitialisation(Administrateur administrateur) {
         passwordResetTokenRepository.deleteByAdministrateur(administrateur);
-        byte[] randomBytes = new byte[32];
-        secureRandom.nextBytes(randomBytes);
-        String tokenBrut = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+        String tokenBrut = genererSecretAleatoire();
 
         PasswordResetToken token = new PasswordResetToken();
         token.setAdministrateur(administrateur);
         token.setTokenHash(hash(tokenBrut));
         token.setExpiresAt(Instant.now().plus(30, ChronoUnit.MINUTES));
         passwordResetTokenRepository.save(token);
-        emailService.sendPasswordResetMessage(administrateur.getUsername(),
-                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+        return tokenBrut;
+    }
+
+    private String genererSecretAleatoire() {
+        byte[] randomBytes = new byte[32];
+        secureRandom.nextBytes(randomBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 
     private String hash(String value) {
@@ -187,6 +269,9 @@ public class AdministrateurService implements UserDetailsService {
             @Value("${app.bootstrap-admin.username:}") String username,
             @Value("${app.bootstrap-admin.password:}") String password) {
         return args -> {
+            // Compatibilité avec les données existantes : auparavant, un compte sans
+            // évènement associé représentait un administrateur global.
+            administrateurRepository.migrerAdministrateursGlobauxHistoriques();
             if (username.isBlank() && password.isBlank()) {
                 return;
             }
@@ -201,6 +286,7 @@ public class AdministrateurService implements UserDetailsService {
                 Administrateur administrateur = new Administrateur();
                 administrateur.setUsername(username.trim().toLowerCase());
                 administrateur.setPasswordHash(passwordEncoder.encode(password));
+                administrateur.setSuperadmin(true);
                 administrateurRepository.save(administrateur);
             }
         };

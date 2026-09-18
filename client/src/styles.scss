@@ -1,5 +1,3 @@
-@import '@angular/material/prebuilt-themes/azure-blue.css';
-
 @font-face {
   font-family: Agu;
   src: url(app/assets/fonts/AguDisplay-Regular.ttf) format('truetype');
@@ -108,82 +106,16 @@
   src: url(app/assets/fonts/TradeWinds-Regular.ttf) format('truetype');
 }
 
-.mat-mdc-raised-button {
-  color: black!important;
-  padding: 0px !important;
-}
-mat-card {
-  margin-bottom: 10px;
-}
-
-.mat-expansion-panel {
-
-  margin-bottom: 10px !important;
-}
-
-.mat-expansion-panel-header {
-  background-color: rgb(176, 185, 231);
-
-}
-
 .toast-custom-rigth {
   top: 350px;
   left: 12px;
 }
 
-.mat-mdc-chip-disabled {
-  background-color: rgb(200, 200, 200) !important;
+.app-icon {
+  display: inline-block;
+  font-weight: 700;
 }
 
-.mat-expansion-panel-header-title {
-  flex-basis: unset !important;
-}
-
-.mat-expansion-panel-header-description {
-  font-size: x-small;
-}
-
-.mat-grid-tile {
-  font-size: smaller;
-}
-.mat-expansion-panel-body{
-  padding-top: 0px !important;
-padding-right: 5px!important;
-padding-bottom: 5px!important;
-padding-left: 5px!important;
-}
-
-.mat-mdc-card,
-.mat-expansion-panel,
-.mat-expansion-panel-header,
-.mat-mdc-standard-chip,
-.mdc-button,
-.mdc-flat-button,
-.mdc-icon-button,
-.mdc-stroked-button {
-  border-radius: 3px !important;
-}
-
-.mat-mdc-chip-option {
-  text-align: center;
-  width: 31%;
-  aspect-ratio: 5/4;
-  height: auto !important;
-}
-
-mat-card-header {
-  display: unset !important;
-  text-align: center;
-}
-
-.mat-mdc-form-field{
-  display: block !important;
-}
-
-.mat-mdc-tab-body-wrapper{
-  height: 100%;
-padding: 10px;
-}
 .warning {
   background-color: rgb(235, 157, 61) !important;
 }

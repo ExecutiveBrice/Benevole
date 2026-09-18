@@ -7,25 +7,14 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import QRCode from 'qrcode'
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 import { NgClass } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatStepperModule } from '@angular/material/stepper';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderByPipe } from '../../services/sort.pipe';
 import { Params } from '../../models/params';
-import { MatDialog } from '@angular/material/dialog';
 import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LocalStand } from '../../models/local/stand';
 import { ModalAccessGestionComponent } from '../../components/modalAccessGestion/modalAccessGestion.component';
+import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 
 
 @Component({
@@ -37,9 +26,7 @@ import { ModalAccessGestionComponent } from '../../components/modalAccessGestion
     NgxEditorModule,
     FormsModule,
     RouterModule,
-    MatStepperModule, MatCheckboxModule, ReactiveFormsModule, MatCardModule,
-    MatSelectModule,
-    FormsModule, MatFormFieldModule, MatInputModule, MatGridListModule, MatDatepickerModule, MatIconModule, MatButtonModule, MatExpansionModule],
+    ReactiveFormsModule, FormsModule, ],
   providers: [
     EvenementService,
     BenevoleService,
@@ -98,7 +85,7 @@ export class GestionComponent implements OnInit {
 
 
 
-  dialog = inject(MatDialog);
+  dialog = inject(BootstrapModalService);
 
   constructor(
     public route: ActivatedRoute,
@@ -162,8 +149,7 @@ export class GestionComponent implements OnInit {
       },
     }).afterClosed().subscribe(result => {
       this.connexionDialogOpen = false;
-      if (result instanceof FormGroup) {
-        this.authService.login(result.get('username')?.value, result.get('password')?.value);
+      if (result === true) {
         this.authorize = true;
         this.loadPage();
       } else {

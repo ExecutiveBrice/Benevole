@@ -8,7 +8,6 @@ import com.wild.corp.model.Stand;
 import com.wild.corp.repositories.EvenementRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +28,8 @@ public class EvenementService {
     @Autowired
     private CreneauService creneauService;
 
-    @Autowired
-    private BenevoleService benevoleService;
-
-    @Autowired
-    private Environment environment;
-
     public void persist(Evenement evenement) {
+        initialiserChampsTexte(evenement);
         evenementRepository.save(evenement);
         evenement.setLock(Constante.LOCK);
         evenement.setValidation(Constante.VALIDATION);
@@ -66,6 +60,42 @@ public class EvenementService {
 
     }
 
+    /**
+     * La création simplifiée ne demande que le nom de l'évènement. Certaines
+     * installations existantes conservent cependant des colonnes texte NOT NULL.
+     */
+    private void initialiserChampsTexte(Evenement evenement) {
+        evenement.setContact(valeurParDefaut(evenement.getContact()));
+        evenement.setContactTel(valeurParDefaut(evenement.getContactTel()));
+        evenement.setContactEmail(valeurParDefaut(evenement.getContactEmail()));
+        evenement.setSitepersourl(valeurParDefaut(evenement.getSitepersourl()));
+        evenement.setValidation(valeurParDefaut(evenement.getValidation()));
+        evenement.setSignature(valeurParDefaut(evenement.getSignature()));
+        evenement.setMessageAccueil(valeurParDefaut(evenement.getMessageAccueil()));
+        evenement.setMessagePlanning(valeurParDefaut(evenement.getMessagePlanning()));
+        evenement.setMessageInfo(valeurParDefaut(evenement.getMessageInfo()));
+        evenement.setCouleurFond(valeurParDefaut(evenement.getCouleurFond()));
+        evenement.setCouleurBandeau(valeurParDefaut(evenement.getCouleurBandeau()));
+        evenement.setCouleurText(valeurParDefaut(evenement.getCouleurText()));
+        evenement.setCouleurTitre(valeurParDefaut(evenement.getCouleurTitre()));
+        evenement.setCouleurBloc(valeurParDefaut(evenement.getCouleurBloc()));
+        evenement.setCouleurCard(valeurParDefaut(evenement.getCouleurCard()));
+        evenement.setTitleFont(valeurParDefaut(evenement.getTitleFont()));
+        evenement.setBasique(valeurParDefaut(evenement.getBasique()));
+        evenement.setNeedtel(valeurParDefaut(evenement.getNeedtel()));
+        evenement.setCopie(valeurParDefaut(evenement.getCopie()));
+        evenement.setNotification(valeurParDefaut(evenement.getNotification()));
+    }
+
+    private String valeurParDefaut(String valeur) {
+        return valeur == null ? "" : valeur;
+    }
+
+    private Boolean valeurParDefaut(Boolean valeur) {
+        return valeur == null ? Boolean.FALSE : valeur;
+    }
+
+
     String replaceText(String text, Evenement evenement) {
         text = text.replaceAll("<event_name>", String.valueOf(evenement.getEventName()));
 
@@ -75,6 +105,7 @@ public class EvenementService {
     public Evenement update(Evenement evenement) {
 
         Evenement event = findById(evenement.getId());
+        event.setStartDate(evenement.getStartDate());
         event.setEndDate(evenement.getEndDate());
         event.setEventName(evenement.getEventName());
         event.setContactTel(evenement.getContactTel());

@@ -6,10 +6,10 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { basicAuthenticationInterceptor } from './services/auth.interceptor';
+import { jwtAuthenticationInterceptor } from './services/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(withInterceptors([basicAuthenticationInterceptor])), provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideAnimationsAsync(),
+  providers: [provideHttpClient(withInterceptors([jwtAuthenticationInterceptor])), provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideAnimationsAsync(),
     {provide: LocationStrategy, useClass: HashLocationStrategy},
       provideAnimations(),
     ]

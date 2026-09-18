@@ -25,6 +25,7 @@ public class EvenementController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Evenement> add(@RequestBody Evenement evenement, Authentication authentication) {
+        administrateurService.verifierAccesGlobal(authentication.getName());
         evenementService.persist(evenement);
 
         if(evenement.getId() == null) {

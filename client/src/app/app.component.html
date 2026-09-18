@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg px-3 py-2" aria-label="Navigation principale">
     @if (logo) {
       @if (evenement?.sitepersourl) {
-        <a class="event-logo-link" [href]="evenement?.sitepersourl" target="_blank" rel="noopener">
+        <a class="event-logo-link" [href]="evenement.sitepersourl" target="_blank" rel="noopener">
           <img class="event-logo" [src]="logo" alt="Site de l'évènement">
         </a>
       } @else {
@@ -43,15 +43,18 @@
 
   @if (evenement?.id) {
     <a class="btn btn-outline-light footer-action" [routerLink]="['/', evenement.id, 'gestion']" [queryParams]="{ connexion: '1' }">
-      <mat-icon aria-hidden="true">settings</mat-icon>
+      <span class="app-icon" aria-hidden="true">settings</span>
       <span>Paramétrage</span>
     </a>
   } @else {
-    <span class="footer-action"></span>
+    <a class="btn btn-outline-light footer-action" [routerLink]="['/evenements/management']" [queryParams]="{ connexion: '1' }">
+      <span class="app-icon" aria-hidden="true">settings</span>
+      <span>Paramétrage</span>
+    </a>
   }
 
   <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener">
-    <mat-icon aria-hidden="true">help</mat-icon>
+    <span class="app-icon" aria-hidden="true">help</span>
     <span>Aide</span>
   </a>
 </footer>

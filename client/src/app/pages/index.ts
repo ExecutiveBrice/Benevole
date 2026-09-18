@@ -1,4 +1,3 @@
-﻿export * from './creation/creation.component';
 export * from './evenement/evenement.component';
 export * from './error/error.component';
 export * from './gestion/gestion.component';
@@ -8,4 +7,3 @@ export * from './gestionMajCreneaux/gestionMajCreneaux.component';
 export * from './gestionMajStands/gestionMajStands.component';
 export * from './gestionStands/gestionStands.component';
 export * from './gestionEvenements/gestionEvenements.component';
-

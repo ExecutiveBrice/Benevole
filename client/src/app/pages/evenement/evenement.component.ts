@@ -5,13 +5,7 @@ import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Evenement } from '../../models';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
 import { ToastService } from '../../services';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConnexionComponent } from "../../components/connexion/connexion.component";
 import { PlanningComponent } from "../../components/planning/planning.component";
@@ -24,13 +18,8 @@ import { NgClass } from '@angular/common';
   templateUrl: './evenement.component.html',
   styleUrls: ['./evenement.component.scss'],
   
-  imports: [MatTooltipModule,NgClass,
-    MatTabsModule,
-    MatButtonModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatExpansionModule, ConnexionComponent, PlanningComponent, InfoComponent],
+  imports: [NgClass,
+    ConnexionComponent, PlanningComponent, InfoComponent],
   providers: [
     StandService,
     CroisementService,

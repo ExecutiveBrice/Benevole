@@ -1,22 +1,17 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder} from '@angular/forms';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 import {Benevole, Croisement, Evenement} from '../../models';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
 import {BenevoleService, TransmissionService} from '../../services';
 import { ToastService } from '../../services';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrderByPipe} from "../../services/sort.pipe";
-import {MatIconModule} from '@angular/material/icon';
 import {Router} from "@angular/router";
 
 
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule, FormsModule, MatFormFieldModule, MatInputModule, ReactiveFormsModule, OrderByPipe, MatIconModule],
+  imports: [FormsModule, ReactiveFormsModule, OrderByPipe, ],
   templateUrl: './connexion.component.html',
   styleUrl: './connexion.component.scss'
 })

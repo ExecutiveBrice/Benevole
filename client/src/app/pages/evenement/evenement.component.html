@@ -26,12 +26,12 @@
 </div>
 }
 @else {
-<mat-tab-group headerPosition="above"  [selectedIndex]="1">
-  <mat-tab>
-    <ng-template mat-tab-label >
+<div class="nav nav-tabs mb-3">
+  <section class="card card-body mb-3">
+    <h2 class="h5" >
 
-      <mat-icon [ngClass]="{'pulse':clignotage}" fontIcon="attribution"></mat-icon>
-    </ng-template>
+      <span class="app-icon" [ngClass]="{'pulse':clignotage}" fontIcon="attribution"></span>
+    </h2>
     @if (evenement) {
       <app-connexion 
       [benevole]="benevole"
@@ -40,11 +40,11 @@
       >
       </app-connexion>
     }
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon fontIcon="calendar_month"></mat-icon>
-    </ng-template>
+  </section>
+  <section class="card card-body mb-3">
+    <h2 class="h5">
+      <span class="app-icon" fontIcon="calendar_month"></span>
+    </h2>
     @if (evenement) {
     <app-planning
     [benevole]="benevole" 
@@ -53,18 +53,18 @@
     >
     </app-planning>
     }
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon fontIcon="info"></mat-icon>
-    </ng-template>
+  </section>
+  <section class="card card-body mb-3">
+    <h2 class="h5">
+      <span class="app-icon" fontIcon="info"></span>
+    </h2>
     @if (evenement) {
     <app-info [evenement]="evenement">
 
     </app-info>
     }
-  </mat-tab>
-</mat-tab-group>
+  </section>
+</div>
 }
 }
 }
