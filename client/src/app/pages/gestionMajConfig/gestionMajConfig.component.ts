@@ -216,6 +216,21 @@ export class GestionMajConfigComponent implements OnInit {
 
   }
 
+  updateBlocage(): void {
+    this.evenement.lock = !this.evenement.lock;
+    this.evenementService.opening(this.idEvenement).subscribe({
+      next: (lock) => {
+        this.evenement.lock = lock;
+        this.transmissionService.dataTransmission(this.evenement);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.evenement.lock = !this.evenement.lock;
+        console.log('😢 Oh no!', error);
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
+  }
+
   imageChangedEvent: any = '';
   croppedImage: any = '';
 

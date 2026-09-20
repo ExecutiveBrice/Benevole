@@ -1,10 +1,12 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Croisement, Evenement } from '../../models';
 import { OrderByPipe } from '../../services/sort.pipe';
 
 @Component({
   selector: 'app-selection-button',
+  // Le planning met à jour les propriétés du croisement après la réponse HTTP.
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
   imports: [NgClass, OrderByPipe],
   templateUrl: './selectionButton.component.html',

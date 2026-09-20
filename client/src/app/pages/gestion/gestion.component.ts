@@ -64,7 +64,6 @@ export class GestionComponent implements OnInit {
   emailStands: LocalStand[] = []
   benevoles: Benevole[] = [];
 
-  mail!: boolean;
   sendingProgress!: boolean;
 
   selectedDeviceObj: any
@@ -103,8 +102,6 @@ export class GestionComponent implements OnInit {
 
 
   ngOnInit() {
-    this.mail = false;
-
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!);
     this.ouvrirConnexionDepuisFooter = this.route.snapshot.queryParamMap.get('connexion') === '1';
 
@@ -236,6 +233,20 @@ export class GestionComponent implements OnInit {
 
   }
 
+  async copyRegistrationLink(): Promise<void> {
+    if (!this.using_address) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(this.using_address);
+      this.toastr.success('Le lien d’inscription a été copié dans le presse-papiers.', 'Lien copié');
+    } catch (error) {
+      console.error('Impossible de copier le lien d’inscription.', error);
+      this.toastr.error('La copie du lien a échoué. Vous pouvez le sélectionner puis le copier.', 'Erreur');
+    }
+  }
+
 
 
 
@@ -249,28 +260,6 @@ export class GestionComponent implements OnInit {
       }
     });
   }
-
-
-
-
-
-  updateBlocage(evenement: Evenement) {
-
-    evenement.lock = !evenement.lock
-    this.evenementService.opening(this.idEvenement).subscribe({
-      next: (data) => {
-      evenement.lock = data
-    },
-      error: (error: HttpErrorResponse) => {
-        console.log('😢 Oh no!', error);
-        this.toastr.error(error.message, 'Erreur');
-      }
-    });
-  }
-
-
-
-
 
   getBenevoles(): void {
     const benevolesWithChoice: LocalStand = new LocalStand;

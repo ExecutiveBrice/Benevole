@@ -5,7 +5,6 @@ import { AuthService, EvenementService, FileService, TransmissionService } from 
 import {HttpErrorResponse} from "@angular/common/http";
 import { ToastService } from './services';
 import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
-import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -14,10 +13,6 @@ import { NgbDropdown, NgbDropdownItem, NgbDropdownMenu, NgbDropdownToggle } from
     RouterModule,
     NgbToast,
     NgbToastHeader,
-    NgbDropdown,
-    NgbDropdownToggle,
-    NgbDropdownMenu,
-    NgbDropdownItem,
     ],
   providers: [
     TransmissionService,
@@ -32,9 +27,9 @@ export class AppComponent  implements OnInit{
 
 
   evenement?: Evenement;
-  evenements: Evenement[] = [];
   isValidAccessForEvent?: number
   logo?: string;
+  activeMobileEventPanel = 1;
 
   constructor(
 
@@ -50,7 +45,10 @@ export class AppComponent  implements OnInit{
 
 
   ngOnInit() {
-    this.getAllEvenements();
+    this.transmissionService.mobileEventPanelStream.subscribe(panel => {
+      this.activeMobileEventPanel = panel;
+      this.changeDetectorRef.markForCheck();
+    });
     this.transmissionService.dataStream.subscribe(data => {
       this.evenement = data
       this.elementRef.nativeElement.ownerDocument
@@ -59,29 +57,6 @@ export class AppComponent  implements OnInit{
       this.getLogo()
       this.changeDetectorRef.detectChanges();
     });
-  }
-
-  getAllEvenements() {
-    this.evenementService.getAll().subscribe({
-      next: (data) => {
-        this.evenements = data.filter(evenement => evenement.id !== 0);
-        this.evenements.forEach(evenement => this.getAffiche(evenement));
-        this.changeDetectorRef.detectChanges();
-      },
-      error: (error: HttpErrorResponse) => this.toastService.error(error.message, 'Erreur')
-    });
-  }
-
-  getAffiche(evenement: Evenement) {
-    this.fileService.get(evenement.id, 'affiche.jpeg').subscribe({
-      next: (data) => evenement.affiche = `data:image/jpeg;base64,${data}`,
-      // Une affiche est optionnelle : l'évènement reste sélectionnable sans elle.
-      error: () => evenement.affiche = ''
-    });
-  }
-
-  changeEvenement(evenement: Evenement) {
-    this.router.navigate(['/', evenement.id]);
   }
 
   isEventManagementPage(): boolean {
@@ -103,6 +78,14 @@ export class AppComponent  implements OnInit{
 
   isManagementPage(): boolean {
     return this.isEventManagementPage() || this.isGlobalManagementPage();
+  }
+
+  isEventDetailPage(): boolean {
+    return /^\/\d+(?:\?.*)?$/.test(this.router.url);
+  }
+
+  selectMobileEventPanel(panel: number): void {
+    this.transmissionService.selectMobileEventPanel(panel);
   }
 
   logoutFromManagement(): void {

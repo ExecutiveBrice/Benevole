@@ -1,6 +1,141 @@
-img {
-    max-width: 30%;
-    height: auto;
-    padding: 0;
-    margin: 0;
+.settings-page {
+  width: min(100%, 86rem);
+  margin: 0 auto;
+}
+
+.settings-actions {
+  position: sticky;
+  top: calc(72px + .75rem);
+  z-index: 10;
+  margin-bottom: 1rem;
+}
+
+.settings-list {
+  display: grid;
+  gap: .75rem;
+}
+
+.settings-section > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .75rem 1rem;
+  font-weight: 600;
+}
+
+.settings-section > summary::after {
+  flex: 0 0 auto;
+  content: 'expand_more';
+  font-family: 'Material Symbols Outlined';
+  font-size: 1.35rem;
+  font-weight: normal;
+  transition: transform .2s ease;
+}
+
+.settings-section[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+.settings-section-content {
+  background-color: var(--event-card-color, var(--bs-card-bg));
+}
+
+.settings-summary {
+  color: var(--bs-secondary-color);
+  font-size: .875rem;
+  font-weight: 400;
+}
+
+.settings-fields-grid,
+.settings-media-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.settings-switches,
+.settings-editors,
+.settings-media-grid > section {
+  display: grid;
+  gap: 1rem;
+}
+
+.settings-section .form-switch {
+  min-height: 1.75rem;
+  padding-left: 3.5rem;
+}
+
+.settings-section .form-switch .form-check-input {
+  width: 3rem;
+  height: 1.5rem;
+  margin-top: .125rem;
+  margin-left: -3.5rem;
+}
+
+.settings-colors-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.settings-wide-field {
+  grid-column: 1 / -1;
+}
+
+.settings-preview {
+  display: block;
+  width: 100%;
+  max-width: 18rem;
+  max-height: 12rem;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+image-cropper {
+  max-height: 26rem;
+}
+
+@media (max-width: 767.98px) {
+  .settings-actions {
+    top: calc(72px + .5rem);
+    margin-bottom: .75rem;
+  }
+
+  .settings-actions .card-body {
+    padding: .5rem;
+  }
+
+  .settings-actions .btn {
+    font-size: .875rem;
+  }
+
+  .settings-section > summary {
+    min-height: 3.25rem;
+    padding: .625rem .75rem;
+  }
+
+  .settings-summary {
+    display: none;
+  }
+
+  .settings-section-content {
+    padding: .75rem;
+  }
+
+  .settings-fields-grid,
+  .settings-media-grid {
+    grid-template-columns: 1fr;
+    gap: .75rem;
+  }
+
+  .settings-wide-field {
+    grid-column: auto;
+  }
+
+  .settings-editors {
+    gap: .75rem;
+  }
+
+  .settings-preview {
+    max-height: 9rem;
+  }
 }

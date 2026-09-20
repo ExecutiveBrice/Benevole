@@ -1,3 +1,58 @@
 :host {
   display: block;
 }
+
+/*
+ * La page d'un évènement contient trois panneaux côte à côte à partir de la
+ * taille "large" de Bootstrap. Elle peut donc utiliser davantage de place que
+ * les pages de gestion, tout en gardant un cadre confortable sur les grands
+ * écrans.
+ */
+@media (min-width: 992px) {
+  .event-page-container {
+    width: 100%;
+    max-width: 1800px;
+    padding-inline: clamp(1rem, 2vw, 2rem);
+  }
+}
+
+@media (max-width: 991.98px) {
+  .event-page-container {
+    overflow: hidden;
+  }
+
+  .event-panels {
+    --bs-gutter-x: 0;
+    flex-wrap: nowrap;
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .event-panel {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 100%;
+    padding-right: 0;
+    padding-left: 0;
+    transform: translateX(0);
+    transition: transform .35s ease-in-out;
+  }
+
+  .event-panels.mobile-panel-1 .event-panel {
+    transform: translateX(-100%);
+  }
+
+  .event-panels.mobile-panel-2 .event-panel {
+    transform: translateX(-200%);
+  }
+
+  .event-panel:not(.mobile-panel-active) {
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-panel {
+    transition: none;
+  }
+}

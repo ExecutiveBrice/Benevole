@@ -185,6 +185,9 @@ export class PlanningComponent implements OnInit {
             }
           }
         })
+        // La reconnexion peut arriver avant le chargement des stands.
+        // Initialiser aussi la sélection à la réception des créneaux.
+        this.checkStands(this.stands);
         this.updateSum()
         this.changeDetectorRef.detectChanges();
       },
@@ -256,7 +259,10 @@ export class PlanningComponent implements OnInit {
       this.benevoleService.addToCroisement(this.benevole!.id, croisement.id, false).subscribe({
         next: (benevole) => {
           croisement.selected = true;
-          croisement.benevoles.push(benevole)
+          // Le bouton de sélection applique un pipe de tri pur aux bénévoles.
+          // Une nouvelle référence permet au pipe de recalculer la liste et
+          // d'afficher immédiatement le bénévole qui vient de s'inscrire.
+          croisement.benevoles = [...croisement.benevoles, benevole];
           this.fillBenevole(benevole);
           this.transmissionService.benevoleTransmission(benevole);
           this.toastr.success("Votre choix à bien été ajouté", "Merci,")

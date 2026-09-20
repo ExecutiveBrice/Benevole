@@ -1,7 +1,8 @@
 @if (evenement; as currentEvenement) {
-  <div class="page-container">
-    <div class="row g-4 align-items-start">
-      <div class="col-12 col-lg-4">
+  <div class="page-container event-page-container">
+    <div class="row g-4 align-items-start event-panels" [class.mobile-panel-1]="activeMobilePanel === 1"
+      [class.mobile-panel-2]="activeMobilePanel === 2">
+      <div class="col-12 col-lg-4 event-panel" [class.mobile-panel-active]="activeMobilePanel === 0">
         <app-connexion
           [benevole]="benevole"
           [evenement]="currentEvenement"
@@ -9,7 +10,7 @@
         </app-connexion>
       </div>
 
-      <div class="col-12 col-lg-4">
+      <div class="col-12 col-lg-4 event-panel" [class.mobile-panel-active]="activeMobilePanel === 1">
         <app-planning
           [benevole]="benevole"
           [evenement]="currentEvenement"
@@ -17,7 +18,7 @@
         </app-planning>
       </div>
 
-      <div class="col-12 col-lg-4">
+      <div class="col-12 col-lg-4 event-panel" [class.mobile-panel-active]="activeMobilePanel === 2">
         <app-info [evenement]="currentEvenement"></app-info>
       </div>
     </div>
