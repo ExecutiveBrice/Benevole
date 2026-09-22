@@ -15,6 +15,13 @@
   gap: .75rem;
 }
 
+.site-lock-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .5rem;
+  width: 100%;
+}
+
 .settings-section > summary {
   display: flex;
   align-items: center;
