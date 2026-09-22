@@ -1,350 +1,288 @@
 @if (authorize && evenement != undefined) {
+  <div class="settings-page">
 
-
-<div class="row marge">
-  <div class="col-sm-12">
-
-    <section class="card shadow-sm mb-3">
-      <div class="row g-3">
-        <div class="col">
-
-          <button class="full-width" type="button" (click)="update()">Enregistrer les
-            modifications</button>
-
-        </div>
-        <div class="col">
-
-
-
+      <div class="card-body d-flex flex-wrap gap-2">
+        <button class="btn btn-primary w-100" type="button" (click)="update()">Enregistrer les modifications</button>
+        <div class="site-lock-actions">
+          <button class="btn" [class.btn-success]="evenement.lock" [class.btn-secondary]="!evenement.lock"
+            type="button" [disabled]="!evenement.lock" (click)="updateBlocage()">
+            Débloquer le site
+          </button>
+          <button class="btn" [class.btn-danger]="!evenement.lock" [class.btn-secondary]="evenement.lock"
+            type="button" [disabled]="evenement.lock" (click)="updateBlocage()">
+            Bloquer le site
+          </button>
         </div>
       </div>
-    </section>
 
 
-  </div>
-
-
-  <div class="col-md-4">
-
-
-
-    <section class="card shadow-sm mb-3">
-      <form [formGroup]="formulaireEvent">
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nom de l'évènement</label>
-            <input class="form-control" type="text" formControlName="eventName">
-
+    <form [formGroup]="formulaireEvent" class="settings-list">
+      <details class="card settings-section" >
+        <summary class="card-header">
+          <span><span class="app-icon" aria-hidden="true">event</span> Informations de l’évènement</span>
+          <span class="settings-summary">Nom, contacts et site</span>
+        </summary>
+        <div class="card-body settings-section-content settings-fields-grid">
+          <div>
+            <label class="form-label" for="eventName">Nom de l’évènement</label>
+            <input id="eventName" class="form-control" type="text" formControlName="eventName">
             @if (formulaireEvent.get('eventName')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom de l'évènement est obligatoire</div>
+              <div class="invalid-feedback d-block">Le nom de l’évènement est obligatoire.</div>
             }
-
           </div>
-        </div>
-
-
-
-
-
-        <div class="card-body">
-
-          <div class="mb-3">
-            <label class="form-label">Vidange de la base donnée des bénévoles</label>
-            <input class="form-control" type="date" [min]="minDate" [max]="maxDate" formControlName="endDate">
+          <div>
+            <label class="form-label" for="endDate">Vidange de la base des bénévoles</label>
+            <input id="endDate" class="form-control" type="date" [min]="minDate" [max]="maxDate" formControlName="endDate">
             @if (formulaireEvent.get('endDate')?.hasError('min')) {
-            <div class="invalid-feedback d-block">La date minimale est {{minDate}}</div>
+              <div class="invalid-feedback d-block">La date minimale est {{ minDate }}.</div>
             }
-
           </div>
-
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nom complet du contact</label>
-            <input class="form-control" type="text" formControlName="contact">
-
+          <div>
+            <label class="form-label" for="contact">Nom complet du contact</label>
+            <input id="contact" class="form-control" type="text" formControlName="contact">
             @if (formulaireEvent.get('contact')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom du contact est obligatoire</div>
+              <div class="invalid-feedback d-block">Le nom du contact est obligatoire.</div>
             }
-
           </div>
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">Numéro de tel du téléphone</label>
-            <input class="form-control" type="text" formControlName="contactTel">
-
-            @if (formulaireEvent.get('contactTel')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom du contactTel est obligatoire</div>
-            }
-
+          <div>
+            <label class="form-label" for="contactTel">Numéro de téléphone</label>
+            <input id="contactTel" class="form-control" type="text" formControlName="contactTel">
           </div>
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nom complet du contactEmail</label>
-            <input class="form-control" type="email" formControlName="contactEmail">
-
+          <div>
+            <label class="form-label" for="contactEmail">E-mail du contact</label>
+            <input id="contactEmail" class="form-control" type="email" formControlName="contactEmail">
             @if (formulaireEvent.get('contactEmail')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom du contactTel est obligatoire</div>
+              <div class="invalid-feedback d-block">L’e-mail du contact est obligatoire.</div>
             }
-
           </div>
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nom complet du sitepersourl</label>
-            <input class="form-control" type="text" formControlName="sitepersourl">
-
+          <div>
+            <label class="form-label" for="sitepersourl">URL du site</label>
+            <input id="sitepersourl" class="form-control" type="url" formControlName="sitepersourl">
             @if (formulaireEvent.get('sitepersourl')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le nom du contactTel est obligatoire</div>
+              <div class="invalid-feedback d-block">L’URL du site est obligatoire.</div>
             }
-
           </div>
         </div>
+      </details>
 
-
-        <div class="card-body">
+      <details class="card settings-section">
+        <summary class="card-header">
+          <span><span class="app-icon" aria-hidden="true">tune</span> Inscriptions</span>
+          <span class="settings-summary">Connexion et affichage</span>
+        </summary>
+        <div class="card-body settings-section-content settings-switches">
           <div class="form-check form-switch">
-            <input class="form-check-input" id="basique" type="checkbox" formControlName="basique"
-                   (change)="updateConnexionParams()">
-            <label class="form-check-label" for="basique">Connexion simplifiée (uniquement un prénom) ?</label>
+            <input class="form-check-input" id="basique" type="checkbox" formControlName="basique" (change)="updateConnexionParams()">
+            <label class="form-check-label" for="basique">Connexion simplifiée (uniquement un prénom)</label>
           </div>
-        </div>
-        @if (!formulaireEvent.get('basique')?.value){
-
-        <div class="card-body">
-          <div class="form-check form-switch">
-            <input class="form-check-input" id="needtel" type="checkbox" formControlName="needtel">
-            <label class="form-check-label" for="needtel">Besoin du téléphone des bénévoles ?</label>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="form-check form-switch">
-            <input class="form-check-input" id="notification" type="checkbox" formControlName="notification">
-            <label class="form-check-label" for="notification">Les bénévoles recoivent un mail de confirmation ?</label>
-          </div>
-        </div>
-        }
-        <div class="card-body">
+          @if (!formulaireEvent.get('basique')?.value) {
+            <div class="form-check form-switch">
+              <input class="form-check-input" id="needtel" type="checkbox" formControlName="needtel">
+              <label class="form-check-label" for="needtel">Demander le téléphone des bénévoles</label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" id="notification" type="checkbox" formControlName="notification">
+              <label class="form-check-label" for="notification">Envoyer un e-mail de confirmation aux bénévoles</label>
+            </div>
+          }
           <div class="form-check form-switch">
             <input class="form-check-input" id="copie" type="checkbox" formControlName="copie">
-            <label class="form-check-label" for="copie">Souhaiez vous une copie des mails de confirmation ?</label>
+            <label class="form-check-label" for="copie">Recevoir une copie des e-mails de confirmation</label>
           </div>
-        </div>
-
-        <div class="card-body">
           <div class="form-check form-switch">
             <input class="form-check-input" id="afficherBenevoles" type="checkbox" formControlName="afficherBenevoles">
-            <label class="form-check-label" for="afficherBenevoles">Affichage du prenom des bénévoles déjà inscrits sur les boutons de selection ?</label>
+            <label class="form-check-label" for="afficherBenevoles">Afficher les prénoms des bénévoles déjà inscrits</label>
           </div>
-
         </div>
+      </details>
 
-        <div class="card-body">
+      <details class="card settings-section">
+        <summary class="card-header">
+          <span><span class="app-icon" aria-hidden="true">chat</span> Messages affichés</span>
+          <span class="settings-summary">Accueil, planning et infos</span>
+        </summary>
+        <div class="card-body settings-section-content settings-editors">
           <div class="form-check form-switch">
             <input class="form-check-input" id="afficherMessageAccueil" type="checkbox" formControlName="afficherMessageAccueil">
-            <label class="form-check-label" for="afficherMessageAccueil">Afficher le message ci dessous dans la page d'accueil ?</label>
+            <label class="form-check-label" for="afficherMessageAccueil">Afficher le message d’accueil</label>
           </div>
-        </div>
-        <div class="card-body">
-          <label class="form-label">Message d'accueil</label>
-          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageAccueil"> </ngx-editor-menu>
-          <ngx-editor [editor]="editorMessageAccueil" formControlName="messageAccueil" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
-        </div>
-
-
-        <div class="card-body">
+          <div>
+            <label class="form-label" for="messageAccueil">Message d’accueil</label>
+            <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageAccueil"></ngx-editor-menu>
+            <ngx-editor id="messageAccueil" [editor]="editorMessageAccueil" formControlName="messageAccueil" [disabled]="false" placeholder="Un message d’accueil"></ngx-editor>
+          </div>
           <div class="form-check form-switch">
             <input class="form-check-input" id="afficherMessagePlanning" type="checkbox" formControlName="afficherMessagePlanning">
-            <label class="form-check-label" for="afficherMessagePlanning">Afficher le message ci dessous dans le planning ?</label>
+            <label class="form-check-label" for="afficherMessagePlanning">Afficher le message du planning</label>
           </div>
-        </div>
-        <div class="card-body">
-          <label class="form-label">Message du planning</label>
-          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessagePlanning"> </ngx-editor-menu>
-          <ngx-editor [editor]="editorMessagePlanning" formControlName="messagePlanning" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
-        </div>
-
-
-
-        <div class="card-body">
+          <div>
+            <label class="form-label" for="messagePlanning">Message du planning</label>
+            <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessagePlanning"></ngx-editor-menu>
+            <ngx-editor id="messagePlanning" [editor]="editorMessagePlanning" formControlName="messagePlanning" [disabled]="false" placeholder="Un message pour le planning"></ngx-editor>
+          </div>
           <div class="form-check form-switch">
             <input class="form-check-input" id="afficherMessageInfo" type="checkbox" formControlName="afficherMessageInfo">
-            <label class="form-check-label" for="afficherMessageInfo">Afficher le message ci dessous dans la page d'info ?</label>
+            <label class="form-check-label" for="afficherMessageInfo">Afficher le message de la page d’information</label>
+          </div>
+          <div>
+            <label class="form-label" for="messageInfo">Message de la page d’information</label>
+            <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageInfo"></ngx-editor-menu>
+            <ngx-editor id="messageInfo" [editor]="editorMessageInfo" formControlName="messageInfo" [disabled]="false" placeholder="Un message pour la page d’information"></ngx-editor>
           </div>
         </div>
-        <div class="card-body">
-          <label class="form-label">Message d'accueil</label>
-          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorMessageInfo"> </ngx-editor-menu>
-          <ngx-editor [editor]="editorMessageInfo" formControlName="messageInfo" [disabled]="false"  [placeholder]="'Un message d\'accueil'"></ngx-editor>
+      </details>
+
+      <details class="card settings-section">
+        <summary class="card-header">
+          <span><span class="app-icon" aria-hidden="true">mail</span> E-mails</span>
+          <span class="settings-summary">Validation et signature</span>
+        </summary>
+        <div class="card-body settings-section-content settings-editors">
+          <div>
+            <label class="form-label" for="validation">Contenu de l’e-mail de validation</label>
+            <ngx-editor-menu [toolbar]="toolbar" [editor]="editorValidation"></ngx-editor-menu>
+            <ngx-editor id="validation" [editor]="editorValidation" formControlName="validation" [disabled]="false" placeholder="Contenu"></ngx-editor>
+          </div>
+          <div>
+            <label class="form-label" for="signature">Signature automatique des e-mails</label>
+            <ngx-editor-menu [toolbar]="toolbar" [editor]="editorSignature"></ngx-editor-menu>
+            <ngx-editor id="signature" [editor]="editorSignature" formControlName="signature" [disabled]="false" placeholder="Une signature dans les e-mails de validation"></ngx-editor>
+          </div>
         </div>
-      </form>
+      </details>
 
-    </section>
+      <details class="card settings-section">
+        <summary class="card-header">
+          <span><span class="app-icon" aria-hidden="true">palette</span> Apparence</span>
+          <span class="settings-summary">Polices</span>
+        </summary>
+        <div class="card-body settings-section-content settings-fields-grid settings-colors-grid">
+          <div>
+            <label class="form-label" for="couleurFond">Fond</label>
+            <input id="couleurFond" class="form-control form-control-color" type="color" formControlName="couleurFond" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurBandeau">Bandeau</label>
+            <input id="couleurBandeau" class="form-control form-control-color" type="color" formControlName="couleurBandeau" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurText">Texte du bandeau</label>
+            <input id="couleurText" class="form-control form-control-color" type="color" formControlName="couleurText" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurTitre">Fond des titres</label>
+            <input id="couleurTitre" class="form-control form-control-color" type="color" formControlName="couleurTitre" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurTexteTitre">Texte des titres</label>
+            <input id="couleurTexteTitre" class="form-control form-control-color" type="color" formControlName="couleurTexteTitre" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurCard">Cartes</label>
+            <input id="couleurCard" class="form-control form-control-color" type="color" formControlName="couleurCard" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurBloc">Stands</label>
+            <input id="couleurBloc" class="form-control form-control-color" type="color" formControlName="couleurBloc" (change)="forceUpdateEvenement()">
+          </div>
+          <div class="settings-wide-field">
+            <label class="form-label" for="titleFont">Police du titre du bandeau</label>
+            <app-font-select id="titleFont" formControlName="titleFont" [fonts]="fontList"
+              [selectedFont]="formulaireEvent.get('titleFont')?.value"
+              label="Police du titre du bandeau" (fontChange)="forceUpdateEvenement()" />
+          </div>
+          <div class="settings-wide-field">
+            <label class="form-label" for="pageTitleFont">Police des titres des pages</label>
+            <app-font-select id="pageTitleFont" formControlName="pageTitleFont" [fonts]="fontList"
+              [selectedFont]="formulaireEvent.get('pageTitleFont')?.value"
+              label="Police des titres des pages" (fontChange)="forceUpdateEvenement()" />
+          </div>
+          <div class="settings-wide-field">
+            <label class="form-label" for="bodyFont">Police des autres textes</label>
+            <app-font-select id="bodyFont" formControlName="bodyFont" [fonts]="fontList"
+              [selectedFont]="formulaireEvent.get('bodyFont')?.value"
+              label="Police des autres textes" (fontChange)="forceUpdateEvenement()" />
+          </div>
+          <section class="settings-wide-field appearance-preview" aria-label="Aperçu mobile de la page planning">
+            <h2 class="h6 mb-2">Aperçu mobile — Planning</h2>
+            <div class="mobile-planning-preview" [style.backgroundColor]="formulaireEvent.get('couleurFond')?.value" [style.font-family]="formulaireEvent.get('bodyFont')?.value">
+              <header class="mobile-planning-preview-header" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value">
+                <span class="app-icon" [style.color]="formulaireEvent.get('couleurText')?.value" aria-hidden="true">volunteer_activism</span>
+                <span [style.color]="formulaireEvent.get('couleurText')?.value" [style.font-family]="formulaireEvent.get('titleFont')?.value">
+                  {{ formulaireEvent.get('eventName')?.value || 'Mon évènement' }}
+                </span>
+              </header>
+              <nav class="mobile-planning-preview-tabs" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value"
+                [style.color]="formulaireEvent.get('couleurText')?.value" aria-label="Aperçu de la navigation mobile">
+                <span><span class="app-icon" aria-hidden="true">key</span></span>
+                <span class="is-active"><span class="app-icon" aria-hidden="true">calendar_month</span></span>
+                <span><span class="app-icon" aria-hidden="true">info</span></span>
+              </nav>
+              <div class="mobile-planning-preview-content">
+                @if (formulaireEvent.get('afficherMessagePlanning')?.value) {
+                  <div class="mobile-planning-preview-message" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
+                    Informations du planning
+                  </div>
+                }
+                <section class="mobile-planning-preview-card" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
+                  <h3 [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
+                    [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
+                    Les stands
+                  </h3>
+                  <div class="mobile-planning-preview-stand" [style.backgroundColor]="formulaireEvent.get('couleurBloc')?.value">
+                    <div [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
+                      [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
+                      Accueil <span>2/4</span>
+                    </div>
+                    <div class="mobile-planning-preview-slots">
+                      <span>09h–12h</span><span>14h–18h</span>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
+        </div>
+      </details>
 
+      <details class="card settings-section">
+        <summary class="card-header">
+          <span><span class="app-icon" aria-hidden="true">image</span> Visuels</span>
+          <span class="settings-summary">Logo et affiche</span>
+        </summary>
+        <div class="card-body settings-section-content settings-media-grid">
+          <section>
+            <h2 class="h6">Logo</h2>
+            @if (logo) {
+              <img class="settings-preview" [src]="logo" alt="Logo de l’évènement">
+            }
+            <button class="btn btn-outline-secondary w-100" type="button" (click)="fileInput.click()">Modifier le logo</button>
+            <input class="form-control" hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
+            @if (croppedImage.length > 5) {
+              <button class="btn btn-primary w-100" type="button" (click)="uploadImage()">Enregistrer le logo</button>
+            }
+            <image-cropper [imageChangedEvent]="imageChangedEvent" [output]="'base64'" [aspectRatio]="14/9"
+              [resizeToWidth]="150" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+              (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+            </image-cropper>
+          </section>
+          <section>
+            <h2 class="h6">Affiche</h2>
+            @if (affiche) {
+              <img class="settings-preview" [src]="affiche" alt="Affiche de l’évènement">
+            }
+            <button class="btn btn-outline-secondary w-100" type="button" (click)="afficheInput.click()">Modifier l’affiche</button>
+            <input class="form-control" hidden (change)="afficheChangeEvent($event)" #afficheInput type="file" id="affiche" accept="image/*">
+            @if (croppedAffiche.length > 5) {
+              <button class="btn btn-primary w-100" type="button" (click)="uploadAffiche()">Enregistrer l’affiche</button>
+            }
+            <image-cropper [imageChangedEvent]="afficheChangedEvent" [output]="'base64'" [maintainAspectRatio]="false"
+              [resizeToWidth]="1280" format="jpeg" (imageCropped)="afficheCropped($event)" (imageLoaded)="imageLoaded()"
+              (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+            </image-cropper>
+          </section>
+        </div>
+      </details>
+    </form>
   </div>
-
-
-  <div class="col-md-4">
-
-    <section class="card shadow-sm mb-3">
-      <form [formGroup]="formulaireEvent">
-        <div class="card-body">
-          <label class="form-label">Contenu de l'email de validation</label>
-          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorValidation"> </ngx-editor-menu>
-          <ngx-editor [editor]="editorValidation" formControlName="validation" [disabled]="false"  [placeholder]="'Contenu'"></ngx-editor>
-
-
-
-        </div>
-
-        <div class="card-body">
-
-          <label class="form-label">Signature automatique des emails de l'application</label>
-          <ngx-editor-menu [toolbar]="toolbar" [editor]="editorSignature"> </ngx-editor-menu>
-          <ngx-editor [editor]="editorSignature" formControlName="signature" [disabled]="false"  [placeholder]="'Une signature dans les mails de validation'"></ngx-editor>
-
-
-        </div>
-
-
-
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">La couleur du fond</label>
-            <input class="form-control" type="color" formControlName="couleurFond" (change)="forceUpdateEvenement()">
-            @if (formulaireEvent.get('couleurFond')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La couleur du fond est obligatoire</div>
-            }
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">La couleur du bandeau</label>
-            <input class="form-control" type="color" formControlName="couleurBandeau" (change)="forceUpdateEvenement()">
-            @if (formulaireEvent.get('couleurBandeau')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La couleur du bandeau est obligatoire</div>
-            }
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">La couleur du texte du bandeau</label>
-            <input class="form-control" type="color" formControlName="couleurText" (change)="forceUpdateEvenement()">
-            @if (formulaireEvent.get('couleurText')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La couleur du texte du bandeau est obligatoire</div>
-            }
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">La couleur des titres</label>
-            <input class="form-control" type="color" formControlName="couleurTitre" (change)="forceUpdateEvenement()">
-            @if (formulaireEvent.get('couleurTitre')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La couleur des titres est obligatoire</div>
-            }
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">La couleur des Bloques</label>
-            <input class="form-control" type="color" formControlName="couleurCard" (change)="forceUpdateEvenement()">
-            @if (formulaireEvent.get('couleurCard')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La couleur des Bloques est obligatoire</div>
-            }
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">La couleur des menus de stands</label>
-            <input class="form-control" type="color" formControlName="couleurBloc" (change)="forceUpdateEvenement()">
-            @if (formulaireEvent.get('couleurBloc')?.hasError('required')) {
-            <div class="invalid-feedback d-block">La couleur des des menus de stands est obligatoire</div>
-            }
-          </div>
-        </div>
-
-
-        <div class="card-body">
-          <div class="mb-3 full-width">
-            <label class="form-label">Besoin</label>
-            <select class="form-select" formControlName="titleFont" (change)="forceUpdateEvenement()">
-              @for (font of fontList; track font) {
-              <option [value]="font">{{ font }}</option>
-              }
-            </select>
-          </div>
-        </div>
-      </form>
-
-    </section>
-
-  </div>
-
-
-  <div class="col-md-4">
-
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
-
-        @if (logo) {
-        <img [src]="logo" alt="logo">
-        }
-
-
-
-        <button class="full-width" type="button" (click)="fileInput.click()">Modifier le
-          logo</button>
-        <input class="form-control" hidden (change)="fileChangeEvent($event)" #fileInput type="file" id="file" accept="image/*">
-        @if (croppedImage.length > 5) {
-        <button class="full-width text-danger" type="button" (click)="uploadImage()">Enregistrer cette
-          image</button>
-        }
-
-        <image-cropper [imageChangedEvent]="imageChangedEvent" [output]="'base64'" [aspectRatio]="14/9"
-          [resizeToWidth]="150" format="jpeg" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
-          (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-        </image-cropper>
-
-
-      </div>
-    </section>
-    <section class="card shadow-sm mb-3">
-      <div class="card-body">
-
-        @if (affiche) {
-          <img [src]="affiche" alt="Affiche">
-          }
-
-
-        <button class="full-width" type="button" (click)="afficheInput.click()">Modifier l'affiche de
-          l'évènement</button>
-        <input class="form-control" hidden (change)="afficheChangeEvent($event)" #afficheInput type="file" id="affiche" accept="image/*">
-        @if (croppedAffiche.length > 5) {
-        <button class="full-width text-danger" type="button" (click)="uploadAffiche()">Enregistrer cette
-          image</button>
-        }
-
-        <image-cropper [imageChangedEvent]="afficheChangedEvent" [output]="'base64'" [maintainAspectRatio]="false"
-          [resizeToWidth]="1280" format="jpeg" (imageCropped)="afficheCropped($event)" (imageLoaded)="imageLoaded()"
-          (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-        </image-cropper>
-
-
-      </div>
-    </section>
-
-
-  </div>
-</div>
-
 }

@@ -10,6 +10,7 @@ import {ColorPickerModule} from 'ngx-color-picker';
 import {Editor, NgxEditorModule, Toolbar} from 'ngx-editor';
 import { ToastService } from '../../services';
 import {HttpErrorResponse} from "@angular/common/http";
+import { FontSelectComponent } from '../../components/fontSelect/fontSelect.component';
 
 @Component({
   selector: 'app-gestionMajConfig',
@@ -21,7 +22,7 @@ import {HttpErrorResponse} from "@angular/common/http";
     ConfigService
   ],
   imports: [FormsModule,
-    ImageCropperComponent, RouterModule, ColorPickerModule, ReactiveFormsModule, FormsModule, NgxEditorModule],
+    ImageCropperComponent, RouterModule, ColorPickerModule, ReactiveFormsModule, FormsModule, NgxEditorModule, FontSelectComponent],
 
   templateUrl: './gestionMajConfig.component.html',
   styleUrls: ['./gestionMajConfig.component.scss']
@@ -53,6 +54,13 @@ export class GestionMajConfigComponent implements OnInit {
 
 
   fontList = [
+    'Arial',
+    'Verdana',
+    'Trebuchet MS',
+    'Georgia',
+    'Times New Roman',
+    'Courier New',
+    'Consolas',
     'Agu',
     'Arbutus',
     'Borel',
@@ -114,11 +122,14 @@ export class GestionMajConfigComponent implements OnInit {
     couleurText: new FormControl(this.evenement.couleurText, [Validators.required]),
 
     couleurTitre: new FormControl(this.evenement.couleurTitre, [Validators.required]),
+    couleurTexteTitre: new FormControl(this.evenement.couleurTexteTitre, [Validators.required]),
     couleurCard: new FormControl(this.evenement.couleurCard, [Validators.required]),
     couleurBloc: new FormControl(this.evenement.couleurBloc, [Validators.required]),
 
 
     titleFont: new FormControl(this.evenement.titleFont, [Validators.required]),
+    pageTitleFont: new FormControl(this.evenement.pageTitleFont, [Validators.required]),
+    bodyFont: new FormControl(this.evenement.bodyFont, [Validators.required]),
   })
 
   constructor(
@@ -189,8 +200,11 @@ export class GestionMajConfigComponent implements OnInit {
         this.formulaireEvent.get("couleurText")?.setValue(evenement.couleurText);
         this.formulaireEvent.get("couleurCard")?.setValue(evenement.couleurCard);
         this.formulaireEvent.get("couleurTitre")?.setValue(evenement.couleurTitre);
+        this.formulaireEvent.get("couleurTexteTitre")?.setValue(evenement.couleurTexteTitre);
         this.formulaireEvent.get("couleurBloc")?.setValue(evenement.couleurBloc);
         this.formulaireEvent.get("titleFont")?.setValue(evenement.titleFont);
+        this.formulaireEvent.get("pageTitleFont")?.setValue(evenement.pageTitleFont);
+        this.formulaireEvent.get("bodyFont")?.setValue(evenement.bodyFont);
         console.log(this.formulaireEvent)
       },
       error: (error: HttpErrorResponse) => {
@@ -214,6 +228,21 @@ export class GestionMajConfigComponent implements OnInit {
       }
     });
 
+  }
+
+  updateBlocage(): void {
+    this.evenement.lock = !this.evenement.lock;
+    this.evenementService.opening(this.idEvenement).subscribe({
+      next: (lock) => {
+        this.evenement.lock = lock;
+        this.transmissionService.dataTransmission(this.evenement);
+      },
+      error: (error: HttpErrorResponse) => {
+        this.evenement.lock = !this.evenement.lock;
+        console.log('😢 Oh no!', error);
+        this.toastr.error(error.message, 'Erreur');
+      }
+    });
   }
 
   imageChangedEvent: any = '';

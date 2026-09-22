@@ -31,10 +31,13 @@ export class Evenement {
   couleurBandeau!: string;
   couleurText!: string;
   couleurTitre!: string;
+  couleurTexteTitre!: string;
   couleurBloc!: string;
   couleurCard!: string;
 
   titleFont!: string;
+  pageTitleFont!: string;
+  bodyFont!: string;
 
   affiche!: string;
 }

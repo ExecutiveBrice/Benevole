@@ -33,6 +33,7 @@ export class EvenementComponent implements OnInit {
   benevole: Benevole | undefined = undefined;
   isShowing: boolean = false
   clignotage: boolean = false;
+  activeMobilePanel = 1;
   
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,
@@ -58,6 +59,12 @@ export class EvenementComponent implements OnInit {
 
 
   ngOnInit() {
+
+    this.transmissionService.selectMobileEventPanel(1);
+    this.transmissionService.mobileEventPanelStream.subscribe(panel => {
+      this.activeMobilePanel = panel;
+      this.changeDetectorRef.markForCheck();
+    });
 
     this.route.paramMap.subscribe(params => {
       this.idEvenement = Number(params.get('id'));

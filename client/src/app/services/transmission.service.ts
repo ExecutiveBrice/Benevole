@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Benevole, Evenement } from '../models';
 
 
@@ -15,6 +15,16 @@ export class TransmissionService {
   // Service message commands
   dataTransmission(evenement: Evenement) {
     this.dataSource.next(evenement);
+  }
+
+  // Panneau affiché dans le carrousel mobile de la page évènement.
+  // Le planning est le panneau affiché par défaut sur la page événement.
+  // Cette valeur doit correspondre à celle du composant racine dès le premier rendu.
+  private mobileEventPanelSource = new BehaviorSubject<number>(1);
+  mobileEventPanelStream = this.mobileEventPanelSource.asObservable();
+
+  selectMobileEventPanel(panel: number) {
+    this.mobileEventPanelSource.next(panel);
   }
 
 

@@ -1,9 +1,13 @@
 <div class="app-shell"
+     [style.--event-background-color]="evenement?.couleurFond"
      [style.--event-card-color]="evenement?.couleurCard"
      [style.--event-block-color]="evenement?.couleurBloc"
      [style.--event-title-color]="evenement?.couleurTitre"
+     [style.--event-title-text-color]="evenement?.couleurTexteTitre"
+     [style.--event-page-title-font]="evenement?.pageTitleFont"
+     [style.--event-body-font]="evenement?.bodyFont"
      [style.--event-text-color]="evenement?.couleurText">
-<header class="app-header" [style.backgroundColor]="evenement?.couleurBandeau">
+<header class="app-header" [class.has-mobile-event-tabs]="isEventDetailPage()" [style.backgroundColor]="evenement?.couleurBandeau">
   <nav class="navbar container-fluid px-3 py-2" aria-label="Navigation principale">
     @if (logo) {
       @if (evenement?.sitepersourl) {
@@ -14,70 +18,67 @@
         <img class="event-logo" [src]="logo" alt="Logo de l'évènement">
       }
     }
-    <a class="navbar-brand d-flex align-items-center text-decoration-none" routerLink="/" [style.color]="evenement?.couleurText">
-      <span class="event-title" [style.font-family]="evenement?.titleFont">{{ evenement?.eventName || 'Bénévoles' }}</span>
-    </a>
+    <div class="navbar-brand d-flex align-items-center" [style.color]="evenement?.couleurText">
+      <span class="event-title"
+        appFitHeaderTitle
+        [appFitHeaderTitle]="evenement?.eventName || 'Bénévoles'"
+        [appFitHeaderTitleFont]="evenement?.titleFont"
+        [style.font-family]="evenement?.titleFont">{{ evenement?.eventName || 'Bénévoles' }}</span>
+    </div>
   </nav>
+  @if (isEventDetailPage()) {
+    <div class="mobile-event-tabs" role="group" aria-label="Sections de l'évènement">
+      <button type="button" class="mobile-event-tab" [class.active]="activeMobileEventPanel === 0"
+        [attr.aria-pressed]="activeMobileEventPanel === 0" (click)="selectMobileEventPanel(0)" aria-label="Connexion" title="Connexion">
+        <span class="app-icon" aria-hidden="true">key</span>
+      </button>
+      <button type="button" class="mobile-event-tab" [class.active]="activeMobileEventPanel === 1"
+        [attr.aria-pressed]="activeMobileEventPanel === 1" (click)="selectMobileEventPanel(1)" aria-label="Planning" title="Planning">
+        <span class="app-icon" aria-hidden="true">calendar_month</span>
+      </button>
+      <button type="button" class="mobile-event-tab" [class.active]="activeMobileEventPanel === 2"
+        [attr.aria-pressed]="activeMobileEventPanel === 2" (click)="selectMobileEventPanel(2)" aria-label="Infos" title="Infos">
+        <span class="app-icon" aria-hidden="true">info</span>
+      </button>
+    </div>
+  }
 </header>
 
-<main class="app-content container-fluid py-4">
+<main class="app-content container-fluid py-4" [class.has-mobile-event-tabs]="isEventDetailPage()">
   <router-outlet/>
 </main>
 
 <footer class="app-footer" [style.backgroundColor]="evenement?.couleurBandeau" aria-label="Actions principales">
-  <div class="container-fluid d-flex flex-wrap justify-content-center gap-2">
-  <div ngbDropdown container="body" placement="top-start" class="footer-action">
-    <button type="button" class="btn btn-outline-light dropdown-toggle event-selector" ngbDropdownToggle
-      aria-label="Changer d'évènement">
-      Autres évènements
-    </button>
-    <div ngbDropdownMenu class="event-menu">
-      @for (event of evenements; track event.id) {
-        <button type="button" ngbDropdownItem class="event-option" (click)="changeEvenement(event)">
-          @if (event.affiche) {
-            <img class="poster-thumbnail" [src]="event.affiche" alt="">
-          } @else {
-            <span class="poster-placeholder" aria-hidden="true">Affiche</span>
-          }
-          <span>{{ event.eventName }}</span>
-        </button>
-      } @empty {
-        <span class="dropdown-item-text text-muted">Aucun évènement disponible</span>
-      }
-    </div>
-  </div>
+  <div class="container-fluid">
+  <a class="btn btn-outline-light footer-action" routerLink="/" aria-label="Accueil" title="Accueil">
+    <span class="app-icon" aria-hidden="true">home</span>
+  </a>
 
   @if (isEventManagementPage() && evenement?.id) {
-    <a class="btn btn-outline-light footer-action" [routerLink]="getEventManagementBackLink()">
+    <a class="btn btn-outline-light footer-action" [routerLink]="getEventManagementBackLink()" aria-label="Retour" title="Retour">
       <span class="app-icon" aria-hidden="true">arrow_back</span>
-      <span>Retour</span>
     </a>
   } @else if (isGlobalManagementPage()) {
-    <a class="btn btn-outline-light footer-action" routerLink="/">
+    <a class="btn btn-outline-light footer-action" routerLink="/" aria-label="Retour" title="Retour">
       <span class="app-icon" aria-hidden="true">arrow_back</span>
-      <span>Retour</span>
     </a>
   } @else if (evenement?.id) {
-    <a class="btn btn-outline-light footer-action" [routerLink]="['/', evenement.id, 'gestion']" [queryParams]="{ connexion: '1' }">
+    <a class="btn btn-outline-light footer-action" [routerLink]="['/', evenement.id, 'gestion']" [queryParams]="{ connexion: '1' }" aria-label="Paramétrage" title="Paramétrage">
       <span class="app-icon" aria-hidden="true">settings</span>
-      <span>Paramétrage</span>
     </a>
   } @else {
-    <a class="btn btn-outline-light footer-action" [routerLink]="['/evenements/management']" [queryParams]="{ connexion: '1' }">
+    <a class="btn btn-outline-light footer-action" [routerLink]="['/evenements/management']" [queryParams]="{ connexion: '1' }" aria-label="Paramétrage" title="Paramétrage">
       <span class="app-icon" aria-hidden="true">settings</span>
-      <span>Paramétrage</span>
     </a>
   }
 
   @if (isManagementPage()) {
-    <button class="btn btn-outline-light footer-action" type="button" (click)="logoutFromManagement()">
+    <button class="btn btn-outline-light footer-action" type="button" (click)="logoutFromManagement()" aria-label="Déconnexion" title="Déconnexion">
       <span class="app-icon" aria-hidden="true">logout</span>
-      <span>Déconnexion</span>
     </button>
   } @else {
-    <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener">
+    <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener" aria-label="Aide" title="Aide">
       <span class="app-icon" aria-hidden="true">help</span>
-      <span>Aide</span>
     </a>
   }
   </div>

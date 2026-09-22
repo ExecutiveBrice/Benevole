@@ -37,23 +37,28 @@ public class Evenement {
 
     private String sitepersourl;
 
+    @Column(columnDefinition = "TEXT")
     private String validation;
 
+    @Column(columnDefinition = "TEXT")
     private String signature;
 
     private boolean afficherMessageAccueil;
 
+    @Column(columnDefinition = "TEXT")
     private String messageAccueil;
 
     private boolean afficherMessagePlanning;
+
+    @Column(columnDefinition = "TEXT")
     private String messagePlanning;
 
     private boolean afficherMessageInfo;
 
+    @Column(columnDefinition = "TEXT")
     private String messageInfo;
 
     private boolean afficherBenevoles;
-
 
     private Boolean basique;
 
@@ -73,11 +78,17 @@ public class Evenement {
 
     private String couleurTitre;
 
+    private String couleurTexteTitre;
+
     private String couleurCard;
 
     private String couleurBloc;
 
     private String titleFont;
+
+    private String pageTitleFont;
+
+    private String bodyFont;
 
     @JsonIgnore
     @OneToMany(mappedBy="evenement", cascade = CascadeType.ALL, orphanRemoval = true)

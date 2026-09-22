@@ -1,0 +1,19 @@
+<div class="font-select">
+  <button [id]="id" type="button" class="form-select font-select-trigger"
+    [style.font-family]="value" [disabled]="disabled" [attr.aria-label]="label"
+    [attr.aria-expanded]="isOpen" aria-haspopup="listbox" (click)="toggle()">
+    {{ value || 'Choisir une police' }}
+  </button>
+
+  @if (isOpen) {
+    <div class="font-select-options" role="listbox" [attr.aria-label]="label">
+      @for (font of fonts; track font) {
+        <button type="button" class="font-select-option" role="option"
+          [style.font-family]="font" [attr.aria-selected]="font === value"
+          (pointerdown)="choose(font); $event.preventDefault()" (click)="choose(font)">
+          {{ font }}
+        </button>
+      }
+    </div>
+  }
+</div>

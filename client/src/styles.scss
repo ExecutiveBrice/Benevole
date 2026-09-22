@@ -120,6 +120,26 @@ body {
   margin: 0 auto;
 }
 
+.app-shell {
+  background-color: var(--event-background-color, transparent);
+  font-family: var(--event-body-font, inherit);
+}
+
+.app-content {
+  background-color: var(--event-background-color, transparent);
+}
+
+/* La palette de l'évènement s'applique aussi aux écrans d'administration. */
+.app-content h1,
+.app-content h2,
+.app-content h3,
+.app-content h4,
+.app-content h5,
+.app-content h6 {
+  color: var(--event-title-text-color, inherit);
+  font-family: var(--event-page-title-font, inherit);
+}
+
 /*
  * Les couleurs sont injectées par l'évènement courant sur .app-shell.
  * Les valeurs Bootstrap conservent un rendu cohérent sur la liste des
@@ -127,11 +147,11 @@ body {
  */
 .card {
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--event-title-color, var(--bs-border-color)) 28%, var(--bs-border-color));
-  border-radius: 1rem;
+  border: 0;
+  border-radius: .5rem;
   background-color: var(--event-card-color, var(--bs-card-bg));
   box-shadow: 0 .35rem 1rem rgb(0 0 0 / 7%);
-  transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+  transition: box-shadow .2s ease, transform .2s ease;
 }
 
 .card-header {
@@ -145,18 +165,8 @@ body {
   background: linear-gradient(115deg,
     color-mix(in srgb, var(--event-title-color, var(--bs-tertiary-bg)) 94%, white),
     var(--event-title-color, var(--bs-tertiary-bg)));
-  color: var(--event-text-color, inherit);
-}
-
-.card-header::before {
-  width: .3rem;
-  height: 1.4rem;
-  flex: 0 0 .3rem;
-  margin-right: .75rem;
-  border-radius: 99px;
-  background: currentColor;
-  content: '';
-  opacity: .72;
+  color: var(--event-title-text-color, var(--event-text-color, inherit));
+  font-family: var(--event-page-title-font, inherit);
 }
 
 .card-header .card-title {
@@ -174,7 +184,6 @@ body {
 }
 
 .card:not(.event-card):hover {
-  border-color: color-mix(in srgb, var(--event-title-color, var(--bs-primary)) 58%, var(--bs-border-color));
   box-shadow: 0 .6rem 1.5rem rgb(0 0 0 / 10%);
 }
 
@@ -196,6 +205,103 @@ details.card > summary.card-header::-webkit-details-marker {
   display: none;
 }
 
+/* Aperçu utilisé dans les paramètres pour visualiser la palette sur mobile. */
+.appearance-preview {
+  max-width: 20rem;
+}
+
+.mobile-planning-preview {
+  width: min(100%, 18rem);
+  margin: 0 auto;
+  overflow: hidden;
+  border: .4rem solid #222;
+  border-radius: 1.35rem;
+  box-shadow: var(--bs-box-shadow-sm);
+  font-size: .62rem;
+}
+
+.mobile-planning-preview-header {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  min-height: 2.5rem;
+  padding: .4rem .55rem;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.mobile-planning-preview-header .app-icon {
+  font-size: 1rem;
+}
+
+.mobile-planning-preview-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  text-align: center;
+}
+
+.mobile-planning-preview-tabs > span {
+  padding: .3rem;
+  opacity: .65;
+}
+
+.mobile-planning-preview-tabs .is-active {
+  border-bottom: 2px solid currentColor;
+  opacity: 1;
+}
+
+.mobile-planning-preview-tabs .app-icon {
+  font-size: .95rem;
+}
+
+.mobile-planning-preview-content {
+  min-height: 10rem;
+  padding: .55rem;
+}
+
+.mobile-planning-preview-message,
+.mobile-planning-preview-card {
+  margin-bottom: .45rem;
+  overflow: hidden;
+  border-radius: .3rem;
+  box-shadow: 0 .12rem .35rem rgb(0 0 0 / 12%);
+}
+
+.mobile-planning-preview-message {
+  padding: .45rem;
+}
+
+.mobile-planning-preview-card h3,
+.mobile-planning-preview-stand > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: .4rem .5rem;
+  font-size: .7rem;
+}
+
+.mobile-planning-preview-stand {
+  margin: .45rem;
+  overflow: hidden;
+  border-radius: .25rem;
+}
+
+.mobile-planning-preview-slots {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .3rem;
+  padding: .4rem;
+}
+
+.mobile-planning-preview-slots span {
+  padding: .35rem .15rem;
+  border: 1px solid rgb(0 0 0 / 16%);
+  border-radius: .2rem;
+  background: rgb(255 255 255 / 75%);
+  text-align: center;
+}
+
 details.card > summary.card-header::after {
   width: .55rem;
   height: .55rem;
@@ -205,6 +311,15 @@ details.card > summary.card-header::after {
   transform: rotate(45deg) translateY(-.18rem);
   content: '';
   transition: transform .2s ease;
+}
+
+.card-header-count {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+details.card > summary.card-header:has(.card-header-count)::after {
+  margin-left: .75rem;
 }
 
 details.card[open] > summary.card-header::after {

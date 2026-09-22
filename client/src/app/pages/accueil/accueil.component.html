@@ -1,13 +1,7 @@
 <section class="page-container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="h3 mb-1">Évènements</h1>
-      <p class="text-body-secondary mb-0">Choisissez un évènement pour consulter le planning.</p>
-    </div>
-  </div>
 
   <div class="row g-3">
-  @for (evenement of evenements; track evenement.id) {
+  @for (evenement of evenements | orderBy:'id':false; track evenement.id) {
     <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
       <a class="card h-100 shadow-sm text-decoration-none text-body event-card" [routerLink]="['/', evenement.id]">
         @if (evenement.affiche) {
