@@ -61,6 +61,8 @@ export class EvenementComponent implements OnInit {
   ngOnInit() {
 
     this.transmissionService.selectMobileEventPanel(1);
+    // Ne pas conserver l'alerte d'un autre évènement après une navigation.
+    this.transmissionService.setConnexionHighlight(false);
     this.transmissionService.mobileEventPanelStream.subscribe(panel => {
       this.activeMobilePanel = panel;
       this.changeDetectorRef.markForCheck();
@@ -111,6 +113,7 @@ export class EvenementComponent implements OnInit {
 
   isBenevoleExiste(clignotage:boolean){
     this.clignotage = clignotage;
+    this.transmissionService.setConnexionHighlight(clignotage);
   }
 
 

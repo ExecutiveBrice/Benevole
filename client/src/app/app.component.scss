@@ -151,6 +151,22 @@
   .mobile-event-tab.active {
     box-shadow: inset 0 .2rem .45rem rgb(0 0 0 / 30%);
   }
+
+  .mobile-event-tab.connexion-highlighted {
+    animation: connexion-tab-attention 1.6s ease-in-out infinite;
+  }
+
+  @keyframes connexion-tab-attention {
+    0%, 100% {
+      background-color: transparent;
+      box-shadow: inset 0 0 0 0 rgb(13 110 253 / 0%);
+    }
+
+    50% {
+      background-color: rgb(13 110 253 / 15%);
+      box-shadow: inset 0 0 0 .18rem rgb(13 110 253 / 65%);
+    }
+  }
 }
 
 @media (max-width: 575.98px) {
@@ -162,6 +178,13 @@
 .toast-container {
   z-index: 1100;
   width: min(420px, calc(100vw - 2rem));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-event-tab.connexion-highlighted {
+    animation: none;
+    box-shadow: inset 0 0 0 .18rem rgb(13 110 253 / 65%);
+  }
 }
   .large{
 

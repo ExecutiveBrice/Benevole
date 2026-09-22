@@ -27,6 +27,15 @@ export class TransmissionService {
     this.mobileEventPanelSource.next(panel);
   }
 
+  // Met en avant la zone de connexion lorsqu'une inscription est tentée sans
+  // bénévole identifié. L'état est partagé avec l'en-tête mobile.
+  private connexionHighlightSource = new BehaviorSubject<boolean>(false);
+  connexionHighlightStream = this.connexionHighlightSource.asObservable();
+
+  setConnexionHighlight(highlight: boolean): void {
+    this.connexionHighlightSource.next(highlight);
+  }
+
 
   // Observable string sources
   private benevoleSource = new Subject<Benevole>();

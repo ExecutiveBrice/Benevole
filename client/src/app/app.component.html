@@ -28,7 +28,7 @@
   </nav>
   @if (isEventDetailPage()) {
     <div class="mobile-event-tabs" role="group" aria-label="Sections de l'évènement">
-      <button type="button" class="mobile-event-tab" [class.active]="activeMobileEventPanel === 0"
+      <button type="button" class="mobile-event-tab" [class.active]="activeMobileEventPanel === 0" [class.connexion-highlighted]="connexionHighlight"
         [attr.aria-pressed]="activeMobileEventPanel === 0" (click)="selectMobileEventPanel(0)" aria-label="Connexion" title="Connexion">
         <span class="app-icon" aria-hidden="true">key</span>
       </button>

@@ -225,7 +225,7 @@ export class PlanningComponent implements OnInit {
     console.log(this.benevole);
 
     if (!this.benevole) {
-      this.toastr.error("Connectez vous pour choisir un stand", 'Erreur');
+      this.toastr.error("La connexion est obligatoire pour s'inscrire sur un créneau", 'Erreur');
       this.actionEmitter.emit(true);
     } else if (croisement.benevoles != undefined && croisement.benevoles.find(benevole => benevole.id == this.benevole?.id) == undefined && croisement.benevoles.length >= croisement.limite) {
       this.toastr.error("Ce créneau est complet, choisisez en un autre", 'Erreur');

@@ -14,6 +14,20 @@
     max-width: 1800px;
     padding-inline: clamp(1rem, 2vw, 2rem);
   }
+
+  .connexion-panel.connexion-highlighted > app-connexion > .card {
+    animation: connexion-attention 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes connexion-attention {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgb(13 110 253 / 0%), var(--bs-box-shadow-sm);
+  }
+
+  50% {
+    box-shadow: 0 0 0 .45rem rgb(13 110 253 / 22%), 0 .5rem 1rem rgb(13 110 253 / 24%);
+  }
 }
 
 @media (max-width: 991.98px) {
@@ -54,5 +68,11 @@
 @media (prefers-reduced-motion: reduce) {
   .event-panel {
     transition: none;
+  }
+
+  .connexion-panel.connexion-highlighted > app-connexion > .card {
+    animation: none;
+    outline: .2rem solid rgb(13 110 253 / 55%);
+    outline-offset: .2rem;
   }
 }

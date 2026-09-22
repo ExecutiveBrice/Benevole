@@ -32,6 +32,7 @@ export class AppComponent  implements OnInit{
   isValidAccessForEvent?: number
   logo?: string;
   activeMobileEventPanel = 1;
+  connexionHighlight = false;
 
   constructor(
 
@@ -49,6 +50,10 @@ export class AppComponent  implements OnInit{
   ngOnInit() {
     this.transmissionService.mobileEventPanelStream.subscribe(panel => {
       this.activeMobileEventPanel = panel;
+      this.changeDetectorRef.markForCheck();
+    });
+    this.transmissionService.connexionHighlightStream.subscribe(highlight => {
+      this.connexionHighlight = highlight;
       this.changeDetectorRef.markForCheck();
     });
     this.transmissionService.dataStream.subscribe(data => {

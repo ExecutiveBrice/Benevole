@@ -116,4 +116,20 @@ describe('Inscription depuis le planning', () => {
       expect(button.classList.contains('complet')).toBeFalse();
     }
   });
+
+  it('demande la connexion avant une inscription sur un créneau', () => {
+    fixture.componentRef.setInput('benevole', undefined);
+    loadPlanning();
+    const toastService = TestBed.inject(ToastService);
+    const highlight = jasmine.createSpy('highlight');
+    fixture.componentInstance.actionEmitter.subscribe(highlight);
+
+    fixture.componentInstance.choisir(croisement);
+
+    expect(toastService.toasts.at(-1)).toEqual(jasmine.objectContaining({
+      message: "La connexion est obligatoire pour s'inscrire sur un créneau",
+      type: 'danger'
+    }));
+    expect(highlight).toHaveBeenCalledOnceWith(true);
+  });
 });

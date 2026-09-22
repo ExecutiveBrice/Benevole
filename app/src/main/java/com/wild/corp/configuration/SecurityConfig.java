@@ -37,6 +37,10 @@ public class SecurityConfig {
                         // Gestion des comptes et propriétés sensibles.
                         .requestMatchers("/administrateurs/**", "/config/getProps").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/auth/mot-de-passe/**").permitAll()
+                        // Un bénévole identifié sur la page de l'évènement peut
+                        // choisir ou libérer ses propres créneaux sans compte
+                        // administrateur.
+                        .requestMatchers(HttpMethod.PUT, "/benevole/addToCroisement", "/benevole/removeToCroisement").permitAll()
                         // Création/modification des paramètres des événements.
                         .requestMatchers(HttpMethod.POST, "/evenement/**", "/creneau/**", "/stand/**", "/croisement/**", "/files/**", "/email/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/evenement/**", "/benevole/**", "/creneau/**", "/stand/**", "/croisement/**").hasRole("ADMIN")
