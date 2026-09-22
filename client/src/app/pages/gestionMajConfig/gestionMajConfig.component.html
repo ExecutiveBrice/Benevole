@@ -1,21 +1,17 @@
 @if (authorize && evenement != undefined) {
 
 
-<div class="row marge">
-  <div class="col-sm-12">
-
-    <section class="card shadow-sm mb-3">
-      <div class="row g-3">
-        <div class="col">
-
-          <button class="full-width" type="button" (click)="update()">Enregistrer les
-            modifications</button>
-
-        </div>
-        <div class="col">
-
-
-
+      <div class="card-body d-flex flex-wrap gap-2">
+        <button class="btn btn-primary w-100" type="button" (click)="update()">Enregistrer les modifications</button>
+        <div class="site-lock-actions">
+          <button class="btn" [class.btn-success]="evenement.lock" [class.btn-secondary]="!evenement.lock"
+            type="button" [disabled]="!evenement.lock" (click)="updateBlocage()">
+            Débloquer le site
+          </button>
+          <button class="btn" [class.btn-danger]="!evenement.lock" [class.btn-secondary]="evenement.lock"
+            type="button" [disabled]="evenement.lock" (click)="updateBlocage()">
+            Bloquer le site
+          </button>
         </div>
       </div>
     </section>
