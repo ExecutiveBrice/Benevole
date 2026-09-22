@@ -5,6 +5,7 @@ import { Evenement } from '../../models';
 import { EvenementService, FileService, TransmissionService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '../../services';
+import {OrderByPipe} from "../../services/sort.pipe";
 
 
 
@@ -16,7 +17,7 @@ import { ToastService } from '../../services';
   ],
   imports: [FormsModule,
     RouterModule,
-    ReactiveFormsModule, FormsModule, ],
+    ReactiveFormsModule, FormsModule, OrderByPipe,],
   templateUrl: './accueil.component.html',
   styleUrls: ['./accueil.component.scss']
 })

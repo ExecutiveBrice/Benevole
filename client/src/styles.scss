@@ -120,6 +120,26 @@ body {
   margin: 0 auto;
 }
 
+.app-shell {
+  background-color: var(--event-background-color, transparent);
+  font-family: var(--event-body-font, inherit);
+}
+
+.app-content {
+  background-color: var(--event-background-color, transparent);
+}
+
+/* La palette de l'évènement s'applique aussi aux écrans d'administration. */
+.app-content h1,
+.app-content h2,
+.app-content h3,
+.app-content h4,
+.app-content h5,
+.app-content h6 {
+  color: var(--event-title-text-color, inherit);
+  font-family: var(--event-page-title-font, inherit);
+}
+
 /*
  * Les couleurs sont injectées par l'évènement courant sur .app-shell.
  * Les valeurs Bootstrap conservent un rendu cohérent sur la liste des
@@ -145,7 +165,8 @@ body {
   background: linear-gradient(115deg,
     color-mix(in srgb, var(--event-title-color, var(--bs-tertiary-bg)) 94%, white),
     var(--event-title-color, var(--bs-tertiary-bg)));
-  color: var(--event-text-color, inherit);
+  color: var(--event-title-text-color, var(--event-text-color, inherit));
+  font-family: var(--event-page-title-font, inherit);
 }
 
 .card-header .card-title {

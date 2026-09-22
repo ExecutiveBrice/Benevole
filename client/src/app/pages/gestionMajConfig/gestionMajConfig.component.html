@@ -164,8 +164,12 @@
             <input id="couleurText" class="form-control form-control-color" type="color" formControlName="couleurText" (change)="forceUpdateEvenement()">
           </div>
           <div>
-            <label class="form-label" for="couleurTitre">Titres</label>
+            <label class="form-label" for="couleurTitre">Fond des titres</label>
             <input id="couleurTitre" class="form-control form-control-color" type="color" formControlName="couleurTitre" (change)="forceUpdateEvenement()">
+          </div>
+          <div>
+            <label class="form-label" for="couleurTexteTitre">Texte des titres</label>
+            <input id="couleurTexteTitre" class="form-control form-control-color" type="color" formControlName="couleurTexteTitre" (change)="forceUpdateEvenement()">
           </div>
           <div>
             <label class="form-label" for="couleurCard">Cartes</label>
@@ -176,16 +180,26 @@
             <input id="couleurBloc" class="form-control form-control-color" type="color" formControlName="couleurBloc" (change)="forceUpdateEvenement()">
           </div>
           <div class="settings-wide-field">
-            <label class="form-label" for="titleFont">Police du titre</label>
-            <select id="titleFont" class="form-select" formControlName="titleFont" (change)="forceUpdateEvenement()">
-              @for (font of fontList; track font) {
-                <option [value]="font">{{ font }}</option>
-              }
-            </select>
+            <label class="form-label" for="titleFont">Police du titre du bandeau</label>
+            <app-font-select id="titleFont" formControlName="titleFont" [fonts]="fontList"
+              [selectedFont]="formulaireEvent.get('titleFont')?.value"
+              label="Police du titre du bandeau" (fontChange)="forceUpdateEvenement()" />
+          </div>
+          <div class="settings-wide-field">
+            <label class="form-label" for="pageTitleFont">Police des titres des pages</label>
+            <app-font-select id="pageTitleFont" formControlName="pageTitleFont" [fonts]="fontList"
+              [selectedFont]="formulaireEvent.get('pageTitleFont')?.value"
+              label="Police des titres des pages" (fontChange)="forceUpdateEvenement()" />
+          </div>
+          <div class="settings-wide-field">
+            <label class="form-label" for="bodyFont">Police des autres textes</label>
+            <app-font-select id="bodyFont" formControlName="bodyFont" [fonts]="fontList"
+              [selectedFont]="formulaireEvent.get('bodyFont')?.value"
+              label="Police des autres textes" (fontChange)="forceUpdateEvenement()" />
           </div>
           <section class="settings-wide-field appearance-preview" aria-label="Aperçu mobile de la page planning">
             <h2 class="h6 mb-2">Aperçu mobile — Planning</h2>
-            <div class="mobile-planning-preview" [style.backgroundColor]="formulaireEvent.get('couleurFond')?.value">
+            <div class="mobile-planning-preview" [style.backgroundColor]="formulaireEvent.get('couleurFond')?.value" [style.font-family]="formulaireEvent.get('bodyFont')?.value">
               <header class="mobile-planning-preview-header" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value">
                 <span class="app-icon" [style.color]="formulaireEvent.get('couleurText')?.value" aria-hidden="true">volunteer_activism</span>
                 <span [style.color]="formulaireEvent.get('couleurText')?.value" [style.font-family]="formulaireEvent.get('titleFont')?.value">
@@ -206,12 +220,12 @@
                 }
                 <section class="mobile-planning-preview-card" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
                   <h3 [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
-                    [style.color]="formulaireEvent.get('couleurText')?.value" [style.font-family]="formulaireEvent.get('titleFont')?.value">
+                    [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
                     Les stands
                   </h3>
                   <div class="mobile-planning-preview-stand" [style.backgroundColor]="formulaireEvent.get('couleurBloc')?.value">
                     <div [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
-                      [style.color]="formulaireEvent.get('couleurText')?.value" [style.font-family]="formulaireEvent.get('titleFont')?.value">
+                      [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
                       Accueil <span>2/4</span>
                     </div>
                     <div class="mobile-planning-preview-slots">

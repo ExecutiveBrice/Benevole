@@ -56,7 +56,10 @@ public class EvenementService {
         evenement.setCouleurFond("#c0c0c0");
         evenement.setCouleurTitre("#808080");
         evenement.setCouleurText("#ffffff");
+        evenement.setCouleurTexteTitre("#ffffff");
         evenement.setTitleFont("PermanentMarker");
+        evenement.setPageTitleFont("PermanentMarker");
+        evenement.setBodyFont("Arial");
 
     }
 
@@ -78,9 +81,12 @@ public class EvenementService {
         evenement.setCouleurBandeau(valeurParDefaut(evenement.getCouleurBandeau()));
         evenement.setCouleurText(valeurParDefaut(evenement.getCouleurText()));
         evenement.setCouleurTitre(valeurParDefaut(evenement.getCouleurTitre()));
+        initialiserCouleurTexteTitre(evenement);
         evenement.setCouleurBloc(valeurParDefaut(evenement.getCouleurBloc()));
         evenement.setCouleurCard(valeurParDefaut(evenement.getCouleurCard()));
         evenement.setTitleFont(valeurParDefaut(evenement.getTitleFont()));
+        initialiserPoliceTitrePage(evenement);
+        initialiserPoliceTexte(evenement);
         evenement.setBasique(valeurParDefaut(evenement.getBasique()));
         evenement.setNeedtel(valeurParDefaut(evenement.getNeedtel()));
         evenement.setCopie(valeurParDefaut(evenement.getCopie()));
@@ -93,6 +99,40 @@ public class EvenementService {
 
     private Boolean valeurParDefaut(Boolean valeur) {
         return valeur == null ? Boolean.FALSE : valeur;
+    }
+
+    /**
+     * Les évènements créés avant l'ajout de ce réglage n'ont pas de valeur en
+     * base. On reprend alors la couleur historique du texte du bandeau afin
+     * de conserver leur rendu jusqu'à ce que l'organisateur la personnalise.
+     */
+    private void initialiserCouleurTexteTitre(Evenement evenement) {
+        if (evenement.getCouleurTexteTitre() == null || evenement.getCouleurTexteTitre().isBlank()) {
+            String couleurHistorique = evenement.getCouleurText();
+            evenement.setCouleurTexteTitre(
+                couleurHistorique == null || couleurHistorique.isBlank() ? "#ffffff" : couleurHistorique
+            );
+        }
+    }
+
+    /**
+     * La police utilisée jusque-là pour le titre du bandeau était également
+     * utilisée dans les pages. Cette valeur garantit une transition visuelle
+     * identique pour les évènements existants.
+     */
+    private void initialiserPoliceTitrePage(Evenement evenement) {
+        if (evenement.getPageTitleFont() == null || evenement.getPageTitleFont().isBlank()) {
+            String policeHistorique = evenement.getTitleFont();
+            evenement.setPageTitleFont(
+                policeHistorique == null || policeHistorique.isBlank() ? "PermanentMarker" : policeHistorique
+            );
+        }
+    }
+
+    private void initialiserPoliceTexte(Evenement evenement) {
+        if (evenement.getBodyFont() == null || evenement.getBodyFont().isBlank()) {
+            evenement.setBodyFont("Arial");
+        }
     }
 
 
@@ -135,19 +175,34 @@ public class EvenementService {
         event.setCouleurBandeau(evenement.getCouleurBandeau());
         event.setCouleurText(evenement.getCouleurText());
         event.setCouleurTitre(evenement.getCouleurTitre());
+        event.setCouleurTexteTitre(evenement.getCouleurTexteTitre());
         event.setCouleurBloc(evenement.getCouleurBloc());
         event.setCouleurCard(evenement.getCouleurCard());
         event.setTitleFont(evenement.getTitleFont());
+        event.setPageTitleFont(evenement.getPageTitleFont());
+        event.setBodyFont(evenement.getBodyFont());
 
         return evenementRepository.save(event);
     }
 
     public List<Evenement> findAll() {
-        return evenementRepository.findAll();
+        List<Evenement> evenements = evenementRepository.findAll();
+        evenements.forEach(evenement -> {
+            initialiserCouleurTexteTitre(evenement);
+            initialiserPoliceTitrePage(evenement);
+            initialiserPoliceTexte(evenement);
+        });
+        return evenements;
     }
 
     public Evenement findById(Integer evenementId) {
-        return evenementRepository.findById(evenementId).orElse(null);
+        Evenement evenement = evenementRepository.findById(evenementId).orElse(null);
+        if (evenement != null) {
+            initialiserCouleurTexteTitre(evenement);
+            initialiserPoliceTitrePage(evenement);
+            initialiserPoliceTexte(evenement);
+        }
+        return evenement;
     }
 
     public void deleteById(Integer evenementId) {

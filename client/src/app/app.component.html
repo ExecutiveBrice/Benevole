@@ -1,7 +1,11 @@
 <div class="app-shell"
+     [style.--event-background-color]="evenement?.couleurFond"
      [style.--event-card-color]="evenement?.couleurCard"
      [style.--event-block-color]="evenement?.couleurBloc"
      [style.--event-title-color]="evenement?.couleurTitre"
+     [style.--event-title-text-color]="evenement?.couleurTexteTitre"
+     [style.--event-page-title-font]="evenement?.pageTitleFont"
+     [style.--event-body-font]="evenement?.bodyFont"
      [style.--event-text-color]="evenement?.couleurText">
 <header class="app-header" [class.has-mobile-event-tabs]="isEventDetailPage()" [style.backgroundColor]="evenement?.couleurBandeau">
   <nav class="navbar container-fluid px-3 py-2" aria-label="Navigation principale">
@@ -15,7 +19,11 @@
       }
     }
     <div class="navbar-brand d-flex align-items-center" [style.color]="evenement?.couleurText">
-      <span class="event-title" [style.font-family]="evenement?.titleFont">{{ evenement?.eventName || 'Bénévoles' }}</span>
+      <span class="event-title"
+        appFitHeaderTitle
+        [appFitHeaderTitle]="evenement?.eventName || 'Bénévoles'"
+        [appFitHeaderTitleFont]="evenement?.titleFont"
+        [style.font-family]="evenement?.titleFont">{{ evenement?.eventName || 'Bénévoles' }}</span>
     </div>
   </nav>
   @if (isEventDetailPage()) {

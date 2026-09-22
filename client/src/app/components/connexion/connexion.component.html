@@ -5,7 +5,7 @@
   @if (!evenement.basique) {
   @if (!inconnu) {
   <header class="card-header text-center">
-    <h2 class="card-title h5 mb-0"> <strong>Connectez vous :</strong></h2>
+    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Connectez vous :</strong></h2>
   </header>
 
   <form [formGroup]="formulaire">
@@ -30,7 +30,7 @@
   </form>
   }@else {
   <header class="card-header text-center">
-    <h2 class="card-title h5 mb-0"> <strong>Inscrivez vous :</strong></h2>
+    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Inscrivez vous :</strong></h2>
   </header>
   <div class="card-body">
     Nous ne nous connaissons pas encore. Nous avons simplement besoin de votre nom et prénom pour communiquer plus
@@ -134,7 +134,7 @@
 <section class="card shadow-sm mb-3">
   <header class="card-header text-center">
     <div class="d-flex align-items-center justify-content-between gap-2">
-      <h2 class="card-title h5 mb-0">Bonjour {{ formulaireBenevole.value.prenom }}</h2>
+      <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre">Bonjour {{ formulaireBenevole.value.prenom }}</h2>
       <button class="btn btn-sm btn-danger shadow-sm" type="button" (click)="exit()">Quitter</button>
     </div>
 
@@ -166,7 +166,7 @@
 @if (evenement.afficherMessageAccueil) {
   <section class="card shadow-sm mb-3">
     <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0"> <strong>Informations :</strong></h2>
+      <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Informations :</strong></h2>
     </header>
     <div class="card-body">
       <div [innerHtml]="evenement.messageAccueil"></div>
@@ -176,7 +176,7 @@
 
 <section class="card shadow-sm mb-3">
   <header class="card-header text-center">
-    <h2 class="card-title h5 mb-0"> <strong>Informations :</strong></h2>
+    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Informations :</strong></h2>
 
   </header>
   <div class="card-body">

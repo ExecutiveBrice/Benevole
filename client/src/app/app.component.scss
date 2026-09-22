@@ -29,7 +29,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(70%, 52rem);
+  width: calc(100% - 9rem);
+  height: 56px;
   margin: 0;
   transform: translate(-50%, -50%);
   text-align: center;
@@ -56,9 +57,10 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
+  overflow: hidden;
   overflow-wrap: anywhere;
-  font-size: clamp(.85rem, 2vw, 1.5rem);
-  line-height: 1.05;
+  font-size: 1.5rem;
+  line-height: 1;
   text-align: center;
   white-space: normal;
 }
@@ -152,7 +154,7 @@
 }
 
 @media (max-width: 575.98px) {
-  .navbar-brand { width: calc(100% - 10rem); }
+  .navbar-brand { width: calc(100% - 9rem); }
 
   .app-footer .btn { font-size: .8rem; }
 }

@@ -5,6 +5,7 @@ import { AuthService, EvenementService, FileService, TransmissionService } from 
 import {HttpErrorResponse} from "@angular/common/http";
 import { ToastService } from './services';
 import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
+import { FitHeaderTitleDirective } from './directives/fit-header-title.directive';
 @Component({
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -13,6 +14,7 @@ import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
     RouterModule,
     NgbToast,
     NgbToastHeader,
+    FitHeaderTitleDirective,
     ],
   providers: [
     TransmissionService,

@@ -1,7 +1,7 @@
 @if (evenement.afficherMessagePlanning) {
   <section class="card shadow-sm mb-3">
     <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0"><strong>Informations :</strong></h2>
+      <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"><strong>Informations :</strong></h2>
     </header>
     <div class="card-body">
       <div [innerHtml]="evenement.messagePlanning"></div>
@@ -16,9 +16,9 @@
       @for (stand of preparatifs | orderBy:'ordre':false; track $index) {
 
         <details class="card mb-3" [style.backgroundColor]="evenement.couleurBloc">
-          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" #title>
-            <span class="fw-semibold" [style]="'font-family: '+evenement.titleFont">{{ stand.nom }}</span>
-            <span class="card-header-count" [style]="'font-family: '+evenement.titleFont">{{ stand.placeOccupe }}/{{ stand.placeTotal }}</span>
+          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" [style.color]="evenement.couleurTexteTitre" #title>
+            <span class="fw-semibold" [style]="'font-family: '+evenement.pageTitleFont">{{ stand.nom }}</span>
+            <span class="card-header-count" [style]="'font-family: '+evenement.pageTitleFont">{{ stand.placeOccupe }}/{{ stand.placeTotal }}</span>
           </summary>
           {{ stand.soustitre }}
           <div class="row">
@@ -46,9 +46,9 @@
       @for (stand of activites | orderBy:'ordre':false; track $index) {
 
         <details class="card mb-3" [style.backgroundColor]="evenement.couleurBloc">
-          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" #title>
-            <span class="fw-semibold" [style]="'font-family: '+evenement.titleFont">{{ stand.nom }}</span>
-            <span class="card-header-count" [style]="'font-family: '+evenement.titleFont">{{ stand.placeOccupe }}/{{ stand.placeTotal }}</span>
+          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" [style.color]="evenement.couleurTexteTitre" #title>
+            <span class="fw-semibold" [style]="'font-family: '+evenement.pageTitleFont">{{ stand.nom }}</span>
+            <span class="card-header-count" [style]="'font-family: '+evenement.pageTitleFont">{{ stand.placeOccupe }}/{{ stand.placeTotal }}</span>
 
           </summary>
           {{ stand.soustitre }}
@@ -115,9 +115,9 @@
       @for (stand of postparatifs | orderBy:'ordre':false; track $index) {
 
         <details class="card mb-3" [style.backgroundColor]="evenement.couleurBloc">
-          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" #title>
-            <span class="fw-semibold" [style]="'font-family: '+evenement.titleFont">{{ stand.nom }}</span>
-            <span class="card-header-count" [style]="'font-family: '+evenement.titleFont">{{ stand.placeOccupe }}/{{ stand.placeTotal }}</span>
+          <summary class="card-header" [style.backgroundColor]="evenement.couleurTitre" [style.color]="evenement.couleurTexteTitre" #title>
+            <span class="fw-semibold" [style]="'font-family: '+evenement.pageTitleFont">{{ stand.nom }}</span>
+            <span class="card-header-count" [style]="'font-family: '+evenement.pageTitleFont">{{ stand.placeOccupe }}/{{ stand.placeTotal }}</span>
           </summary>
           {{ stand.soustitre }}
           <div class="row">

@@ -7,7 +7,7 @@
 @if (evenement.afficherMessageInfo) {
   <section class="card shadow-sm mb-3">
     <header class="card-header text-center">
-      <h2 class="card-title h5 mb-0"> <strong>Informations :</strong></h2>
+      <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Informations :</strong></h2>
     </header>
     <div class="card-body">
       <div [innerHtml]="evenement.messageInfo"></div>
