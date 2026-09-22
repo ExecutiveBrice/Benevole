@@ -91,6 +91,14 @@ export class AppComponent  implements OnInit{
     return /^\/\d+(?:\?.*)?$/.test(this.router.url);
   }
 
+  isLandingPage(): boolean {
+    return /^\/(?:\?.*)?$/.test(this.router.url);
+  }
+
+  isEventPage(): boolean {
+    return /^\/\d+(?:\/|\?.*)?$/.test(this.router.url);
+  }
+
   selectMobileEventPanel(panel: number): void {
     this.transmissionService.selectMobileEventPanel(panel);
   }

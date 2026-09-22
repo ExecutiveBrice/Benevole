@@ -13,3 +13,4 @@ export * from './toast.service';
 export * from './bootstrap-modal.service';
 export * from './auth.service';
 export * from './administrateur.service';
+export * from './demande-creation-evenement.service';

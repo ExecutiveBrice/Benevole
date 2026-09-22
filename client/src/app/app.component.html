@@ -76,7 +76,11 @@
     <button class="btn btn-outline-light footer-action" type="button" (click)="logoutFromManagement()" aria-label="Déconnexion" title="Déconnexion">
       <span class="app-icon" aria-hidden="true">logout</span>
     </button>
-  } @else {
+  } @else if (isLandingPage()) {
+    <a class="btn btn-outline-light footer-action" routerLink="/aide" aria-label="Demander la création d'un évènement" title="Demander la création d'un évènement">
+      <span class="app-icon" aria-hidden="true">add_circle</span>
+    </a>
+  } @else if (isEventPage()) {
     <a class="btn btn-outline-light footer-action" href="https://alod.fr/tuto-benevoles/" target="_blank" rel="noopener" aria-label="Aide" title="Aide">
       <span class="app-icon" aria-hidden="true">help</span>
     </a>

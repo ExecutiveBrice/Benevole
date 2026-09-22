@@ -11,6 +11,7 @@ export const jwtAuthenticationInterceptor: HttpInterceptorFn = (request, next) =
   const isAuthenticationRequest = request.url.startsWith(`${environment.url}auth/`);
   const requiresAuthentication = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
     || request.url.startsWith(`${environment.url}administrateurs`)
+    || request.url.startsWith(`${environment.url}demandes-evenements`)
     || request.url === `${environment.url}config/getProps`;
 
   const authorization = isApiRequest && !isAuthenticationRequest && requiresAuthentication

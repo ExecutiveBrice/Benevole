@@ -7,3 +7,4 @@ export * from './gestionMajCreneaux/gestionMajCreneaux.component';
 export * from './gestionMajStands/gestionMajStands.component';
 export * from './gestionStands/gestionStands.component';
 export * from './gestionEvenements/gestionEvenements.component';
+export * from './aide/aide.component';

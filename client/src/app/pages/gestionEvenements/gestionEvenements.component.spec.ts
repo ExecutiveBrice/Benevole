@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { of, throwError } from 'rxjs';
-import { AdministrateurService, AuthService, EvenementService, ToastService } from '../../services';
+import { AdministrateurService, AuthService, DemandeCreationEvenementService, EvenementService, ToastService } from '../../services';
 import { GestionEvenementsComponent } from './gestionEvenements.component';
 import { jwtAuthenticationInterceptor } from '../../services/auth.interceptor';
 import { environment } from '../../../environments/environment';
@@ -27,7 +27,7 @@ describe('Session sur le paramétrage global', () => {
     router = jasmine.createSpyObj('Router', ['navigate']);
     TestBed.configureTestingModule({ providers: [{ provide: BootstrapModalService, useValue: dialog }] });
     component = TestBed.runInInjectionContext(() => new GestionEvenementsComponent(
-      new ToastService(), {} as ActivatedRoute, router, {} as EvenementService, auth, administrators
+      new ToastService(), {} as ActivatedRoute, router, {} as EvenementService, auth, administrators, {} as DemandeCreationEvenementService
     ));
   });
 

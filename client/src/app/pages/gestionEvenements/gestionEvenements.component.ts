@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Evenement } from '../../models';
+import { DemandeCreationEvenement, Evenement } from '../../models';
 import {
   AdministrateurConnecte,
   AdministrateurCreation,
   AdministrateurMiseAJour,
   AdministrateurService,
   AuthService,
+  DemandeCreationEvenementService,
   EvenementService,
   ToastService
 } from '../../services';
@@ -21,7 +23,7 @@ import { BootstrapModalService } from '../../services/bootstrap-modal.service';
   standalone: true,
   templateUrl: './gestionEvenements.component.html',
   styleUrls: ['./gestionEvenements.component.scss'],
-  imports: [FormsModule],
+  imports: [DatePipe, FormsModule],
   providers: [EvenementService],
 })
 export class GestionEvenementsComponent implements OnInit {
@@ -29,6 +31,8 @@ export class GestionEvenementsComponent implements OnInit {
   verificationEnCours = false;
   connexionDialogOpen = false;
   evenements: Evenement[] = [];
+  demandesCreation: DemandeCreationEvenement[] = [];
+  demandeEnValidation?: number;
   administrateurs: AdministrateurConnecte[] = [];
   nomNouvelEvenement = '';
   afficherAdministrateurs = false;
@@ -45,6 +49,7 @@ export class GestionEvenementsComponent implements OnInit {
     public evenementService: EvenementService,
     private authService: AuthService,
     private administrateurService: AdministrateurService,
+    private demandeCreationService: DemandeCreationEvenementService,
   ) {}
 
   ngOnInit(): void {
@@ -95,6 +100,7 @@ export class GestionEvenementsComponent implements OnInit {
         }
         this.authorize = true;
         this.getAllEvenements();
+        this.getDemandesCreation();
       },
       error: (error: HttpErrorResponse) => {
         this.verificationEnCours = false;
@@ -155,6 +161,30 @@ export class GestionEvenementsComponent implements OnInit {
     this.evenementService.getAll().subscribe({
       next: data => this.evenements = data.filter(evenement => evenement.id !== 0),
       error: (error: HttpErrorResponse) => this.afficherErreur(error)
+    });
+  }
+
+  getDemandesCreation(): void {
+    this.demandeCreationService.getAll().subscribe({
+      next: demandes => this.demandesCreation = demandes,
+      error: (error: HttpErrorResponse) => this.afficherErreur(error)
+    });
+  }
+
+  validerDemande(demande: DemandeCreationEvenement): void {
+    if (this.demandeEnValidation !== undefined) return;
+    this.demandeEnValidation = demande.id;
+    this.demandeCreationService.valider(demande.id).subscribe({
+      next: evenement => {
+        this.demandeEnValidation = undefined;
+        this.toastr.success(`L’évènement « ${evenement.eventName} » a été créé.`, 'Demande validée');
+        this.getAllEvenements();
+        this.getDemandesCreation();
+      },
+      error: (error: HttpErrorResponse) => {
+        this.demandeEnValidation = undefined;
+        this.afficherErreur(error);
+      }
     });
   }
 

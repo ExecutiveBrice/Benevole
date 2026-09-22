@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import java.util.List;
 
 
@@ -28,7 +31,11 @@ public class EvenementService {
     @Autowired
     private CreneauService creneauService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public void persist(Evenement evenement) {
+        synchroniserSequenceIdentifiants();
         initialiserChampsTexte(evenement);
         evenementRepository.save(evenement);
         evenement.setLock(Constante.LOCK);
@@ -61,6 +68,22 @@ public class EvenementService {
         evenement.setPageTitleFont("PermanentMarker");
         evenement.setBodyFont("Arial");
 
+    }
+
+    /**
+     * Certaines bases existantes ont été alimentées avec des identifiants
+     * explicites, ce qui peut laisser la séquence PostgreSQL derrière le plus
+     * grand identifiant présent. On la remet à niveau avant toute création afin
+     * d'éviter une violation de la clé primaire lors de l'insertion.
+     */
+    private void synchroniserSequenceIdentifiants() {
+        entityManager.createNativeQuery("""
+                SELECT setval(
+                    pg_get_serial_sequence('evenement', 'id'),
+                    COALESCE((SELECT MAX(id) FROM evenement), 0) + 1,
+                    false
+                )
+                """).getSingleResult();
     }
 
     /**

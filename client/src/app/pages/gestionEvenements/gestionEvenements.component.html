@@ -26,6 +26,30 @@
         </button>
       </div>
 
+      <section class="requests-section">
+        <h2>Demandes de création</h2>
+        <p class="section-description">Validez une demande pour créer immédiatement l’évènement avec ses paramètres de base.</p>
+        @for (demande of demandesCreation; track demande.id) {
+          <article class="request-row">
+            <div>
+              <strong class="event-title">{{ demande.eventName }}</strong>
+              <dl class="request-details">
+                <div><dt>Contact</dt><dd>{{ demande.contact }}</dd></div>
+                <div><dt>E-mail</dt><dd><a [href]="'mailto:' + demande.contactEmail">{{ demande.contactEmail }}</a></dd></div>
+                @if (demande.contactTel) { <div><dt>Téléphone</dt><dd>{{ demande.contactTel }}</dd></div> }
+                @if (demande.endDate) { <div><dt>Date prévue</dt><dd>{{ demande.endDate | date:'dd/MM/yyyy' }}</dd></div> }
+                @if (demande.sitepersourl) { <div><dt>Site</dt><dd><a [href]="demande.sitepersourl" target="_blank" rel="noopener">Ouvrir le site</a></dd></div> }
+              </dl>
+            </div>
+            <button type="button" class="btn btn-success" (click)="validerDemande(demande)" [disabled]="demandeEnValidation !== undefined">
+              {{ demandeEnValidation === demande.id ? 'Création…' : 'Valider et créer' }}
+            </button>
+          </article>
+        } @empty {
+          <p>Aucune demande en attente.</p>
+        }
+      </section>
+
       <section class="events-section">
         <h2>Évènements</h2>
         @for (evenement of evenements; track evenement.id) {

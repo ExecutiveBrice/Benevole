@@ -34,6 +34,10 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
+                        // Le formulaire d'aide est public, mais la liste et la validation
+                        // des demandes restent réservées aux super-administrateurs.
+                        .requestMatchers(HttpMethod.POST, "/demandes-evenements", "/demandes-evenements/").permitAll()
+                        .requestMatchers("/demandes-evenements/**").hasRole("ADMIN")
                         // Gestion des comptes et propriétés sensibles.
                         .requestMatchers("/administrateurs/**", "/config/getProps").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/auth/mot-de-passe/**").permitAll()
