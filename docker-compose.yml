@@ -5,7 +5,7 @@ services:
     depends_on:
       - app_benevole
     volumes:
-      - ./client:/usr/share/nginx/html/benevoles
+      - ./client/dist/browser:/usr/share/nginx/html/benevoles:ro
     networks:
       - traefik_web
     labels:
@@ -30,7 +30,7 @@ services:
     environment:
       - DNS_NAME=${DNS_NAME}
       - PASSWORD_OVHMAIL=${PASSWORD_OVHMAIL}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:8106/${DB_NAME}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - MJ_MAIL=${MJ_MAIL}
