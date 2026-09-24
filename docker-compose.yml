@@ -5,13 +5,13 @@ services:
     depends_on:
       - app_benevole
     volumes:
-      - ./client:/usr/share/nginx/html/benevoles
+      - ./client/dist/browser:/usr/share/nginx/html:ro
     networks:
       - traefik_web
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.client_benevole.priority=1000"
-      - "traefik.http.routers.client_benevole.rule=(Host(`${DNS_NAME}`) || Host(`www.${DNS_NAME}`)) && PathPrefix(`/benevoles/`)"
+      - "traefik.http.routers.client_benevole.rule=Host(`benevoles.${DNS_NAME}`)"
 
       - "traefik.http.routers.client_benevole.entrypoints=websecure"
       - "traefik.http.routers.client_benevole.tls=true"
@@ -44,10 +44,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app_benevole.priority=10000"
-      - "traefik.http.routers.app_benevole.rule=(Host(`${DNS_NAME}`) || Host(`www.${DNS_NAME}`)) && PathPrefix(`/benevoles/api/`)"
+      - "traefik.http.routers.app_benevole.rule=Host(`benevoles.${DNS_NAME}`)"
 
       - "traefik.http.routers.app_benevole.middlewares=app_benevole-replacepathregex"
-      - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/benevoles/api/(.*)"
+      - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/api/(.*)"
       - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.replacement=/$$1"
 
       - "traefik.http.routers.app_benevole.entrypoints=websecure"

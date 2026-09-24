@@ -62,7 +62,7 @@ public class EmailService {
             corpsMessage.append(benevole.getEvenement().getContactEmail());
             corpsMessage.append("<br />");
             corpsMessage.append("<br />");
-            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "'>https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "</a>");
+            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www." + System.getenv("DNS_NAME") + "/#/" + benevole.getEvenement().getId() + "'>https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "</a>");
             corpsMessage.append("<br />");
 
             List<String> destinataires = new ArrayList<>();
