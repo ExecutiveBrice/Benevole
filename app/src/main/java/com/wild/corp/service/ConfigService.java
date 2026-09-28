@@ -23,7 +23,7 @@ public class ConfigService {
         Params params = new Params();
         params.setHeader(Constante.HEADER);
         params.setTitle(Constante.TITLE);
-        params.setUrl("https://"+DNS_NAME+"/benevoles/");
+        params.setUrl("https://"+DNS_NAME+"/");
         params.setUsing(Constante.USING);
         params.setSignature(Constante.SIGNATURE);
         params.setManaging(Constante.MANAGING);

@@ -28,7 +28,7 @@ server:
 # APP_BOOTSTRAP_ADMIN_USERNAME (adresse e-mail) et APP_BOOTSTRAP_ADMIN_PASSWORD.
 app:
   # URL publique de l'application utilisée dans les liens de réinitialisation.
-  frontend-url: ${APP_FRONTEND_URL:http://localhost:4200/benevoles/}
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:4200/}
   bootstrap-admin:
     username: ${APP_BOOTSTRAP_ADMIN_USERNAME:}
     password: ${APP_BOOTSTRAP_ADMIN_PASSWORD:}
