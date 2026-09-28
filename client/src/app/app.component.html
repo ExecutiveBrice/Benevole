@@ -7,7 +7,7 @@
      [style.--event-page-title-font]="evenement?.pageTitleFont"
      [style.--event-body-font]="evenement?.bodyFont"
      [style.--event-text-color]="evenement?.couleurText">
-<header class="app-header" [class.has-mobile-event-tabs]="isEventDetailPage()" [style.backgroundColor]="evenement?.couleurBandeau">
+<header class="app-header" [class.has-mobile-event-tabs]="isEventDetailPage()" [class.is-event-page]="isEventPage()" [class.is-landing-page]="isLandingPage()" [style.backgroundColor]="isLandingPage() ? 'black' : evenement?.couleurBandeau">
   <nav class="navbar container-fluid px-3 py-2" aria-label="Navigation principale">
     @if (logo) {
       @if (evenement?.sitepersourl) {
@@ -18,12 +18,12 @@
         <img class="event-logo" [src]="logo" alt="Logo de l'évènement">
       }
     }
-    <div class="navbar-brand d-flex align-items-center" [style.color]="evenement?.couleurText">
+    <div class="navbar-brand d-flex align-items-center" [style.color]="isLandingPage() ? 'white' : evenement?.couleurText">
       <span class="event-title"
         appFitHeaderTitle
         [appFitHeaderTitle]="evenement?.eventName || 'Bénévoles'"
-        [appFitHeaderTitleFont]="evenement?.titleFont"
-        [style.font-family]="evenement?.titleFont">{{ evenement?.eventName || 'Bénévoles' }}</span>
+        [appFitHeaderTitleFont]="getHeaderTitleFont()"
+        [style.font-family]="getHeaderTitleFont()">{{ evenement?.eventName || 'Bénévoles' }}</span>
     </div>
   </nav>
   @if (isEventDetailPage()) {
@@ -48,9 +48,9 @@
   <router-outlet/>
 </main>
 
-<footer class="app-footer" [style.backgroundColor]="evenement?.couleurBandeau" aria-label="Actions principales">
+<footer class="app-footer" [class.is-landing-page]="isLandingPage()" [style.backgroundColor]="isLandingPage() ? 'black' : evenement?.couleurBandeau" aria-label="Actions principales">
   <div class="container-fluid">
-  <a class="btn btn-outline-light footer-action" routerLink="/" aria-label="Accueil" title="Accueil">
+  <a class="btn btn-outline-light footer-action" routerLink="/" [queryParams]="{ liste: '1' }" aria-label="Liste des évènements" title="Liste des évènements">
     <span class="app-icon" aria-hidden="true">home</span>
   </a>
 

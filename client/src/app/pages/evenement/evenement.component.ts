@@ -1,6 +1,6 @@
 
 import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { BenevoleService, TransmissionService, EvenementService, FileService, ConfigService } from '../../services';
+import { BenevoleService, TransmissionService, EvenementService, FileService, ConfigService, DernierEvenementService } from '../../services';
 import { CroisementService, StandService, MailService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Evenement } from '../../models';
@@ -44,6 +44,7 @@ export class EvenementComponent implements OnInit {
     public standService: StandService,
     public mailService: MailService,
     public transmissionService: TransmissionService,
+    private dernierEvenementService: DernierEvenementService,
   
     public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
@@ -90,6 +91,7 @@ export class EvenementComponent implements OnInit {
       next: (data) => {
        
         this.evenement = data;
+        this.dernierEvenementService.save(data.id);
         document.getElementsByTagName('html')[0].style.setProperty('--background-color', this.evenement!.couleurFond);
         this.transmissionService.dataTransmission(data);
         this.changeDetectorRef.detectChanges();

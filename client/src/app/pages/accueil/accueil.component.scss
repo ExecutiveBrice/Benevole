@@ -10,13 +10,26 @@
 
 .event-poster,
 .event-poster-placeholder {
-  height: 13rem;
-  object-fit: cover;
+  width: 100%;
+  aspect-ratio: 1 / 1.4142;
+  object-fit: contain;
+  background: var(--bs-secondary-bg);
 }
 
 .event-poster-placeholder {
   display: grid;
   place-items: center;
   color: var(--bs-secondary-color);
-  background: var(--bs-secondary-bg);
+}
+
+.event-card .card-body {
+  display: grid;
+  min-height: 4.5rem;
+  place-items: center;
+  text-align: center;
+}
+
+.event-card .card-title {
+  margin: 0;
+  font-family: PermanentMarker, cursive;
 }
