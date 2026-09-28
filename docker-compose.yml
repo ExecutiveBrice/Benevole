@@ -11,7 +11,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.client_benevole.priority=1000"
-      - "traefik.http.routers.client_benevole.rule=Host(`benevoles.${DNS_NAME}`)"
+      - "traefik.http.routers.client_benevole.rule=Host(`benevole.${DNS_NAME}`)"
 
       - "traefik.http.routers.client_benevole.entrypoints=websecure"
       - "traefik.http.routers.client_benevole.tls=true"
@@ -44,7 +44,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app_benevole.priority=10000"
-      - "traefik.http.routers.app_benevole.rule=Host(`benevoles.${DNS_NAME}`)"
+      - "traefik.http.routers.app_benevole.rule=Host(`benevole.${DNS_NAME}`) && PathPrefix(`/api`)"
 
       - "traefik.http.routers.app_benevole.middlewares=app_benevole-replacepathregex"
       - "traefik.http.middlewares.app_benevole-replacepathregex.replacepathregex.regex=^/api/(.*)"
