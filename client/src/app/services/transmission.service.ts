@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Benevole, Evenement } from '../models';
+import { BenevoleSessionService } from './benevole-session.service';
 
 
 @Injectable()
 export class TransmissionService {
+  constructor(private benevoleSessionService: BenevoleSessionService) {}
 
   // Observable string sources
   private dataSource = new Subject<Evenement>();
@@ -45,7 +47,7 @@ export class TransmissionService {
 
   // Service message commands
   benevoleTransmission(benevole: Benevole) {
-    localStorage.setItem('benevoleEmail', JSON.stringify(benevole.email));
+    this.benevoleSessionService.saveEmail(benevole.email);
     this.benevoleSource.next(benevole);
   }
 

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit} from '@angular/core';
-import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Evenement } from './models';
 import { AuthService, EvenementService, FileService, TransmissionService } from './services';
 import {HttpErrorResponse} from "@angular/common/http";
@@ -48,6 +48,12 @@ export class AppComponent  implements OnInit{
 
 
   ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.applyBodyBackground();
+      }
+    });
+
     this.transmissionService.mobileEventPanelStream.subscribe(panel => {
       this.activeMobileEventPanel = panel;
       this.changeDetectorRef.markForCheck();
@@ -58,8 +64,7 @@ export class AppComponent  implements OnInit{
     });
     this.transmissionService.dataStream.subscribe(data => {
       this.evenement = data
-      this.elementRef.nativeElement.ownerDocument
-      .body.style.backgroundColor = data.couleurFond;
+      this.applyBodyBackground();
       this.isValidAccessForEvent = JSON.parse(localStorage.getItem('isValidAccessForEvent')!);
       this.getLogo()
       this.changeDetectorRef.detectChanges();
@@ -93,6 +98,15 @@ export class AppComponent  implements OnInit{
 
   isLandingPage(): boolean {
     return /^\/(?:\?.*)?$/.test(this.router.url);
+  }
+
+  getHeaderTitleFont(): string | undefined {
+    return this.isLandingPage() ? 'PermanentMarker' : this.evenement?.titleFont;
+  }
+
+  private applyBodyBackground(): void {
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor =
+      this.isLandingPage() ? 'grey' : (this.evenement?.couleurFond ?? '');
   }
 
   isEventPage(): boolean {

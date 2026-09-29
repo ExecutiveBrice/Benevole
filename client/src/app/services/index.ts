@@ -14,3 +14,5 @@ export * from './bootstrap-modal.service';
 export * from './auth.service';
 export * from './administrateur.service';
 export * from './demande-creation-evenement.service';
+export * from './dernier-evenement.service';
+export * from './benevole-session.service';

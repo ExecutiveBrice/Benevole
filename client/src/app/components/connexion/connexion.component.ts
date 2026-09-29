@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {Benevole, Croisement, Evenement} from '../../models';
-import {BenevoleService, TransmissionService} from '../../services';
+import {BenevoleService, BenevoleSessionService, TransmissionService} from '../../services';
 import { ToastService } from '../../services';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrderByPipe} from "../../services/sort.pipe";
@@ -25,6 +25,7 @@ export class ConnexionComponent implements OnInit {
   constructor(
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
+    private benevoleSessionService: BenevoleSessionService,
     private router: Router,
     private toastr: ToastService,
     public formBuilder: FormBuilder,
@@ -49,14 +50,14 @@ export class ConnexionComponent implements OnInit {
       this.changeDetectorRef.markForCheck();
     });
 
-    this.benevoleEmail = JSON.parse(localStorage.getItem('benevoleEmail')!);
+    this.benevoleEmail = this.benevoleSessionService.getEmail() ?? '';
     if (this.benevoleEmail != null) {
       this.formulaire.get('email')?.setValue( this.benevoleEmail)
       this.find();
     }
   }
   exit(){
-    localStorage.removeItem('benevoleEmail');
+    this.benevoleSessionService.clear();
     this.router.navigate(['/']);
   }
   formulaire = this.formBuilder.group({

@@ -57,7 +57,6 @@ export class AccueilComponent implements OnInit {
       next: (data) => {
       this.evenements = data.filter(evenemet => evenemet.id != 0)
       this.evenements.forEach(evenement => this.getAffiche(evenement))
-      this.changeDetectorRef.detectChanges();
     },
       error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
@@ -84,6 +83,9 @@ export class AccueilComponent implements OnInit {
     this.fileService.get(evenement.id, 'affiche.jpeg').subscribe({
       next: (data) => {
         evenement.affiche = "data:image/jpeg;base64," + data
+        // Les affiches arrivent après le rendu initial des cartes : déclencher
+        // une vérification garantit que chaque image apparaît dès sa réception.
+        this.changeDetectorRef.markForCheck();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
