@@ -38,6 +38,15 @@ export class TransmissionService {
     this.connexionHighlightSource.next(highlight);
   }
 
+  // Demande au formulaire de connexion de placer le curseur sur son premier
+  // champ après le changement de panneau sur mobile.
+  private connexionFocusSource = new Subject<void>();
+  connexionFocusStream = this.connexionFocusSource.asObservable();
+
+  requestConnexionFocus(): void {
+    this.connexionFocusSource.next();
+  }
+
 
   // Observable string sources
   private benevoleSource = new Subject<Benevole>();

@@ -224,13 +224,13 @@ public class AdministrateurService implements UserDetailsService {
     private void creerEtEnvoyerJetonReinitialisation(Administrateur administrateur) {
         String tokenBrut = creerJetonReinitialisation(administrateur);
         emailService.sendPasswordResetMessage(administrateur.getUsername(),
-                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+                frontendUrl + "mot-de-passe?token=" + tokenBrut);
     }
 
     private void creerEtEnvoyerJetonInvitation(Administrateur administrateur) {
         String tokenBrut = creerJetonReinitialisation(administrateur);
         emailService.sendAdministratorInvitationMessage(administrateur.getUsername(),
-                frontendUrl + "#/mot-de-passe?token=" + tokenBrut);
+                frontendUrl + "mot-de-passe?token=" + tokenBrut);
     }
 
     private String creerJetonReinitialisation(Administrateur administrateur) {

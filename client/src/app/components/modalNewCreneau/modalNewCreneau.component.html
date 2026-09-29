@@ -1,0 +1,28 @@
+<h2 class="modal-title h5">{{ data.title }}</h2>
+
+<form [formGroup]="creneauForm" (ngSubmit)="accept()">
+  <div class="modal-body">
+    <div class="row g-3">
+      <div class="col-12 col-sm-4">
+        <label class="form-label" for="new-creneau-order">Ordre</label>
+        <input id="new-creneau-order" class="form-control" type="text" formControlName="ordre">
+        @if (submitted && creneauForm.get('ordre')?.hasError('required')) {
+          <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire.</div>
+        }
+      </div>
+
+      <div class="col-12 col-sm-8">
+        <label class="form-label" for="new-creneau-plage">Plage horaire</label>
+        <input id="new-creneau-plage" class="form-control" type="text" formControlName="plage">
+        @if (submitted && creneauForm.get('plage')?.hasError('required')) {
+          <div class="invalid-feedback d-block">La plage horaire est obligatoire.</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-outline-secondary" type="button" (click)="cancel()">Annuler</button>
+    <button class="btn btn-primary" type="submit">Ajouter</button>
+  </div>
+</form>

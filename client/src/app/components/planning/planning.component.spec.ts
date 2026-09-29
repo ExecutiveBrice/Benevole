@@ -123,6 +123,7 @@ describe('Inscription depuis le planning', () => {
     const toastService = TestBed.inject(ToastService);
     const highlight = jasmine.createSpy('highlight');
     fixture.componentInstance.actionEmitter.subscribe(highlight);
+    spyOn(fixture.componentInstance as any, 'isMobileViewport').and.returnValue(false);
 
     fixture.componentInstance.choisir(croisement);
 
@@ -131,5 +132,21 @@ describe('Inscription depuis le planning', () => {
       type: 'danger'
     }));
     expect(highlight).toHaveBeenCalledOnceWith(true);
+  });
+
+  it('ouvre la connexion et demande le focus sur mobile', () => {
+    fixture.componentRef.setInput('benevole', undefined);
+    loadPlanning();
+    const transmission = TestBed.inject(TransmissionService);
+    const focus = jasmine.createSpy('focus');
+    let activePanel = -1;
+    transmission.connexionFocusStream.subscribe(focus);
+    transmission.mobileEventPanelStream.subscribe(panel => activePanel = panel);
+    spyOn(fixture.componentInstance as any, 'isMobileViewport').and.returnValue(true);
+
+    fixture.componentInstance.choisir(croisement);
+
+    expect(activePanel).toBe(0);
+    expect(focus).toHaveBeenCalledTimes(1);
   });
 });

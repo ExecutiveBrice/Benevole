@@ -36,35 +36,10 @@
   text-align: center;
 }
 
-.event-logo {
-  width: 54px;
-  height: 54px;
-  object-fit: contain;
-  border-radius: .375rem;
-}
-
-.event-logo-link {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 54px;
-  height: 54px;
-  overflow: hidden;
-}
-
-/* Le logo d'un évènement remplit la bande haute, sans modifier les en-têtes
-   de la liste des évènements ou des pages générales. */
 .app-header.is-event-page .navbar {
   height: 72px;
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-}
-
-.app-header.is-event-page .event-logo,
-.app-header.is-event-page .event-logo-link {
-  width: auto;
-  height: 72px;
-  border-radius: 0;
 }
 
 .event-title {
@@ -211,6 +186,9 @@
 }
 
 .toast-container {
+  // Évite que les notifications recouvrent l'en-tête ou les actions de page,
+  // y compris sur les écrans mobiles de faible hauteur.
+  top: 300px !important;
   z-index: 1100;
   width: min(420px, calc(100vw - 2rem));
 }

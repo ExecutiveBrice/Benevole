@@ -226,7 +226,15 @@ export class PlanningComponent implements OnInit {
 
     if (!this.benevole) {
       this.toastr.error("La connexion est obligatoire pour s'inscrire sur un créneau", 'Erreur');
-      this.actionEmitter.emit(true);
+      if (this.isMobileViewport()) {
+        // Sur mobile, ouvrir immédiatement le panneau de connexion plutôt que
+        // de signaler l'onglet par une animation.
+        this.transmissionService.setConnexionHighlight(false);
+        this.transmissionService.selectMobileEventPanel(0);
+        this.transmissionService.requestConnexionFocus();
+      } else {
+        this.actionEmitter.emit(true);
+      }
     } else if (croisement.benevoles != undefined && croisement.benevoles.find(benevole => benevole.id == this.benevole?.id) == undefined && croisement.benevoles.length >= croisement.limite) {
       this.toastr.error("Ce créneau est complet, choisisez en un autre", 'Erreur');
     } else {
@@ -236,6 +244,11 @@ export class PlanningComponent implements OnInit {
         this.ajoutCroisement(croisement);
       }
     }
+  }
+
+  private isMobileViewport(): boolean {
+    return typeof window !== 'undefined'
+      && window.matchMedia('(max-width: 991.98px)').matches;
   }
 
   retraitCroisement(croisement: Croisement) {

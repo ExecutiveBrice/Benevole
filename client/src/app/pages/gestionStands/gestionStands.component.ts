@@ -139,7 +139,11 @@ export class GestionStandsComponent implements OnInit {
     }).afterClosed().subscribe(benevole => {
       console.log(benevole);
 
-      if (benevole.id == 0) {
+      if (!benevole) {
+        return;
+      }
+
+      if (benevole.id == null) {
 
         benevole.email = benevole.email.toLowerCase();
         benevole.email = benevole.email.trimEnd();
@@ -148,6 +152,9 @@ export class GestionStandsComponent implements OnInit {
         this.benevoleService.add(benevole, this.idEvenement).subscribe({
           next: (data) => {
             benevole = data;
+            if (!this.benevoles.some(existing => existing.id === benevole.id)) {
+              this.benevoles.push(benevole);
+            }
 
             this.updateCroisement(croisement, benevole,stand);
           },

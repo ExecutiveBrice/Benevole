@@ -221,7 +221,7 @@ export class GestionComponent implements OnInit {
 
 
   getQRcode(idEvenement: number): void {
-    this.using_address = this.params.url + "#/" + idEvenement
+    this.using_address = this.params.url + idEvenement
     // With promises
     QRCode.toDataURL(this.using_address, { errorCorrectionLevel: 'H', width: 500 })
       .then((qrcode: string) => {

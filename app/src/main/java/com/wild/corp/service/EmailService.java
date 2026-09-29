@@ -35,6 +35,9 @@ public class EmailService {
     @Autowired
     BenevoleService benevoleService;
 
+    @Autowired
+    ConfigService configService;
+
     public String sendGestionMessage(EmailRessource email) {
 
         email.getTo().forEach(benevoleId -> {
@@ -62,7 +65,8 @@ public class EmailService {
             corpsMessage.append(benevole.getEvenement().getContactEmail());
             corpsMessage.append("<br />");
             corpsMessage.append("<br />");
-            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www." + System.getenv("DNS_NAME") + "/#/" + benevole.getEvenement().getId() + "'>https://www." + System.getenv("DNS_NAME") + "/benevoles/#/" + benevole.getEvenement().getId() + "</a>");
+            String eventUrl = configService.getEventUrl(benevole.getEvenement().getId());
+            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='" + eventUrl + "'>" + eventUrl + "</a>");
             corpsMessage.append("<br />");
 
             List<String> destinataires = new ArrayList<>();

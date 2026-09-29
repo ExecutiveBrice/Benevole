@@ -22,9 +22,9 @@ public class BenevoleController {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<Benevole> add(@RequestBody Benevole benevole, @RequestParam Integer eventId) {
-        benevoleService.add(benevole, eventId );
+        Benevole benevoleCree = benevoleService.add(benevole, eventId);
 
-        return new ResponseEntity<>(benevole, HttpStatus.OK);
+        return new ResponseEntity<>(benevoleCree, HttpStatus.OK);
     }
 
 

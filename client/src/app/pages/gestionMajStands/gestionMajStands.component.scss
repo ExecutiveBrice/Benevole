@@ -1,1 +1,36 @@
 :host { display: block; }
+
+.heading-copy {
+  min-width: 0;
+}
+
+.associated-slots summary {
+  cursor: pointer;
+}
+
+.associated-slots summary > h3 {
+  display: inline;
+}
+
+.associated-slots-content .list-group {
+  --bs-list-group-bg: transparent;
+  --bs-list-group-border-color: transparent;
+  background-color: transparent;
+}
+
+.associated-slots-content .list-group-item {
+  padding: 1rem;
+}
+
+.associated-slots-content .list-group-item:nth-child(odd) {
+  background-color: var(--bs-white);
+}
+
+.associated-slots-content .list-group-item:nth-child(even) {
+  background-color: var(--bs-gray-100);
+}
+
+.associated-slots summary:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 4px;
+}

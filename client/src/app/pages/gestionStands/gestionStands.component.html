@@ -8,8 +8,8 @@
     <div class="row g-3">
     @for (stand of stands | orderBy:'ordre':false; track $index) {
       <div class="col-12 col-lg-6 col-xl-4">
-        <section class="card h-100">
-          <div class="card-header"><h2 class="h5 mb-0">{{ stand.nom }}</h2></div>
+        <details class="card h-100">
+          <summary class="card-header"><h2 class="h5 mb-0">{{ stand.nom }}</h2></summary>
           <div class="card-body p-0">
             <div class="list-group list-group-flush">
             @for (standcroisement of stand.croisements | orderBy:'creneau.ordre':false; track standcroisement) {
@@ -23,7 +23,7 @@
                   @for (benevole of standcroisement.benevoles | orderBy:'nom':false; track benevole) {
                     <li class="list-group-item d-flex align-items-center justify-content-between gap-2">
                       <div class="small"><strong class="d-block">{{ benevole.prenom }} {{ benevole.nom }}</strong><span class="text-body-secondary">{{ benevole.email }} · {{ benevole.telephone }}</span></div>
-                      <button class="btn btn-sm btn-outline-danger" type="button" (click)="delete(benevole, standcroisement, stand)">Retirer</button>
+                      <button class="btn btn-sm btn-outline-danger icon-button" type="button" (click)="delete(benevole, standcroisement, stand)" aria-label="Retirer {{ benevole.prenom }} {{ benevole.nom }} du créneau" title="Retirer le bénévole"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg></button>
                     </li>
                   }
                   </ul>
@@ -36,7 +36,7 @@
             }
             </div>
           </div>
-        </section>
+        </details>
       </div>
     } @empty {
       <div class="col-12"><div class="alert alert-info mb-0">Aucun stand enregistré.</div></div>

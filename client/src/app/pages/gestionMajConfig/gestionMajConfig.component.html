@@ -156,35 +156,7 @@
           <span><span class="app-icon" aria-hidden="true">palette</span> Apparence</span>
           <span class="settings-summary">Polices</span>
         </summary>
-        <div class="card-body settings-section-content settings-fields-grid settings-colors-grid">
-          <div>
-            <label class="form-label" for="couleurFond">Fond</label>
-            <input id="couleurFond" class="form-control form-control-color" type="color" formControlName="couleurFond" (change)="forceUpdateEvenement()">
-          </div>
-          <div>
-            <label class="form-label" for="couleurBandeau">Bandeau</label>
-            <input id="couleurBandeau" class="form-control form-control-color" type="color" formControlName="couleurBandeau" (change)="forceUpdateEvenement()">
-          </div>
-          <div>
-            <label class="form-label" for="couleurText">Texte du bandeau</label>
-            <input id="couleurText" class="form-control form-control-color" type="color" formControlName="couleurText" (change)="forceUpdateEvenement()">
-          </div>
-          <div>
-            <label class="form-label" for="couleurTitre">Fond des titres</label>
-            <input id="couleurTitre" class="form-control form-control-color" type="color" formControlName="couleurTitre" (change)="forceUpdateEvenement()">
-          </div>
-          <div>
-            <label class="form-label" for="couleurTexteTitre">Texte des titres</label>
-            <input id="couleurTexteTitre" class="form-control form-control-color" type="color" formControlName="couleurTexteTitre" (change)="forceUpdateEvenement()">
-          </div>
-          <div>
-            <label class="form-label" for="couleurCard">Cartes</label>
-            <input id="couleurCard" class="form-control form-control-color" type="color" formControlName="couleurCard" (change)="forceUpdateEvenement()">
-          </div>
-          <div>
-            <label class="form-label" for="couleurBloc">Stands</label>
-            <input id="couleurBloc" class="form-control form-control-color" type="color" formControlName="couleurBloc" (change)="forceUpdateEvenement()">
-          </div>
+        <div class="card-body settings-section-content settings-fields-grid">
           <div class="settings-wide-field">
             <label class="form-label" for="titleFont">Police du titre du bandeau</label>
             <app-font-select id="titleFont" formControlName="titleFont" [fonts]="fontList"
@@ -205,40 +177,51 @@
           </div>
           <section class="settings-wide-field appearance-preview" aria-label="Aperçu mobile de la page planning">
             <h2 class="h6 mb-2">Aperçu mobile — Planning</h2>
-            <div class="mobile-planning-preview" [style.backgroundColor]="formulaireEvent.get('couleurFond')?.value" [style.font-family]="formulaireEvent.get('bodyFont')?.value">
-              <header class="mobile-planning-preview-header" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value">
-                <span class="app-icon" [style.color]="formulaireEvent.get('couleurText')?.value" aria-hidden="true">volunteer_activism</span>
-                <span [style.color]="formulaireEvent.get('couleurText')?.value" [style.font-family]="formulaireEvent.get('titleFont')?.value">
-                  {{ formulaireEvent.get('eventName')?.value || 'Mon évènement' }}
-                </span>
-              </header>
-              <nav class="mobile-planning-preview-tabs" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value"
-                [style.color]="formulaireEvent.get('couleurText')?.value" aria-label="Aperçu de la navigation mobile">
-                <span><span class="app-icon" aria-hidden="true">key</span></span>
-                <span class="is-active"><span class="app-icon" aria-hidden="true">calendar_month</span></span>
-                <span><span class="app-icon" aria-hidden="true">info</span></span>
-              </nav>
-              <div class="mobile-planning-preview-content">
-                @if (formulaireEvent.get('afficherMessagePlanning')?.value) {
-                  <div class="mobile-planning-preview-message" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
-                    Informations du planning
-                  </div>
-                }
-                <section class="mobile-planning-preview-card" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
-                  <h3 [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
-                    [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
-                    Les stands
-                  </h3>
-                  <div class="mobile-planning-preview-stand" [style.backgroundColor]="formulaireEvent.get('couleurBloc')?.value">
-                    <div [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
+            <div class="appearance-preview-layout">
+              <div class="mobile-planning-preview" [style.backgroundColor]="formulaireEvent.get('couleurFond')?.value" [style.font-family]="formulaireEvent.get('bodyFont')?.value">
+                <header class="mobile-planning-preview-header" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value">
+                  <span class="app-icon" [style.color]="formulaireEvent.get('couleurText')?.value" aria-hidden="true">volunteer_activism</span>
+                  <span [style.color]="formulaireEvent.get('couleurText')?.value" [style.font-family]="formulaireEvent.get('titleFont')?.value">
+                    {{ formulaireEvent.get('eventName')?.value || 'Mon évènement' }}
+                  </span>
+                </header>
+                <nav class="mobile-planning-preview-tabs" [style.backgroundColor]="formulaireEvent.get('couleurBandeau')?.value"
+                  [style.color]="formulaireEvent.get('couleurText')?.value" aria-label="Aperçu de la navigation mobile">
+                  <span><span class="app-icon" aria-hidden="true">key</span></span>
+                  <span class="is-active"><span class="app-icon" aria-hidden="true">calendar_month</span></span>
+                  <span><span class="app-icon" aria-hidden="true">info</span></span>
+                </nav>
+                <div class="mobile-planning-preview-content">
+                  @if (formulaireEvent.get('afficherMessagePlanning')?.value) {
+                    <div class="mobile-planning-preview-message" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
+                      Informations du planning
+                    </div>
+                  }
+                  <section class="mobile-planning-preview-card" [style.backgroundColor]="formulaireEvent.get('couleurCard')?.value">
+                    <h3 [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
                       [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
-                      Accueil <span>2/4</span>
+                      Les stands
+                    </h3>
+                    <div class="mobile-planning-preview-stand" [style.backgroundColor]="formulaireEvent.get('couleurBloc')?.value">
+                      <div [style.backgroundColor]="formulaireEvent.get('couleurTitre')?.value"
+                        [style.color]="formulaireEvent.get('couleurTexteTitre')?.value" [style.font-family]="formulaireEvent.get('pageTitleFont')?.value">
+                        Accueil <span>2/4</span>
+                      </div>
+                      <div class="mobile-planning-preview-slots">
+                        <span>09h–12h</span><span>14h–18h</span>
+                      </div>
                     </div>
-                    <div class="mobile-planning-preview-slots">
-                      <span>09h–12h</span><span>14h–18h</span>
-                    </div>
-                  </div>
-                </section>
+                  </section>
+                </div>
+              </div>
+              <div class="appearance-color-controls" role="group" aria-label="Couleurs de l’apparence">
+                <input id="couleurFond" class="form-control form-control-color" type="color" formControlName="couleurFond" (change)="forceUpdateEvenement()" aria-label="Fond">
+                <input id="couleurBandeau" class="form-control form-control-color" type="color" formControlName="couleurBandeau" (change)="forceUpdateEvenement()" aria-label="Bandeau">
+                <input id="couleurText" class="form-control form-control-color" type="color" formControlName="couleurText" (change)="forceUpdateEvenement()" aria-label="Texte du bandeau">
+                <input id="couleurTitre" class="form-control form-control-color" type="color" formControlName="couleurTitre" (change)="forceUpdateEvenement()" aria-label="Fond des titres">
+                <input id="couleurTexteTitre" class="form-control form-control-color" type="color" formControlName="couleurTexteTitre" (change)="forceUpdateEvenement()" aria-label="Texte des titres">
+                <input id="couleurCard" class="form-control form-control-color" type="color" formControlName="couleurCard" (change)="forceUpdateEvenement()" aria-label="Cartes">
+                <input id="couleurBloc" class="form-control form-control-color" type="color" formControlName="couleurBloc" (change)="forceUpdateEvenement()" aria-label="Stands">
               </div>
             </div>
           </section>

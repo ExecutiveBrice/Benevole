@@ -1,165 +1,122 @@
 @if (authorize && evenement != undefined) {
-
-<div class="row marge">
-  <div class="col-sm-12">
-
-
-    <section class="card shadow-sm mb-3">
-      <div class="row g-3">
-        <div class="col">
-
-          {{benevoles.length}} bénévoles
-
-        </div>
-        <div class="col">
-          <button class="full-width" type="button" (click)="exportAsXLSX()">Télécharger</button>
-        </div>
+  <div class="page-container">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+      <div>
+        <h1 class="h3 mb-1">Bénévoles</h1>
+        <p class="text-body-secondary mb-0">{{ benevoles.length }} bénévole(s) inscrit(s).</p>
       </div>
-    </section>
+      <button class="btn btn-outline-primary" type="button" (click)="exportAsXLSX()">Télécharger</button>
+    </div>
 
-  </div>
-
-
-  @for (benevole of benevoles | orderBy:'nom':false; track $index) {
-  <div class="col-6 col-sm-6 col-md-4 col-xl-3 col-xxl-2">
-
-    <details #mep class="card mb-3" [formGroup]="benevole.formulaire">
-      <summary class="card-header">
-        <span class="fw-semibold"> {{benevole.nom}} {{benevole.prenom}} </span>
-
-      </summary>
-
-      @if (mep.open) {
-      <div class="row marge">
-
-        
-        
-
-        <div class="col-8">
-
-      <div class="mb-3 full-width">
-        <label class="form-label">Nom</label>
-        <input class="form-control" formControlName="nom" placeholder="Ex: Connor">
-        @if (benevole.formulaire.get('nom')?.hasError('required')) {
-        <div class="invalid-feedback d-block">Le nom est obligatoire</div>
-        }
-        @if (benevole.formulaire.get('nom')?.hasError('minlength')) {
-        <div class="invalid-feedback d-block">C'est un peu court comme nom!</div>
-        }
-        <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
+    @if (chargement) {
+      <div class="alert alert-info" role="status">Chargement des bénévoles…</div>
+    } @else if (erreurChargement) {
+      <div class="alert alert-danger d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+        <span>Impossible de charger les bénévoles. Veuillez réessayer.</span>
+        <button class="btn btn-outline-danger" type="button" (click)="relancerChargement()">Réessayer</button>
       </div>
+    } @else {
+    <div class="row g-3">
+    @for (benevole of benevoles | orderBy:'nom':false; track benevole.id) {
+      <div class="col-12 col-md-6 col-xl-4">
+        <details class="card h-100" [formGroup]="benevole.formulaire">
+          <summary class="card-header">
+            <span class="fw-semibold">{{ benevole.nom }} {{ benevole.prenom }}</span>
+          </summary>
 
-    </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label" [for]="'nom-' + benevole.id">Nom</label>
+                  <input class="form-control" [id]="'nom-' + benevole.id" formControlName="nom" placeholder="Ex. Connor">
+                  @if (benevole.formulaire.get('nom')?.hasError('required')) {
+                    <div class="invalid-feedback d-block">Le nom est obligatoire.</div>
+                  }
+                  @if (benevole.formulaire.get('nom')?.hasError('minlength')) {
+                    <div class="invalid-feedback d-block">Le nom est trop court.</div>
+                  }
+                </div>
 
-    <div class="col-4">
-      <button class="green-icon" type="button" [disabled]="!benevole.formulaire.touched"
-        (click)="update(benevole)"><span class="app-icon">save</span>
-      </button>
-    </div>
+                <div class="col-12 col-sm-6">
+                  <label class="form-label" [for]="'prenom-' + benevole.id">Prénom</label>
+                  <input class="form-control" [id]="'prenom-' + benevole.id" formControlName="prenom" placeholder="Ex. Sarah">
+                  @if (benevole.formulaire.get('prenom')?.hasError('required')) {
+                    <div class="invalid-feedback d-block">Le prénom est obligatoire.</div>
+                  }
+                  @if (benevole.formulaire.get('prenom')?.hasError('minlength')) {
+                    <div class="invalid-feedback d-block">Le prénom est trop court.</div>
+                  }
+                </div>
 
-    <div class="col-8">
+                <div class="col-12">
+                  <label class="form-label" [for]="'email-' + benevole.id">E-mail</label>
+                  <input class="form-control" [id]="'email-' + benevole.id" type="email" formControlName="email">
+                  @if (benevole.formulaire.get('email')?.hasError('email')) {
+                    <div class="invalid-feedback d-block">Le format de l’e-mail est incorrect.</div>
+                  }
+                  @if (benevole.formulaire.get('email')?.hasError('required')) {
+                    <div class="invalid-feedback d-block">L’e-mail est obligatoire.</div>
+                  }
+                </div>
 
-      <div class="mb-3 full-width">
-        <label class="form-label">Prenom</label>
-        <input class="form-control" formControlName="prenom" placeholder="Ex: Sarah">
-        @if (benevole.formulaire.get('prenom')?.hasError('required')) {
-        <div class="invalid-feedback d-block">Le prenom est obligatoire</div>
-        }
-        @if (benevole.formulaire.get('prenom')?.hasError('minlength')) {
-        <div class="invalid-feedback d-block">C'est un peu court comme prenom!</div>
-        }
-        <div class="form-text">Pour vous identifier sur le planning et dans les échanges</div>
-      </div>
-    </div>
-
-    <div class="col-4">
-      <button class="red-icon" type="button" (click)="delete(benevole)"><span class="app-icon">delete_forever</span>
-      </button>
-    </div>
-
-
-
-        <div class="col-12">
-          <div class="mb-3 full-width">
-            <label class="form-label">Email</label>
-            <input class="form-control" type="email" formControlName="email">
-            @if (benevole.formulaire.get('email')?.hasError('email')) {
-            <div class="invalid-feedback d-block">Le format est incorrecte</div>
-            }
-            @if (benevole.formulaire.get('email')?.hasError('required')) {
-            <div class="invalid-feedback d-block">L'email est obligatoire</div>
-            }
-          </div>
-
-        </div>
-
-
-        <div class="col-12">
-          @if (!benevole.formulaire.get('telephone')?.disabled) {
-          <div class="mb-3 full-width">
-            <label class="form-label">telephone</label>
-            <input class="form-control" type="text" formControlName="telephone">
-
-            @if (benevole.formulaire.get('telephone')?.hasError('required')) {
-            <div class="invalid-feedback d-block">Le telephone est obligatoire</div>
-            }
-          </div>
-          }
-        </div>
-
-        <div class="col-12">
-          @for (benecroisement of benevole.croisements | orderBy:'stand.ordre':false; track $index) {
-
-
-          <div class="mb-3 full-width">
-            <label class="form-label">{{benecroisement.stand.nom == "tous"?"N'importe quel
-              stand":benecroisement.stand.nom}}</label>
-            <select name="crois">
-              @for (stand of stands | orderBy:'ordre':false; track $index) {
-              <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
-                @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
-                <option [selected]="benecroisement.id == croisement.id"
-                  (click)="choisir(benevole, benecroisement, croisement)">
-                  {{croisement.creneau.plage}}
-                  ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+                @if (!benevole.formulaire.get('telephone')?.disabled) {
+                  <div class="col-12">
+                    <label class="form-label" [for]="'telephone-' + benevole.id">Téléphone</label>
+                    <input class="form-control" [id]="'telephone-' + benevole.id" type="text" formControlName="telephone">
+                    @if (benevole.formulaire.get('telephone')?.hasError('required')) {
+                      <div class="invalid-feedback d-block">Le téléphone est obligatoire.</div>
+                    }
+                  </div>
                 }
 
-
-              </optgroup>
-              }
-              <option (click)="choisir(benevole, benecroisement, null)">
-                <font color="red"><b>Suppression</b></font>
-              </option>
-            </select>
-          </div>
-
-          }
-        </div>
-        <div class="col-12">
-          <div class="mb-3 full-width">
-            <label class="form-label">Nouveau</label>
-            <select name="crois">
-              <option value="" selected></option>
-              @for (stand of stands | orderBy:'ordre':false; track $index) {
-              <optgroup label="{{stand.nom == 'tous'?'N\'importe quel stand':stand.nom}}">
-
-                @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track $index) {
-
-                <option (click)="choisir(benevole, null, croisement)"> {{croisement.creneau.plage}}
-                  ({{croisement.benevoles.length}}/{{croisement.limite}})</option>
+                <div class="col-12">
+                @for (benecroisement of benevole.croisements | orderBy:'stand.ordre':false; track benecroisement.id) {
+                  <div class="d-flex align-items-center justify-content-between gap-2 border rounded p-2 mb-2">
+                    <span>{{ benecroisement.stand.nom == 'tous' ? "N’importe quel stand" : benecroisement.stand.nom }} · {{ benecroisement.creneau.plage }}</span>
+                    <button class="btn btn-sm btn-outline-danger icon-button" type="button" (click)="retraitCroisement(benevole, benecroisement)" aria-label="Retirer le créneau {{ benecroisement.creneau.plage }}" title="Retirer ce créneau">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg>
+                    </button>
+                  </div>
                 }
-              </optgroup>
-              }
-            </select>
-          </div>
-        </div>
 
+                  <div>
+                    <label class="form-label" [for]="'nouveau-croisement-' + benevole.id">Ajouter un créneau</label>
+                    <select class="form-select" [id]="'nouveau-croisement-' + benevole.id" (change)="ajouterCroisementDepuisSelect(benevole, $event)">
+                      <option value="" selected>Choisir un créneau</option>
+                    @for (stand of stands | orderBy:'ordre':false; track stand.id) {
+                      <optgroup [label]="stand.nom == 'tous' ? 'N’importe quel stand' : stand.nom">
+                      @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track croisement.id) {
+                        <option [value]="croisement.id">{{ croisement.creneau.plage }} ({{ croisement.benevoles.length }}/{{ croisement.limite }})</option>
+                      }
+                      </optgroup>
+                    }
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-12 d-flex justify-content-end gap-2">
+                  <button class="btn btn-success icon-button" type="button" [disabled]="!benevole.formulaire.touched" (click)="update(benevole)" aria-label="Enregistrer {{ benevole.prenom }} {{ benevole.nom }}" title="Enregistrer">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+                  </button>
+                  <button class="btn btn-outline-danger icon-button" type="button" (click)="delete(benevole)" aria-label="Supprimer {{ benevole.prenom }} {{ benevole.nom }}" title="Supprimer">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+        </details>
       </div>
-      }
-    </details>
+    } @empty {
+      <div class="col-12"><div class="alert alert-info mb-0">Aucun bénévole inscrit.</div></div>
+    }
+    </div>
+    }
   </div>
-  }
-
-</div>
-
+} @else {
+  <div class="page-container">
+    <div class="alert alert-info mb-0 d-flex flex-wrap align-items-center justify-content-between gap-3" role="alert">
+      <span>Une connexion gestionnaire est nécessaire pour afficher les bénévoles.</span>
+      <button class="btn btn-outline-primary" type="button" (click)="authorizeAccess()">Se connecter</button>
+    </div>
+  </div>
 }

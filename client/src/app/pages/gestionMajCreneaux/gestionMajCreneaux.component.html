@@ -1,48 +1,34 @@
 @if (authorize && evenement != undefined) {
   <div class="page-container">
-    <div class="mb-4">
-      <h1 class="h3 mb-1">Créneaux</h1>
-      <p class="text-body-secondary mb-0">Ajoutez, modifiez ou supprimez les horaires disponibles.</p>
-    </div>
-
-    <section class="card mb-4" [formGroup]="formulaireNewCreneau">
-      <div class="card-header"><h2 class="h5 mb-0">Nouveau créneau</h2></div>
-      <div class="card-body">
-        <div class="row g-3 align-items-end">
-          <div class="col-12 col-md-3">
-            <label class="form-label" for="newCreneauOrder">Ordre</label>
-            <input id="newCreneauOrder" class="form-control" type="text" formControlName="ordre">
-            @if (formulaireNewCreneau.get('ordre')?.hasError('required')) { <div class="invalid-feedback d-block">Le numéro d'ordre est obligatoire.</div> }
-          </div>
-          <div class="col-12 col-md-6">
-            <label class="form-label" for="newCreneauPlage">Plage horaire</label>
-            <input id="newCreneauPlage" class="form-control" type="text" formControlName="plage">
-            @if (formulaireNewCreneau.get('plage')?.hasError('required')) { <div class="invalid-feedback d-block">La plage horaire est obligatoire.</div> }
-          </div>
-          <div class="col-12 col-md-3"><button class="btn btn-primary w-100" type="button" (click)="ajout(formulaireNewCreneau)">Ajouter</button></div>
-        </div>
+    <div class="d-flex flex-nowrap align-items-center justify-content-between gap-2 mb-4">
+      <div class="flex-grow-1 heading-copy">
+        <h1 class="h3 mb-1">Créneaux</h1>
+        <p class="text-body-secondary mb-0">Ajoutez, modifiez ou supprimez les horaires disponibles.</p>
       </div>
-    </section>
+      <button class="btn btn-primary flex-shrink-0 text-nowrap" type="button" (click)="openNewCreneauModal()">
+        Nouveau créneau
+      </button>
+    </div>
 
     <div class="row g-3">
     @for (creneau of creneaux | orderBy:'ordre':false; track $index) {
       <div class="col-12 col-md-6 col-xl-4">
         <section class="card h-100" [formGroup]="creneau.formulaire">
           <div class="card-body">
-            <div class="row g-3 align-items-end">
-              <div class="col-4">
+            <div class="row g-3 align-items-start">
+              <div class="col-2">
                 <label class="form-label">Ordre</label>
                 <input class="form-control" type="text" formControlName="ordre">
                 @if (creneau.formulaire.get('ordre')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }
               </div>
-              <div class="col-8">
+              <div class="col-6">
                 <label class="form-label">Plage horaire</label>
                 <input class="form-control" type="text" formControlName="plage">
                 @if (creneau.formulaire.get('plage')?.hasError('required')) { <div class="invalid-feedback d-block">Obligatoire.</div> }
               </div>
-              <div class="col-12 d-flex gap-2">
-                <button class="btn btn-success" type="button" [disabled]="!creneau.formulaire.touched" (click)="update(creneau.formulaire)">Enregistrer</button>
-                <button class="btn btn-outline-danger" type="button" (click)="delete(creneau)">Supprimer</button>
+              <div class="col-4 d-flex justify-content-end gap-2 form-actions">
+                <button class="btn btn-success icon-button" type="button" [disabled]="!creneau.formulaire.touched" (click)="update(creneau.formulaire)" aria-label="Enregistrer le créneau" title="Enregistrer le créneau"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
+                <button class="btn btn-outline-danger icon-button" type="button" (click)="delete(creneau)" aria-label="Supprimer le créneau {{ creneau.plage }}" title="Supprimer le créneau"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg></button>
               </div>
             </div>
           </div>

@@ -57,7 +57,7 @@
             <strong class="event-title">{{ evenement.eventName }}</strong>
             <div class="event-actions">
               <button type="button" class="btn btn-warning" (click)="goToGestion(evenement)">Accéder</button>
-              <button type="button" class="btn btn-danger" (click)="delete(evenement)">Supprimer</button>
+              <button type="button" class="btn btn-danger icon-button" (click)="delete(evenement)" aria-label="Supprimer l’évènement {{ evenement.eventName }}" title="Supprimer l’évènement"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg></button>
             </div>
           </article>
         } @empty {

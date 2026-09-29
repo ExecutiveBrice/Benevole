@@ -28,6 +28,9 @@ public class SchedulerService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private ConfigService configService;
+
     @Scheduled(cron = "0 0 1 * * *")
     public void reset() {
         log.warn("reset");
@@ -82,7 +85,8 @@ public class SchedulerService {
             corpsMessage.append(benevole.getEvenement().getContactEmail());
             corpsMessage.append("<br />");
             corpsMessage.append("<br />");
-            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='https://www."+System.getenv("DNS_NAME")+"/#/"+benevole.getEvenement().getId()+"'>https://www."+System.getenv("DNS_NAME")+"/benevoles/#/"+benevole.getEvenement().getId()+"</a>");
+            String eventUrl = configService.getEventUrl(benevole.getEvenement().getId());
+            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='" + eventUrl + "'>" + eventUrl + "</a>");
             corpsMessage.append("<br />");
 
 

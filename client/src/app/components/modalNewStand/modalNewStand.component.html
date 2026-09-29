@@ -1,0 +1,33 @@
+<h2 class="modal-title h5">{{ data.title }}</h2>
+
+<form [formGroup]="standForm" (ngSubmit)="accept()">
+  <div class="modal-body">
+    <div class="row g-3">
+      <div class="col-12 col-sm-4">
+        <label class="form-label" for="new-stand-order">Ordre</label>
+        <input id="new-stand-order" class="form-control" type="text" formControlName="ordre">
+        @if (submitted && standForm.get('ordre')?.hasError('required')) {
+          <div class="invalid-feedback d-block">Obligatoire.</div>
+        }
+      </div>
+
+      <div class="col-12 col-sm-8">
+        <label class="form-label" for="new-stand-name">Nom</label>
+        <input id="new-stand-name" class="form-control" type="text" formControlName="nom">
+        @if (submitted && standForm.get('nom')?.hasError('required')) {
+          <div class="invalid-feedback d-block">Obligatoire.</div>
+        }
+      </div>
+
+      <div class="col-12">
+        <label class="form-label" for="new-stand-subtitle">Sous-titre</label>
+        <input id="new-stand-subtitle" class="form-control" type="text" formControlName="soustitre">
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-outline-secondary" type="button" (click)="cancel()">Annuler</button>
+    <button class="btn btn-primary" type="submit">Ajouter</button>
+  </div>
+</form>

@@ -31,19 +31,6 @@
   font-weight: 600;
 }
 
-.settings-section > summary::after {
-  flex: 0 0 auto;
-  content: 'expand_more';
-  font-family: 'Material Symbols Outlined';
-  font-size: 1.35rem;
-  font-weight: normal;
-  transition: transform .2s ease;
-}
-
-.settings-section[open] > summary::after {
-  transform: rotate(180deg);
-}
-
 .settings-section-content {
   background-color: var(--event-card-color, var(--bs-card-bg));
 }
@@ -78,10 +65,6 @@
   height: 1.5rem;
   margin-top: .125rem;
   margin-left: -3.5rem;
-}
-
-.settings-colors-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .settings-wide-field {

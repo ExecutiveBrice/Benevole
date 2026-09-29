@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {Benevole, Croisement, Evenement} from '../../models';
-import {BenevoleService, BenevoleSessionService, TransmissionService} from '../../services';
+import {BenevoleService, BenevoleSessionService, FileService, TransmissionService} from '../../services';
 import { ToastService } from '../../services';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrderByPipe} from "../../services/sort.pipe";
@@ -20,19 +20,23 @@ export class ConnexionComponent implements OnInit {
   @Input() evenement!: Evenement;
   @Input() benevole: Benevole | undefined = undefined;
   @Output() actionEmitter: EventEmitter<boolean> = new EventEmitter;
+  @ViewChild('firstConnexionField') firstConnexionField?: ElementRef<HTMLInputElement>;
 
   benevoleEmail!:string;
+  logo?: string;
   constructor(
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
     private benevoleSessionService: BenevoleSessionService,
     private router: Router,
     private toastr: ToastService,
+    private fileService: FileService,
     public formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,) {
   }
 
   ngOnInit(): void {
+    this.getLogo();
     if (this.evenement.needtel) {
       this.formulaireBenevole.get('telephone')?.enable()
     } else {
@@ -49,6 +53,10 @@ export class ConnexionComponent implements OnInit {
       // rendu du panneau « Mes tâches » pour refléter immédiatement ce choix.
       this.changeDetectorRef.markForCheck();
     });
+    this.transmissionService.connexionFocusStream.subscribe(() => {
+      // Attendre le rendu du changement de panneau avant de donner le focus.
+      setTimeout(() => this.firstConnexionField?.nativeElement.focus());
+    });
 
     this.benevoleEmail = this.benevoleSessionService.getEmail() ?? '';
     if (this.benevoleEmail != null) {
@@ -59,6 +67,24 @@ export class ConnexionComponent implements OnInit {
   exit(){
     this.benevoleSessionService.clear();
     this.router.navigate(['/']);
+  }
+
+  getLogo(): void {
+    this.fileService.get(this.evenement.id, 'logo.jpeg').subscribe({
+      next: data => {
+        this.logo = data?.trim() ? `data:image/jpeg;base64,${data}` : undefined;
+        this.changeDetectorRef.markForCheck();
+      },
+      // L'absence de logo est un état normal : ne rien afficher.
+      error: () => {
+        this.logo = undefined;
+        this.changeDetectorRef.markForCheck();
+      }
+    });
+  }
+
+  hideLogo(): void {
+    this.logo = undefined;
   }
   formulaire = this.formBuilder.group({
     email: new FormControl(this.benevole?.email, [Validators.required, Validators.email])

@@ -18,6 +18,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import { ToastService } from '../../services';
 import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 import {ListFilterPipe} from "../../services/simpleFilter.pipe";
+import {ModalNewStandComponent, NewStandFormValue} from '../../components/modalNewStand/modalNewStand.component';
 
 @Component({
   selector: 'app-gestionMajStands',
@@ -59,13 +60,8 @@ export class GestionMajStandsComponent implements OnInit {
 
   }
 
-  formulaireNewStand = this.fb.group({
-    ordre: ["", [Validators.required, Validators.minLength(1)]],
-    nom: ["", [Validators.required, Validators.minLength(2)]],
-    soustitre: ["", []],
-  });
-
   standsFormulaire: FormArray = this.fb.array([])
+  nextStandOrder = '1';
 
 
   getCroisement(stand: FormGroup) {
@@ -118,6 +114,7 @@ export class GestionMajStandsComponent implements OnInit {
         } else {
           this.stands = []
         }
+        this.updateNewStandOrder();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
@@ -126,10 +123,15 @@ export class GestionMajStandsComponent implements OnInit {
     })
   }
 
+  private updateNewStandOrder(): void {
+    const lastOrder = Math.max(0, ...this.standsFormulaire.controls.map(stand => Number(stand.get('ordre')?.value) || 0));
+    this.nextStandOrder = String(lastOrder + 1);
+  }
+
   fillForm(stand: Stand): FormGroup {
     const croisementsFormulaire: FormArray = this.fb.array([])
     if (stand.croisements != null) {
-      stand.croisements.forEach(croisement => {
+      [...stand.croisements].sort((a, b) => a.id - b.id).forEach(croisement => {
         const croisementFormulaire: FormGroup = this.fb.group({
           id: [croisement.id, []],
           plage: [croisement.creneau.plage, [Validators.required]],
@@ -172,6 +174,7 @@ export class GestionMajStandsComponent implements OnInit {
           this.toastr.success(stand.nom + " à bien été mis à jour", 'Succès');
           standForm.markAsPristine()
           standForm.markAsUntouched()
+          this.updateNewStandOrder();
         },
         error: (error: HttpErrorResponse) => {
           console.log(error)
@@ -208,7 +211,8 @@ export class GestionMajStandsComponent implements OnInit {
           creneau: [null, []],
         })
 
-        croisements.push(croisementFormulaire);
+        const index = croisements.controls.findIndex(control => Number(control.get('id')?.value) > croisement.id);
+        croisements.insert(index === -1 ? croisements.length : index, croisementFormulaire);
         this.toastr.success(croisement.creneau.plage + " à bien été ajouté", 'Succès');
       },
       error: (error: HttpErrorResponse) => {
@@ -223,21 +227,44 @@ export class GestionMajStandsComponent implements OnInit {
   }
 
 
-  ajout(standForm: FormGroup): void {
+  openNewStandModal(): void {
+    this.dialog.open(ModalNewStandComponent, {
+      data: {
+        title: 'Nouveau stand',
+        ordre: this.nextStandOrder
+      },
+    }).afterClosed().subscribe((value: unknown) => {
+      if (!this.isNewStandFormValue(value)) {
+        return;
+      }
 
-    if (standForm.valid) {
-      const newStand = new Stand;
-      Object.assign(newStand, standForm.getRawValue())
-      newStand.type = 2
-      this.standService.ajout(newStand, this.idEvenement).subscribe(stand => {
-          this.standsFormulaire.push(this.fillForm(stand));
-          this.standsFormulaire.controls.sort((a, b) => Number(a.get('ordre')?.value) - Number(b.get('ordre')?.value))
-          console.log(this.standsFormulaire)
-        },
-        error => {
-          console.log('😢 Oh no!', error);
-        });
-    }
+      this.ajout(value);
+    });
+  }
+
+  private isNewStandFormValue(value: unknown): value is NewStandFormValue {
+    return typeof value === 'object'
+      && value !== null
+      && 'ordre' in value
+      && 'nom' in value
+      && 'soustitre' in value;
+  }
+
+  ajout(standValue: NewStandFormValue): void {
+    const newStand = new Stand;
+    Object.assign(newStand, standValue);
+    newStand.type = 2;
+    this.standService.ajout(newStand, this.idEvenement).subscribe({
+      next: (stand) => {
+        this.standsFormulaire.push(this.fillForm(stand));
+        this.standsFormulaire.controls.sort((a, b) => Number(a.get('ordre')?.value) - Number(b.get('ordre')?.value));
+        this.updateNewStandOrder();
+      },
+      error: (error: HttpErrorResponse) => {
+        console.log('😢 Oh no!', error);
+        this.toastr.error(error.error ?? error.message, 'Erreur');
+      }
+    });
   }
 
 
@@ -257,6 +284,7 @@ export class GestionMajStandsComponent implements OnInit {
             if (index !== -1) {
               this.standsFormulaire.removeAt(index)
             }
+            this.updateNewStandOrder();
             this.toastr.success(standForm.get('nom')?.value + " à bien été supprimé", 'Succès');
           },
           error: (error: HttpErrorResponse) => {

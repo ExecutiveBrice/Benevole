@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Benevole, Croisement, Evenement } from '../../models';
 import { OrderByPipe } from "../../services/sort.pipe";
@@ -19,9 +19,8 @@ export class InfoComponent implements OnInit {
 
   affiche!: string;
   constructor(
-    public fileService: FileService
-
-
+    public fileService: FileService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) { }
   ngOnInit(): void {
     this.getAffiche()
@@ -33,6 +32,9 @@ export class InfoComponent implements OnInit {
     this.fileService.get(this.evenement.id, 'affiche.jpeg').subscribe({
       next: (data) => {
         this.affiche = "data:image/jpeg;base64," + data
+        // L'affiche est chargée après le premier rendu de la colonne Info.
+        // Marquer le composant garantit que l'image est affichée dès réception.
+        this.changeDetectorRef.markForCheck();
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)

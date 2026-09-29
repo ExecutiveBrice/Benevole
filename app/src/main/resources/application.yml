@@ -17,7 +17,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-image-storage-dir: C:\Users\PC\Documents\ProjetsDev\Benevoles
+image-storage-dir: C:\Users\brice\IdeaProjects\Benevole
 
 server:
   port: 8006

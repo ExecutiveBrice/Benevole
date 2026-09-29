@@ -22,19 +22,7 @@ export class PasswordResetComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.token = this.route.snapshot.queryParamMap.get('token') ?? this.tokenFromHash();
-  }
-
-  /**
-   * Secours pour les navigateurs qui ne remettent pas la query-string située
-   * après le # dans ActivatedRoute avec HashLocationStrategy.
-   */
-  private tokenFromHash(): string {
-    const queryIndex = window.location.hash.indexOf('?');
-    if (queryIndex < 0) {
-      return '';
-    }
-    return new URLSearchParams(window.location.hash.slice(queryIndex + 1)).get('token') ?? '';
+    this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
   }
 
   save(): void {

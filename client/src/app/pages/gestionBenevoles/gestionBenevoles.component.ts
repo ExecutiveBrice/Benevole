@@ -17,6 +17,7 @@ import {OrderByPipe} from "../../services/sort.pipe";
 import {HttpErrorResponse} from '@angular/common/http';
 import { ToastService } from '../../services';
 import {ModalComponent} from '../../components/modal/modal.component';
+import {ModalAccessGestionComponent} from '../../components/modalAccessGestion/modalAccessGestion.component';
 import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 
 @Component({
@@ -48,8 +49,11 @@ export class GestionBenevolesComponent implements OnInit {
   evenement: Evenement = new Evenement();
   subscription = new Subscription()
   idEvenement!: number
-  stands!: Stand[];
+  stands: Stand[] = [];
   benevoles: Benevole[] = [];
+  connexionDialogOpen = false;
+  chargement = false;
+  erreurChargement = false;
 
 
   constructor(
@@ -71,24 +75,64 @@ export class GestionBenevolesComponent implements OnInit {
     this.idEvenement = parseInt(this.route.snapshot.paramMap.get('id')!)
     if (this.authService.isAuthenticated()) {
       this.authorize = true;
-      this.getEvenement(this.idEvenement);
-      this.find();
-      this.getStand();
-      this.croisements = [];
-      this.choix = "";
+      this.loadPage();
     } else {
-      this.router.navigate(['/', this.idEvenement, 'gestion']);
+      this.authorizeAccess();
     }
+  }
+
+  private loadPage(): void {
+    this.chargement = true;
+    this.erreurChargement = false;
+    this.getEvenement(this.idEvenement);
+    this.getStand();
+    this.croisements = [];
+    this.choix = '';
+  }
+
+  relancerChargement(): void {
+    this.loadPage();
+  }
+
+  authorizeAccess(): void {
+    if (this.connexionDialogOpen) {
+      return;
+    }
+
+    this.connexionDialogOpen = true;
+    this.dialog.open(ModalAccessGestionComponent, {
+      hasBackdrop: true,
+      disableClose: true,
+      backdropClass: 'backdropBackground',
+      data: {
+        title: 'Accès mode gestionnaire',
+        question: 'Saisissez vos identifiants administrateur :',
+      },
+    }).afterClosed().subscribe(result => {
+      this.connexionDialogOpen = false;
+      if (result === true) {
+        this.authorize = true;
+        this.loadPage();
+      }
+    });
   }
 
 
   getEvenement(idEvenement: number): void {
     this.evenementService.getById(idEvenement).subscribe({
       next: (data) => {
+        if (!data) {
+          this.chargement = false;
+          this.erreurChargement = true;
+          return;
+        }
         this.evenement = data;
         this.transmissionService.dataTransmission(data);
+        this.find();
       },
       error: (error: HttpErrorResponse) => {
+        this.chargement = false;
+        this.erreurChargement = true;
         console.log('😢 Oh no!', error);
         this.toastr.error(error.message, 'Erreur');
       }
@@ -100,11 +144,12 @@ export class GestionBenevolesComponent implements OnInit {
     this.stands = []
     this.standService.getAll(this.idEvenement).subscribe({
       next: (data) => {
-        data.forEach(stand => {
+        const stands = data ?? [];
+        stands.forEach(stand => {
           stand.croisements = []
           this.croisementService.getByStand(stand.id).subscribe({
             next: (data) => {
-              stand.croisements = data
+              stand.croisements = data ?? []
             },
             error: (error: HttpErrorResponse) => {
               console.log('😢 Oh no!', error);
@@ -112,8 +157,7 @@ export class GestionBenevolesComponent implements OnInit {
             }
           });
         })
-        this.stands = data
-        console.log(this.stands)
+        this.stands = stands
       },
       error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
@@ -126,9 +170,7 @@ export class GestionBenevolesComponent implements OnInit {
   find(): void {
     this.benevoleService.getByEvenementId(this.idEvenement).subscribe({
       next: (data) => {
-        if (data != null) {
-          this.benevoles = data
-          data.forEach(benevole => {
+        this.benevoles = (data ?? []).map(benevole => {
 
             let formulaireBenevole = this.formBuilder.group({
               email: new FormControl(benevole.email, [Validators.required, Validators.minLength(2)]),
@@ -141,11 +183,13 @@ export class GestionBenevolesComponent implements OnInit {
               formulaireBenevole.get('telephone')?.disable()
             }
             benevole.formulaire = formulaireBenevole;
-
-          })
-        }
+            return benevole;
+          });
+        this.chargement = false;
       },
       error: (error: HttpErrorResponse) => {
+        this.chargement = false;
+        this.erreurChargement = true;
         console.log('😢 Oh no!', error);
         this.toastr.error(error.message, 'Erreur');
       }
@@ -167,10 +211,27 @@ export class GestionBenevolesComponent implements OnInit {
 
   }
 
+  ajouterCroisementDepuisSelect(benevole: Benevole, event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const croisement = this.trouverCroisement(select.value);
+    if (croisement) {
+      this.choisir(benevole, null, croisement);
+    }
+    select.value = '';
+  }
+
+  private trouverCroisement(croisementId: string): Croisement | null {
+    const id = Number(croisementId);
+    return this.stands.flatMap(stand => stand.croisements).find(croisement => croisement.id === id) ?? null;
+  }
+
   ajoutCroisement(benevole: Benevole, croisement: Croisement) {
     this.benevoleService.addToCroisement(benevole!.id, croisement.id, true).subscribe({
-      next: (ben) => {
-        benevole.croisements.push(croisement)
+      next: (benevoleMisAJour) => {
+        // L'API renvoie le bénévole avec ses croisements à jour : on remplace
+        // la collection pour que la nouvelle ligne soit rendue immédiatement.
+        benevole.croisements = benevoleMisAJour.croisements ?? [...benevole.croisements, croisement];
+        this.mettreAJourPlacesDisponibles(croisement, benevole, true);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
@@ -182,13 +243,26 @@ export class GestionBenevolesComponent implements OnInit {
   retraitCroisement(benevole: Benevole, croisement: Croisement) {
     this.benevoleService.removeToCroisement(benevole!.id, croisement.id).subscribe({
       next: (ben) => {
-        benevole.croisements.filter(crois => crois.id != croisement.id)
+        benevole.croisements = benevole.croisements.filter(crois => crois.id != croisement.id)
+        this.mettreAJourPlacesDisponibles(croisement, benevole, false);
       },
       error: (error: HttpErrorResponse) => {
         console.log(error)
         this.toastr.error(error.message, 'Erreur');
       }
     })
+  }
+
+  private mettreAJourPlacesDisponibles(croisement: Croisement, benevole: Benevole, ajout: boolean): void {
+    const croisementDuSelecteur = this.trouverCroisement(String(croisement.id));
+    if (!croisementDuSelecteur) {
+      return;
+    }
+
+    const benevoles = croisementDuSelecteur.benevoles ?? [];
+    croisementDuSelecteur.benevoles = ajout
+      ? benevoles.some(ben => ben.id === benevole.id) ? benevoles : [...benevoles, benevole]
+      : benevoles.filter(ben => ben.id !== benevole.id);
   }
 
 
@@ -230,6 +304,7 @@ export class GestionBenevolesComponent implements OnInit {
 
         this.benevoleService.deleteById(benevole.id).subscribe({
           next: (data) => {
+            benevole.croisements.forEach(croisement => this.mettreAJourPlacesDisponibles(croisement, benevole, false));
             this.benevoles = this.benevoles.filter(ben => ben.id != benevole.id)
             this.toastr.success(benevole.formulaire.get('prénom')?.value + " à bien été retiré de l'application", 'Succès');
           },

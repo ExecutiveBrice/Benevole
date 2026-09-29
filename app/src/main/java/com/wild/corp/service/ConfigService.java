@@ -15,15 +15,23 @@ public class ConfigService {
     @Autowired
     private EvenementRepository evenementRepository;
 
-    @Value("${DNS_NAME}")
-    private String DNS_NAME;
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
+
+    public String getFrontendUrl() {
+        return frontendUrl.endsWith("/") ? frontendUrl : frontendUrl + "/";
+    }
+
+    public String getEventUrl(Integer eventId) {
+        return getFrontendUrl() + eventId;
+    }
 
     public Params getParams() {
 
         Params params = new Params();
         params.setHeader(Constante.HEADER);
         params.setTitle(Constante.TITLE);
-        params.setUrl("https://"+DNS_NAME+"/");
+        params.setUrl(getFrontendUrl());
         params.setUsing(Constante.USING);
         params.setSignature(Constante.SIGNATURE);
         params.setManaging(Constante.MANAGING);

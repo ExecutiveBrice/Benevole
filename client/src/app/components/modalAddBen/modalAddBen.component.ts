@@ -24,7 +24,9 @@ export class ModalAddBenComponent implements OnInit {
     nom: new FormControl('', [Validators.required, Validators.minLength(2)]),
     prenom: new FormControl('', [Validators.required, Validators.minLength(2)]),
     telephone: new FormControl('', [Validators.required, Validators.minLength(2)]),
-    id: new FormControl(0, [])
+    // An identifier is only set when an existing volunteer is selected.  Sending
+    // `0` for a new one makes JPA treat it as an update instead of an insert.
+    id: new FormControl<number | null>(null)
   })
 
 

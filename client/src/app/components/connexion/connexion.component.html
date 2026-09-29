@@ -12,7 +12,7 @@
     <div class="card-body">
       <div class="mb-3 full-width">
         <label class="form-label">Email</label>
-        <input class="form-control" type="email" formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
+        <input #firstConnexionField class="form-control" type="email" formControlName="email" placeholder="Ex: mon_mail_a_moi@gmail.com">
         @if (formulaire.get('email')?.hasError('email')) {
         <div class="invalid-feedback d-block">Le format est incorrecte</div>
         }
@@ -108,7 +108,7 @@
       <div class="card-body">
         <div class="mb-3 full-width">
           <label class="form-label">Prenom</label>
-          <input class="form-control" formControlName="prenom" placeholder="Ex: Sarah">
+          <input #firstConnexionField class="form-control" formControlName="prenom" placeholder="Ex: Sarah">
           @if (formulaireBenevole.get('prenom')?.hasError('required')) {
             <div class="invalid-feedback d-block">Les organisateurs en auront besoin !</div>
           }
@@ -176,14 +176,12 @@
 
 <section class="card shadow-sm mb-3">
   <header class="card-header text-center">
-    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Informations :</strong></h2>
+    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Organisateur :</strong></h2>
 
   </header>
   <div class="card-body">
     <div class="row">
-      <div class="col-12">
-        <b>Organisateur</b>
-      </div>
+
 
 
       <div class="col-12">
@@ -200,6 +198,18 @@
         {{evenement.contactTel}}
       </div>
 
+
+      @if (logo) {
+        <div class="col-12 organizer-logo">
+          @if (evenement.sitepersourl) {
+            <a [href]="evenement.sitepersourl" target="_blank" rel="noopener">
+              <img [src]="logo" alt="" (error)="hideLogo()">
+            </a>
+          } @else {
+            <img [src]="logo" alt="" (error)="hideLogo()">
+          }
+        </div>
+      }
 
     </div>
   </div>

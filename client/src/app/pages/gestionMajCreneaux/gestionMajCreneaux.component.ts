@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { CreneauService, EvenementService, TransmissionService, ConfigService, AuthService } from '../../services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Creneau, Evenement } from '../../models';
@@ -11,6 +11,8 @@ import { OrderByPipe } from "../../services/sort.pipe";
 import { ImageCropperComponent } from 'ngx-image-cropper';
 import {HttpErrorResponse} from "@angular/common/http";
 import { ToastService } from '../../services';
+import { BootstrapModalService } from '../../services/bootstrap-modal.service';
+import { ModalNewCreneauComponent, NewCreneauFormValue } from '../../components/modalNewCreneau/modalNewCreneau.component';
 
 
 @Component({
@@ -80,17 +82,18 @@ export class GestionMajCreneauxComponent implements OnInit {
   }
 
 
-  formulaireNewCreneau = this.formBuilder.group(
-    {
+  nextCreneauOrder = '1';
 
-      ordre: new FormControl("", [Validators.required, Validators.minLength(1)]),
-      plage: new FormControl("", [Validators.required, Validators.minLength(2)]),
-    }
-  )
+  private updateNewCreneauOrder(): void {
+    const lastOrder = Math.max(0, ...this.creneaux.map(creneau => Number(creneau.ordre) || 0));
+    this.nextCreneauOrder = String(lastOrder + 1);
+  }
+
   getAll(): void {
     this.creneauService.getAll(this.idEvenement).subscribe({
       next: (data) => {
       this.creneaux = data;
+      this.updateNewCreneauOrder();
       console.log(this.creneaux)
         data.forEach(creneau => {
 
@@ -130,18 +133,41 @@ export class GestionMajCreneauxComponent implements OnInit {
     }
   }
 
-  ajout(formulaire: FormGroup): void {
-    if (formulaire.valid) {
-    this.creneauService.ajout(formulaire.getRawValue(), this.idEvenement).subscribe({
+  openNewCreneauModal(): void {
+    this.dialog.open(ModalNewCreneauComponent, {
+      data: {
+        title: 'Nouveau créneau',
+        ordre: this.nextCreneauOrder
+      }
+    }).afterClosed().subscribe((value: unknown) => {
+      if (!this.isNewCreneauFormValue(value)) {
+        return;
+      }
+
+      this.ajout(value);
+    });
+  }
+
+  private isNewCreneauFormValue(value: unknown): value is NewCreneauFormValue {
+    return typeof value === 'object'
+      && value !== null
+      && 'ordre' in value
+      && 'plage' in value;
+  }
+
+  ajout(creneau: NewCreneauFormValue): void {
+    const newCreneau = new Creneau();
+    Object.assign(newCreneau, creneau);
+
+    this.creneauService.ajout(newCreneau, this.idEvenement).subscribe({
       next: (data) => {
       this.getAll();
-    },
+      },
       error: (error: HttpErrorResponse) => {
         console.log('😢 Oh no!', error);
         this.toastr.error(error.message, 'Erreur');
       }
     });
-    }
   }
 
 
@@ -157,4 +183,6 @@ export class GestionMajCreneauxComponent implements OnInit {
     }
   });
   }
+
+  dialog = inject(BootstrapModalService);
 }

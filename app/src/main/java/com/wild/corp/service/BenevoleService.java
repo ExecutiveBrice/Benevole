@@ -30,18 +30,18 @@ public class BenevoleService {
     @Autowired
     private EvenementRepository evenementRepository;
 
-    public void persist(Benevole benevole) {
-        benevoleRepository.save(benevole);
+    public Benevole persist(Benevole benevole) {
+        return benevoleRepository.save(benevole);
     }
 
-    public void add(Benevole benevole, Integer evenementId) {
+    public Benevole add(Benevole benevole, Integer evenementId) {
 
         if(findByEmail(benevole.getEmail(), evenementId) != null){
             throw new RuntimeException("existe déjà");
         }
         Evenement evenement = evenementRepository.findById(evenementId).get();
         benevole.setEvenement(evenement);
-        persist(benevole);
+        return persist(benevole);
     }
 
     public void update(Benevole benevole) {

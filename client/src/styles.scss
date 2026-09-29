@@ -115,6 +115,10 @@ body {
   background-color: var(--bs-tertiary-bg);
 }
 
+.form-label {
+  margin-bottom: 0;
+}
+
 .page-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -207,7 +211,44 @@ details.card > summary.card-header::-webkit-details-marker {
 
 /* Aperçu utilisé dans les paramètres pour visualiser la palette sur mobile. */
 .appearance-preview {
-  max-width: 20rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+
+.appearance-preview-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) auto;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.appearance-preview-layout .mobile-planning-preview {
+  width: 100%;
+  margin: 0;
+}
+
+.appearance-color-controls {
+  display: grid;
+  grid-template-columns: repeat(2, 2.5rem);
+  gap: .5rem;
+  align-content: center;
+}
+
+.appearance-color-controls .form-control-color {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: .25rem;
+}
+
+@media (max-width: 767.98px) {
+  .appearance-preview {
+    max-width: none;
+  }
+
+  .appearance-preview-layout {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
 }
 
 .mobile-planning-preview {

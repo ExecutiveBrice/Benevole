@@ -12,10 +12,21 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.client_benevole.priority=1000"
       - "traefik.http.routers.client_benevole.rule=Host(`benevole.${DNS_NAME}`)"
+      - "traefik.http.routers.client_benevole.service=client_benevole"
 
       - "traefik.http.routers.client_benevole.entrypoints=websecure"
       - "traefik.http.routers.client_benevole.tls=true"
       - "traefik.http.routers.client_benevole.tls.certresolver=myresolver"
+
+      - "traefik.http.routers.client_benevole_spa.priority=1100"
+      - "traefik.http.routers.client_benevole_spa.rule=Host(`benevole.${DNS_NAME}`) && PathRegexp(`^/([0-9]+(/.*)?|evenements/management/?|aide/?|mot-de-passe/?)$`)"
+      - "traefik.http.routers.client_benevole_spa.entrypoints=websecure"
+      - "traefik.http.routers.client_benevole_spa.tls=true"
+      - "traefik.http.routers.client_benevole_spa.tls.certresolver=myresolver"
+      - "traefik.http.routers.client_benevole_spa.middlewares=client_benevole_spa"
+      - "traefik.http.routers.client_benevole_spa.service=client_benevole"
+      - "traefik.http.middlewares.client_benevole_spa.replacepath.path=/index.html"
+      - "traefik.http.services.client_benevole.loadbalancer.server.port=80"
 
   app_benevole:
     image: 'docker-spring-boot-benevole'
@@ -29,8 +40,8 @@ services:
       - /home/ubuntu/benevole/img/:/home/ubuntu/benevole/
     environment:
       - DNS_NAME=${DNS_NAME}
-      - PASSWORD_OVHMAIL=${PASSWORD_OVHMAIL}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:8106/${DB_NAME}
+      - APP_FRONTEND_URL=https://benevole.${DNS_NAME}/
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db_benevole:5432/${DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SERVER_PORT=8000

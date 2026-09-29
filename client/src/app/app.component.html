@@ -9,15 +9,6 @@
      [style.--event-text-color]="evenement?.couleurText">
 <header class="app-header" [class.has-mobile-event-tabs]="isEventDetailPage()" [class.is-event-page]="isEventPage()" [class.is-landing-page]="isLandingPage()" [style.backgroundColor]="isLandingPage() ? 'black' : evenement?.couleurBandeau">
   <nav class="navbar container-fluid px-3 py-2" aria-label="Navigation principale">
-    @if (logo) {
-      @if (evenement?.sitepersourl) {
-        <a class="event-logo-link" [href]="evenement.sitepersourl" target="_blank" rel="noopener">
-          <img class="event-logo" [src]="logo" alt="Site de l'évènement">
-        </a>
-      } @else {
-        <img class="event-logo" [src]="logo" alt="Logo de l'évènement">
-      }
-    }
     <div class="navbar-brand d-flex align-items-center" [style.color]="isLandingPage() ? 'white' : evenement?.couleurText">
       <span class="event-title"
         appFitHeaderTitle
