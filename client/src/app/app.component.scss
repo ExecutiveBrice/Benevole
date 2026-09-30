@@ -126,6 +126,27 @@
 }
 
 @media (max-width: 991.98px) {
+  /* Le titre partage l'espace réellement disponible avec le logo : il peut
+     alors se réduire ou passer sur plusieurs lignes, sans jamais le recouvrir. */
+  .app-header.is-event-page .navbar {
+    gap: .75rem;
+  }
+
+  .app-header.is-event-page .navbar-brand {
+    position: static;
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    transform: none;
+  }
+
+  .app-header.is-event-page .event-logo,
+  .app-header.is-event-page .event-logo-link {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 45vw;
+  }
+
   .app-header.has-mobile-event-tabs {
     min-height: calc(72px + 2.5rem);
   }
@@ -191,6 +212,75 @@
   top: 300px !important;
   z-index: 1100;
   width: min(420px, calc(100vw - 2rem));
+}
+
+.install-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+  background: rgb(0 0 0 / 34%);
+}
+
+.install-modal {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .2rem .75rem;
+  width: min(100%, 31rem);
+  margin: 0 auto;
+  padding: 1rem 2.75rem 1rem 1rem;
+  border-radius: .9rem;
+  background: var(--bs-body-bg);
+  box-shadow: 0 .7rem 2rem rgb(0 0 0 / 30%);
+}
+
+.install-modal-icon {
+  grid-row: span 2;
+  align-self: center;
+  color: var(--bs-primary);
+  font-size: 2rem;
+}
+
+.install-modal h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.install-modal p {
+  margin: 0;
+  font-size: .875rem;
+  line-height: 1.35;
+}
+
+.install-modal-close {
+  position: absolute;
+  top: .35rem;
+  right: .5rem;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  background: transparent;
+  color: var(--bs-secondary-color);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.install-modal-action {
+  grid-column: 2;
+  justify-self: start;
+  margin-top: .35rem;
+  padding: .3rem .75rem;
+  font-size: .875rem;
+}
+
+@media (min-width: 992px) {
+  .install-modal-backdrop {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

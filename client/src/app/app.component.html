@@ -41,9 +41,9 @@
 
 <footer class="app-footer" [class.is-landing-page]="isLandingPage()" [style.backgroundColor]="isLandingPage() ? 'black' : evenement?.couleurBandeau" aria-label="Actions principales">
   <div class="container-fluid">
-  <a class="btn btn-outline-light footer-action" routerLink="/" [queryParams]="{ liste: '1' }" aria-label="Liste des évènements" title="Liste des évènements">
+  <button class="btn btn-outline-light footer-action" type="button" (click)="showEventList()" aria-label="Liste des évènements" title="Liste des évènements">
     <span class="app-icon" aria-hidden="true">home</span>
-  </a>
+  </button>
 
   @if (isEventManagementPage() && evenement?.id) {
     <a class="btn btn-outline-light footer-action" [routerLink]="getEventManagementBackLink()" aria-label="Retour" title="Retour">
@@ -78,6 +78,26 @@
   }
   </div>
 </footer>
+
+@if (showInstallModal) {
+  <div class="install-modal-backdrop" role="presentation">
+    <section class="install-modal" role="dialog" aria-modal="true" aria-labelledby="install-modal-title" aria-describedby="install-modal-description">
+      <button type="button" class="install-modal-close" (click)="closeInstallModal()" aria-label="Fermer">&times;</button>
+      <span class="app-icon install-modal-icon" aria-hidden="true">install_mobile</span>
+      <div>
+        <h2 id="install-modal-title">Installer Bénévoles</h2>
+        @if (isIosInstall) {
+          <p id="install-modal-description">Touchez <strong>Partager</strong>, puis « Sur l’écran d’accueil » pour ouvrir l’application comme une app.</p>
+        } @else {
+          <p id="install-modal-description">Installez l’application pour y accéder plus rapidement depuis votre écran d’accueil. Si le bouton n’apparaît pas, choisissez « Ajouter à l’écran d’accueil » dans le menu du navigateur.</p>
+        }
+      </div>
+      @if (installPrompt) {
+        <button type="button" class="btn btn-dark install-modal-action" (click)="installApplication()">Installer</button>
+      }
+    </section>
+  </div>
+}
 
 <div class="toast-container position-fixed top-0 end-0 p-3">
   @for (toast of toastService.toasts; track toast.id) {

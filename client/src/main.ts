@@ -9,4 +9,20 @@ if (window.location.hash.startsWith('#/') && !window.location.hash.startsWith('#
 }
 
 bootstrapApplication(AppComponent, appConfig)
+  .then(() => {
+    if ('serviceWorker' in navigator) {
+      let reloadingForServiceWorker = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!reloadingForServiceWorker) {
+          reloadingForServiceWorker = true;
+          window.location.reload();
+        }
+      });
+
+      navigator.serviceWorker
+        .register('/sw.js', { updateViaCache: 'none' })
+        .then((registration) => registration.update())
+        .catch((err) => console.error('Service worker non enregistré', err));
+    }
+  })
   .catch((err) => console.error(err));

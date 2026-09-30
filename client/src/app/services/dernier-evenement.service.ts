@@ -31,6 +31,14 @@ export class DernierEvenementService {
     }
   }
 
+  clear(): void {
+    try {
+      this.storage?.removeItem(LAST_VIEWED_EVENT_ID_KEY);
+    } catch {
+      // Storage may be unavailable (for example in a private browsing context).
+    }
+  }
+
   private get storage(): Storage | null {
     return isPlatformBrowser(this.platformId) ? localStorage : null;
   }
