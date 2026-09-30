@@ -23,4 +23,12 @@ describe('DernierEvenementService', () => {
 
     expect(service.get()).toBeNull();
   });
+
+  it('clears the most recently viewed event', () => {
+    service.save(42);
+
+    service.clear();
+
+    expect(service.get()).toBeNull();
+  });
 });
