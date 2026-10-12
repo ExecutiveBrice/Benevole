@@ -28,6 +28,7 @@ import { BootstrapModalService } from '../../services/bootstrap-modal.service';
 })
 export class GestionEvenementsComponent implements OnInit {
   authorize = false;
+  superadmin = false;
   verificationEnCours = false;
   connexionDialogOpen = false;
   evenements: Evenement[] = [];
@@ -75,8 +76,8 @@ export class GestionEvenementsComponent implements OnInit {
       disableClose: true,
       backdropClass: 'backdropBackground',
       data: {
-        title: 'Accès au paramétrage global',
-        question: 'Saisissez vos identifiants super-administrateur :',
+        title: 'Accès au paramétrage',
+        question: 'Saisissez vos identifiants administrateur :',
       },
     }).afterClosed().subscribe(result => {
       this.connexionDialogOpen = false;
@@ -93,14 +94,10 @@ export class GestionEvenementsComponent implements OnInit {
     this.administrateurService.moi().subscribe({
       next: administrateur => {
         this.verificationEnCours = false;
-        if (!administrateur.superadmin) {
-          this.toastr.error('Ce compte ne dispose pas des droits de paramétrage global.', 'Accès refusé');
-          this.router.navigate(['/']);
-          return;
-        }
+        this.superadmin = administrateur.superadmin;
         this.authorize = true;
         this.getAllEvenements();
-        this.getDemandesCreation();
+        if (this.superadmin) this.getDemandesCreation();
       },
       error: (error: HttpErrorResponse) => {
         this.verificationEnCours = false;
@@ -158,8 +155,8 @@ export class GestionEvenementsComponent implements OnInit {
   }
 
   getAllEvenements(): void {
-    this.evenementService.getAll().subscribe({
-      next: data => this.evenements = data.filter(evenement => evenement.id !== 0),
+    this.administrateurService.mesEvenements().subscribe({
+      next: data => this.evenements = (data ?? []).filter(evenement => evenement.id !== 0),
       error: (error: HttpErrorResponse) => this.afficherErreur(error)
     });
   }
@@ -254,6 +251,11 @@ export class GestionEvenementsComponent implements OnInit {
 
   evenementSelectionne(evenementId: number, administrateur: AdministrateurCreation | AdministrateurConnecte): boolean {
     return administrateur.evenementIds.includes(evenementId);
+  }
+
+  nomsEvenements(administrateur: AdministrateurConnecte): string {
+    return this.evenements.filter(e => administrateur.evenementIds.includes(e.id))
+      .map(e => e.eventName).join(', ') || 'Aucun évènement';
   }
 
   private creerNouvelAdministrateur(): AdministrateurCreation {

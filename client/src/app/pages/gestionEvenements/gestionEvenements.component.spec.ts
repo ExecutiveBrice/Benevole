@@ -22,7 +22,8 @@ describe('Session sur le paramétrage global', () => {
   beforeEach(() => {
     auth = jasmine.createSpyObj('AuthService', ['isAuthenticated', 'logout']);
     auth.isAuthenticated.and.returnValue(true);
-    administrators = jasmine.createSpyObj('AdministrateurService', ['moi']);
+    administrators = jasmine.createSpyObj('AdministrateurService', ['moi', 'mesEvenements']);
+    administrators.mesEvenements.and.returnValue(of([]));
     dialog = jasmine.createSpyObj('BootstrapModalService', ['open']);
     router = jasmine.createSpyObj('Router', ['navigate']);
     TestBed.configureTestingModule({ providers: [{ provide: BootstrapModalService, useValue: dialog }] });
@@ -31,11 +32,13 @@ describe('Session sur le paramétrage global', () => {
     ));
   });
 
-  it('conserve la session d’un administrateur d’événement qui n’a pas les droits globaux', () => {
+  it('affiche les événements attribués sans donner les droits globaux', () => {
     administrators.moi.and.returnValue(of({ id: 1, username: 'admin@example.org', superadmin: false, enabled: true, evenementIds: [1] }));
     component.ngOnInit();
-    expect(component.authorize).toBeFalse();
-    expect(router.navigate).toHaveBeenCalledWith(['/']);
+    expect(component.authorize).toBeTrue();
+    expect(component.superadmin).toBeFalse();
+    expect(administrators.mesEvenements).toHaveBeenCalled();
+    expect(router.navigate).not.toHaveBeenCalled();
     expect(auth.logout).not.toHaveBeenCalled();
     expect(dialog.open).not.toHaveBeenCalled();
   });

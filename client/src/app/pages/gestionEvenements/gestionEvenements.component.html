@@ -1,7 +1,7 @@
 @if (!authorize) {
   <section class="global-settings text-center py-5" aria-live="polite">
-    <h1>Paramétrage global</h1>
-    <p>{{ verificationEnCours ? 'Vérification de votre connexion…' : 'Une connexion super-administrateur est requise.' }}</p>
+    <h1>Paramétrage</h1>
+    <p>{{ verificationEnCours ? 'Vérification de votre connexion…' : 'Une connexion administrateur est requise.' }}</p>
     @if (!connexionDialogOpen && !verificationEnCours) {
       <button type="button" class="btn btn-primary" (click)="authorizeAccess()">Se connecter</button>
     }
@@ -10,45 +10,48 @@
   <section class="global-settings">
     @if (!afficherAdministrateurs) {
       <header class="settings-header">
-        <h1>Paramétrage global</h1>
-        <p>Gérez les évènements et les accès administrateurs de l’application.</p>
+        <h1>{{ superadmin ? 'Paramétrage global' : 'Mes évènements' }}</h1>
+        <p>{{ superadmin ? 'Gérez les évènements et les accès administrateurs de l’application.' : 'Accédez au paramétrage des évènements qui vous sont attribués.' }}</p>
       </header>
 
-      <div class="settings-actions">
-        <form class="event-creation-form" (ngSubmit)="ajouterEvenement()">
-          <label for="nomNouvelEvenement" class="visually-hidden">Nom de l’évènement</label>
-          <input id="nomNouvelEvenement" name="nomNouvelEvenement" type="text" class="form-control"
-            [(ngModel)]="nomNouvelEvenement" placeholder="Nom de l’évènement" required>
-          <button type="submit" class="btn btn-warning">Ajouter l’évènement</button>
-        </form>
-        <button type="button" class="btn btn-primary btn-lg" (click)="afficherGestionAdministrateurs()">
-          Ajouter et gérer les administrateurs
-        </button>
-      </div>
+      @if (superadmin) {
+        <div class="settings-actions">
+          <form class="event-creation-form" (ngSubmit)="ajouterEvenement()">
+            <label for="nomNouvelEvenement" class="visually-hidden">Nom de l’évènement</label>
+            <input id="nomNouvelEvenement" name="nomNouvelEvenement" type="text" class="form-control"
+              [(ngModel)]="nomNouvelEvenement" placeholder="Nom de l’évènement" required>
+            <button type="submit" class="btn btn-warning">Ajouter l’évènement</button>
+          </form>
+          <button type="button" class="btn btn-primary btn-lg" (click)="afficherGestionAdministrateurs()">
+            Ajouter et gérer les administrateurs
+          </button>
+        </div>
 
-      <section class="requests-section">
-        <h2>Demandes de création</h2>
-        <p class="section-description">Validez une demande pour créer immédiatement l’évènement avec ses paramètres de base.</p>
-        @for (demande of demandesCreation; track demande.id) {
-          <article class="request-row">
-            <div>
-              <strong class="event-title">{{ demande.eventName }}</strong>
-              <dl class="request-details">
-                <div><dt>Contact</dt><dd>{{ demande.contact }}</dd></div>
-                <div><dt>E-mail</dt><dd><a [href]="'mailto:' + demande.contactEmail">{{ demande.contactEmail }}</a></dd></div>
-                @if (demande.contactTel) { <div><dt>Téléphone</dt><dd>{{ demande.contactTel }}</dd></div> }
-                @if (demande.endDate) { <div><dt>Date prévue</dt><dd>{{ demande.endDate | date:'dd/MM/yyyy' }}</dd></div> }
-                @if (demande.sitepersourl) { <div><dt>Site</dt><dd><a [href]="demande.sitepersourl" target="_blank" rel="noopener">Ouvrir le site</a></dd></div> }
-              </dl>
-            </div>
-            <button type="button" class="btn btn-success" (click)="validerDemande(demande)" [disabled]="demandeEnValidation !== undefined">
-              {{ demandeEnValidation === demande.id ? 'Création…' : 'Valider et créer' }}
-            </button>
-          </article>
-        } @empty {
-          <p>Aucune demande en attente.</p>
-        }
-      </section>
+        <section class="requests-section">
+          <h2>Demandes de création</h2>
+          <p class="section-description">Validez une demande pour créer immédiatement l’évènement avec ses paramètres de base.</p>
+          @for (demande of demandesCreation; track demande.id) {
+            <article class="request-row">
+              <div>
+                <strong class="event-title">{{ demande.eventName }}</strong>
+                <dl class="request-details">
+                  <div><dt>Contact</dt><dd>{{ demande.contact }}</dd></div>
+                  <div><dt>E-mail</dt><dd><a [href]="'mailto:' + demande.contactEmail">{{ demande.contactEmail }}</a></dd></div>
+                  @if (demande.contactTel) { <div><dt>Téléphone</dt><dd>{{ demande.contactTel }}</dd></div> }
+                  @if (demande.endDate) { <div><dt>Date prévue</dt><dd>{{ demande.endDate | date:'dd/MM/yyyy' }}</dd></div> }
+                  @if (demande.sitepersourl) { <div><dt>Site</dt><dd><a [href]="demande.sitepersourl" target="_blank" rel="noopener">Ouvrir le site</a></dd></div> }
+                </dl>
+              </div>
+              <button type="button" class="btn btn-success" (click)="validerDemande(demande)" [disabled]="demandeEnValidation !== undefined">
+                {{ demandeEnValidation === demande.id ? 'Création…' : 'Valider et créer' }}
+              </button>
+            </article>
+          } @empty {
+            <p>Aucune demande en attente.</p>
+          }
+        </section>
+
+      }
 
       <section class="events-section">
         <h2>Évènements</h2>
@@ -57,11 +60,13 @@
             <strong class="event-title">{{ evenement.eventName }}</strong>
             <div class="event-actions">
               <button type="button" class="btn btn-warning" (click)="goToGestion(evenement)">Accéder</button>
+              @if (superadmin) {
               <button type="button" class="btn btn-danger icon-button" (click)="delete(evenement)" aria-label="Supprimer l’évènement {{ evenement.eventName }}" title="Supprimer l’évènement"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 15h10l1-15M10 10v7M14 10v7"/></svg></button>
+              }
             </div>
           </article>
         } @empty {
-          <p>Aucun évènement n’a encore été créé.</p>
+          <p>Aucun évènement disponible.</p>
         }
       </section>
     } @else {
@@ -124,6 +129,7 @@
               <span class="badge" [class.text-bg-success]="administrateur.superadmin" [class.text-bg-secondary]="!administrateur.superadmin">
                 {{ administrateur.superadmin ? 'Super-administrateur' : 'Évènements sélectionnés' }}
               </span>
+              <p>Évènements : {{ administrateur.superadmin ? 'Tous les évènements' : nomsEvenements(administrateur) }}</p>
               @if (!administrateur.enabled) { <span class="badge text-bg-danger">Désactivé</span> }
             </div>
             <button type="button" class="btn btn-outline-primary btn-sm" (click)="editerAdministrateur(administrateur)">Modifier</button>

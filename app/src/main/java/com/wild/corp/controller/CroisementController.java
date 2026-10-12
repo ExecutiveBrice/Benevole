@@ -4,6 +4,8 @@ package com.wild.corp.controller;
 import com.wild.corp.model.Croisement;
 import com.wild.corp.service.CroisementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import com.wild.corp.service.AccesParametrageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,14 @@ import java.util.List;
 @RequestMapping("/croisement")
 public class CroisementController {
     @Autowired
+    private AccesParametrageService accesParametrageService;
+
+    @Autowired
     private CroisementService croisementService;
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Croisement> add(@RequestBody Croisement croisement) {
+    public ResponseEntity<Croisement> add(@RequestBody Croisement croisement, Authentication authentication) {
+        accesParametrageService.croisement(authentication.getName(), croisement);
         croisementService.persist(croisement);
 
         if(croisement.getId() == null) {
@@ -30,7 +36,8 @@ public class CroisementController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestParam Integer croisementId) {
+    public ResponseEntity<?> delete(@RequestParam Integer croisementId, Authentication authentication) {
+        accesParametrageService.croisement(authentication.getName(), croisementId);
         try {
             croisementService.delete(croisementId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -44,7 +51,8 @@ public class CroisementController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Croisement> update(@RequestBody Croisement croisement) {
+    public ResponseEntity<Croisement> update(@RequestBody Croisement croisement, Authentication authentication) {
+        accesParametrageService.croisement(authentication.getName(), croisement);
         croisementService.persist(croisement);
         return new ResponseEntity<>(croisement, HttpStatus.OK);
     }

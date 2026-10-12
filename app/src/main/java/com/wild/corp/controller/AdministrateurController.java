@@ -1,5 +1,6 @@
 package com.wild.corp.controller;
 
+import com.wild.corp.model.Evenement;
 import com.wild.corp.model.Ressources.AdministrateurCreationRessource;
 import com.wild.corp.model.Ressources.AdministrateurMiseAJourRessource;
 import com.wild.corp.model.Ressources.AdministrateurRessource;
@@ -31,6 +32,11 @@ public class AdministrateurController {
     @GetMapping("/moi")
     public AdministrateurRessource moi(Authentication authentication) {
         return administrateurService.moi(authentication.getName());
+    }
+
+    @GetMapping("/moi/evenements")
+    public List<Evenement> mesEvenements(Authentication authentication) {
+        return administrateurService.evenementsDe(authentication.getName());
     }
 
     @GetMapping

@@ -6,6 +6,8 @@ import com.wild.corp.model.Stand;
 import com.wild.corp.service.StandService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import com.wild.corp.service.AccesParametrageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +19,17 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/stand")
 public class StandController {
+    @Autowired
+    private AccesParametrageService accesParametrageService;
+
 
     @Autowired
     private StandService standService;
 
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestParam Integer standId) {
+    public ResponseEntity<?> delete(@RequestParam Integer standId, Authentication authentication) {
+        accesParametrageService.stand(authentication.getName(), standId);
 
         try {
             standService.delete(standId);
@@ -35,7 +41,9 @@ public class StandController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Stand> add(@RequestBody Stand stand, @RequestParam Integer eventId) {
+    public ResponseEntity<Stand> add(@RequestBody Stand stand, @RequestParam Integer eventId, Authentication authentication) {
+        accesParametrageService.evenement(authentication.getName(), eventId);
+        if (stand.getId() != null) accesParametrageService.stand(authentication.getName(), stand.getId());
 
         standService.addStand(stand, eventId);
 
@@ -48,7 +56,8 @@ public class StandController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Stand> update(@RequestBody StandRessource stand) {
+    public ResponseEntity<Stand> update(@RequestBody StandRessource stand, Authentication authentication) {
+        accesParametrageService.stand(authentication.getName(), stand.getId());
         log.info("getId "+stand.getId());
 log.info("getNom "+stand.getNom());
         log.info("getSoustitre "+stand.getSoustitre());

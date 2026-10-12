@@ -34,6 +34,55 @@ export class EvenementComponent implements OnInit {
   isShowing: boolean = false
   clignotage: boolean = false;
   activeMobilePanel = 1;
+  private swipeStart: { x: number; y: number; identifier: number } | undefined;
+
+  onPanelTouchStart(event: TouchEvent): void {
+    this.swipeStart = undefined;
+    if (!window.matchMedia('(max-width: 991.98px)').matches || event.touches.length !== 1) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    this.swipeStart = { x: touch.clientX, y: touch.clientY, identifier: touch.identifier };
+  }
+
+  onPanelTouchMove(event: TouchEvent): void {
+    if (!this.swipeStart) return;
+    if (event.touches.length !== 1) {
+      this.cancelPanelSwipe();
+      return;
+    }
+
+    const touch = event.touches[0];
+    const deltaX = Math.abs(touch.clientX - this.swipeStart.x);
+    const deltaY = Math.abs(touch.clientY - this.swipeStart.y);
+    // Un défilement vertical ne doit pas devenir un changement d'onglet.
+    if (deltaY > 10 && deltaY > deltaX) {
+      this.cancelPanelSwipe();
+    }
+  }
+
+  onPanelTouchEnd(event: TouchEvent): void {
+    const start = this.swipeStart;
+    this.cancelPanelSwipe();
+    if (!start || event.touches.length !== 0 || !window.matchMedia('(max-width: 991.98px)').matches) return;
+
+    const touch = Array.from(event.changedTouches).find(item => item.identifier === start.identifier);
+    if (!touch) return;
+
+    const deltaX = touch.clientX - start.x;
+    const deltaY = touch.clientY - start.y;
+    if (Math.abs(deltaX) < 60 || Math.abs(deltaX) < Math.abs(deltaY) * 1.5) return;
+
+    const panel = Math.max(0, Math.min(2, this.activeMobilePanel + (deltaX < 0 ? 1 : -1)));
+    if (panel !== this.activeMobilePanel) {
+      this.transmissionService.selectMobileEventPanel(panel);
+    }
+  }
+
+  cancelPanelSwipe(): void {
+    this.swipeStart = undefined;
+  }
   
   constructor(public benevoleService: BenevoleService,
     public evenementService: EvenementService,

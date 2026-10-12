@@ -5,6 +5,8 @@ package com.wild.corp.controller;
 import com.wild.corp.model.Creneau;
 import com.wild.corp.service.CreneauService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import com.wild.corp.service.AccesParametrageService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/creneau")
 public class CreneauController {
+    @Autowired
+    private AccesParametrageService accesParametrageService;
+
 
     @Autowired
     private CreneauService creneauService;
@@ -22,7 +27,9 @@ public class CreneauController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<Creneau> add(@RequestBody Creneau creneau, @RequestParam Integer eventId) {
+    public ResponseEntity<Creneau> add(@RequestBody Creneau creneau, @RequestParam Integer eventId, Authentication authentication) {
+        accesParametrageService.evenement(authentication.getName(), eventId);
+        if (creneau.getId() != null) accesParametrageService.creneau(authentication.getName(), creneau.getId());
         creneauService.addCreneau(creneau, eventId);
 
         if(creneau.getId() == null) {
@@ -33,13 +40,15 @@ public class CreneauController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.DELETE)
-    public ResponseEntity<?> delete(@RequestParam Integer creneauId) {
+    public ResponseEntity<?> delete(@RequestParam Integer creneauId, Authentication authentication) {
+        accesParametrageService.creneau(authentication.getName(), creneauId);
         creneauService.delete(creneauId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Creneau> update(@RequestBody Creneau creneau) {
+    public ResponseEntity<Creneau> update(@RequestBody Creneau creneau, Authentication authentication) {
+        accesParametrageService.creneau(authentication.getName(), creneau.getId());
         creneauService.updateCreneau(creneau);
         return new ResponseEntity<>(creneau, HttpStatus.OK);
     }

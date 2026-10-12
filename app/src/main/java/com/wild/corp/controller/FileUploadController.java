@@ -1,6 +1,10 @@
 package com.wild.corp.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import com.wild.corp.service.AdministrateurService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +24,21 @@ import java.util.Base64;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/files")
 public class FileUploadController {
+    @Autowired
+    private AdministrateurService administrateurService;
 
 
     @Value("${image-storage-dir}")
     private Path imageStorageDir;
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<String> uploadFile(@RequestParam("evenementId") String evenementId,@RequestParam("fileName") String fileName, @RequestBody String fileContent) throws IOException {
+    public ResponseEntity<String> uploadFile(@RequestParam("evenementId") String evenementId,@RequestParam("fileName") String fileName, @RequestBody String fileContent, Authentication authentication) throws IOException {
+        administrateurService.verifierAccesEvenement(authentication.getName(), Integer.valueOf(evenementId));
 
+        if (fileName.isBlank() || fileName.contains("/") || fileName.contains("\\")
+                || fileName.equals(".") || fileName.equals("..")) {
+            throw new AccessDeniedException("Nom de fichier non autorisé");
+        }
         byte[] imageDecoded = Base64.getDecoder().decode(fileContent.getBytes());
         Path prePath = this.imageStorageDir.resolve(evenementId);
 

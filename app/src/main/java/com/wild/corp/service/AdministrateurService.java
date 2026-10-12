@@ -152,7 +152,9 @@ public class AdministrateurService implements UserDetailsService {
     }
 
     public List<Evenement> evenementsDe(String username) {
-        return administrateurRepository.findEvenementsByUsername(username);
+        return getByUsername(username).isSuperadmin()
+                ? evenementRepository.findAll()
+                : administrateurRepository.findEvenementsByUsername(username);
     }
 
     /** Associe automatiquement un événement à l'administrateur qui le crée. */
@@ -269,9 +271,6 @@ public class AdministrateurService implements UserDetailsService {
             @Value("${app.bootstrap-admin.username:}") String username,
             @Value("${app.bootstrap-admin.password:}") String password) {
         return args -> {
-            // Compatibilité avec les données existantes : auparavant, un compte sans
-            // évènement associé représentait un administrateur global.
-            administrateurRepository.migrerAdministrateursGlobauxHistoriques();
             if (username.isBlank() && password.isBlank()) {
                 return;
             }

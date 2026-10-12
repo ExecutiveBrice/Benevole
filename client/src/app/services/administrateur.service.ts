@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Evenement } from '../models';
 import { environment } from '../../environments/environment';
 
 export interface AdministrateurConnecte {
@@ -30,6 +31,10 @@ export class AdministrateurService {
 
   moi() {
     return this.http.get<AdministrateurConnecte>(`${environment.url}administrateurs/moi`);
+  }
+
+  mesEvenements() {
+    return this.http.get<Evenement[]>(`${environment.url}administrateurs/moi/evenements`);
   }
 
   getAll() {
