@@ -28,8 +28,7 @@ public class SchedulerService {
     @Autowired
     private RecapitulatifEvenementService recapitulatifEvenementService;
 
-   // @Scheduled(cron = "0 0 1 * * *", zone = "Europe/Paris")
-    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 0 1 * * *", zone = "Europe/Paris")
     public void recapitulatifEtReset() {
         Instant fin = RecapitulatifEvenementService.finPeriode(Instant.now());
         log.info("Recapitulatif et reset fin periode {}", fin);
