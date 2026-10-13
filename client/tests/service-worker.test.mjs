@@ -23,7 +23,7 @@ function worker() {
     },
   };
   vm.runInNewContext(readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8'), {
-    self, URL, console: { info: (...args) => logs.push(args), error: (...args) => logs.push(args) },
+    self, URL, URLSearchParams, console: { info: (...args) => logs.push(args), error: (...args) => logs.push(args) },
   });
   const fire = async (name, values) => {
     let waiting;
@@ -33,7 +33,7 @@ function worker() {
   return { notifications, opened, logs, fire, setWindows: value => windows = value, failDisplay: error => displayError = error };
 }
 
-test('affiche une confirmation et ouvre le bon événement', async () => {
+test('ouvre le texte complet de la confirmation avant l’événement', async () => {
   const w = worker();
   await w.fire('push', { data: { json: () => ({ title: 'Participation enregistrée', body: 'Vos choix ont été pris en compte.', url: '/7', tag: 'confirmation-1' }) } });
   const notification = w.notifications[0];
@@ -41,18 +41,29 @@ test('affiche une confirmation et ouvre le bon événement', async () => {
   assert.equal(notification.options.tag, 'confirmation-1');
   assert.equal(notification.options.renotify, true);
   let closed = false;
-  await w.fire('notificationclick', { notification: { ...notification.options, close: () => closed = true } });
+  await w.fire('notificationclick', { notification: { title: notification.title, ...notification.options, close: () => closed = true } });
   assert.equal(closed, true);
-  assert.deepEqual(w.opened, ['https://benevoles.example.test/7']);
+  const target = new URL(w.opened[0]);
+  assert.equal(target.pathname, '/notification.html');
+  assert.equal(target.search, '');
+  const message = new URLSearchParams(target.hash.slice(1));
+  assert.equal(message.get('title'), notification.title);
+  assert.equal(message.get('body'), notification.options.body);
+  assert.equal(message.get('url'), 'https://benevoles.example.test/7');
+  assert.equal(message.get('at'), notification.options.data.at);
 });
 
-test('réutilise une fenêtre de l’événement déjà ouverte', async () => {
+test('réutilise la page de lecture sans remplacer un événement déjà ouvert', async () => {
   const w = worker();
   let focused = false;
   let navigated;
-  w.setWindows([{ url: 'https://benevoles.example.test/7', navigate: async url => navigated = url, focus: async () => focused = true }]);
+  w.setWindows([
+    { url: 'https://benevoles.example.test/7', navigate: async () => assert.fail('L’événement doit rester ouvert') },
+    { url: 'https://benevoles.example.test/notification.html#ancien', navigate: async url => navigated = url, focus: async () => focused = true },
+  ]);
   await w.fire('notificationclick', { notification: { data: { url: 'https://benevoles.example.test/7' }, close() {} } });
-  assert.equal(navigated, 'https://benevoles.example.test/7');
+  assert.equal(new URL(navigated).pathname, '/notification.html');
+  assert.equal(new URLSearchParams(new URL(navigated).hash.slice(1)).get('url'), 'https://benevoles.example.test/7');
   assert.equal(focused, true);
   assert.equal(w.opened.length, 0);
 });

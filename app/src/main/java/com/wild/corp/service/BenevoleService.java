@@ -8,6 +8,7 @@ import com.wild.corp.repositories.BenevoleRepository;
 import com.wild.corp.repositories.EvenementRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ import java.util.Optional;
 @Service("BenevoleService")
 @Transactional
 public class BenevoleService {
+
+    @Value("${app.confirmation.delay-minutes:5}")
+    private long confirmationDelayMinutes = 5;
 
     @Autowired
     private BenevoleRepository benevoleRepository;
@@ -68,17 +72,14 @@ public class BenevoleService {
     }
 
     public Benevole addToCroisement(Integer benevoleId, Integer croisementId, Boolean force) {
-        Benevole benevole = findById(benevoleId);
+        Benevole benevole = benevoleRepository.findForConfirmation(benevoleId).orElseThrow();
         Croisement croisement = croisementService.findById(croisementId);
-        ZoneId z = ZoneId.of( "Europe/Paris" );
-        LocalDateTime now = LocalDateTime.now( z );
-        benevole.setDateMaj(now);
-        benevole.setAdviseSent(false);
         if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
             throw new RuntimeException("existe déjà");
         } else {
             if (croisement.getBenevoles().size() < croisement.getLimite() || force) {
                 benevole.getCroisements().add(croisement);
+                markChoicesChanged(benevole);
             }else{
                 throw new RuntimeException("pas de place");
             }
@@ -89,17 +90,19 @@ public class BenevoleService {
     }
 
     public Benevole removeToCroisement(Integer benevoleId, Integer croisementId) {
-        Benevole benevole = findById(benevoleId);
-        ZoneId z = ZoneId.of( "Europe/Paris" );
-        LocalDateTime now = LocalDateTime.now( z );
-        benevole.setDateMaj(now);
-        benevole.setAdviseSent(false);
-        if (benevole.getCroisements().stream().anyMatch(croisementFind -> croisementId.equals(croisementFind.getId()))) {
-            benevole.getCroisements().remove(croisementService.findById(croisementId));
+        Benevole benevole = benevoleRepository.findForConfirmation(benevoleId).orElseThrow();
+        if (benevole.getCroisements().removeIf(croisement -> croisementId.equals(croisement.getId()))) {
+            markChoicesChanged(benevole);
         }
         persist(benevole);
 
         return benevole;
+    }
+
+    private void markChoicesChanged(Benevole benevole) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Europe/Paris"));
+        benevole.setDateMaj(now);
+        benevole.setAdviseSent(false);
     }
 
     public List<Benevole> findAll() {
@@ -109,8 +112,7 @@ public class BenevoleService {
     public List<Benevole> findBenevolesToAdvise() {
         ZoneId z = ZoneId.of( "Europe/Paris" );
         LocalDateTime now = LocalDateTime.now(z);
-        log.debug(now.minusMinutes(5).toString());
-        return benevoleRepository.findBenevolesToAdvise(now.minusMinutes(5));
+        return benevoleRepository.findBenevolesToAdvise(now.minusMinutes(confirmationDelayMinutes));
     }
 
     public Benevole findById(Integer benevoleId) {

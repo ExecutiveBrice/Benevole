@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,34 +38,46 @@ public class ConfirmationService {
     @Transactional
     public void confirm(Integer benevoleId) {
         Benevole benevole = benevoles.findForConfirmation(benevoleId).orElse(null);
-        if (benevole == null || Boolean.TRUE.equals(benevole.getAdviseSent()) || benevole.getDateMaj() == null
-                || !benevole.getDateMaj().isBefore(LocalDateTime.now(ZoneId.of("Europe/Paris")).minusMinutes(5))) return;
 
         boolean pending = false;
         if (Boolean.TRUE.equals(benevole.getEvenement().getNotification())) {
             var devices = subscriptions.findByBenevoleId(benevoleId);
-            if (devices.isEmpty()) delivery(benevole, "push:none").setStatus(SKIPPED);
+
+            if (devices.isEmpty()){
+                log.info("devices.isEmpty()");
+                delivery(benevole, "push:none").setStatus(SKIPPED);
+            }
             for (PushSubscription subscription : devices) {
                 ConfirmationDelivery delivery = delivery(benevole, "push:" + subscription.getId());
                 if (ready(delivery)) {
+                    log.info("ready(delivery)");
                     if (!subscription.getAccess().getExpiresAt().isAfter(Instant.now())) {
+                        log.info("!subscription.getAccess().getExpiresAt().isAfter(Instant.now())");
                         delivery.setStatus(EXPIRED);
                         subscriptions.delete(subscription);
                     } else if (push.isConfigured()) {
+                        log.info("push.isConfigured()");
                         attemptPush(benevole, subscription, delivery);
                     }
+                    log.info(" Sans configuration");
                     // Sans configuration, conserver l'envoi en attente sans épuiser les reprises.
                 }
+                log.info("not ready {}", ready(delivery));
                 pending |= delivery.getStatus() == PENDING;
             }
+        }else {
+            log.info("benevole.getEvenement().getNotification() {}", benevole.getEvenement().getNotification());
         }
         if (Boolean.TRUE.equals(benevole.getEvenement().getCopie())) {
             ConfirmationDelivery delivery = delivery(benevole, "organizer");
             if (ready(delivery)) {
+                log.info("ready(delivery)");
                 String recipient = benevole.getEvenement().getContactEmail();
                 if (recipient == null || recipient.isBlank()) {
+                    log.info("recipient null");
                     delivery.setStatus(SKIPPED);
                 } else {
+                    log.info("recipient");
                     delivery.setAttempts(delivery.getAttempts() + 1);
                     boolean accepted = email.sendSingleMessage(List.of(recipient), organizerBody(benevole),
                             "Participation enregistrée : " + benevole.getEvenement().getEventName(), benevole.getPrenom(), benevole.getNom());
@@ -76,6 +86,8 @@ public class ConfirmationService {
                 }
             }
             pending |= delivery.getStatus() == PENDING;
+        }else {
+            log.info("Boolean.TRUE.equals(benevole.getEvenement().getCopie()) {}", benevole.getEvenement().getCopie());
         }
         // Compatibilité : ce drapeau signifie que le changement a été traité,
         // pas que la notification a été affichée ou lue.
@@ -100,6 +112,7 @@ public class ConfirmationService {
 
     private void attemptPush(Benevole benevole, PushSubscription subscription, ConfirmationDelivery delivery) {
         delivery.setAttempts(delivery.getAttempts() + 1);
+        log.info("delivery.getAttempts() {}", delivery.getAttempts());
         try {
             String payload = json.writeValueAsString(Map.of(
                     "title", "Participation enregistrée",
@@ -107,13 +120,16 @@ public class ConfirmationService {
                             + " » ont bien été pris en compte. Consultez votre planning.",
                     "url", config.getEventUrl(benevole.getEvenement().getId()),
                     "tag", "confirmation-" + benevole.getId()));
+            log.info("payload {}", payload);
             int code = push.send(subscription, payload);
             finishAttempt(delivery, code);
             if (code == 404 || code == 410) subscriptions.delete(subscription);
         } catch (InterruptedException interrupted) {
+            log.error("interrupted {}", interrupted.getMessage());
             Thread.currentThread().interrupt();
             finishFailure(delivery, "INTERRUPTED", true);
         } catch (Exception exception) {
+            log.error("exception {}", exception.getMessage());
             // Un nom de classe décrit la cause sans exposer endpoint, clés ou message sensible.
             Throwable cause = exception;
             for (int depth = 0; depth < 8 && cause.getCause() != null && cause.getCause() != cause; depth++) cause = cause.getCause();

@@ -4,6 +4,8 @@ Les confirmations automatiques des choix sont envoyées par Web Push aux apparei
 
 ## Configuration du serveur
 
+Le seuil d'inactivité avant confirmation est configurable avec `APP_CONFIRMATION_DELAY_MINUTES` (en minutes, `5` par défaut), via l'environnement du backend ou le `.env` chargé par Docker Compose. Par exemple, `APP_CONFIRMATION_DELAY_MINUTES=1` réduit ce délai à une minute. Redémarrer le backend après modification. Le scheduler vérifie toujours les bénévoles chaque minute ; l'envoi peut donc intervenir jusqu'à une minute après le seuil configuré.
+
 Depuis la racine du projet, générer une paire VAPID :
 
 ```sh
@@ -38,7 +40,9 @@ Chaque appareil et navigateur possède sa propre autorisation globale. Quitter l
 
 ## Envoi et suivi
 
-Le scheduler vérifie chaque minute les choix qui n'ont pas changé depuis cinq minutes. Une livraison persistante distingue chaque révision des choix, chaque appareil et la copie organisateur. Les états sont `PENDING`, `ACCEPTED`, `FAILED`, `EXPIRED` et `SKIPPED`. Les erreurs temporaires sont reprises après une puis cinq minutes, avec au maximum trois tentatives. Un appareil déjà accepté n'est pas renvoyé lors de la reprise d'un autre appareil ou de l'email organisateur. Les nouvelles modifications remplacent les anciennes confirmations encore en attente.
+Le scheduler vérifie chaque minute les choix qui n'ont pas changé depuis au moins cinq minutes. Chaque ajout ou retrait effectif redémarre ce délai à partir du dernier mouvement, même si les modifications successives repoussent indéfiniment l'envoi. Après une confirmation, toute nouvelle modification déclenche une nouvelle confirmation après cinq minutes sans mouvement. Sans changement, aucune nouvelle notification n'est envoyée. Un retrait sans effet ou une inscription refusée ne redémarre pas le délai.
+
+Une livraison persistante distingue chaque révision des choix, chaque appareil et la copie organisateur. Les états sont `PENDING`, `ACCEPTED`, `FAILED`, `EXPIRED` et `SKIPPED`. Les erreurs temporaires sont reprises après une puis cinq minutes, avec au maximum trois tentatives. Un appareil déjà accepté n'est pas renvoyé lors de la reprise d'un autre appareil ou de l'email organisateur. Les nouvelles modifications remplacent les anciennes confirmations encore en attente. Les ajouts et retraits utilisent le même verrou de bénévole que l'envoi pour éviter de perdre un changement pendant une confirmation.
 
 Les réponses Push 404/410 suppriment l'abonnement expiré. Les erreurs permanentes arrêtent la livraison ; les erreurs finales sont consignées sans clés ni endpoints. Sans abonnement, la livraison est ignorée, sans email de secours. L'activation d'un nouvel appareil remet les choix courants à traiter pour cet appareil.
 
@@ -48,7 +52,7 @@ En localhost, redémarrer le backend après les changements de code et conserver
 
 `ACCEPTED` signifie que le service Push a accepté le message, pas que le téléphone l'a affiché ou que le bénévole l'a lu. Le drapeau historique `adviseSent` signifie désormais que le changement a fini d'être traité, y compris les livraisons ignorées ou définitivement échouées. Les transactions verrouillent le bénévole pendant l'envoi pour éviter deux workers concurrents. Comme tout envoi réseau, un arrêt du processus entre l'acceptation distante et la validation en base peut provoquer une répétition ; le `tag` de notification remplace la confirmation précédente dans le navigateur. Le worker utilise `renotify: true` pour demander une nouvelle alerte lors de ce remplacement, dans les navigateurs qui le prennent en charge et selon les réglages système.
 
-La notification affiche uniquement la prise en compte des choix et le nom public de l'événement. Le clic ouvre la page de l'événement, où le bénévole s'identifie pour consulter ses créneaux. Le lien personnel et les clés d'accès ne figurent jamais dans la notification.
+La notification affiche uniquement la prise en compte des choix et le nom public de l'événement. Le clic ouvre une page de lecture affichant le titre, le texte intégral reçu et l'heure de réception, sans identification préalable. Le bouton « Ouvrir l’événement » permet ensuite d'accéder à l'événement, où le bénévole s'identifie pour consulter ses créneaux. Le message est transmis à la page dans le fragment de l'URL, qui n'est pas envoyé au serveur. La page de lecture est mise en cache pour rester accessible hors connexion après activation du nouveau service worker. Une page de lecture déjà ouverte est réutilisée sans remplacer la page de l'événement. Le lien personnel et les clés d'accès ne figurent jamais dans la notification.
 
 ## Diagnostiquer une notification invisible dans Chrome
 

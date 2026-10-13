@@ -49,6 +49,7 @@ public class SchedulerService {
     public void adviseBenevoles() {
         benevoleService.findBenevolesToAdvise().forEach(benevole -> {
             try {
+                log.info("benevole to advise {}", benevole.getNom());
                 confirmationService.confirm(benevole.getId());
             } catch (Exception exception) {
                 log.warn("Confirmation non traitée pour le bénévole {}", benevole.getId());

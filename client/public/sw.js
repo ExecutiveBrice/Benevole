@@ -1,5 +1,5 @@
-const CACHE_NAME = 'benevoles-shell-v3';
-const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest', '/icons/app-icon.svg'];
+const CACHE_NAME = 'benevoles-shell-v4';
+const APP_SHELL = ['/', '/index.html', '/notification.html', '/notification.js', '/manifest.webmanifest', '/icons/app-icon.svg'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
@@ -19,10 +19,12 @@ self.addEventListener('fetch', (event) => {
   }
 
   if (event.request.mode === 'navigate') {
+    const fallback = new URL(event.request.url).pathname === '/notification.html'
+      ? '/notification.html' : '/index.html';
     event.respondWith(
       fetch(event.request)
-        .then((response) => response.ok ? response : caches.match('/index.html'))
-        .catch(() => caches.match('/index.html'))
+        .then((response) => response.ok ? response : caches.match(fallback))
+        .catch(() => caches.match(fallback))
     );
     return;
   }
@@ -65,7 +67,7 @@ self.addEventListener('push', (event) => {
         tag: payload.tag || 'confirmation',
         // Une nouvelle confirmation doit alerter même si elle remplace l'ancienne.
         renotify: true,
-        data: { url: url.href },
+        data: { url: url.href, at },
       });
     } catch (error) {
       await reportPushStatus('display-failed', at, error?.name || 'Error');
@@ -78,8 +80,18 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const target = new URL(event.notification.data?.url || '/', self.location.origin);
-  if (target.origin !== self.location.origin) return;
+  let eventUrl;
+  try { eventUrl = new URL(event.notification.data?.url || '/', self.location.origin); }
+  catch { return; }
+  if (eventUrl.origin !== self.location.origin) return;
+  const target = new URL('/notification.html', self.location.origin);
+  // Le fragment conserve le message reçu sans le transmettre au serveur.
+  target.hash = new URLSearchParams({
+    title: event.notification.title || 'Bénévoles',
+    body: event.notification.body || 'Vos choix ont bien été pris en compte.',
+    url: eventUrl.href,
+    at: event.notification.data?.at || '',
+  }).toString();
   event.waitUntil((async () => {
     const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     const existing = windows.find(client => new URL(client.url).pathname === target.pathname);

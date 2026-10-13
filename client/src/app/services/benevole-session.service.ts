@@ -3,7 +3,7 @@ import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 
 const VOLUNTEER_EMAIL_KEY = 'benevoleEmail';
 
-/** Keeps the identified volunteer for the lifetime of the current browser or PWA session. */
+/** Keeps the identified volunteer across browser and PWA restarts until logout. */
 @Injectable({ providedIn: 'root' })
 export class BenevoleSessionService {
   private readonly platformId = inject(PLATFORM_ID);
@@ -14,7 +14,8 @@ export class BenevoleSessionService {
     }
 
     try {
-      this.sessionStorage?.setItem(VOLUNTEER_EMAIL_KEY, JSON.stringify(email));
+      this.localStorage?.setItem(VOLUNTEER_EMAIL_KEY, JSON.stringify(email));
+      this.sessionStorage?.removeItem(VOLUNTEER_EMAIL_KEY);
     } catch {
       // Storage can be disabled by the browser or the PWA host.
     }
@@ -22,17 +23,15 @@ export class BenevoleSessionService {
 
   getEmail(): string | null {
     try {
-      const email = this.parseEmail(this.sessionStorage?.getItem(VOLUNTEER_EMAIL_KEY));
+      const email = this.parseEmail(this.localStorage?.getItem(VOLUNTEER_EMAIL_KEY));
       if (email !== null) {
         return email;
       }
 
-      // Preserve the identified volunteer for users upgrading from the former
-      // localStorage implementation, then keep subsequent data in sessionStorage.
-      const legacyEmail = this.parseEmail(this.localStorage?.getItem(VOLUNTEER_EMAIL_KEY));
+      // Preserve volunteers identified before persistent storage was restored.
+      const legacyEmail = this.parseEmail(this.sessionStorage?.getItem(VOLUNTEER_EMAIL_KEY));
       if (legacyEmail !== null) {
         this.saveEmail(legacyEmail);
-        this.localStorage?.removeItem(VOLUNTEER_EMAIL_KEY);
       }
       return legacyEmail;
     } catch {
@@ -54,8 +53,12 @@ export class BenevoleSessionService {
       return null;
     }
 
-    const email = JSON.parse(value);
-    return typeof email === 'string' && email.length > 0 ? email : null;
+    try {
+      const email = JSON.parse(value);
+      return typeof email === 'string' && email.length > 0 ? email : null;
+    } catch {
+      return null;
+    }
   }
 
   private get sessionStorage(): Storage | null {

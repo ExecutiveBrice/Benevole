@@ -55,8 +55,6 @@ public class BenevoleController {
 
             Benevole benevole = benevoleService.removeToCroisement(benevoleId, croisementId);
             return new ResponseEntity<>(benevole,HttpStatus.OK);
-
-
     }
 
     @RequestMapping(value = "/byMail", method = RequestMethod.GET)

@@ -22,6 +22,6 @@ public interface BenevoleRepository extends JpaRepository<Benevole, Integer> {
 
     List<Benevole> findAll();
 
-    @Query("SELECT b FROM Benevole b WHERE b.dateMaj < :nowMinusFiveMin AND b.adviseSent = false ")
+    @Query("SELECT b FROM Benevole b WHERE b.dateMaj <= :nowMinusFiveMin AND b.adviseSent = false ")
     List<Benevole> findBenevolesToAdvise(@Param("nowMinusFiveMin")  LocalDateTime nowMinusFiveMin);
 }

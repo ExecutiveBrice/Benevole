@@ -27,6 +27,8 @@ server:
 # placer le mot de passe dans ce fichier :
 # APP_BOOTSTRAP_ADMIN_USERNAME (adresse e-mail) et APP_BOOTSTRAP_ADMIN_PASSWORD.
 app:
+  confirmation:
+    delay-minutes: ${APP_CONFIRMATION_DELAY_MINUTES:5}
   push:
     public-key: ${APP_PUSH_PUBLIC_KEY:}
     private-key: ${APP_PUSH_PRIVATE_KEY:}
