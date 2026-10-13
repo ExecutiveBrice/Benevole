@@ -10,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ConnexionComponent } from "../../components/connexion/connexion.component";
 import { PlanningComponent } from "../../components/planning/planning.component";
 import { InfoComponent } from "../../components/info/info.component";
+import { EventNotificationPromptComponent } from '../../components/notifications/event-notification-prompt.component';
 
 @Component({
   selector: 'app-evenement',
@@ -17,7 +18,7 @@ import { InfoComponent } from "../../components/info/info.component";
   templateUrl: './evenement.component.html',
   styleUrls: ['./evenement.component.scss'],
   
-  imports: [ConnexionComponent, PlanningComponent, InfoComponent],
+  imports: [ConnexionComponent, PlanningComponent, InfoComponent, EventNotificationPromptComponent],
   providers: [
     StandService,
     CroisementService,

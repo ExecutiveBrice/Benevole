@@ -1,17 +1,19 @@
 import {ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder} from '@angular/forms';
 import {Benevole, Croisement, Evenement} from '../../models';
-import {BenevoleService, BenevoleSessionService, FileService, TransmissionService} from '../../services';
+import {BenevoleService, BenevoleSessionService, TransmissionService} from '../../services';
 import { ToastService } from '../../services';
 import {HttpErrorResponse} from '@angular/common/http';
 import {OrderByPipe} from "../../services/sort.pipe";
 import {Router} from "@angular/router";
+import { NotificationsComponent } from '../notifications/notifications.component';
+import { PushNotificationService } from '../../services/push-notification.service';
 
 
 @Component({
   selector: 'app-connexion',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, OrderByPipe, ],
+  imports: [FormsModule, ReactiveFormsModule, OrderByPipe, NotificationsComponent],
   templateUrl: './connexion.component.html',
   styleUrl: './connexion.component.scss'
 })
@@ -23,20 +25,18 @@ export class ConnexionComponent implements OnInit {
   @ViewChild('firstConnexionField') firstConnexionField?: ElementRef<HTMLInputElement>;
 
   benevoleEmail!:string;
-  logo?: string;
   constructor(
     public benevoleService: BenevoleService,
     public transmissionService: TransmissionService,
     private benevoleSessionService: BenevoleSessionService,
+    private pushNotifications: PushNotificationService,
     private router: Router,
     private toastr: ToastService,
-    private fileService: FileService,
     public formBuilder: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,) {
   }
 
   ngOnInit(): void {
-    this.getLogo();
     if (this.evenement.needtel) {
       this.formulaireBenevole.get('telephone')?.enable()
     } else {
@@ -58,6 +58,19 @@ export class ConnexionComponent implements OnInit {
       setTimeout(() => this.firstConnexionField?.nativeElement.focus());
     });
 
+    if (new URLSearchParams(window.location.hash.slice(1)).has('notifications')) {
+      this.pushNotifications.consumeInvitation(this.evenement.id).then(benevole => {
+        if (!benevole) return;
+        this.benevole = benevole;
+        this.userExist = true;
+        this.formulaireBenevole.patchValue({ nom: benevole.nom, prenom: benevole.prenom, email: benevole.email });
+        this.transmissionService.benevoleTransmission(benevole);
+        this.actionEmitter.emit(false);
+        this.changeDetectorRef.markForCheck();
+      }).catch(() => this.toastr.error('Ce lien personnel est invalide, expiré ou déjà utilisé. Demandez un nouveau lien à l’organisateur.', 'Notifications'));
+      return;
+    }
+
     this.benevoleEmail = this.benevoleSessionService.getEmail() ?? '';
     if (this.benevoleEmail != null) {
       this.formulaire.get('email')?.setValue( this.benevoleEmail)
@@ -65,27 +78,17 @@ export class ConnexionComponent implements OnInit {
     }
   }
   exit(){
-    this.benevoleSessionService.clear();
+    this.benevole = undefined;
+    this.userExist = false;
+    this.inconnu = false;
+    this.benevoleEmail = '';
+    this.formulaire.reset();
+    this.formulaireBenevole.reset();
+    this.transmissionService.deconnexionBenevole();
+    this.changeDetectorRef.markForCheck();
     this.router.navigate(['/']);
   }
 
-  getLogo(): void {
-    this.fileService.get(this.evenement.id, 'logo.jpeg').subscribe({
-      next: data => {
-        this.logo = data?.trim() ? `data:image/jpeg;base64,${data}` : undefined;
-        this.changeDetectorRef.markForCheck();
-      },
-      // L'absence de logo est un état normal : ne rien afficher.
-      error: () => {
-        this.logo = undefined;
-        this.changeDetectorRef.markForCheck();
-      }
-    });
-  }
-
-  hideLogo(): void {
-    this.logo = undefined;
-  }
   formulaire = this.formBuilder.group({
     email: new FormControl(this.benevole?.email, [Validators.required, Validators.email])
   })
@@ -182,6 +185,10 @@ export class ConnexionComponent implements OnInit {
       this.benevoleService.add(this.benevole, this.evenement?.id).subscribe({
         next: (benevole) => {
           benevole.croisements = [];
+          if (benevole.notificationToken) {
+            try { this.pushNotifications.remember(this.evenement.id, benevole.id, benevole.notificationToken); }
+            catch { this.toastr.error('Le stockage de cet appareil est désactivé. Un lien personnel sera nécessaire pour activer les notifications.', 'Notifications'); }
+          }
           this.benevole = benevole;
 
           this.userExist = true;

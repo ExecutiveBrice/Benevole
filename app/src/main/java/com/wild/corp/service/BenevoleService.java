@@ -30,6 +30,9 @@ public class BenevoleService {
     @Autowired
     private EvenementRepository evenementRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     public Benevole persist(Benevole benevole) {
         return benevoleRepository.save(benevole);
     }
@@ -40,8 +43,15 @@ public class BenevoleService {
             throw new RuntimeException("existe déjà");
         }
         Evenement evenement = evenementRepository.findById(evenementId).get();
+        // Ne jamais accepter un identifiant existant pour délivrer un accès personnel.
+        benevole.setId(null);
+        benevole.setCroisements(new java.util.ArrayList<>());
+        benevole.setAdviseSent(true);
+        benevole.setDateMaj(null);
         benevole.setEvenement(evenement);
-        return persist(benevole);
+        Benevole created = persist(benevole);
+        created.setNotificationToken(notificationService.createAccess(created, false));
+        return created;
     }
 
     public void update(Benevole benevole) {

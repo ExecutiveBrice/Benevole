@@ -1,3 +1,21 @@
 img{
     width: 100%;
 }
+
+.organization-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.organizer-logo {
+  margin: .75rem 0;
+  text-align: center;
+
+  img {
+    display: block;
+    width: min(100%, 220px);
+    max-height: 140px;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+}

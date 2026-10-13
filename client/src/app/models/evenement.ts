@@ -3,6 +3,10 @@ export class Evenement {
   id!: number;
   contact!: string;
   eventName!: string;
+  dateEvenement?: string | null;
+  adresse?: string;
+  indicationsDebut?: string;
+  indicationsFin?: string;
   contactEmail!: string;
   contactTel!: string;
   startDate!: Date;

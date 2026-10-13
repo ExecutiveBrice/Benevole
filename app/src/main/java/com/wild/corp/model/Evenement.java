@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +31,17 @@ public class Evenement {
     private String contactEmail;
 
     private String eventName;
+
+    private LocalDate dateEvenement;
+
+    @Column(columnDefinition = "TEXT")
+    private String adresse;
+
+    @Column(columnDefinition = "TEXT")
+    private String indicationsDebut;
+
+    @Column(columnDefinition = "TEXT")
+    private String indicationsFin;
 
     private Date startDate;
 

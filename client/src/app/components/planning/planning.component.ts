@@ -8,6 +8,7 @@ import { OrderByPipe } from "../../services/sort.pipe";
 import { NgClass } from '@angular/common';
 import { EventCardComponent } from '../eventCard/eventCard.component';
 import { SelectionButtonComponent } from '../selectionButton/selectionButton.component';
+import { PushNotificationService } from '../../services/push-notification.service';
 
 @Component({
   selector: 'app-planning',
@@ -28,7 +29,8 @@ export class PlanningComponent implements OnInit {
     public standService: StandService,
     private toastr: ToastService,
     public formBuilder: FormBuilder,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private pushNotifications: PushNotificationService
   ) { }
 
   ngOnInit(): void {
@@ -96,7 +98,7 @@ export class PlanningComponent implements OnInit {
   }
 
 
-  fillBenevole(benevole: Benevole) {
+  fillBenevole(benevole: Benevole | undefined) {
     console.log(benevole);
 
     if (benevole != null) {
@@ -110,7 +112,11 @@ export class PlanningComponent implements OnInit {
       this.updateSum()
       this.changeDetectorRef.detectChanges();
     } else {
-      console.log("pas de benevole avec cette email")
+      this.benevole = undefined;
+      this.checkStands(this.stands);
+      this.checkCroisements(this.besoins);
+      this.checkCroisements(this.sansChoix);
+      this.changeDetectorRef.markForCheck();
     }
   }
 
@@ -279,6 +285,7 @@ export class PlanningComponent implements OnInit {
           this.fillBenevole(benevole);
           this.transmissionService.benevoleTransmission(benevole);
           this.toastr.success("Votre choix à bien été ajouté", "Merci,")
+          this.pushNotifications.promptIfNeeded();
         },
         error: (error: HttpErrorResponse) => {
           console.log(error)

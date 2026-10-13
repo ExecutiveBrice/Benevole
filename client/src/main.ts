@@ -12,11 +12,15 @@ bootstrapApplication(AppComponent, appConfig)
   .then(() => {
     if ('serviceWorker' in navigator) {
       let reloadingForServiceWorker = false;
+      let hadController = !!navigator.serviceWorker.controller;
       navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (!reloadingForServiceWorker) {
+        // La première installation ne doit pas interrompre l'échange d'un lien
+        // personnel à usage unique en cours. Recharger uniquement les mises à jour.
+        if (hadController && !reloadingForServiceWorker) {
           reloadingForServiceWorker = true;
           window.location.reload();
         }
+        hadController = true;
       });
 
       navigator.serviceWorker

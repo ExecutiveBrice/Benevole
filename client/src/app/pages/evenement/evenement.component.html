@@ -1,5 +1,6 @@
 @if (evenement; as currentEvenement) {
   @if (!currentEvenement.lock) {
+  <app-event-notification-prompt [event]="currentEvenement"></app-event-notification-prompt>
   <div class="page-container event-page-container">
     <div class="row g-4 align-items-start event-panels" [class.mobile-panel-1]="activeMobilePanel === 1"
       [class.mobile-panel-2]="activeMobilePanel === 2"

@@ -1,17 +1,13 @@
 package com.wild.corp.service;
 
-import com.wild.corp.model.Benevole;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @EnableScheduling
 @Configuration
@@ -26,10 +22,7 @@ public class SchedulerService {
     private EvenementService evenementService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private ConfigService configService;
+    private ConfirmationService confirmationService;
 
     @Scheduled(cron = "0 0 1 * * *")
     public void reset() {
@@ -53,55 +46,13 @@ public class SchedulerService {
     }
 
     @Scheduled(cron = "0 * * * * *")
-    @Transactional
     public void adviseBenevoles() {
-
-        List<Benevole> benevoles = benevoleService.findBenevolesToAdvise();
-        log.debug("findBenevolesToAdvise " + benevoles.size());
-        benevoles.forEach(benevole -> {
-            benevole.setAdviseSent(true);
-            log.info("send confirmation Email to " + benevole.getPrenom() + " " + benevole.getNom());
-
-            String subject = "Validation de participation pour l'evenement : " + benevole.getEvenement().getEventName();
-
-            StringBuilder corpsMessage = new StringBuilder();
-            corpsMessage.append("Bonjour,<br />").append(benevole.getEvenement().getValidation()).append("<br />");
-            corpsMessage.append("<br />");
-
-            benevole.getCroisements().stream().filter(croisement -> croisement.getStand().getType()!=4).forEach(croisement -> {
-                String nomStand = "tous".equals(croisement.getStand().getNom()) ? "N'importe quel stand" : croisement.getStand().getNom();
-                corpsMessage.append(nomStand);
-                corpsMessage.append("-");
-                corpsMessage.append(croisement.getCreneau().getPlage());
-                corpsMessage.append("<br />");
-            });
-            corpsMessage.append("<br />");
-            corpsMessage.append(benevole.getEvenement().getSignature());
-            corpsMessage.append("<br />");
-            corpsMessage.append("Ceci est un mail automatique, veuillez utiliser le contact de cet évènement :");
-            corpsMessage.append("<br />");
-            corpsMessage.append(benevole.getEvenement().getContact());
-            corpsMessage.append("-");
-            corpsMessage.append(benevole.getEvenement().getContactEmail());
-            corpsMessage.append("<br />");
-            corpsMessage.append("<br />");
-            String eventUrl = configService.getEventUrl(benevole.getEvenement().getId());
-            corpsMessage.append("Vous pouvez revenir sur l'application à tous moments : <a href='" + eventUrl + "'>" + eventUrl + "</a>");
-            corpsMessage.append("<br />");
-
-
-            List<String> destinataires = new ArrayList<>();
-            if(benevole.getEvenement().getNotification()){
-                destinataires.add(benevole.getEmail());
+        benevoleService.findBenevolesToAdvise().forEach(benevole -> {
+            try {
+                confirmationService.confirm(benevole.getId());
+            } catch (Exception exception) {
+                log.warn("Confirmation non traitée pour le bénévole {}", benevole.getId());
             }
-
-            if(benevole.getEvenement().getCopie()){
-                destinataires.add(benevole.getEvenement().getContactEmail());
-            }
-
-            emailService.singleMessage(destinataires, corpsMessage.toString(), subject, benevole.getPrenom(), benevole.getNom());
-
         });
     }
-
 }

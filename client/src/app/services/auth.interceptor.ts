@@ -9,12 +9,14 @@ export const jwtAuthenticationInterceptor: HttpInterceptorFn = (request, next) =
   const authService = inject(AuthService);
   const isApiRequest = request.url.startsWith(environment.url);
   const isAuthenticationRequest = request.url.startsWith(`${environment.url}auth/`);
+  const isNotificationAccessRequest = request.url.startsWith(`${environment.url}notifications/`)
+    && !request.url.startsWith(`${environment.url}notifications/invitations`);
   const requiresAuthentication = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)
     || request.url.startsWith(`${environment.url}administrateurs`)
     || request.url.startsWith(`${environment.url}demandes-evenements`)
     || request.url === `${environment.url}config/getProps`;
 
-  const authorization = isApiRequest && !isAuthenticationRequest && requiresAuthentication
+  const authorization = isApiRequest && !isAuthenticationRequest && !isNotificationAccessRequest && requiresAuthentication
     ? authService.authorizationHeader()
     : null;
   const authenticatedRequest = authorization

@@ -49,7 +49,7 @@ export class TransmissionService {
 
 
   // Observable string sources
-  private benevoleSource = new Subject<Benevole>();
+  private benevoleSource = new Subject<Benevole | undefined>();
 
   // Observable string streams
   benevoleStream = this.benevoleSource.asObservable();
@@ -58,6 +58,11 @@ export class TransmissionService {
   benevoleTransmission(benevole: Benevole) {
     this.benevoleSessionService.saveEmail(benevole.email);
     this.benevoleSource.next(benevole);
+  }
+
+  deconnexionBenevole(): void {
+    this.benevoleSessionService.clear();
+    this.benevoleSource.next(undefined);
   }
 
 

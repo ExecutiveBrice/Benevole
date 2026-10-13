@@ -20,7 +20,7 @@
       <details class="card settings-section" >
         <summary class="card-header">
           <span><span class="app-icon" aria-hidden="true">event</span> Informations de l’évènement</span>
-          <span class="settings-summary">Nom, contacts et site</span>
+          <span class="settings-summary">Nom, date, adresse, indications et contacts</span>
         </summary>
         <div class="card-body settings-section-content settings-fields-grid">
           <div>
@@ -29,6 +29,22 @@
             @if (formulaireEvent.get('eventName')?.hasError('required')) {
               <div class="invalid-feedback d-block">Le nom de l’évènement est obligatoire.</div>
             }
+          </div>
+          <div>
+            <label class="form-label" for="dateEvenement">Date de l’évènement</label>
+            <input id="dateEvenement" class="form-control" type="date" formControlName="dateEvenement">
+          </div>
+          <div>
+            <label class="form-label" for="adresse">Adresse</label>
+            <input id="adresse" class="form-control" type="text" formControlName="adresse">
+          </div>
+          <div>
+            <label class="form-label" for="indicationsDebut">Indications de début</label>
+            <textarea id="indicationsDebut" class="form-control" rows="3" formControlName="indicationsDebut"></textarea>
+          </div>
+          <div>
+            <label class="form-label" for="indicationsFin">Indications de fin</label>
+            <textarea id="indicationsFin" class="form-control" rows="3" formControlName="indicationsFin"></textarea>
           </div>
           <div>
             <label class="form-label" for="endDate">Vidange de la base des bénévoles</label>
@@ -80,14 +96,15 @@
               <input class="form-check-input" id="needtel" type="checkbox" formControlName="needtel">
               <label class="form-check-label" for="needtel">Demander le téléphone des bénévoles</label>
             </div>
-            <div class="form-check form-switch">
-              <input class="form-check-input" id="notification" type="checkbox" formControlName="notification">
-              <label class="form-check-label" for="notification">Envoyer un e-mail de confirmation aux bénévoles</label>
-            </div>
           }
           <div class="form-check form-switch">
+            <input class="form-check-input" id="notification" type="checkbox" formControlName="notification">
+            <label class="form-check-label" for="notification">Envoyer une notification de confirmation aux bénévoles</label>
+            <div class="form-text">Sur les appareils où le bénévole a activé les notifications. Aucun e-mail de confirmation ne lui sera envoyé.</div>
+          </div>
+          <div class="form-check form-switch">
             <input class="form-check-input" id="copie" type="checkbox" formControlName="copie">
-            <label class="form-check-label" for="copie">Recevoir une copie des e-mails de confirmation</label>
+            <label class="form-check-label" for="copie">Recevoir la confirmation par e-mail à l’adresse de l’organisateur</label>
           </div>
           <div class="form-check form-switch">
             <input class="form-check-input" id="afficherBenevoles" type="checkbox" formControlName="afficherBenevoles">

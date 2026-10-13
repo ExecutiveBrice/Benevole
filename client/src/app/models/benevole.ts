@@ -6,6 +6,7 @@ import { Evenement } from './evenement';
 
 export class Benevole {
   id!: number;
+  notificationToken?: string;
   prenom!: string;
   nom!: string;
   email!: string;

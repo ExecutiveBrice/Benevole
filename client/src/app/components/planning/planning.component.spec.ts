@@ -5,18 +5,21 @@ import { environment } from '../../../environments/environment';
 import { Benevole, Croisement, Evenement, Stand } from '../../models';
 import { BenevoleService, StandService, ToastService, TransmissionService } from '../../services';
 import { PlanningComponent } from './planning.component';
+import { PushNotificationService } from '../../services/push-notification.service';
 
 describe('Inscription depuis le planning', () => {
   let fixture: ComponentFixture<PlanningComponent>;
   let requests: HttpTestingController;
   let benevole: Benevole;
   let croisement: Croisement;
+  let push: jasmine.SpyObj<PushNotificationService>;
 
   beforeEach(async () => {
+    push = jasmine.createSpyObj('Push', ['promptIfNeeded']);
     await TestBed.configureTestingModule({
       imports: [PlanningComponent],
       providers: [provideHttpClient(), provideHttpClientTesting(), BenevoleService,
-        StandService, TransmissionService, ToastService]
+        StandService, TransmissionService, ToastService, { provide: PushNotificationService, useValue: push }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PlanningComponent);
@@ -94,6 +97,7 @@ describe('Inscription depuis le planning', () => {
     fixture.detectChanges();
     requests.expectOne(`${environment.url}benevole/addToCroisement?benevoleId=2&croisementId=4&force=false`)
       .flush({ ...benevole, croisements: [{ ...croisement, benevoles: undefined }] });
+    expect(push.promptIfNeeded).toHaveBeenCalledTimes(1);
 
     for (const button of buttons()) {
       expect(button.textContent).toContain('Brice');
@@ -107,6 +111,7 @@ describe('Inscription depuis le planning', () => {
     fixture.detectChanges();
     requests.expectOne(`${environment.url}benevole/removeToCroisement?benevoleId=2&croisementId=4`)
       .flush({ ...benevole, croisements: [] });
+    expect(push.promptIfNeeded).toHaveBeenCalledTimes(1);
 
     for (const button of buttons()) {
       expect(button.textContent).not.toContain('Brice');
@@ -115,6 +120,14 @@ describe('Inscription depuis le planning', () => {
       expect(button.classList.contains('selected')).toBeFalse();
       expect(button.classList.contains('complet')).toBeFalse();
     }
+  });
+
+  it('ne propose pas les notifications lorsqu’une inscription échoue', () => {
+    loadPlanning();
+    buttons()[0].click();
+    requests.expectOne(`${environment.url}benevole/addToCroisement?benevoleId=2&croisementId=4&force=false`)
+      .flush({}, { status: 409, statusText: 'Conflict' });
+    expect(push.promptIfNeeded).not.toHaveBeenCalled();
   });
 
   it('demande la connexion avant une inscription sur un créneau', () => {

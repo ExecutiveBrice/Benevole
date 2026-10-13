@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, HostListener, OnInit} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule, RouterOutlet } from '@angular/router';
 import { Evenement } from './models';
 
@@ -6,6 +7,8 @@ import { AuthService,DernierEvenementService, EvenementService, FileService, Tra
 import { ToastService } from './services';
 import { NgbToast, NgbToastHeader } from '@ng-bootstrap/ng-bootstrap/toast';
 import { FitHeaderTitleDirective } from './directives/fit-header-title.directive';
+import { ApplicationNotificationPromptComponent } from './components/notifications/application-notification-prompt.component';
+import { PushNotificationService } from './services/push-notification.service';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
@@ -21,6 +24,7 @@ interface BeforeInstallPromptEvent extends Event {
     NgbToast,
     NgbToastHeader,
     FitHeaderTitleDirective,
+    ApplicationNotificationPromptComponent,
     ],
   providers: [
     TransmissionService,
@@ -52,7 +56,18 @@ export class AppComponent  implements OnInit{
     public toastService: ToastService,
     public route: ActivatedRoute,
     private elementRef: ElementRef,
-    private changeDetectorRef: ChangeDetectorRef) {}
+    private changeDetectorRef: ChangeDetectorRef,
+    push: PushNotificationService,
+    destroyRef: DestroyRef) {
+    push.diagnostics.pipe(takeUntilDestroyed(destroyRef)).subscribe(diagnostic => {
+      if (diagnostic.status === 'received') {
+        this.toastService.info('Une confirmation vient d’être reçue sur cet appareil.', 'Notification reçue');
+      } else if (diagnostic.status === 'display-failed') {
+        this.toastService.warning('La confirmation a été reçue, mais la notification système n’a pas pu être créée.', 'Notification');
+      }
+      this.changeDetectorRef.markForCheck();
+    });
+  }
 
 
   ngOnInit() {

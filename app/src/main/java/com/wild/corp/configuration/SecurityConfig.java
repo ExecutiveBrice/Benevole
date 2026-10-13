@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/connexion").permitAll()
+                        .requestMatchers("/notifications/invitations").hasRole("ADMIN")
                         // Le formulaire d'aide est public, mais la liste et la validation
                         // des demandes restent réservées aux super-administrateurs.
                         .requestMatchers(HttpMethod.POST, "/demandes-evenements", "/demandes-evenements/").permitAll()

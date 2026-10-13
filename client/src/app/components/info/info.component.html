@@ -1,4 +1,91 @@
 <section class="card shadow-sm mb-3">
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Organisation</strong></h2>
+
+  </header>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-12 mt-3">
+      <strong>Responsable : </strong>{{evenement.contact}}
+      </div>
+      @if (evenement.contactEmail && evenement.contactEmail.trim()) {
+        <div class="col-12 mt-3">
+          {{evenement.contactEmail}}
+          <button class="btn btn-sm btn-outline-primary ms-2" type="button" (click)="copyContact(evenement.contactEmail)"
+            title="Copier l’adresse e-mail" aria-label="Copier l’adresse e-mail de l’organisateur">
+            <span class="app-icon" aria-hidden="true">content_copy</span>
+          </button>
+        </div>
+      }
+
+      @if (evenement.contactTel && evenement.contactTel.trim()) {
+        <div class="col-12">
+          {{evenement.contactTel}}
+          <button class="btn btn-sm btn-outline-primary ms-2" type="button" (click)="copyContact(evenement.contactTel)"
+            title="Copier le numéro de téléphone" aria-label="Copier le numéro de téléphone de l’organisateur">
+            <span class="app-icon" aria-hidden="true">content_copy</span>
+          </button>
+        </div>
+      }
+
+      @if (evenement.dateEvenement) {
+        <div class="col-12 mt-3">
+          <strong>Date de l’évènement :</strong> {{ evenement.dateEvenement | date:'dd/MM/yyyy' }}
+          <button class="btn btn-sm btn-outline-primary ms-2" type="button" (click)="addToCalendar()"
+            title="Ajouter à mon agenda" aria-label="Ajouter l’évènement à mon agenda">
+            <span class="app-icon" aria-hidden="true">event_available</span>
+          </button>
+        </div>
+      }
+      <div class="col-12 mt-3">
+      @if (evenement.indicationsDebut?.trim()) {
+          <strong>Début :</strong>{{ evenement.indicationsDebut }}
+      }
+      @if (evenement.indicationsFin?.trim()) {
+          <strong>Fin :</strong>{{ evenement.indicationsFin }}
+      }
+    </div>
+      @if (evenement.adresse?.trim()) {
+        <div class="col-12 mt-3">
+          <strong>Adresse de l'évènement:</strong>
+          <a class="btn btn-sm btn-outline-primary ms-2" [href]="directionsUrl" target="_blank" rel="noopener noreferrer"
+            title="Ouvrir l’itinéraire GPS" aria-label="Ouvrir l’itinéraire vers l’adresse de l’évènement">
+            <span class="app-icon" aria-hidden="true">directions</span>
+          </a>
+          <div class="organization-text">{{ evenement.adresse }}</div>
+        </div>
+      }
+
+
+      @if (logo) {
+        <div class="col-12 organizer-logo">
+          @if (evenement.sitepersourl) {
+            <a [href]="evenement.sitepersourl" target="_blank" rel="noopener">{{evenement.sitepersourl}}</a>
+            <a [href]="evenement.sitepersourl" target="_blank" rel="noopener">
+              <img [src]="logo" alt="" (error)="hideLogo()">
+            </a>
+          } @else {
+            <img [src]="logo" alt="" (error)="hideLogo()">
+          }
+        </div>
+      } @else {
+        @if (evenement.sitepersourl) {
+          <div class="col-12 mt-3">
+            <strong>Site de l'évènement : </strong><a [href]="evenement.sitepersourl" target="_blank" rel="noopener">{{evenement.sitepersourl}}</a>
+          </div>
+        }
+      }
+
+    </div>
+  </div>
+
+</section>
+
+<section class="card shadow-sm mb-3">
+  <header class="card-header text-center">
+    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Affiche</strong></h2>
+
+  </header>
   <div class="card-body">
     <img [src]="affiche" alt="Affiche">
   </div>

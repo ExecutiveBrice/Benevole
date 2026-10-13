@@ -104,6 +104,11 @@ public class EmailService {
     }
 
     public void singleMessage(List<String> destinataires, String text, String sujet, String prenom, String nom) {
+        sendSingleMessage(destinataires, text, sujet, prenom, nom);
+    }
+
+    public boolean sendSingleMessage(List<String> destinataires, String text, String sujet, String prenom, String nom) {
+        if (destinataires == null || destinataires.isEmpty()) return false;
 
         Properties prop = new Properties();
         prop.put("mail.debug", "false");
@@ -124,7 +129,7 @@ public class EmailService {
         }
         if (brevoApiKey == null || brevoApiKey.isBlank()) {
             log.error("Aucune clé API Brevo n'est configurée : l'e-mail ne peut pas être envoyé");
-            return;
+            return false;
         }
 
         ApiClient defaultClient = Configuration.getDefaultApiClient();
@@ -161,8 +166,10 @@ public class EmailService {
 
             CreateSmtpEmail response = api.sendTransacEmail(sendSmtpEmail);
             log.info(response.toString());
+            return true;
         } catch (Exception e) {
             log.warn("Exception occurred:- " + e.getMessage());
+            return false;
         }
 
     }

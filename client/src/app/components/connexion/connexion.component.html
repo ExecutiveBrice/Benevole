@@ -160,6 +160,10 @@
   </ul>
   }
 
+  @if (benevole && evenement.notification) {
+    <app-notifications [eventId]="evenement.id" [benevoleId]="benevole.id" />
+  }
+
 </section>
 }
 
@@ -173,45 +177,3 @@
     </div>
   </section>
 }
-
-<section class="card shadow-sm mb-3">
-  <header class="card-header text-center">
-    <h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre"> <strong>Organisateur :</strong></h2>
-
-  </header>
-  <div class="card-body">
-    <div class="row">
-
-
-
-      <div class="col-12">
-        {{evenement.contact}}
-      </div>
-
-
-      <div class="col-12">
-        {{evenement.contactEmail}}
-      </div>
-
-
-      <div class="col-12">
-        {{evenement.contactTel}}
-      </div>
-
-
-      @if (logo) {
-        <div class="col-12 organizer-logo">
-          @if (evenement.sitepersourl) {
-            <a [href]="evenement.sitepersourl" target="_blank" rel="noopener">
-              <img [src]="logo" alt="" (error)="hideLogo()">
-            </a>
-          } @else {
-            <img [src]="logo" alt="" (error)="hideLogo()">
-          }
-        </div>
-      }
-
-    </div>
-  </div>
-
-</section>

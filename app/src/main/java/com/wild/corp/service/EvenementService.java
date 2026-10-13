@@ -91,6 +91,9 @@ public class EvenementService {
      * installations existantes conservent cependant des colonnes texte NOT NULL.
      */
     private void initialiserChampsTexte(Evenement evenement) {
+        evenement.setAdresse(valeurParDefaut(evenement.getAdresse()));
+        evenement.setIndicationsDebut(valeurParDefaut(evenement.getIndicationsDebut()));
+        evenement.setIndicationsFin(valeurParDefaut(evenement.getIndicationsFin()));
         evenement.setContact(valeurParDefaut(evenement.getContact()));
         evenement.setContactTel(valeurParDefaut(evenement.getContactTel()));
         evenement.setContactEmail(valeurParDefaut(evenement.getContactEmail()));
@@ -171,6 +174,10 @@ public class EvenementService {
         event.setStartDate(evenement.getStartDate());
         event.setEndDate(evenement.getEndDate());
         event.setEventName(evenement.getEventName());
+        event.setDateEvenement(evenement.getDateEvenement());
+        event.setAdresse(valeurParDefaut(evenement.getAdresse()));
+        event.setIndicationsDebut(valeurParDefaut(evenement.getIndicationsDebut()));
+        event.setIndicationsFin(valeurParDefaut(evenement.getIndicationsFin()));
         event.setContactTel(evenement.getContactTel());
         event.setContact(evenement.getContact());
         event.setContactEmail(evenement.getContactEmail());

@@ -12,6 +12,10 @@ import java.util.List;
 @Repository
 public interface BenevoleRepository extends JpaRepository<Benevole, Integer> {
 
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT b FROM Benevole b WHERE b.id = :id")
+    java.util.Optional<Benevole> findForConfirmation(@Param("id") Integer id);
+
     Benevole findByEmailAndEvenementId(String email, Integer evenementId);
 
     List<Benevole> findByEvenementId(Integer evenementId);

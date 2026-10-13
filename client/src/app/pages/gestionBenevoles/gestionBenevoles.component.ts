@@ -19,6 +19,7 @@ import { ToastService } from '../../services';
 import {ModalComponent} from '../../components/modal/modal.component';
 import {ModalAccessGestionComponent} from '../../components/modalAccessGestion/modalAccessGestion.component';
 import { BootstrapModalService } from '../../services/bootstrap-modal.service';
+import { PushNotificationService } from '../../services/push-notification.service';
 
 @Component({
   selector: 'app-gestionBenevoles',
@@ -54,6 +55,8 @@ export class GestionBenevolesComponent implements OnInit {
   connexionDialogOpen = false;
   chargement = false;
   erreurChargement = false;
+  notificationLinks: Record<number, string> = {};
+  notificationLinkBusy: Record<number, boolean> = {};
 
 
   constructor(
@@ -67,6 +70,7 @@ export class GestionBenevolesComponent implements OnInit {
     public standService: StandService,
     private authService: AuthService,
     private toastr: ToastService,
+    private pushNotifications: PushNotificationService,
     public formBuilder: FormBuilder) {
   }
 
@@ -288,6 +292,24 @@ export class GestionBenevolesComponent implements OnInit {
 
   async exportAsXLSX() {
     this.excelService.multiExportAsExcelBenevoles(this.benevoles, 'Benevoles');
+  }
+
+  async creerLienNotifications(benevole: Benevole): Promise<void> {
+    this.notificationLinkBusy[benevole.id] = true;
+    try {
+      const url = await this.pushNotifications.invitation(benevole.id);
+      this.notificationLinks[benevole.id] = url;
+      try {
+        await navigator.clipboard.writeText(url);
+        this.toastr.success('Lien personnel copié. Transmettez-le au bénévole : valable 7 jours, à usage unique.', 'Notifications');
+      } catch {
+        this.toastr.success('Le lien personnel est affiché ci-dessous. Vous pouvez le copier.', 'Notifications');
+      }
+    } catch {
+      this.toastr.error('Impossible de créer le lien personnel.', 'Notifications');
+    } finally {
+      this.notificationLinkBusy[benevole.id] = false;
+    }
   }
 
 

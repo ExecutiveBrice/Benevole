@@ -94,6 +94,10 @@ export class GestionMajConfigComponent implements OnInit {
   formulaireEvent = this.formBuilder.group({
 
     eventName: new FormControl(this.evenement.eventName, [Validators.required, Validators.minLength(2)]),
+    dateEvenement: new FormControl(this.evenement.dateEvenement ?? null),
+    adresse: new FormControl(this.evenement.adresse ?? ''),
+    indicationsDebut: new FormControl(this.evenement.indicationsDebut ?? ''),
+    indicationsFin: new FormControl(this.evenement.indicationsFin ?? ''),
     contact: new FormControl(this.evenement.contact, [Validators.required, Validators.minLength(2)]),
     contactTel: new FormControl(this.evenement.contactTel, []),
     contactEmail: new FormControl(this.evenement.contactEmail, [Validators.required, Validators.minLength(2)]),
@@ -161,7 +165,6 @@ export class GestionMajConfigComponent implements OnInit {
 
   updateConnexionParams() {
     if (this.formulaireEvent.get('basique')?.value) {
-      this.formulaireEvent.get('notification')?.setValue(false);
       this.formulaireEvent.get('needtel')?.setValue(false);
     }
   }
@@ -173,6 +176,12 @@ export class GestionMajConfigComponent implements OnInit {
         this.transmissionService.dataTransmission(evenement);
 
         this.formulaireEvent.get("eventName")?.setValue(evenement.eventName);
+        this.formulaireEvent.patchValue({
+          dateEvenement: evenement.dateEvenement ?? null,
+          adresse: evenement.adresse ?? '',
+          indicationsDebut: evenement.indicationsDebut ?? '',
+          indicationsFin: evenement.indicationsFin ?? '',
+        });
         this.formulaireEvent.get("contact")?.setValue(evenement.contact);
 
         this.formulaireEvent.get("contactTel")?.setValue(evenement.contactTel);
@@ -215,7 +224,9 @@ export class GestionMajConfigComponent implements OnInit {
 
   update(): void {
 
-    let evenement = Object.assign(this.evenement, this.formulaireEvent.value)
+    let evenement = Object.assign(this.evenement, this.formulaireEvent.value, {
+      dateEvenement: this.formulaireEvent.value.dateEvenement || null,
+    })
 
     this.evenementService.update(evenement).subscribe({
       next: (data) => {

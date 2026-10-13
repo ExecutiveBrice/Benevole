@@ -62,6 +62,19 @@ describe('Session JWT', () => {
     expect(localStorage.getItem('benevole.jwt-expiration')).toBeNull();
   });
 
+  it('ne mélange pas les accès personnels de notification avec la session administrateur', () => {
+    login();
+    http.post(`${environment.url}notifications/identity`, {}, { headers: { 'X-Notification-Token': 'personal' } }).subscribe({ error: () => {} });
+    const personal = requests.expectOne(`${environment.url}notifications/identity`);
+    expect(personal.request.headers.has('Authorization')).toBeFalse();
+    personal.flush({}, { status: 401, statusText: 'Unauthorized' });
+    expect(auth.isAuthenticated()).toBeTrue();
+    http.post(`${environment.url}notifications/invitations`, {}).subscribe();
+    const invitation = requests.expectOne(`${environment.url}notifications/invitations`);
+    expect(invitation.request.headers.has('Authorization')).toBeTrue();
+    invitation.flush({ url: 'link' });
+  });
+
   it('supprime le jeton et son expiration lors de la déconnexion', () => {
     login();
     auth.logout();

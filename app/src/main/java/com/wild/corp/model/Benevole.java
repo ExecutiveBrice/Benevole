@@ -40,6 +40,26 @@ public class Benevole {
     @Column(name = "ADVISE_SENT")
     private Boolean adviseSent;
 
+    // Retourné uniquement lors de la création, jamais lors des lectures publiques.
+    @Transient
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private String notificationToken;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "benevole", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<NotificationAccess> notificationAccesses;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "benevole", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<ConfirmationDelivery> confirmationDeliveries;
+
     @ManyToMany
     @JsonIgnoreProperties({"benevoles"})
     private List<Croisement> croisements;
