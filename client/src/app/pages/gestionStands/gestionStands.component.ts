@@ -16,6 +16,7 @@ import { ToastService } from '../../services';
 import { map, Observable, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { BootstrapModalService } from '../../services/bootstrap-modal.service';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-gestionStands',
@@ -24,6 +25,7 @@ import { BootstrapModalService } from '../../services/bootstrap-modal.service';
   templateUrl: './gestionStands.component.html',
   styleUrls: ['./gestionStands.component.scss'],
   imports: [
+    NgbNavModule,
     RouterModule, ReactiveFormsModule, FormsModule, OrderByPipe, ],
   providers: [
     EvenementService,
@@ -40,6 +42,16 @@ export class GestionStandsComponent implements OnInit {
   stands: Stand[] = [];
   evenement: Evenement = new Evenement();
   idEvenement!: number
+
+  get nombreCreneauxChoisis(): number {
+    return this.stands.reduce((total, stand) => total + (stand.croisements ?? [])
+      .reduce((inscriptions, croisement) => inscriptions + (croisement.benevoles?.length ?? 0), 0), 0);
+  }
+
+  get nombreCreneauxTotal(): number {
+    return this.stands.reduce((total, stand) => total + (stand.croisements ?? [])
+      .reduce((places, croisement) => places + (croisement.limite ?? 0), 0), 0);
+  }
 
   constructor(
     public route: ActivatedRoute,

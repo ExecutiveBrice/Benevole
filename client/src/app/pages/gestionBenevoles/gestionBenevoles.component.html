@@ -3,7 +3,7 @@
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
       <div>
         <h1 class="h3 mb-1">Bénévoles</h1>
-        <p class="text-body-secondary mb-0">{{ benevoles.length }} bénévole(s) inscrit(s).</p>
+        <p class="text-body-secondary mb-0">{{ benevoles.length }} bénévole(s) inscrit(s) · {{ nombreCreneauxChoisis }} créneaux choisis / {{ nombreCreneauxTotal }}.</p>
       </div>
       <button class="btn btn-outline-primary" type="button" (click)="exportAsXLSX()">Télécharger</button>
     </div>
@@ -16,6 +16,10 @@
         <button class="btn btn-outline-danger" type="button" (click)="relancerChargement()">Réessayer</button>
       </div>
     } @else {
+    <ul ngbNav #onglets="ngbNav" [activeId]="'gestion'" [destroyOnHide]="false" class="nav-tabs mb-3" aria-label="Vues des bénévoles">
+      <li ngbNavItem="gestion">
+        <button ngbNavLink type="button">Gestion</button>
+        <ng-template ngbNavContent>
     <div class="row g-3">
     @for (benevole of benevoles | orderBy:'nom':false; track benevole.id) {
       <div class="col-12 col-md-6 col-xl-4">
@@ -119,6 +123,66 @@
       <div class="col-12"><div class="alert alert-info mb-0">Aucun bénévole inscrit.</div></div>
     }
     </div>
+        </ng-template>
+      </li>
+      <li ngbNavItem="synthese">
+        <button ngbNavLink type="button">Synthèse</button>
+        <ng-template ngbNavContent>
+          <table class="table table-striped summary-table" role="table">
+            <caption class="caption-top">Coordonnées et affectations de tous les bénévoles.</caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th scope="col" role="columnheader">Bénévole</th>
+                <th scope="col" role="columnheader">E-mail</th>
+                <th scope="col" role="columnheader">Téléphone</th>
+                <th scope="col" role="columnheader">Stands et créneaux</th>
+                @if (evenement.notification) {
+                  <th scope="col" role="columnheader">Lien de notifications</th>
+                }
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              @for (benevole of benevoles | orderBy:'nom':false; track benevole.id) {
+                <tr role="row">
+                  <th scope="row" role="rowheader" data-label="Bénévole"><span>{{ benevole.formulaire.get('nom')?.value }} {{ benevole.formulaire.get('prenom')?.value }}</span></th>
+                  <td role="cell" data-label="E-mail">
+                    @if (benevole.formulaire.get('email')?.value?.trim(); as email) {
+                      <a class="summary-contact-link" [href]="'mailto:' + email" [attr.aria-label]="'Envoyer un e-mail à ' + benevole.formulaire.get('prenom')?.value + ' ' + benevole.formulaire.get('nom')?.value">{{ email }}</a>
+                    } @else {
+                      <span>Non renseigné</span>
+                    }
+                  </td>
+                  <td role="cell" data-label="Téléphone">
+                    @if (benevole.formulaire.get('telephone')?.value?.trim(); as telephone) {
+                      <a class="summary-contact-link" [href]="'tel:' + telephone" [attr.aria-label]="'Appeler ' + benevole.formulaire.get('prenom')?.value + ' ' + benevole.formulaire.get('nom')?.value">{{ telephone }}</a>
+                    } @else {
+                      <span>Non renseigné</span>
+                    }
+                  </td>
+                  <td role="cell" data-label="Stands et créneaux">
+                    <ul class="summary-list">
+                      @for (croisement of ((benevole.croisements | orderBy:'creneau.ordre':false) ?? []) | orderBy:'stand.ordre':false; track croisement.id) {
+                        <li><strong>{{ croisement.stand.nom === 'tous' ? 'N’importe quel stand' : croisement.stand.nom }}</strong> · {{ croisement.creneau.plage }}</li>
+                      } @empty {
+                        <li class="text-body-secondary">Aucun créneau associé.</li>
+                      }
+                    </ul>
+                  </td>
+                  @if (evenement.notification) {
+                    <td role="cell" data-label="Lien de notifications">
+                      <span>{{ notificationLinks[benevole.id] || 'Lien non créé' }}</span>
+                    </td>
+                  }
+                </tr>
+              } @empty {
+                <tr role="row"><td role="cell" [attr.colspan]="evenement.notification ? 5 : 4" class="summary-empty">Aucun bénévole inscrit.</td></tr>
+              }
+            </tbody>
+          </table>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="onglets"></div>
     }
   </div>
 } @else {

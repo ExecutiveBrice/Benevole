@@ -1,0 +1,92 @@
+.summary-table {
+  width: 100%;
+  table-layout: fixed;
+  margin-bottom: 0;
+  background-color: var(--bs-body-bg);
+
+  th,
+  td {
+    padding: .85rem;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+  }
+
+  thead th {
+    background-color: var(--bs-tertiary-bg);
+  }
+}
+
+.summary-contact-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  text-underline-offset: .15em;
+}
+
+.summary-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li + li {
+    margin-top: .65rem;
+    padding-top: .65rem;
+    border-top: 1px solid var(--bs-border-color);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .summary-table {
+    display: block;
+    background-color: transparent;
+
+    caption {
+      display: block;
+    }
+
+    // Keep column headings accessible while each cell shows its label on mobile.
+    thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    tbody {
+      display: block;
+    }
+
+    tbody tr {
+      display: block;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      border: 1px solid var(--bs-border-color);
+      border-radius: .5rem;
+      background-color: var(--bs-body-bg);
+    }
+
+    tbody th,
+    tbody td {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: .75rem;
+      padding: .75rem;
+    }
+
+    [data-label]::before {
+      content: attr(data-label);
+      font-weight: 600;
+    }
+
+    tbody tr > :last-child {
+      border-bottom: 0;
+    }
+
+    .summary-empty {
+      display: block;
+    }
+  }
+}

@@ -1,10 +1,14 @@
 @if (authorize && evenement != undefined) {
   <div class="page-container">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-      <div><h1 class="h3 mb-1">Répartition par stand</h1><p class="text-body-secondary mb-0">{{ stands.length }} stand(s) à suivre.</p></div>
+      <div><h1 class="h3 mb-1">Répartition par stand</h1><p class="text-body-secondary mb-0">{{ stands.length }} stand(s) à suivre · {{ nombreCreneauxChoisis }} créneaux choisis / {{ nombreCreneauxTotal }}.</p></div>
       <button class="btn btn-outline-primary" type="button" (click)="exportAsXLSX()">Télécharger</button>
     </div>
 
+    <ul ngbNav #onglets="ngbNav" [activeId]="'gestion'" [destroyOnHide]="false" class="nav-tabs mb-3" aria-label="Vues de la répartition par stand">
+      <li ngbNavItem="gestion">
+        <button ngbNavLink type="button">Gestion</button>
+        <ng-template ngbNavContent>
     <div class="row g-3">
     @for (stand of stands | orderBy:'ordre':false; track $index) {
       <div class="col-12 col-lg-6 col-xl-4">
@@ -42,5 +46,70 @@
       <div class="col-12"><div class="alert alert-info mb-0">Aucun stand enregistré.</div></div>
     }
     </div>
+        </ng-template>
+      </li>
+      <li ngbNavItem="synthese">
+        <button ngbNavLink type="button">Synthèse</button>
+        <ng-template ngbNavContent>
+          <table class="table table-striped summary-table" role="table">
+            <caption class="caption-top">Tous les stands, leurs créneaux et les bénévoles inscrits.</caption>
+            <thead role="rowgroup">
+              <tr role="row">
+                <th scope="col" role="columnheader">Stand</th>
+                <th scope="col" role="columnheader">Créneau</th>
+                <th scope="col" role="columnheader">Inscrits / limite</th>
+                <th scope="col" role="columnheader">Bénévoles et coordonnées</th>
+              </tr>
+            </thead>
+            <tbody role="rowgroup">
+              @for (stand of stands | orderBy:'ordre':false; track stand.id) {
+                @for (croisement of stand.croisements | orderBy:'creneau.ordre':false; track croisement.id) {
+                  <tr role="row">
+                    <th scope="row" role="rowheader" data-label="Stand"><span>{{ stand.nom === 'tous' ? 'N’importe quel stand' : stand.nom }}</span></th>
+                    <td role="cell" data-label="Créneau"><span>{{ croisement.creneau.plage }}</span></td>
+                    <td role="cell" data-label="Inscrits / limite"><span>{{ croisement.benevoles.length }} / {{ croisement.limite }}</span></td>
+                    <td role="cell" data-label="Bénévoles et coordonnées">
+                      <ul class="summary-list">
+                        @for (benevole of croisement.benevoles | orderBy:'nom':false; track benevole.id) {
+                          <li>
+                            <strong class="d-block">{{ benevole.prenom }} {{ benevole.nom }}</strong>
+                            <span class="d-block">
+                              @if (benevole.email?.trim(); as email) {
+                                <a class="summary-contact-link" [href]="'mailto:' + email" [attr.aria-label]="'Envoyer un e-mail à ' + benevole.prenom + ' ' + benevole.nom">{{ email }}</a>
+                              } @else {
+                                E-mail non renseigné
+                              }
+                            </span>
+                            <span class="d-block">
+                              @if (benevole.telephone?.trim(); as telephone) {
+                                <a class="summary-contact-link" [href]="'tel:' + telephone" [attr.aria-label]="'Appeler ' + benevole.prenom + ' ' + benevole.nom">{{ telephone }}</a>
+                              } @else {
+                                Téléphone non renseigné
+                              }
+                            </span>
+                          </li>
+                        } @empty {
+                          <li class="text-body-secondary">Aucun bénévole inscrit.</li>
+                        }
+                      </ul>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr role="row">
+                    <th scope="row" role="rowheader" data-label="Stand"><span>{{ stand.nom === 'tous' ? 'N’importe quel stand' : stand.nom }}</span></th>
+                    <td role="cell" data-label="Créneau"><span>Aucun créneau associé.</span></td>
+                    <td role="cell" data-label="Inscrits / limite"><span>—</span></td>
+                    <td role="cell" data-label="Bénévoles et coordonnées"><span>Aucun bénévole inscrit.</span></td>
+                  </tr>
+                }
+              } @empty {
+                <tr role="row"><td role="cell" colspan="4" class="summary-empty">Aucun stand enregistré.</td></tr>
+              }
+            </tbody>
+          </table>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="onglets"></div>
   </div>
 }

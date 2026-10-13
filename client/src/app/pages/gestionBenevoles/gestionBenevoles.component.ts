@@ -11,6 +11,7 @@ import {
 import {Benevole, Croisement, Evenement, Stand} from '../../models';
 import {Router, ActivatedRoute, RouterModule} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {NgbNavModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {OrderByPipe} from "../../services/sort.pipe";
@@ -28,6 +29,7 @@ import { PushNotificationService } from '../../services/push-notification.servic
   templateUrl: './gestionBenevoles.component.html',
   styleUrls: ['./gestionBenevoles.component.scss'],
   imports: [
+    NgbNavModule,
     FormsModule,
     RouterModule,
     ReactiveFormsModule, FormsModule, OrderByPipe, ],
@@ -57,6 +59,15 @@ export class GestionBenevolesComponent implements OnInit {
   erreurChargement = false;
   notificationLinks: Record<number, string> = {};
   notificationLinkBusy: Record<number, boolean> = {};
+
+  get nombreCreneauxChoisis(): number {
+    return this.benevoles.reduce((total, benevole) => total + (benevole.croisements?.length ?? 0), 0);
+  }
+
+  get nombreCreneauxTotal(): number {
+    return this.stands.reduce((total, stand) => total + (stand.croisements ?? [])
+      .reduce((places, croisement) => places + (croisement.limite ?? 0), 0), 0);
+  }
 
 
   constructor(
