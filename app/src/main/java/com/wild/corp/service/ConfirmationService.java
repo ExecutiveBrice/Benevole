@@ -5,7 +5,6 @@ import com.wild.corp.repositories.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.util.HtmlUtils;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -19,18 +18,16 @@ public class ConfirmationService {
     private final PushSubscriptionRepository subscriptions;
     private final ConfirmationDeliveryRepository deliveries;
     private final WebPushService push;
-    private final EmailService email;
     private final ConfigService config;
     private final ObjectMapper json = new ObjectMapper();
 
     public ConfirmationService(BenevoleRepository benevoles, PushSubscriptionRepository subscriptions,
                                ConfirmationDeliveryRepository deliveries, WebPushService push,
-                               EmailService email, ConfigService config) {
+                               ConfigService config) {
         this.benevoles = benevoles;
         this.subscriptions = subscriptions;
         this.deliveries = deliveries;
         this.push = push;
-        this.email = email;
         this.config = config;
     }
 
@@ -38,6 +35,7 @@ public class ConfirmationService {
     @Transactional
     public void confirm(Integer benevoleId) {
         Benevole benevole = benevoles.findForConfirmation(benevoleId).orElse(null);
+        if (benevole == null) return;
 
         boolean pending = false;
         if (Boolean.TRUE.equals(benevole.getEvenement().getNotification())) {
@@ -67,27 +65,6 @@ public class ConfirmationService {
             }
         }else {
             log.info("benevole.getEvenement().getNotification() {}", benevole.getEvenement().getNotification());
-        }
-        if (Boolean.TRUE.equals(benevole.getEvenement().getCopie())) {
-            ConfirmationDelivery delivery = delivery(benevole, "organizer");
-            if (ready(delivery)) {
-                log.info("ready(delivery)");
-                String recipient = benevole.getEvenement().getContactEmail();
-                if (recipient == null || recipient.isBlank()) {
-                    log.info("recipient null");
-                    delivery.setStatus(SKIPPED);
-                } else {
-                    log.info("recipient");
-                    delivery.setAttempts(delivery.getAttempts() + 1);
-                    boolean accepted = email.sendSingleMessage(List.of(recipient), organizerBody(benevole),
-                            "Participation enregistrée : " + benevole.getEvenement().getEventName(), benevole.getPrenom(), benevole.getNom());
-                    if (accepted) finishAttempt(delivery, 202);
-                    else finishFailure(delivery, "EMAIL_NOT_ACCEPTED", true);
-                }
-            }
-            pending |= delivery.getStatus() == PENDING;
-        }else {
-            log.info("Boolean.TRUE.equals(benevole.getEvenement().getCopie()) {}", benevole.getEvenement().getCopie());
         }
         // Compatibilité : ce drapeau signifie que le changement a été traité,
         // pas que la notification a été affichée ou lue.
@@ -160,23 +137,9 @@ public class ConfirmationService {
 
     private static void logFailure(ConfirmationDelivery delivery) {
         log.warn("Confirmation non envoyée : livraison {}, canal {}, HTTP {}, cause {}, état {}, tentative {}/3",
-                delivery.getId(), delivery.getRecipient().startsWith("push:") ? "push" : "email-organisateur",
+                delivery.getId(), "push",
                 delivery.getResponseCode(), delivery.getLastError(), delivery.getStatus(), delivery.getAttempts());
     }
 
-    private String organizerBody(Benevole benevole) {
-        Evenement event = benevole.getEvenement();
-        StringBuilder body = new StringBuilder("<p>Copie organisateur — Participation de ")
-                .append(escape(benevole.getPrenom())).append(" ").append(escape(benevole.getNom())).append("</p>")
-                .append(event.getValidation() == null ? "" : event.getValidation()).append("<ul>");
-        benevole.getCroisements().stream().filter(c -> !Integer.valueOf(4).equals(c.getStand().getType())).forEach(c ->
-                body.append("<li>").append(escape("tous".equals(c.getStand().getNom()) ? "N’importe quel stand" : c.getStand().getNom()))
-                        .append(" — ").append(escape(c.getCreneau().getPlage())).append("</li>"));
-        body.append("</ul>").append(event.getSignature() == null ? "" : event.getSignature());
-        body.append("<p><a href=\"").append(escape(config.getEventUrl(event.getId()))).append("\">Consulter l’événement</a></p>");
-        return body.toString();
-    }
-
-    private static String escape(String value) { return HtmlUtils.htmlEscape(value == null ? "" : value); }
     private static String truncate(String value, int max) { return value == null ? "l’événement" : value.substring(0, Math.min(value.length(), max)); }
 }

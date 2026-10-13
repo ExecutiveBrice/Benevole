@@ -1,9 +1,10 @@
+import QRCode from 'qrcode';
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormControl, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { Benevole, Croisement, Evenement } from '../../models';
 import { OrderByPipe } from "../../services/sort.pipe";
-import { FileService, ToastService } from '../../services';
+import { ConfigService, FileService, ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { createEventCalendar } from '../../utils/event-calendar';
 
@@ -19,17 +20,62 @@ export class InfoComponent implements OnInit {
 
   @Input() evenement!: Evenement;
 
+  qrcode?: string;
+  using_address = '';
   affiche!: string;
   logo?: string;
   constructor(
     public fileService: FileService,
+    private configService: ConfigService,
     private changeDetectorRef: ChangeDetectorRef,
     private toastr: ToastService,
   ) { }
   ngOnInit(): void {
     this.getLogo();
-    this.getAffiche()
+    this.getAffiche();
+    this.getRegistrationLink();
   }
+
+
+
+  getRegistrationLink(): void {
+    this.configService.getParams().subscribe({
+      next: params => {
+        this.using_address = params.url + this.evenement.id;
+        this.generateQRCode();
+        this.changeDetectorRef.markForCheck();
+      },
+      error: error => console.error(error)
+    });
+  }
+
+  private generateQRCode(): void {
+    // With promises
+    QRCode.toDataURL(this.using_address, { errorCorrectionLevel: 'H', width: 500 })
+      .then((qrcode: string) => {
+        this.qrcode = qrcode;
+        this.changeDetectorRef.markForCheck();
+      })
+      .catch((err: any) => {
+        console.error(err)
+      })
+
+  }
+
+  async copyRegistrationLink(): Promise<void> {
+    if (!this.using_address) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(this.using_address);
+      this.toastr.success('Le lien d’inscription a été copié dans le presse-papiers.', 'Lien copié');
+    } catch (error) {
+      console.error('Impossible de copier le lien d’inscription.', error);
+      this.toastr.error('La copie du lien a échoué. Vous pouvez le sélectionner puis le copier.', 'Erreur');
+    }
+  }
+
 
 
 

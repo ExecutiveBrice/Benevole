@@ -27,6 +27,8 @@ class NotificationServiceTest {
             }
         };
         BenevoleService service = new BenevoleService();
+        ConfirmationServiceTest.inject(service, "mouvementBenevoleService", new MouvementBenevoleService(
+                stub(MouvementBenevoleRepository.class, (method, args) -> args[0])));
         for (var entry : Map.of("benevoleRepository", repository, "evenementRepository", events, "notificationService", notifications).entrySet()) {
             var field = BenevoleService.class.getDeclaredField(entry.getKey()); field.setAccessible(true); field.set(service, entry.getValue());
         }

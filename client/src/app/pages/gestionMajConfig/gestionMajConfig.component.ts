@@ -119,7 +119,7 @@ export class GestionMajConfigComponent implements OnInit {
     needtel: new FormControl(this.evenement.needtel, [Validators.required]),
     basique: new FormControl(this.evenement.basique, [Validators.required]),
     notification: new FormControl(this.evenement.notification, [Validators.required]),
-    copie: new FormControl(this.evenement.copie, [Validators.required]),
+    recapitulatifQuotidien: new FormControl(this.evenement.recapitulatifQuotidien ?? false, { nonNullable: true }),
 
     couleurFond: new FormControl(this.evenement.couleurFond, [Validators.required]),
     couleurBandeau: new FormControl(this.evenement.couleurBandeau, [Validators.required]),
@@ -200,8 +200,8 @@ export class GestionMajConfigComponent implements OnInit {
         this.formulaireEvent.get("afficherMessagePlanning")?.setValue(evenement.afficherMessagePlanning);
         this.formulaireEvent.get("messagePlanning")?.setValue(evenement.messagePlanning);
         this.formulaireEvent.get("needtel")?.setValue(evenement.needtel);
-        this.formulaireEvent.get("copie")?.setValue(evenement.copie);
         this.formulaireEvent.get("notification")?.setValue(evenement.notification);
+        this.formulaireEvent.get("recapitulatifQuotidien")?.setValue(evenement.recapitulatifQuotidien ?? false);
         this.formulaireEvent.get("basique")?.setValue(evenement.basique);
         this.formulaireEvent.get("afficherBenevoles")?.setValue(evenement.afficherBenevoles);
         this.formulaireEvent.get("couleurFond")?.setValue(evenement.couleurFond);

@@ -4,11 +4,9 @@ import { TransmissionService, CroisementService, EvenementService, StandService,
 import { DomSanitizer } from '@angular/platform-browser';
 import { Benevole, Email, Evenement, Stand } from '../../models';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import QRCode from 'qrcode'
 import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderByPipe } from '../../services/sort.pipe';
-import { Params } from '../../models/params';
 import { ToastService } from '../../services';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LocalStand } from '../../models/local/stand';
@@ -68,7 +66,6 @@ export class GestionComponent implements OnInit {
 
   selectedDeviceObj: any
   evenement?: Evenement;
-  params!: Params
   idEvenement!: number
   isValidAccessForEvent?: number
   emailInfo: Email = {
@@ -77,8 +74,6 @@ export class GestionComponent implements OnInit {
     text: "Bla bla",
     rappel: false
   }
-  qrcode!: string
-  using_address!: string;
 
 
 
@@ -124,7 +119,6 @@ export class GestionComponent implements OnInit {
   loadPage() {
     console.log("loadpage");
 
-    this.getParams();
     this.getEvenement(this.idEvenement);
     this.getBenevoles();
     this.getAllStands();
@@ -189,22 +183,6 @@ export class GestionComponent implements OnInit {
   }
 
 
-  getParams() {
-    this.configService.getParams().subscribe({
-      next: (params) => {
-        console.log(params);
-
-        this.params = params;
-        this.getQRcode(this.idEvenement)
-      },
-      error: (error: HttpErrorResponse) => {
-
-
-      }
-    })
-
-  }
-
   getEvenement(idEvenement: number): void {
     this.evenementService.getById(idEvenement).subscribe({
       next: (data) => {
@@ -217,36 +195,6 @@ export class GestionComponent implements OnInit {
       }
     });
   }
-
-
-
-  getQRcode(idEvenement: number): void {
-    this.using_address = this.params.url + idEvenement
-    // With promises
-    QRCode.toDataURL(this.using_address, { errorCorrectionLevel: 'H', width: 500 })
-      .then((qrcode: string) => {
-        this.qrcode = qrcode
-      })
-      .catch((err: any) => {
-        console.error(err)
-      })
-
-  }
-
-  async copyRegistrationLink(): Promise<void> {
-    if (!this.using_address) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(this.using_address);
-      this.toastr.success('Le lien d’inscription a été copié dans le presse-papiers.', 'Lien copié');
-    } catch (error) {
-      console.error('Impossible de copier le lien d’inscription.', error);
-      this.toastr.error('La copie du lien a échoué. Vous pouvez le sélectionner puis le copier.', 'Erreur');
-    }
-  }
-
 
 
 

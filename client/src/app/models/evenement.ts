@@ -29,8 +29,8 @@ export class Evenement {
   lock!: boolean;
   needtel!: boolean;
   basique!: boolean;
-  copie!: boolean;
   notification!: boolean;
+  recapitulatifQuotidien: boolean = false;
   couleurFond!: string;
   couleurBandeau!: string;
   couleurText!: string;

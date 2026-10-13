@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.time.Instant;
 
 @EnableScheduling
 @Configuration
@@ -24,7 +25,25 @@ public class SchedulerService {
     @Autowired
     private ConfirmationService confirmationService;
 
-    @Scheduled(cron = "0 0 1 * * *")
+    @Autowired
+    private RecapitulatifEvenementService recapitulatifEvenementService;
+
+   // @Scheduled(cron = "0 0 1 * * *", zone = "Europe/Paris")
+    @Scheduled(cron = "0 * * * * *")
+    public void recapitulatifEtReset() {
+        Instant fin = RecapitulatifEvenementService.finPeriode(Instant.now());
+        log.info("Recapitulatif et reset fin periode {}", fin);
+        recapitulatifEvenementService.evenementsAEnvoyer(fin).forEach(evenementId -> {
+            try {
+                recapitulatifEvenementService.envoyer(evenementId, fin);
+            } catch (Exception exception) {
+                log.warn("Récapitulatif non traité pour l'évènement {}", evenementId, exception);
+            }
+        });
+        // Le remplissage est récapitulé avant la purge de fin d'évènement.
+        reset();
+    }
+
     public void reset() {
         log.warn("reset");
         Calendar caldendat = Calendar.getInstance();
@@ -39,7 +58,7 @@ public class SchedulerService {
                 log.info(evenement.getEventName());
                 evenement.setEndDate(null);
                 benevoleService.findByEvenementId(evenement.getId()).forEach(benevole -> {
-                    benevoleService.deleteById(benevole.getId());
+                    benevoleService.deleteForReset(benevole.getId());
                 });
             }
         });

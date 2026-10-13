@@ -117,6 +117,7 @@ public class EvenementService {
         evenement.setNeedtel(valeurParDefaut(evenement.getNeedtel()));
         evenement.setCopie(valeurParDefaut(evenement.getCopie()));
         evenement.setNotification(valeurParDefaut(evenement.getNotification()));
+        evenement.setRecapitulatifQuotidien(valeurParDefaut(evenement.getRecapitulatifQuotidien()));
     }
 
     private String valeurParDefaut(String valeur) {
@@ -196,8 +197,8 @@ public class EvenementService {
         event.setLock(evenement.isLock());
 
         event.setBasique(evenement.getBasique());
-        event.setCopie(evenement.getCopie());
         event.setNotification(evenement.getNotification());
+        event.setRecapitulatifQuotidien(Boolean.TRUE.equals(evenement.getRecapitulatifQuotidien()));
         event.setNeedtel(evenement.getNeedtel());
         event.setSitepersourl(evenement.getSitepersourl());
 

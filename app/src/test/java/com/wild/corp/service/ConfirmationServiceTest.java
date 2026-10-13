@@ -79,7 +79,7 @@ class ConfirmationServiceTest {
             ConfigService config = new ConfigService() {
                 @Override public String getEventUrl(Integer id) { return "https://benevoles.example.test/" + id; }
             };
-            service = new ConfirmationService(repository, subscriptions, deliveryRepository, push, email, config);
+            service = new ConfirmationService(repository, subscriptions, deliveryRepository, push, config);
             inject(selection, "benevoleRepository", repository);
             inject(scheduler, "benevoleService", selection);
             inject(scheduler, "confirmationService", service);
@@ -94,11 +94,12 @@ class ConfirmationServiceTest {
         void makeRetriesDue() { deliveries.values().forEach(delivery -> delivery.setNextAttemptAt(Instant.EPOCH)); }
     }
 
-    @Test void notificationSansEmailBenevoleEtCopieUniquementOrganisateur() {
+    @Test void notificationSansCopieOrganisateurMemeSiAncienParametreActive() {
         Fixture f = new Fixture(true, true); f.device(11);
         f.service.confirm(1); f.service.confirm(1);
         assertEquals(1, f.sends.get(11L));
-        assertEquals(List.of(List.of("organisateur@example.test")), f.emails);
+        assertTrue(f.emails.isEmpty());
+        assertNull(f.delivery("organizer"));
         assertEquals(ACCEPTED, f.delivery("push:11").getStatus());
         assertTrue(f.benevole.getAdviseSent());
     }
@@ -109,9 +110,10 @@ class ConfirmationServiceTest {
         assertEquals(SKIPPED, f.delivery("push:none").getStatus());
     }
 
-    @Test void copieOrganisateurIndependanteDuParametreNotifications() {
+    @Test void ancienParametreCopieNeDeclencheAucuneConfirmation() {
         Fixture f = new Fixture(false, true); f.device(11); f.service.confirm(1);
-        assertTrue(f.sends.isEmpty()); assertEquals(1, f.emails.size());
+        assertTrue(f.sends.isEmpty()); assertTrue(f.emails.isEmpty());
+        assertTrue(f.deliveries.isEmpty()); assertTrue(f.benevole.getAdviseSent());
     }
 
     @Test void reprendUniquementAppareilEnEchecEtRespecteLeDelai() {
@@ -119,16 +121,18 @@ class ConfirmationServiceTest {
         f.service.confirm(1); f.service.confirm(1);
         assertFalse(f.benevole.getAdviseSent()); assertEquals(1, f.sends.get(12L));
         f.makeRetriesDue(); f.codes.put(12L, 201); f.service.confirm(1);
-        assertEquals(1, f.sends.get(11L)); assertEquals(2, f.sends.get(12L)); assertEquals(1, f.emails.size());
+        assertEquals(1, f.sends.get(11L)); assertEquals(2, f.sends.get(12L)); assertTrue(f.emails.isEmpty());
         assertTrue(f.benevole.getAdviseSent());
     }
 
-    @Test void reprendCopieOrganisateurSansRenvoyerLePush() {
-        Fixture f = new Fixture(true, true); f.device(11); f.emailAccepted = false; f.service.confirm(1);
-        assertNull(f.delivery("organizer").getResponseCode());
-        assertEquals("EMAIL_NOT_ACCEPTED", f.delivery("organizer").getLastError());
-        f.makeRetriesDue(); f.emailAccepted = true; f.service.confirm(1);
-        assertEquals(1, f.sends.get(11L)); assertEquals(2, f.emails.size()); assertTrue(f.benevole.getAdviseSent());
+    @Test void ancienneCopieEnAttenteNeBloquePasLaConfirmation() {
+        Fixture f = new Fixture(true, true); f.device(11);
+        ConfirmationDelivery ancienne = new ConfirmationDelivery(); ancienne.setRecipient("organizer");
+        ancienne.setRevision(f.benevole.getDateMaj()); ancienne.setBenevole(f.benevole);
+        f.deliveries.put(f.benevole.getDateMaj() + ":organizer", ancienne);
+        f.service.confirm(1);
+        assertEquals(1, f.sends.get(11L)); assertTrue(f.emails.isEmpty());
+        assertEquals(0, ancienne.getAttempts()); assertTrue(f.benevole.getAdviseSent());
     }
 
     @Test void erreurReseauNestPasUneReponseHttp503EtResteReessayable() {
@@ -194,7 +198,7 @@ class ConfirmationServiceTest {
     @Test void activerUnSecondAppareilNeRenvoyePasAuxDestinatairesDejaTraites() {
         Fixture f = new Fixture(true, true); f.device(11); f.service.confirm(1);
         f.device(12); f.benevole.setAdviseSent(false); f.service.confirm(1);
-        assertEquals(1, f.sends.get(11L)); assertEquals(1, f.sends.get(12L)); assertEquals(1, f.emails.size());
+        assertEquals(1, f.sends.get(11L)); assertEquals(1, f.sends.get(12L)); assertTrue(f.emails.isEmpty());
     }
 
     @Test void chaqueMouvementRepousseLaConfirmationDeCinqMinutes() throws Exception {
@@ -258,11 +262,15 @@ class ConfirmationServiceTest {
             throw new UnsupportedOperationException(method);
         });
         Croisement croisement = new Croisement(); croisement.setId(42); croisement.setLimite(10);
+        Stand stand = new Stand(); stand.setNom("Buvette"); croisement.setStand(stand);
+        Creneau creneau = new Creneau(); creneau.setPlage("10h–12h"); croisement.setCreneau(creneau);
         croisement.setBenevoles(new ArrayList<>());
         CroisementService croisements = new CroisementService() {
             @Override public Croisement findById(Integer id) { return croisement; }
         };
         BenevoleService service = new BenevoleService();
+        inject(service, "mouvementBenevoleService", new MouvementBenevoleService(
+                stub(MouvementBenevoleRepository.class, (method, args) -> args[0])));
         for (var entry : Map.of("benevoleRepository", repository, "croisementService", croisements).entrySet()) {
             var field = BenevoleService.class.getDeclaredField(entry.getKey());
             field.setAccessible(true); field.set(service, entry.getValue());

@@ -4,6 +4,7 @@ package com.wild.corp.service;
 import com.wild.corp.model.Benevole;
 import com.wild.corp.model.Croisement;
 import com.wild.corp.model.Evenement;
+import com.wild.corp.model.MouvementBenevole;
 import com.wild.corp.repositories.BenevoleRepository;
 import com.wild.corp.repositories.EvenementRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,9 @@ public class BenevoleService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private MouvementBenevoleService mouvementBenevoleService;
+
     public Benevole persist(Benevole benevole) {
         return benevoleRepository.save(benevole);
     }
@@ -55,6 +59,7 @@ public class BenevoleService {
         benevole.setEvenement(evenement);
         Benevole created = persist(benevole);
         created.setNotificationToken(notificationService.createAccess(created, false));
+        mouvementBenevoleService.enregistrer(created, MouvementBenevole.Type.CREATION, null);
         return created;
     }
 
@@ -80,6 +85,7 @@ public class BenevoleService {
             if (croisement.getBenevoles().size() < croisement.getLimite() || force) {
                 benevole.getCroisements().add(croisement);
                 markChoicesChanged(benevole);
+                mouvementBenevoleService.enregistrer(benevole, MouvementBenevole.Type.INSCRIPTION, croisement);
             }else{
                 throw new RuntimeException("pas de place");
             }
@@ -91,8 +97,12 @@ public class BenevoleService {
 
     public Benevole removeToCroisement(Integer benevoleId, Integer croisementId) {
         Benevole benevole = benevoleRepository.findForConfirmation(benevoleId).orElseThrow();
-        if (benevole.getCroisements().removeIf(croisement -> croisementId.equals(croisement.getId()))) {
+        Croisement removed = benevole.getCroisements().stream()
+                .filter(croisement -> croisementId.equals(croisement.getId())).findFirst().orElse(null);
+        if (removed != null) {
+            benevole.getCroisements().removeIf(croisement -> croisementId.equals(croisement.getId()));
             markChoicesChanged(benevole);
+            mouvementBenevoleService.enregistrer(benevole, MouvementBenevole.Type.DESINSCRIPTION, removed);
         }
         persist(benevole);
 
@@ -126,6 +136,16 @@ public class BenevoleService {
     }
 
     public void deleteById(Integer benevoleId) {
+        benevoleRepository.findForConfirmation(benevoleId).ifPresent(benevole -> {
+            benevole.getCroisements().forEach(croisement -> mouvementBenevoleService.enregistrer(
+                    benevole, MouvementBenevole.Type.DESINSCRIPTION, croisement));
+            mouvementBenevoleService.enregistrer(benevole, MouvementBenevole.Type.SUPPRESSION, null);
+            benevoleRepository.delete(benevole);
+        });
+    }
+
+    /** La purge automatique de fin d'évènement n'est pas un mouvement d'inscription. */
+    public void deleteForReset(Integer benevoleId) {
         benevoleRepository.deleteById(benevoleId);
     }
 

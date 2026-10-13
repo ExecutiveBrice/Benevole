@@ -29,11 +29,13 @@ class EvenementServiceTest {
 
         Evenement modification = new Evenement();
         modification.setId(1);
+        modification.setRecapitulatifQuotidien(true);
         modification.setDateEvenement(LocalDate.of(2027, 3, 28));
         modification.setAdresse("12 rue des Fleurs, Paris");
         modification.setIndicationsDebut("Accueil à 8h30\nEntrée côté jardin");
         modification.setIndicationsFin("Rangement puis départ libre");
         Evenement resultat = service.update(modification);
+        assertTrue(resultat.getRecapitulatifQuotidien());
         assertEquals(LocalDate.of(2027, 3, 28), resultat.getDateEvenement());
         assertEquals(modification.getAdresse(), resultat.getAdresse());
         assertEquals(modification.getIndicationsDebut(), resultat.getIndicationsDebut());
@@ -42,6 +44,7 @@ class EvenementServiceTest {
         Evenement effacement = new Evenement();
         effacement.setId(1);
         resultat = service.update(effacement);
+        assertFalse(resultat.getRecapitulatifQuotidien());
         assertNull(resultat.getDateEvenement());
         assertEquals("", resultat.getAdresse());
         assertEquals("", resultat.getIndicationsDebut());

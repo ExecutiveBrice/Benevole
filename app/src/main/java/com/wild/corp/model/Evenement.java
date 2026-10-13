@@ -76,9 +76,12 @@ public class Evenement {
 
     private Boolean needtel;
 
+    // Colonne historique conservée pour les bases existantes ; aucune copie n'est envoyée.
     private Boolean copie;
 
     private Boolean notification;
+
+    private Boolean recapitulatifQuotidien = false;
 
     private boolean lock;
 
@@ -113,6 +116,12 @@ public class Evenement {
     @JsonIgnore
     @OneToMany(mappedBy="evenement" , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stand> stands;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "evenement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @lombok.ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<MouvementBenevole> mouvements;
 
     /**
      * Administrateurs autorisés à gérer cet événement.

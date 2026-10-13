@@ -91,6 +91,19 @@
   </div>
 </section>
 
+<section class="card shadow-sm mb-3 text-center">
+  <div class="card-header"><h2 class="card-title h5 mb-0" [style.color]="evenement.couleurTexteTitre">Lien d’inscription</h2></div>
+  <div class="card-body">
+    <button class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-between gap-2 text-start text-break mb-3"
+      type="button" [disabled]="!using_address" (click)="copyRegistrationLink()"
+      aria-label="Copier le lien d’inscription dans le presse-papiers" title="Copier dans le presse-papiers">
+      <span>{{ using_address }}</span>
+      <span class="app-icon flex-shrink-0" aria-hidden="true">content_copy</span>
+    </button>
+    @if (qrcode) { <img class="img-fluid" [src]="qrcode" alt="QR code du lien d’inscription"> }
+  </div>
+</section>
+
 @if (evenement.afficherMessageInfo) {
   <section class="card shadow-sm mb-3">
     <header class="card-header text-center">

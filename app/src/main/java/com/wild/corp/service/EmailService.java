@@ -74,10 +74,6 @@ public class EmailService {
                 destinataires.add(benevole.getEmail());
             }
 
-            if(benevole.getEvenement().getCopie()){
-                destinataires.add(benevole.getEvenement().getContactEmail());
-            }
-
             singleMessage(destinataires, corpsMessage.toString(), email.getSubject(), benevole.getPrenom(), benevole.getNom());
         });
         return "ok";
@@ -142,7 +138,7 @@ public class EmailService {
 
             TransactionalEmailsApi api = new TransactionalEmailsApi();
             SendSmtpEmailSender sender = new SendSmtpEmailSender();
-            sender.setEmail("adhesion@alod.fr");
+            sender.setEmail("bryce.morel@gmail.com");
             sender.setName("ALOD");
             List<SendSmtpEmailTo> toList = new ArrayList<>();
             destinataires.forEach(destinataire -> {
@@ -152,7 +148,7 @@ public class EmailService {
             });
 
             SendSmtpEmailReplyTo replyTo = new SendSmtpEmailReplyTo();
-            replyTo.setEmail("adhesion@alod.fr");
+            replyTo.setEmail("bryce.morel@gmail.com");
             replyTo.setName("ALOD");
 
             SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();

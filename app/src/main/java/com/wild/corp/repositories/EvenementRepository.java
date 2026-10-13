@@ -12,6 +12,10 @@ import java.util.List;
 @Repository
 public interface EvenementRepository extends JpaRepository<Evenement, Integer> {
 
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("select e from Evenement e where e.id = :id")
+    java.util.Optional<Evenement> findForRecapitulatif(@org.springframework.data.repository.query.Param("id") Integer id);
+
 
     List<Evenement> findAllById(Integer evenementId);
 

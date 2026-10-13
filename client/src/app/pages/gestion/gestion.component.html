@@ -37,7 +37,7 @@
     </div>
 
     <div class="row g-4">
-      <div class="col-12 col-lg-8">
+      <div class="col-12">
         <section class="card">
           <div class="card-header"><h2 class="h5 mb-0">Communication</h2></div>
           <div class="card-body">
@@ -73,20 +73,7 @@
         </section>
       </div>
 
-      <div class="col-12 col-lg-4">
-        <section class="card h-100 text-center">
-          <div class="card-header"><h2 class="h5 mb-0">Lien d’inscription</h2></div>
-          <div class="card-body">
-            <button class="btn btn-outline-dark w-100 d-flex align-items-center justify-content-between gap-2 text-start text-break mb-3"
-              type="button" [disabled]="!using_address" (click)="copyRegistrationLink()"
-              aria-label="Copier le lien d’inscription dans le presse-papiers" title="Copier dans le presse-papiers">
-              <span>{{ using_address }}</span>
-              <span class="app-icon flex-shrink-0" aria-hidden="true">content_copy</span>
-            </button>
-            @if (qrcode) { <img class="img-fluid" [src]="qrcode" alt="QR code du lien d’inscription"> }
-          </div>
-        </section>
-      </div>
+
     </div>
   </div>
 }
