@@ -212,6 +212,6 @@ export class AppComponent  implements OnInit{
   showEventList(): void {
     this.dernierEvenementService.clear();
     this.evenement = undefined;
-    window.location.assign('/?liste=1');
+    window.location.assign(new URL('#/?liste=1', document.baseURI).href);
   }
 }

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
-function worker() {
+function worker(base = '/', options = {}) {
   const events = {};
   const notifications = [];
   const logs = [];
@@ -11,24 +11,33 @@ function worker() {
   let windows = [];
   let displayError;
   const self = {
+    skipWaiting: async () => {},
     location: { origin: 'https://benevoles.example.test' },
     addEventListener: (name, handler) => events[name] = handler,
-    registration: { showNotification: async (title, options) => {
+    registration: { scope: `https://benevoles.example.test${base}`, showNotification: async (title, options) => {
       if (displayError) throw displayError;
       notifications.push({ title, options });
     } },
     clients: {
+      claim: async () => {},
       matchAll: async () => windows,
       openWindow: async url => opened.push(url),
     },
   };
   vm.runInNewContext(readFileSync(new URL('../public/sw.js', import.meta.url), 'utf8'), {
+    fetch: options.fetch ?? (async () => { throw new Error('Offline'); }),
+    caches: options.caches ?? { open: async () => ({ match: async url => ({ cachedUrl: url }) }) },
+    Request, Response, AbortController,
+    setTimeout: options.setTimeout ?? setTimeout, clearTimeout,
     self, URL, URLSearchParams, console: { info: (...args) => logs.push(args), error: (...args) => logs.push(args) },
   });
   const fire = async (name, values) => {
-    let waiting;
-    events[name]({ ...values, waitUntil: value => waiting = value });
-    await waiting;
+    const waiting = [];
+    let response;
+    events[name]({ ...values, waitUntil: value => waiting.push(value), respondWith: value => response = value });
+    const result = await response;
+    await Promise.all(waiting);
+    return result;
   };
   return { notifications, opened, logs, fire, setWindows: value => windows = value, failDisplay: error => displayError = error };
 }
@@ -53,6 +62,136 @@ test('ouvre le texte complet de la confirmation avant l’événement', async ()
   assert.equal(message.get('at'), notification.options.data.at);
 });
 
+function shellFixture() {
+  const base = 'https://benevoles.example.test/benevoles/';
+  const entries = new Map();
+  const fetched = [];
+  const html = '<app-root></app-root><script src="main-ABC.js" type="module"></script>'
+    + '<script src="polyfills-ABC.js"></script><link rel="modulepreload" href="chunk-ABC.js">'
+    + '<link rel="stylesheet" href="styles-ABC.css"><link href="https://fonts.example.test/font.css">';
+  let online = true;
+  let missingAsset = false;
+  const fetch = async input => {
+    const url = typeof input === 'string' ? input : input.url;
+    fetched.push(url);
+    if (!online) throw new Error('Offline');
+    if (url.endsWith('index.html') || url === base) return new Response(html, { headers: { 'Content-Type': 'text/html' } });
+    return new Response('asset', { status: missingAsset && url.endsWith('main-ABC.js') ? 404 : 200 });
+  };
+  const cache = {
+    match: async input => entries.get(typeof input === 'string' ? input : input.url)?.clone(),
+    put: async (input, response) => entries.set(typeof input === 'string' ? input : input.url, response.clone()),
+    addAll: async inputs => {
+      const responses = await Promise.all(inputs.map(fetch));
+      if (responses.some(response => !response.ok)) throw new Error('Asset absent');
+      await Promise.all(inputs.map((input, i) => cache.put(input, responses[i])));
+    },
+  };
+  const caches = { open: async name => {
+    assert.equal(name, 'benevoles-shell-v6');
+    return cache;
+  } };
+  return { base, entries, fetched, html, fetch, caches, cache,
+    offline: () => online = false, missingAsset: () => missingAsset = true };
+}
+
+test('installe ensemble la page et tous ses scripts et styles locaux', async () => {
+  const fixture = shellFixture();
+  const w = worker('/benevoles/', fixture);
+  await w.fire('install', {});
+  for (const file of ['index.html', 'main-ABC.js', 'polyfills-ABC.js', 'chunk-ABC.js', 'styles-ABC.css', 'notification.html']) {
+    assert.ok(fixture.entries.has(fixture.base + file), file);
+  }
+  assert.ok(fixture.fetched.every(url => url.startsWith(fixture.base)));
+  fixture.offline();
+  const page = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  assert.equal(await page.text(), fixture.html);
+  const script = await w.fire('fetch', { request: { method: 'GET', mode: 'cors', url: fixture.base + 'main-ABC.js' } });
+  assert.equal(await script.text(), 'asset');
+});
+
+test('ne remplace pas le HTML utilisable si un nouveau script est absent', async () => {
+  const fixture = shellFixture();
+  await fixture.cache.put(fixture.base + 'index.html', new Response('ancienne version complète'));
+  fixture.missingAsset();
+  const w = worker('/benevoles/', fixture);
+  const response = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  assert.equal(response.status, 200);
+  assert.equal(await (await fixture.cache.match(fixture.base + 'index.html')).text(), 'ancienne version complète');
+  await assert.rejects(w.fire('install', {}), /Asset absent/);
+});
+
+test('sort du blocage réseau et utilise le cache après le délai de connexion', async () => {
+  let aborted = false;
+  const w = worker('/benevoles/', {
+    fetch: (_, { signal }) => {
+      signal.addEventListener('abort', () => aborted = true);
+      return new Promise(() => {});
+    },
+    setTimeout: (callback, delay) => {
+      assert.equal(delay, 8000);
+      return setTimeout(callback, 0);
+    },
+  });
+  const response = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: 'https://benevoles.example.test/benevoles/' } });
+  assert.equal(response.cachedUrl, 'https://benevoles.example.test/benevoles/index.html');
+  assert.equal(aborted, true);
+});
+
+test('réutilise un script hashé après un déploiement sans requête réseau', async () => {
+  const fixture = shellFixture();
+  await fixture.cache.put(fixture.base + 'main-OLD.js', new Response('ancien script'));
+  const w = worker('/benevoles/', fixture);
+  const request = { method: 'GET', mode: 'cors', url: fixture.base + 'main-OLD.js' };
+  const response = await w.fire('fetch', { request });
+  assert.equal(await response.text(), 'ancien script');
+  assert.deepEqual(fixture.fetched, []);
+});
+
+test('ne retélécharge pas les bundles inchangés à chaque ouverture', async () => {
+  const fixture = shellFixture();
+  const html = '<app-root></app-root><script src="main-ABC12345.js"></script>';
+  const w = worker('/benevoles/', {
+    ...fixture,
+    fetch: async () => new Response(html, { headers: { 'Content-Type': 'text/html' } }),
+  });
+  await fixture.cache.put(fixture.base + 'main-ABC12345.js', new Response('déjà présent'));
+  await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  assert.deepEqual(fixture.fetched, []);
+  assert.equal(await (await fixture.cache.match(fixture.base + 'index.html')).text(), html);
+});
+
+test('conserve les ressources chargées au cours de l’utilisation', async () => {
+  const fixture = shellFixture();
+  const w = worker('/benevoles/', fixture);
+  const request = { method: 'GET', mode: 'cors', url: fixture.base + 'chunk-LAZY.js' };
+  assert.equal((await w.fire('fetch', { request })).status, 200);
+  fixture.offline();
+  assert.equal(await (await w.fire('fetch', { request })).text(), 'asset');
+});
+
+test('laisse les appels API, externes et non GET au navigateur', async () => {
+  const fixture = shellFixture();
+  const w = worker('/benevoles/', fixture);
+  for (const [method, url] of [
+    ['GET', fixture.base + 'api/image.png'], ['POST', fixture.base + 'main-ABC.js'],
+    ['GET', 'https://other.example.test/main.js'], ['GET', fixture.base + 'sw.js'],
+  ]) {
+    assert.equal(await w.fire('fetch', { request: { method, mode: 'cors', url } }), undefined);
+  }
+  assert.deepEqual(fixture.fetched, []);
+  assert.equal(fixture.entries.size, 0);
+});
+
+test('renvoie une réponse explicite si le réseau et le cache sont indisponibles', async () => {
+  const fixture = shellFixture();
+  fixture.offline();
+  const w = worker('/benevoles/', fixture);
+  const response = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  assert.equal(response.status, 503);
+  assert.match(await response.text(), /Connexion indisponible/);
+});
+
 test('réutilise la page de lecture sans remplacer un événement déjà ouvert', async () => {
   const w = worker();
   let focused = false;
@@ -71,7 +210,7 @@ test('réutilise la page de lecture sans remplacer un événement déjà ouvert'
 test('refuse de diriger une notification vers un autre site', async () => {
   const w = worker();
   await w.fire('push', { data: { json: () => ({ url: 'https://evil.example.test/7' }) } });
-  assert.equal(w.notifications[0].options.data.url, 'https://benevoles.example.test/');
+  assert.equal(w.notifications[0].options.data.url, 'https://benevoles.example.test/#/');
   await w.fire('notificationclick', { notification: { data: { url: 'https://evil.example.test/7' }, close() {} } });
   assert.equal(w.opened.length, 0);
 });
@@ -118,4 +257,32 @@ test('un onglet fermé ne bloque ni l’affichage ni le diagnostic des autres on
   await w.fire('push', { data: { json: () => null } });
   assert.equal(w.notifications.length, 1);
   assert.deepEqual(messages.map(message => message.status), ['received', 'display-requested']);
+});
+
+test('conserve le préfixe de déploiement pour les icônes et la page de notification', async () => {
+  const w = worker('/benevoles/');
+  await w.fire('push', { data: { json: () => ({ url: '/benevoles/#/7' }) } });
+  const notification = w.notifications[0];
+  assert.equal(notification.options.icon, 'https://benevoles.example.test/benevoles/icons/app-icon-192.png');
+  assert.equal(notification.options.badge, notification.options.icon);
+  await w.fire('notificationclick', { notification: { title: notification.title, ...notification.options, close() {} } });
+  const target = new URL(w.opened[0]);
+  assert.equal(target.pathname, '/benevoles/notification.html');
+  assert.equal(new URLSearchParams(target.hash.slice(1)).get('url'), 'https://benevoles.example.test/benevoles/#/7');
+});
+
+test('revient à l’accueil sous le préfixe en cas de lien push invalide', async () => {
+  const w = worker('/benevoles/');
+  await w.fire('push', { data: { json: () => ({ url: 'https://evil.example.test/' }) } });
+  assert.equal(w.notifications[0].options.data.url, 'https://benevoles.example.test/benevoles/#/');
+});
+
+test('sert les bonnes pages hors ligne sous le préfixe de déploiement', async () => {
+  const w = worker('/benevoles/');
+  for (const [path, fallback] of [['#/7', 'index.html'], ['notification.html?lecture=1', 'notification.html']]) {
+    const response = await w.fire('fetch', { request: {
+      method: 'GET', mode: 'navigate', url: `https://benevoles.example.test/benevoles/${path}`,
+    } });
+    assert.equal(response.cachedUrl, `https://benevoles.example.test/benevoles/${fallback}`);
+  }
 });

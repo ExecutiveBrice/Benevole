@@ -69,11 +69,12 @@ export class PushNotificationService {
   }
 
   async consumeInvitation(eventId: number): Promise<Benevole | null> {
-    const fragment = new URLSearchParams(window.location.hash.slice(1));
+    const fragment = new URLSearchParams(window.location.hash.split('#').pop());
     const token = fragment.get('notifications');
     if (!token) return null;
     // Le secret ne doit pas rester dans l'adresse ni être envoyé comme référent.
-    history.replaceState(history.state, '', window.location.pathname + window.location.search);
+    const routeHash = window.location.hash.slice(0, window.location.hash.lastIndexOf('#'));
+    history.replaceState(history.state, '', window.location.pathname + window.location.search + routeHash);
     const identity = await firstValueFrom(this.http.post<NotificationIdentity>(`${this.api}/identity`, {}, {
       headers: new HttpHeaders({ 'X-Notification-Token': token }),
     }));
@@ -190,8 +191,8 @@ export class PushNotificationService {
   }
 
   private async registration(): Promise<ServiceWorkerRegistration> {
-    const registration = await navigator.serviceWorker.getRegistration('/')
-      ?? await navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' });
+    const registration = await navigator.serviceWorker.getRegistration(document.baseURI)
+      ?? await navigator.serviceWorker.register(new URL('sw.js', document.baseURI).href, { updateViaCache: 'none' });
     if (registration.active) return registration;
     return Promise.race([
       navigator.serviceWorker.ready,

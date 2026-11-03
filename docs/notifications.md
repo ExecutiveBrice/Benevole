@@ -14,7 +14,7 @@ node scripts/generate-vapid.mjs
 
 Copier les trois variables affichées dans le `.env` du serveur (chargé par `env_file` dans Docker Compose), et remplacer `APP_PUSH_SUBJECT` par l'adresse de contact réelle de l'organisateur. Ne pas versionner ces secrets. Garder la même paire de clés lors des redémarrages : les abonnements des navigateurs en dépendent.
 
-Configurer `APP_FRONTEND_URL` avec l'adresse HTTPS publique de l'application. Le Docker Compose le fait déjà à partir de `DNS_NAME`. Le serveur doit pouvoir joindre en HTTPS les services Push Google, Mozilla et Apple. Le client utilise le service worker existant `/sw.js`.
+Configurer `APP_FRONTEND_URL` avec l'adresse HTTPS publique de l'application. Le Docker Compose le fait déjà à partir de `DNS_NAME`. Le serveur doit pouvoir joindre en HTTPS les services Push Google, Mozilla et Apple. En production, l’application est publiée sous `https://<DNS>/benevoles/#/` et son service worker sous `/benevoles/sw.js`. Reconstruire le client avec `npm run build` avant de relancer `docker compose up -d --build`.
 
 Sans clés, l'application continue à fonctionner et affiche que les notifications ne sont pas disponibles ; aucun email de secours n'est envoyé. Une configuration partielle ou des clés invalides empêchent le démarrage avec une erreur explicite.
 
@@ -62,7 +62,7 @@ Quand l'envoi automatique déclenche le toast et `display-requested`, le parcour
 
 Le service worker écrit des traces `[Bénévoles Push]` avec l'heure de réception et les étapes `received`, `display-requested` ou `display-failed`. `display-requested` indique que `showNotification()` a réussi, sans garantir une bannière visible ni une lecture. `display-failed` donne le nom de l'erreur de création. Ces traces ne contiennent ni contenu de notification, ni endpoint, ni clés. Elles sont aussi relayées à la console des onglets ouverts. À la réception, un message « Notification reçue » apparaît brièvement dans l'application ouverte ; ce message ne dépend pas de la bannière système et ne constitue pas un historique des notifications.
 
-Après mise à jour du client, recharger la page pour activer le nouveau `/sw.js`. Dans les DevTools Chrome, garder le niveau **Info** activé dans **Console** et filtrer sur `Bénévoles Push`. Dans **Application → Service Workers**, utiliser **Push** avec ce JSON pour tester le worker sans attendre le scheduler ni contacter le serveur :
+Après mise à jour du client, recharger la page pour activer le nouveau `/benevoles/sw.js`. Dans les DevTools Chrome, garder le niveau **Info** activé dans **Console** et filtrer sur `Bénévoles Push`. Dans **Application → Service Workers**, utiliser **Push** avec ce JSON pour tester le worker sans attendre le scheduler ni contacter le serveur :
 
 ```json
 {"title":"Test Bénévoles","body":"Test local de réception","url":"/","tag":"test-local"}

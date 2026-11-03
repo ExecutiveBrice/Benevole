@@ -15,6 +15,74 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div id="app-startup" role="status" aria-live="polite" style="position:fixed;inset:0;z-index:10000;display:grid;place-content:center;gap:1rem;padding:1.5rem;text-align:center;background:#fff;color:#222;font:1rem/1.5 system-ui,sans-serif">
+    <strong style="font-size:1.5rem">Bénévoles</strong>
+    <p id="app-startup-message">Chargement de l’application…</p>
+    <button id="app-startup-retry" type="button" hidden style="padding:.75rem 1.25rem;font:inherit;cursor:pointer">Réessayer</button>
+    <noscript>Activez JavaScript pour ouvrir l’application.</noscript>
+  </div>
+  <script>
+    // Cette protection fonctionne même si les modules Angular ne se chargent pas.
+    (() => {
+      const screen = document.getElementById('app-startup');
+      const message = document.getElementById('app-startup-message');
+      const retry = document.getElementById('app-startup-retry');
+      const reloadKey = 'benevoles.startup-reload';
+      const deadline = Date.now() + 20000;
+      let ready = false;
+      let failed = false;
+      let reloading = false;
+
+      function recover() {
+        if (ready || reloading) return;
+        failed = true;
+        retry.hidden = false;
+        if (!navigator.onLine) {
+          message.textContent = 'Connexion indisponible. Le chargement reprendra au retour du réseau.';
+          return;
+        }
+        message.textContent = 'Le chargement a été interrompu. Vous pouvez réessayer.';
+        try {
+          // Une seule reprise automatique, même si le serveur reste indisponible.
+          if (sessionStorage.getItem(reloadKey)) return;
+          sessionStorage.setItem(reloadKey, '1');
+        } catch { return; }
+        reloading = true;
+        window.location.reload();
+      }
+
+      const timer = setTimeout(recover, 20000);
+      const onResume = () => {
+        if (document.visibilityState === 'visible' && Date.now() >= deadline) recover();
+      };
+      const onOnline = () => { if (failed) recover(); };
+      const onError = event => {
+        const source = event.target;
+        if (source && source.tagName === 'SCRIPT' && source.src
+            && source.src.startsWith(document.baseURI)) recover();
+      };
+      window.addEventListener('error', onError, true);
+      window.addEventListener('pageshow', onResume);
+      window.addEventListener('online', onOnline);
+      document.addEventListener('visibilitychange', onResume);
+      window.addEventListener('benevoles:startup-failed', recover);
+      window.addEventListener('benevoles:startup-ready', () => {
+        ready = true;
+        clearTimeout(timer);
+        screen.remove();
+        window.removeEventListener('error', onError, true);
+        window.removeEventListener('pageshow', onResume);
+        window.removeEventListener('online', onOnline);
+        document.removeEventListener('visibilitychange', onResume);
+        window.removeEventListener('benevoles:startup-failed', recover);
+        try { sessionStorage.removeItem(reloadKey); } catch { /* stockage désactivé */ }
+      }, { once: true });
+      retry.addEventListener('click', () => {
+        try { sessionStorage.setItem(reloadKey, '1'); } catch { /* reprise manuelle */ }
+        window.location.reload();
+      });
+    })();
+  </script>
   <app-root></app-root>
 </body>
 </html>

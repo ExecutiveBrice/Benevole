@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
-function reader(values) {
+function reader(values, base = '/') {
   const elements = Object.fromEntries(['title', 'message', 'received', 'event-link'].map(id => [id, {}]));
   const handlers = {};
   const window = {
-    location: { origin: 'https://benevoles.example.test', hash: `#${new URLSearchParams(values)}` },
+    location: { href: `https://benevoles.example.test${base}notification.html`, origin: 'https://benevoles.example.test', hash: `#${new URLSearchParams(values)}` },
     addEventListener: (name, handler) => handlers[name] = handler,
   };
   vm.runInNewContext(readFileSync(new URL('../public/notification.js', import.meta.url), 'utf8'), {
@@ -30,7 +30,7 @@ test('conserve le message intégral, les accents et les sauts de ligne comme tex
 test('refuse les liens externes et les liens exécutables', () => {
   for (const url of ['https://evil.example.test', 'javascript:alert(1)', 'http://[']) {
     const { elements } = reader({ url, at: 'invalide' });
-    assert.equal(elements['event-link'].href, '/');
+    assert.equal(elements['event-link'].href, 'https://benevoles.example.test/#/');
     assert.equal(elements.received.hidden, true);
   }
 });
@@ -41,4 +41,11 @@ test('actualise le message quand une autre notification réutilise la page', () 
   handlers.hashchange();
   assert.equal(elements.message.textContent, 'Nouveau message');
   assert.equal(elements['event-link'].href, 'https://benevoles.example.test/8');
+});
+
+test('ouvre les événements et l’accueil sous le préfixe de déploiement', () => {
+  const { elements } = reader({ url: '/benevoles/#/7' }, '/benevoles/');
+  assert.equal(elements['event-link'].href, 'https://benevoles.example.test/benevoles/#/7');
+  const fallback = reader({ url: 'https://evil.example.test' }, '/benevoles/');
+  assert.equal(fallback.elements['event-link'].href, 'https://benevoles.example.test/benevoles/#/');
 });

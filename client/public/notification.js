@@ -11,9 +11,10 @@ function displayNotification() {
     received.textContent = `Reçue le ${date.toLocaleString('fr-FR')}`;
   }
   const link = document.getElementById('event-link');
-  link.href = '/';
+  const appBase = new URL('./', window.location.href);
+  link.href = new URL('#/', appBase).href;
   try {
-    const target = new URL(message.get('url') || '/', window.location.origin);
+    const target = new URL(message.get('url') || '#/', appBase);
     if (target.origin === window.location.origin) link.href = target.href;
   } catch { /* conserver l'accueil si l'adresse est invalide */ }
 }

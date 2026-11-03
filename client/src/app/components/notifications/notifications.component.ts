@@ -21,7 +21,6 @@ import { PushNotificationService } from '../../services/push-notification.servic
           {{ busy ? 'Veuillez patienter…' : 'Autoriser les notifications de l’application' }}
         </button>
       } @else {
-        <p class="small mb-1" role="status">Notifications autorisées pour toute l’application.</p>
         @if (active) {
           <p class="small mb-0">Vous recevrez la confirmation de vos choix.</p>
         } @else if (!push.hasAccess(eventId, benevoleId)) {

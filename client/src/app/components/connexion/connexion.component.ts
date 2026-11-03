@@ -58,7 +58,7 @@ export class ConnexionComponent implements OnInit {
       setTimeout(() => this.firstConnexionField?.nativeElement.focus());
     });
 
-    if (new URLSearchParams(window.location.hash.slice(1)).has('notifications')) {
+    if (new URLSearchParams(window.location.hash.split('#').pop()).has('notifications')) {
       this.pushNotifications.consumeInvitation(this.evenement.id).then(benevole => {
         if (!benevole) return;
         this.benevole = benevole;

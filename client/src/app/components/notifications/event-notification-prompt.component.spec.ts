@@ -43,7 +43,8 @@ describe('Association des événements après autorisation globale', () => {
     push.hasAccess.and.returnValue(false);
     identities.next({ id: 1 } as Benevole); await tick();
     expect(push.associate).not.toHaveBeenCalled();
-    expect(fixture.componentInstance.message).toContain('lien personnel');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="status"]')).toBeNull();
   });
 
   it('respecte le réglage d’envoi des confirmations de l’événement', async () => {

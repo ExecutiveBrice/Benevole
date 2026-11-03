@@ -2,14 +2,9 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 
-// Les anciens QR codes et courriels pointent vers /#/... ; conserver leur route
-// tout en retirant le # de l'adresse avant le démarrage du routeur Angular.
-if (window.location.hash.startsWith('#/') && !window.location.hash.startsWith('#//')) {
-  window.history.replaceState(window.history.state, '', window.location.hash.slice(1));
-}
-
 bootstrapApplication(AppComponent, appConfig)
   .then(() => {
+    window.dispatchEvent(new Event('benevoles:startup-ready'));
     if ('serviceWorker' in navigator) {
       let reloadingForServiceWorker = false;
       let hadController = !!navigator.serviceWorker.controller;
@@ -24,9 +19,12 @@ bootstrapApplication(AppComponent, appConfig)
       });
 
       navigator.serviceWorker
-        .register('/sw.js', { updateViaCache: 'none' })
+        .register(new URL('sw.js', document.baseURI).href, { updateViaCache: 'none' })
         .then((registration) => registration.update())
         .catch((err) => console.error('Service worker non enregistré', err));
     }
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error('Démarrage de l’application impossible', err);
+    window.dispatchEvent(new Event('benevoles:startup-failed'));
+  });

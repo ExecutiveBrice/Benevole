@@ -42,7 +42,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/",
+              "baseHref": "/benevoles/",
               "budgets": [
                 {
                   "type": "initial",

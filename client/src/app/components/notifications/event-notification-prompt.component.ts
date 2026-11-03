@@ -47,7 +47,7 @@ export class EventNotificationPromptComponent implements OnChanges {
     const benevole = this.benevole;
     if (!event?.notification || !benevole || !this.push.authorized || this.binding) return;
     if (!this.push.hasAccess(event.id, benevole.id)) {
-      this.message = 'Notifications autorisées pour l’application. Pour recevoir vos confirmations sur cet appareil, ouvrez votre lien personnel fourni par l’organisateur.';
+      this.message = '';
       this.changes.markForCheck();
       return;
     }

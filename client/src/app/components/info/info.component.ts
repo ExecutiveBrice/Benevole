@@ -117,9 +117,8 @@ export class InfoComponent implements OnInit {
   addToCalendar(): void {
     if (!this.evenement.dateEvenement) return;
     const applicationUrl = new URL(document.baseURI);
-    applicationUrl.pathname = `${applicationUrl.pathname.replace(/\/$/, '')}/${this.evenement.id}`;
     applicationUrl.search = '';
-    applicationUrl.hash = '';
+    applicationUrl.hash = `/${this.evenement.id}`;
     const calendar = createEventCalendar(this.evenement, applicationUrl.href);
     const url = URL.createObjectURL(new Blob([calendar], { type: 'text/calendar;charset=utf-8' }));
     const link = document.createElement('a');

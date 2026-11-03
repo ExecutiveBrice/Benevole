@@ -148,6 +148,16 @@ describe('Notifications bénévoles', () => {
     expect(localStorage.getItem('benevole.push-access.7.1')).toBe('b'.repeat(43));
   });
 
+  it('retire le secret sans perdre la route de l’événement après le hash', async () => {
+    history.replaceState(null, '', `${location.pathname}#/7#notifications=${token}`);
+    const identifying = service.consumeInvitation(7);
+    expect(location.hash).toBe('#/7');
+    const request = requests.expectOne(`${api}/identity`);
+    expect(request.request.headers.get('X-Notification-Token')).toBe(token);
+    request.flush({ benevole: { id: 1 }, eventId: 7, token: 'b'.repeat(43) });
+    expect((await identifying)?.id).toBe(1);
+  });
+
   it('retire un accès expiré après vérification du statut', async () => {
     service.remember(7, 1, token);
     const checking = service.active(7, 1);
