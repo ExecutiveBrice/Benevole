@@ -1,4 +1,4 @@
-const CACHE_NAME = 'benevoles-shell-v6';
+const CACHE_NAME = 'benevoles-shell-v7';
 const NETWORK_TIMEOUT = 8000;
 const APP_BASE = self.registration.scope;
 const appUrl = (path) => new URL(path, APP_BASE).href;
@@ -22,6 +22,37 @@ async function fetchWithTimeout(request) {
   }
 }
 
+async function cacheAssets(cache, urls) {
+  const visited = new Set();
+  let pending = [...urls];
+  while (pending.length) {
+    const batch = [...new Set(pending)].filter(url => !visited.has(url));
+    batch.forEach(url => visited.add(url));
+    const dependencies = await Promise.all(batch.map(async url => {
+      const immutable = /-[a-z0-9]{8,}\.(?:m?js|css)$/i.test(new URL(url).pathname);
+      const cached = immutable ? await cache.match(url) : undefined;
+      const asset = cached || await fetchWithTimeout(url);
+      if (!asset.ok || (/\.(?:m?js|css)$/i.test(new URL(url).pathname)
+          && asset.headers.get('content-type')?.includes('text/html'))) {
+        throw new Error('Ressource de démarrage indisponible');
+      }
+      const imports = [];
+      if (/\.m?js$/i.test(new URL(url).pathname)) {
+        const code = await asset.clone().text();
+        // Les chunks produits par Angular peuvent importer d'autres chunks,
+        // y compris le moteur d'animations chargé dynamiquement au démarrage.
+        for (const match of code.matchAll(/(?:\bfrom\s*|\bimport\s*(?:\(\s*)?)["'](\.[^"']+\.m?js(?:\?[^"']*)?)["']/g)) {
+          const dependency = new URL(match[1], url);
+          if (dependency.href.startsWith(APP_BASE)) imports.push(dependency.href);
+        }
+      }
+      if (!cached) await cache.put(url, asset);
+      return imports;
+    }));
+    pending = dependencies.flat();
+  }
+}
+
 async function cacheApplication(response) {
   if (!response.ok || !response.headers.get('content-type')?.includes('text/html')) {
     throw new Error('Page de démarrage indisponible');
@@ -38,14 +69,7 @@ async function cacheApplication(response) {
     if (url.href.startsWith(APP_BASE)) assets.add(url.href);
   }
   const cache = await caches.open(CACHE_NAME);
-  const missingAssets = [];
-  for (const url of assets) {
-    const immutable = /-[a-z0-9]{8,}\.(?:m?js|css)$/i.test(new URL(url).pathname);
-    if (!immutable || !await cache.match(url)) {
-      missingAssets.push(new Request(url, { cache: 'reload' }));
-    }
-  }
-  await cache.addAll(missingAssets);
+  await cacheAssets(cache, assets);
   // Ne jamais remplacer le HTML utilisable si ses nouveaux scripts sont absents.
   await cache.put(appUrl('index.html'), response);
 }
@@ -56,7 +80,7 @@ self.addEventListener('install', (event) => {
     if (!response.ok) throw new Error('Application indisponible');
     await cacheApplication(response);
     const cache = await caches.open(CACHE_NAME);
-    await cache.addAll(APP_SHELL);
+    await cacheAssets(cache, APP_SHELL);
     await self.skipWaiting();
   })());
 });
@@ -77,17 +101,24 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     const fallback = new URL(event.request.url).pathname === new URL('notification.html', APP_BASE).pathname
       ? appUrl('notification.html') : appUrl('index.html');
-    const response = fetchWithTimeout(event.request);
-    event.waitUntil(response.then(result => {
-      if (fallback === appUrl('index.html')) return cacheApplication(result.clone());
-    }).catch(() => { /* conserver la dernière version complète */ }));
+    const cache = caches.open(CACHE_NAME);
+    // Le cache installé contient une version complète : l'afficher sans attendre
+    // le réseau, notamment à la réouverture de l'application après une veille.
+    const cached = cache.then(cache => cache.match(fallback));
+    const response = (async () => {
+      const result = await fetchWithTimeout(event.request);
+      if (!result.ok) throw new Error('Application indisponible');
+      if (fallback === appUrl('index.html')) await cacheApplication(result.clone());
+      return result;
+    })();
+    event.waitUntil(response.catch(() => { /* conserver la dernière version complète */ }));
     event.respondWith((async () => {
+      const previous = await cached;
+      if (previous) return previous;
       try {
-        const result = await response;
-        if (result.ok) return result;
+        return await response;
       } catch { /* réseau indisponible ou trop lent */ }
-      const cache = await caches.open(CACHE_NAME);
-      return await cache.match(fallback) || new Response('Connexion indisponible. Veuillez réessayer.', {
+      return new Response('Connexion indisponible. Veuillez réessayer.', {
         status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       });
     })());

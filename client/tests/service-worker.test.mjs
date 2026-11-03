@@ -31,15 +31,19 @@ function worker(base = '/', options = {}) {
     setTimeout: options.setTimeout ?? setTimeout, clearTimeout,
     self, URL, URLSearchParams, console: { info: (...args) => logs.push(args), error: (...args) => logs.push(args) },
   });
-  const fire = async (name, values) => {
+  const dispatch = (name, values) => {
     const waiting = [];
     let response;
     events[name]({ ...values, waitUntil: value => waiting.push(value), respondWith: value => response = value });
-    const result = await response;
-    await Promise.all(waiting);
+    return { response: Promise.resolve(response), done: Promise.all(waiting) };
+  };
+  const fire = async (name, values) => {
+    const event = dispatch(name, values);
+    const result = await event.response;
+    await event.done;
     return result;
   };
-  return { notifications, opened, logs, fire, setWindows: value => windows = value, failDisplay: error => displayError = error };
+  return { notifications, opened, logs, fire, dispatch, setWindows: value => windows = value, failDisplay: error => displayError = error };
 }
 
 test('ouvre le texte complet de la confirmation avant l’événement', async () => {
@@ -88,7 +92,7 @@ function shellFixture() {
     },
   };
   const caches = { open: async name => {
-    assert.equal(name, 'benevoles-shell-v6');
+    assert.equal(name, 'benevoles-shell-v7');
     return cache;
   } };
   return { base, entries, fetched, html, fetch, caches, cache,
@@ -117,8 +121,104 @@ test('ne remplace pas le HTML utilisable si un nouveau script est absent', async
   const w = worker('/benevoles/', fixture);
   const response = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
   assert.equal(response.status, 200);
+  assert.equal(await response.text(), 'ancienne version complète');
   assert.equal(await (await fixture.cache.match(fixture.base + 'index.html')).text(), 'ancienne version complète');
-  await assert.rejects(w.fire('install', {}), /Asset absent/);
+  await assert.rejects(w.fire('install', {}), /Ressource de démarrage indisponible/);
+});
+
+test('affiche immédiatement la version complète en cache pendant une connexion bloquée', async () => {
+  const fixture = shellFixture();
+  await fixture.cache.put(fixture.base + 'index.html', new Response('version complète'));
+  let finishFetch;
+  const w = worker('/benevoles/', {
+    ...fixture,
+    fetch: () => new Promise(resolve => finishFetch = resolve),
+  });
+  const event = w.dispatch('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  try {
+    const result = await Promise.race([
+      event.response.then(response => response.text()),
+      new Promise(resolve => setTimeout(() => resolve('navigation bloquée'), 100)),
+    ]);
+    assert.equal(result, 'version complète');
+  } finally {
+    finishFetch(new Response('indisponible', { status: 503 }));
+    await event.done;
+  }
+});
+
+test('prépare les imports directs, transitifs et dynamiques avant de publier le HTML', async () => {
+  const fixture = shellFixture();
+  const scripts = {
+    'main-ABC.js': 'import "./chunk-SIDE.js"; export { x } from "./chunk-SHARED.js"; import("./chunk-LAZY.js");',
+    'chunk-SIDE.js': 'import { x } from "./chunk-SHARED.js";',
+    'chunk-SHARED.js': 'export const x = 1;',
+    'chunk-LAZY.js': 'import { x } from "./chunk-SHARED.js";',
+  };
+  const w = worker('/benevoles/', {
+    ...fixture,
+    fetch: async input => {
+      const url = typeof input === 'string' ? input : input.url;
+      const name = new URL(url).pathname.split('/').pop();
+      if (name in scripts) return new Response(scripts[name], { headers: { 'Content-Type': 'text/javascript' } });
+      return fixture.fetch(input);
+    },
+  });
+  await w.fire('install', {});
+  for (const name of Object.keys(scripts)) assert.ok(fixture.entries.has(fixture.base + name), name);
+});
+
+test('refuse la nouvelle page si une dépendance transitive manque', async () => {
+  const fixture = shellFixture();
+  await fixture.cache.put(fixture.base + 'index.html', new Response('ancienne version complète'));
+  const w = worker('/benevoles/', {
+    ...fixture,
+    fetch: async input => {
+      const url = typeof input === 'string' ? input : input.url;
+      if (url.endsWith('main-ABC.js')) return new Response('import "./chunk-MISSING.js";');
+      if (url.endsWith('chunk-MISSING.js')) return new Response('absent', { status: 404 });
+      return fixture.fetch(input);
+    },
+  });
+  const response = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  assert.equal(await response.text(), 'ancienne version complète');
+  assert.equal(await (await fixture.cache.match(fixture.base + 'index.html')).text(), 'ancienne version complète');
+});
+
+test('ne sert jamais une page incomplète même si le cache est vide', async () => {
+  const fixture = shellFixture();
+  fixture.missingAsset();
+  const w = worker('/benevoles/', fixture);
+  const response = await w.fire('fetch', { request: { method: 'GET', mode: 'navigate', url: fixture.base } });
+  assert.equal(response.status, 503);
+  assert.equal(await fixture.cache.match(fixture.base + 'index.html'), undefined);
+});
+
+test('rejette une page HTML renvoyée à la place d’un script', async () => {
+  const fixture = shellFixture();
+  const w = worker('/benevoles/', {
+    ...fixture,
+    fetch: async input => {
+      const url = typeof input === 'string' ? input : input.url;
+      if (url.endsWith('main-ABC.js')) return new Response(fixture.html, { headers: { 'Content-Type': 'text/html' } });
+      return fixture.fetch(input);
+    },
+  });
+  await assert.rejects(w.fire('install', {}), /Ressource de démarrage indisponible/);
+  assert.equal(await fixture.cache.match(fixture.base + 'index.html'), undefined);
+});
+
+test('prépare la mise à jour en arrière-plan pour l’ouverture suivante', async () => {
+  const fixture = shellFixture();
+  await fixture.cache.put(fixture.base + 'index.html', new Response('ancienne version complète'));
+  const w = worker('/benevoles/', fixture);
+  const request = { method: 'GET', mode: 'navigate', url: fixture.base };
+  const first = await w.fire('fetch', { request });
+  assert.equal(await first.text(), 'ancienne version complète');
+  assert.ok(fixture.entries.has(fixture.base + 'main-ABC.js'));
+  fixture.offline();
+  const second = await w.fire('fetch', { request });
+  assert.equal(await second.text(), fixture.html);
 });
 
 test('sort du blocage réseau et utilise le cache après le délai de connexion', async () => {

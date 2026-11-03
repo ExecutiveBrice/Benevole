@@ -119,10 +119,7 @@ public class EmailService {
 
 
         String brevoApiKey = System.getenv("BREVO_APIKEY_PRIVATE");
-        if (brevoApiKey == null || brevoApiKey.isBlank()) {
-            // Nom utilisé par le docker-compose de cette application.
-            brevoApiKey = System.getenv("MJ_APIKEY_PRIVATE");
-        }
+
         if (brevoApiKey == null || brevoApiKey.isBlank()) {
             log.error("Aucune clé API Brevo n'est configurée : l'e-mail ne peut pas être envoyé");
             return false;
@@ -138,7 +135,7 @@ public class EmailService {
 
             TransactionalEmailsApi api = new TransactionalEmailsApi();
             SendSmtpEmailSender sender = new SendSmtpEmailSender();
-            sender.setEmail("bryce.morel@gmail.com");
+            sender.setEmail("benevole@alod.fr");
             sender.setName("ALOD");
             List<SendSmtpEmailTo> toList = new ArrayList<>();
             destinataires.forEach(destinataire -> {
@@ -148,7 +145,7 @@ public class EmailService {
             });
 
             SendSmtpEmailReplyTo replyTo = new SendSmtpEmailReplyTo();
-            replyTo.setEmail("bryce.morel@gmail.com");
+            replyTo.setEmail("benevole@alod.fr");
             replyTo.setName("ALOD");
 
             SendSmtpEmail sendSmtpEmail = new SendSmtpEmail();
